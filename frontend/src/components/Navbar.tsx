@@ -14,6 +14,7 @@ import { useState } from "react";
 import { api } from "../lib/api";
 import UserAvatar from "./core/UserAvatar";
 import { Dropdown } from "./core/Dropdown";
+import {LogOut,Settings,User,} from "lucide-react";
 import clsx from "clsx";
 
 const Navbar: React.FC = ({ notifications }) => {
@@ -86,19 +87,26 @@ const Navbar: React.FC = ({ notifications }) => {
     },
   ];
 
+
+  const profileMenuOptions= [
+    {label:"profil", icon:<User/>},
+    {label:"Ustawienia", icon:<Settings/>},
+    {label:"Wloguj się", icon:<LogOut/>},
+  ]
+
 const NavLinkItem: React.FC = ({ element }) => {
   const { link, label } = element;
   return (
     <Link
     
       className={clsx(
-        "px-3 py-2.5 rounded-xl text-slate-600 text-sm font-semibold hover:bg-slate-600 hover:text-white",
+        "px-3 py-2.5 rounded-xl border border-transparent text-slate-600 text-sm font-semibold  hover:border hover:border-slate-400/90",
         path === link.split("/")[0] ? "bg-slate-600 text-neutral-50" : ""
       )}
       to={link}
     >
     
-      <span className="hover:text-[#2564ed]">{label}</span>
+      <span >{label}</span>
     </Link>
   );
 };
@@ -118,7 +126,7 @@ const NavLinkItem: React.FC = ({ element }) => {
           <button className="w-full text-left px-1.5 hover:text-blue-200  text-gray-400 text-sm" onClick={() => setIsModalOpen(true)}>Szukaj</button>
           {/* <SearchModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/> */}
         </div>
-        <div className=" flex justify-around w-full items-center space-x-4 ">
+        <div className=" flex justify-around w-full items-center space-x-3.5 ">
 
 {navigationItems.map((element)=>{
   return(
@@ -156,7 +164,7 @@ const NavLinkItem: React.FC = ({ element }) => {
         {/* <NotificationPanel notifications={notifications} /> */}
         {/* <Drawer /> */}
         <button onClick={openDrawer}>Draw</button>
-        <Dropdown triggerBtn={<div><UserAvatar/></div>}/>
+        <Dropdown options={profileMenuOptions} triggerBtn={<div><UserAvatar/></div>}/>
         <SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
  
       </div>

@@ -1,4 +1,4 @@
-import {Routes,Route, useNavigate} from "react-router-dom";
+import {Routes,Route, useNavigate, Navigate} from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
@@ -10,6 +10,15 @@ import { setNavigate } from "./lib/navigation";
 import SearchPage from "./pages/SearchPage";
 import AuthLayout from "./layouts/AuthLayout";
 import RootLayout from "./layouts/RootLayout";
+import Deparments from "./pages/Departments";
+import HelpdeskPage from "./pages/HelpdeskPage";
+import SalesPage from "./pages/SalesPage";
+import AdministrationPage from "./pages/AdministrationPage";
+import AppointmentPage from "./pages/AppointmentPage";
+import StatisticsPage from "./pages/StatisticsPage";
+import CoversationReportPage from "./pages/CoversationReportPage";
+import FavouritesPage from "./pages/FavouritesPage";
+import TodosBoardPage from "./pages/TodosBoardPage";
 
 
 
@@ -23,7 +32,30 @@ setNavigate(navigate);
       <Route  element={<RootLayout />}>
   
      <Route index path="articles" element={<SearchPage/>} />
+     <Route path="statistics" element={<StatisticsPage />} />
+     <Route path="coversation-report" element={<CoversationReportPage />} />
+     <Route path="favourites" element={<FavouritesPage />} />
+     <Route path="todos-board" element={<TodosBoardPage />} />
         {/* <Route path="settings" element={<Settings />} />  */}
+
+
+
+
+
+
+{/*  */}
+        <Route path="departments" element={<Deparments />}>
+            <Route index element={<Navigate to="helpdesk" replace />} />
+            <Route index path="helpdesk" element={<HelpdeskPage />} />
+            <Route path="sales" element={<SalesPage />} />
+            <Route path="administration" element={<AdministrationPage />} />
+            <Route path="appointment" element={<AppointmentPage />} />
+          </Route>
+{/*  */}
+
+
+
+
       </Route>
 
       <Route path="/" element={<AuthLayout />}>
