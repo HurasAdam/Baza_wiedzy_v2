@@ -20,9 +20,9 @@ setNavigate(navigate);
 
   return (
     <Routes>
-      <Route path="/" element={<RootLayout />}>
+      <Route  element={<RootLayout />}>
   
-     <Route index element={<SearchPage/>} />
+     <Route index path="articles" element={<SearchPage/>} />
         {/* <Route path="settings" element={<Settings />} />  */}
       </Route>
 
