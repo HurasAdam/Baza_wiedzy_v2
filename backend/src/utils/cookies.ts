@@ -18,7 +18,7 @@ export const getAccessTokenCookieOptions = ():CookieOptions =>({
 export const getRefreshTokenCookieOptions = ():CookieOptions =>({
     ...defaults,
     expires: thirtyDaysFromNow(),
-    path:REFRESH_PATH
+    // path:REFRESH_PATH
 });
 
 

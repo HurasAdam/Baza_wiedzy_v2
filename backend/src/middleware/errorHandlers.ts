@@ -22,7 +22,7 @@ const handleZodError = (res: Response, error: z.ZodError) => {
 const handleAppError = (res:Response, error:AppError)=>{
   return res.status(error.statusCode).json({
     message:error.message,
-    errorCpde:error.errorCode
+    errorCode:error.errorCode
   });
 }
 

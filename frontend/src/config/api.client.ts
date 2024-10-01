@@ -5,7 +5,7 @@ import { navigate } from "../lib/navigation";
 
 const options = {
   baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
-  withCredentials: true,
+  withCredentials: true, // to ensure cookies like refreshToken are sent
 };
 
 // create a separate client for refreshing the access token
@@ -20,26 +20,39 @@ API.interceptors.response.use(
   async (error) => {
     const { config, response } = error;
     const { status, data } = response || {};
+    
+    console.log("Interceptor error response:", response);
+    console.log("Error status:", status);
+    console.log("Error data:", data);
 
-    // try to refresh the access token behind the scenes
-    if (status === UNAUTHORIZED && data?.errorCode === "InvalidAccessToken") {
+    // Sprawdź, czy access token wygasł
+    if (status === UNAUTHORIZED && data?.errorCode === "InvalidAccesToken") {
+      console.log("Access token expired, trying to refresh the token...");
+
       try {
-        // refresh the access token, then retry the original request
+        // Spróbuj odświeżyć access token za pomocą refresh tokena
         await TokenRefreshClient.get("/auth/refresh");
-        return TokenRefreshClient(config);
-      } catch (error) {
-        // handle refresh errors by clearing the query cache & redirecting to login
-        queryClient.clear();
-        navigate("/login", {
-          state: {
-            redirectUrl: window.location.pathname,
-          },
-        });
+
+        // Powtórz oryginalne żądanie z nowym tokenem
+        return API(config);
+      } catch (refreshError) {
+        console.error("Error during token refresh:", refreshError);
+
+        // Jeżeli refresh token również zwróci 401 (Unauthorized)
+        if (refreshError.response?.status === UNAUTHORIZED) {
+          console.log("Refresh token invalid, logging out user...");
+
+     
+        }
+
+        // W przypadku innych błędów rzucaj je dalej
+        return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject({ status, ...data });
   }
 );
+
 
 export default API;
