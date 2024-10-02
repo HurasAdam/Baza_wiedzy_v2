@@ -3,7 +3,7 @@ import { authApi } from "../../services/authApi";
 import NotificationPanel from "./NotificationPanel";
 
 import { SideDrawer } from "./core/SideDrawer";
-import { NavLink,Link, useLocation } from "react-router-dom";
+import { NavLink,Link, useLocation, useNavigate } from "react-router-dom";
 import Modal from "./SearchModal";
 import SearchModal from "./SearchModal";
 import { useAppContext } from "../../contexts/AppContext";
@@ -21,23 +21,21 @@ const Navbar: React.FC = ({ notifications }) => {
 //   const {showContentModal} = useAppContext();
   const queryClient = useQueryClient();
   const location = useLocation();
+  const navigate = useNavigate()
   const path = location.pathname.split("/")[1];
   const [isModalOpen, setIsModalOpen] = useState(false)
 
 
-  const { mutate } = useMutation({
+  const { mutate:logoutUser } = useMutation({
     mutationFn: () => {
       return api.logout();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["validateToken"]);
-    },
+    onSettled:()=>{
+      queryClient.clear();
+      navigate("/login",{replace:true})
+  }
   });
 
-  const logoutHandler = () => {
-    console.log("logout");
-    mutate();
-  };
 
   const [isDrawerOpen, setIsDrawerOpen] =useState(false);
 
@@ -88,20 +86,25 @@ const Navbar: React.FC = ({ notifications }) => {
   ];
 
 
+
+
+
+
   const profileMenuOptions= [
-    {label:"profil", icon:<User/>},
-    {label:"Ustawienia", icon:<Settings/>},
-    {label:"Wloguj się", icon:<LogOut/>},
-  ]
+    {label:"profil", icon:<User/>, actionHandler: () => console.log("profil")},
+    {label:"Ustawienia", icon:<Settings/>, actionHandler: () => console.log("ustawienia")},
+    {label:"Wyloguj się", icon:<LogOut/>, actionHandler: logoutUser },
+  ];
 
 const NavLinkItem: React.FC = ({ element }) => {
   const { link, label } = element;
+  const isActive = path === link.split("/")[0]
   return (
     <Link
     
       className={clsx(
         "px-3 py-2.5 rounded-xl border border-transparent text-slate-600 text-sm font-semibold  hover:border hover:border-slate-400/90",
-        path === link.split("/")[0] ? "bg-slate-600 text-neutral-50" : ""
+        isActive  ? "bg-slate-600 text-white" : ""
       )}
       to={link}
     >

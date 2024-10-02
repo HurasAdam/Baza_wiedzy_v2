@@ -38,11 +38,12 @@ import {
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
 
-      {options.map((item)=>{
+
+      {options.map(({icon,label, actionHandler})=>{
         return(
           <DropdownMenuItem className="cursor-pointer">
-       <div className="mr-2 w-4 h-4 flex items-center">{item.icon}</div>
-          <span>{item.label}</span>
+       <div className="mr-2 w-4 h-4 flex items-center">{icon}</div>
+          <span onClick={()=>actionHandler()}>{label}</span>
        
         </DropdownMenuItem>
         )

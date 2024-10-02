@@ -11,7 +11,7 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const redirectUrl = location.state?.redirectUrl || "/";
+  const redirectUrl = location.state?.redirectUrl || "/articles";
 
 
 
@@ -36,7 +36,7 @@ const Login = () => {
     }
 
 if(user){
-  return navigate("/")
+  return navigate("/articles")
 }
 
 
