@@ -11,6 +11,7 @@ import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
 import authenticate from "./middleware/authenticate";
 import sessionRoutes from "./routes/session.route";
+import articleRoutes from "./routes/article.route";
 
 
 
@@ -37,6 +38,7 @@ app.use("/auth", authRoutes);
 //protected routes
 app.use("/user", authenticate,userRoutes);
 app.use("/sessions", authenticate,sessionRoutes);
+app.use("/articles",authenticate, articleRoutes);
 
 app.use(errorHandler);
 
