@@ -51,54 +51,54 @@ interface GetArticlesOptions {
     sortBy: string;
   }
   
-  export const getAllArticles = async (options: GetArticlesOptions) => {
-    const { title, tags, author, verified, limit, page, sortBy } = options;
+//   export const getAllArticles = async ({options,req}:{options:GetArticlesOptions,req:Express.Request} ) => {
+//     const { title, tags, author, verified, limit, page, sortBy } = options;
     
-    const query: any = {};
+//     const query: any = {};
   
-    // Konstruowanie zapytania
-    if (title) {
-      query.title = new RegExp(title, "i");
-    }
+//     // Konstruowanie zapytania
+//     if (title) {
+//       query.title = new RegExp(title, "i");
+//     }
   
-    if (tags) {
-      query.tags = { $all: tags };
-    }
+//     if (tags) {
+//       query.tags = { $all: tags };
+//     }
   
-    if (author) {
-      query.createdBy = author;
-    }
+//     if (author) {
+//       query.createdBy = author;
+//     }
   
-    if (verified !== undefined) {
-      query.isVerified = verified;
-    }
+//     if (verified !== undefined) {
+//       query.isVerified = verified;
+//     }
   
-    const pageSize = limit;
-    const skipp = (page - 1) * pageSize;
+//     const pageSize = limit;
+//     const skipp = (page - 1) * pageSize;
   
-    const articles = await ArticleModel.find(query)
-      .select([
-        "-clientDescription",
-        "-employeeDescription",
-        "-verifiedBy",
-        "-updatedAt",
-        "-viewsCounter",
-        "-__v",
-      ])
-      .populate([
-        { path: "tags", select: ["name", "shortname"] },
-        { path: "createdBy", select: ["name", "surname"] },
-      ])
-      .skip(skipp)
-      .limit(pageSize)
-      .sort(sortBy);
+//     const articles = await ArticleModel.find(query)
+//       .select([
+//         "-clientDescription",
+//         "-employeeDescription",
+//         "-verifiedBy",
+//         "-updatedAt",
+//         "-viewsCounter",
+//         "-__v",
+//       ])
+//       .populate([
+//         { path: "tags", select: ["name", "shortname"] },
+//         { path: "createdBy", select: ["name", "surname"] },
+//       ])
+//       .skip(skipp)
+//       .limit(pageSize)
+//       .sort(sortBy);
   
-    const total = await ArticleModel.countDocuments(query);
+//     const total = await ArticleModel.countDocuments(query);
   
-    return {
-      articles,
-      total,
-      pages: Math.ceil(total / pageSize),
-      currentPage: page,
-    };
-  };
+//     return {
+//       articles,
+//       total,
+//       pages: Math.ceil(total / pageSize),
+//       currentPage: page,
+//     };
+//   };
