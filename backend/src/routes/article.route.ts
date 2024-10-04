@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createArticleHandler, getArticlesHandler } from "../controllers/article.controller";
+import { createArticleHandler, getArticleHandler, getArticlesHandler } from "../controllers/article.controller";
 
 
 const articleRoutes = Router();
@@ -9,6 +9,7 @@ const articleRoutes = Router();
 // articleRoutes.get("/",getSessionsHandler)
 articleRoutes.post("/create",createArticleHandler);
 articleRoutes.get("/",getArticlesHandler);
+articleRoutes.get("/:id",getArticleHandler);
 
 
 export default articleRoutes;

@@ -1,5 +1,6 @@
 import { CONFLICT } from "../constants/http";
 import ArticleModel from "../models/Article.model";
+import UserModel from "../models/User.model";
 import appAssert from "../utils/appAssert";
 
 
@@ -38,18 +39,42 @@ return createdArticle
 
 
 
+// Article 
+interface getArticleParams{
+  userId:string;
+  articleId:string;
+}
+
+export const getArticle = async({userId,articleId}:getArticleParams)=>{
+
+const user = await UserModel.findById(userId);
+  const article = await ArticleModel.findById({ _id: articleId })
+
+  console.log(user)
+
+  appAssert(article, CONFLICT, "Article not found");
+  appAssert(user, CONFLICT, "User not found");
+
+  // const isFavorite = user?.favourites.includes(article._id);
+
+  return article;
+}
+
+
 // ARTICLES
 
 
-interface GetArticlesOptions {
-    title?: string;
-    tags?: string[];
-    author?: string;
-    verified?: boolean;
-    limit: number;
-    page: number;
-    sortBy: string;
-  }
+// interface GetArticlesOptions {
+//     title?: string;
+//     tags?: string[];
+//     author?: string;
+//     verified?: boolean;
+//     limit: number;
+//     page: number;
+//     sortBy: string;
+//   }
+  
+
   
 //   export const getAllArticles = async ({options,req}:{options:GetArticlesOptions,req:Express.Request} ) => {
 //     const { title, tags, author, verified, limit, page, sortBy } = options;

@@ -13,6 +13,7 @@ export interface UserDocument extends mongoose.Document {
     UserDocument,
     "_id" | "email" | "verified" | "createdAt" | "updatedAt" | "__v"
   >;
+  favourites:[{type:String, default:[]}];
 }
 
 
@@ -20,6 +21,7 @@ const userSchema = new Schema<UserDocument>({
     email:{type:String, unique:true, required:true},
     password:{type:String, required:true},
     verified:{type:Boolean, required:true, default:false},
+    favourites: [{ type: Schema.Types.ObjectId, ref: "Article" }],
 },{
     timestamps:true
 })

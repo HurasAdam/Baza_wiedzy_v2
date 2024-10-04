@@ -1,7 +1,7 @@
 
 import { OK } from "../constants/http";
 import ArticleModel from "../models/Article.model";
-import { createArticle } from "../services/article.service";
+import { createArticle, getArticle } from "../services/article.service";
 import catchErrors from "../utils/catchErrors";
 import { newArticleSchema } from "./article.schemas";
 
@@ -27,5 +27,16 @@ export const getArticlesHandler = catchErrors(
     const allArticles = await ArticleModel.find({});
     return res.status(OK).json(allArticles);
   
+    }
+)
+
+
+export const getArticleHandler = catchErrors(
+    async(req,res)=>{
+        const {userId}:{userId:string} = req;
+        const {id}= req.params;
+ console.log(id)
+        const article = await getArticle({userId,articleId:id});
+        return res.status(OK).json(article);
     }
 )
