@@ -12,7 +12,7 @@ import userRoutes from "./routes/user.route";
 import authenticate from "./middleware/authenticate";
 import sessionRoutes from "./routes/session.route";
 import articleRoutes from "./routes/article.route";
-
+import tagRoutes from "./routes/tag.route";
 
 
 const app = express();
@@ -39,6 +39,7 @@ app.use("/auth", authRoutes);
 app.use("/user", authenticate,userRoutes);
 app.use("/sessions", authenticate,sessionRoutes);
 app.use("/articles",authenticate, articleRoutes);
+app.use("/tags",authenticate, tagRoutes)
 
 app.use(errorHandler);
 
