@@ -48,7 +48,10 @@ interface getArticleParams{
 export const getArticle = async({userId,articleId}:getArticleParams)=>{
 
 const user = await UserModel.findById(userId);
-  const article = await ArticleModel.findById({ _id: articleId })
+  const article = await ArticleModel.findById({ _id: articleId }).populate([
+    {path:"tags", select:["name"]},
+    {path:"createdBy", select:["name","surname"]},
+  ])
 
   console.log(user)
 

@@ -3,6 +3,8 @@ import { compareValue, hashValue } from "../utils/bcrypt";
 
 
 export interface UserDocument extends mongoose.Document {
+  name:string,
+  surname:string,
   email: string;
   password: string;
   verified: boolean;
@@ -18,6 +20,8 @@ export interface UserDocument extends mongoose.Document {
 
 
 const userSchema = new Schema<UserDocument>({
+  name:{type:String, required:true},
+  surname:{type:String, required:true},
     email:{type:String, unique:true, required:true},
     password:{type:String, required:true},
     verified:{type:Boolean, required:true, default:false},
