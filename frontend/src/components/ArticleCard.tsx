@@ -26,11 +26,12 @@ const ArticleCard = ({data,className}) => {
     </CardHeader>
  
     <CardFooter className='space-x-1 flex '>
-    <BadgeLabel variant="secondary" label={"Synergia"}/>
-      <BadgeLabel variant="secondary"  label={"Aplikacja mobilna"}/>
-      <BadgeLabel variant="secondary"  label={"DZD"}/>
-      <BadgeLabel variant="secondary"  label={"świadectwa"}/>
-      <BadgeLabel variant="secondary"  label={"NI"}/>
+{data?.tags?.map(({name})=>{
+  return (
+    <BadgeLabel variant="secondary" label={name}/>
+  )
+})}
+ 
     
     </CardFooter>
   </Card>

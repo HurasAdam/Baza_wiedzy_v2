@@ -5,7 +5,13 @@ export const getAllArticles = async() =>{
 }
 
 
+export const createArticle = async({formData})=>{
+    return API.post('/articles/create',formData)
+}
+
+
 
 export  const articlesApi ={
-    getAllArticles
+    getAllArticles,
+    createArticle
 } 
