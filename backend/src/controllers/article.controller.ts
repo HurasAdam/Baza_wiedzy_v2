@@ -24,7 +24,9 @@ export const createArticleHandler = catchErrors(
 export const getArticlesHandler = catchErrors(
     async (req,res) => {
    
-    const allArticles = await ArticleModel.find({});
+    const allArticles = await ArticleModel.find({}).select(["-clientDescription","-employeeDescription"]).populate([
+        {path:"tags", select:["name"]}
+    ])
     return res.status(OK).json(allArticles);
   
     }
