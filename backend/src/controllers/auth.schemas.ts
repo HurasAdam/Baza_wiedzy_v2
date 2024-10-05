@@ -15,6 +15,8 @@ export const loginSchema = z.object({
 
 export const registerSchema = loginSchema.extend({
 
+  name: z.string().min(3).max(255),
+  surname: z.string().min(3).max(255),
     confirmPassword:z.string().min(6).max(255),
 
     }).refine(
