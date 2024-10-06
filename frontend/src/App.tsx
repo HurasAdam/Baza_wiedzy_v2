@@ -20,6 +20,7 @@ import CoversationReportPage from "./pages/CoversationReportPage";
 import FavouritesPage from "./pages/FavouritesPage";
 import TodosBoardPage from "./pages/TodosBoardPage";
 import CreateArticle from "./pages/CreateArticle";
+import ArticleDetails from "./pages/ArticleDetails";
 
 
 
@@ -35,6 +36,7 @@ setNavigate(navigate);
      <Route index path="articles" element={<SearchPage/>} />
      <Route path="statistics" element={<StatisticsPage />} />
      <Route path="articles/new-article" element={<CreateArticle />} />
+     <Route path="articles/:id" element={<ArticleDetails />} />
      <Route path="coversation-report" element={<CoversationReportPage />} />
      <Route path="favourites" element={<FavouritesPage />} />
      <Route path="todos-board" element={<TodosBoardPage />} />
