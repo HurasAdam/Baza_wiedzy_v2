@@ -3,6 +3,7 @@ import { OK } from "../constants/http";
 import ArticleModel from "../models/Article.model";
 import { createArticle, getArticle } from "../services/article.service";
 import catchErrors from "../utils/catchErrors";
+import { constructSearchQuery } from "../utils/constructSearchQuery";
 import { newArticleSchema } from "./article.schemas";
 
 export const createArticleHandler = catchErrors(
@@ -24,10 +25,43 @@ export const createArticleHandler = catchErrors(
 export const getArticlesHandler = catchErrors(
     async (req,res) => {
    
-    const allArticles = await ArticleModel.find({}).select(["-clientDescription","-employeeDescription"]).populate([
-        {path:"tags", select:["name"]}
-    ])
-    return res.status(OK).json(allArticles);
+        const query = constructSearchQuery(req.query);
+
+
+        const limit = parseInt(req.query.limit?.toString() || "20")
+    const pageSize = limit;
+        const pageNumber = parseInt(
+          req.query.page ? req.query.page.toString() : "1"
+        );
+        const skipp = (pageNumber - 1) * pageSize;
+        const sortBy = req.query.sortBy ? req.query.sortBy.toString() : '-createdAt';
+        const articles = await ArticleModel.find(query)
+          .select([
+            "-clientDescription",
+            "-employeeDescription",
+            "-verifiedBy",
+            "-updatedAt",
+            "-viewsCounter",
+            "-__v",
+          ])
+          .populate([{ path: "tags", select: ["name","shortname"] },{path:"createdBy",select:["name","surname"]}])
+          .skip(skipp)
+          .limit(pageSize)
+          .sort(sortBy); 
+    
+        const total = await ArticleModel.countDocuments(query);
+    
+        const responseObject = {
+          data: articles,
+          pagination: {
+            total,
+            page: pageNumber,
+            pages: Math.ceil(total / pageSize),
+          },
+        };
+    
+        
+    return res.status(OK).json(responseObject);
   
     }
 )

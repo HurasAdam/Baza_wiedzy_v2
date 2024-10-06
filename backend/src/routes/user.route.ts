@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUserHandler } from "../controllers/user.controller";
+import { getUserHandler, getUsersHandler } from "../controllers/user.controller";
 import { getSessionsHandler } from "../controllers/session.controller";
 
  const userRoutes = Router();
@@ -7,5 +7,6 @@ import { getSessionsHandler } from "../controllers/session.controller";
 //prefix: /user
 
 userRoutes.get("/",getUserHandler);
+userRoutes.get("/users",getUsersHandler);
 
 export default userRoutes;
