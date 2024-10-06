@@ -31,6 +31,11 @@ export const getUser = async()=>{
   return API.get("/user");
 }
 
+
+export const getUsers = async()=>{
+    return API.get("/user/users")
+}
+
 export const getSessions =async()=>{
     return API.get("/sessions")
 }
@@ -51,6 +56,7 @@ export const api = {
     getUser,
     logout,
     getSessions,
-    deleteSession
+    deleteSession,
+    getUsers
 }
 
