@@ -8,8 +8,8 @@ export const logout = async()=>{
     return API.get("/auth/logout")
 }
 
-export const register = async({email,password,confirmPassword}) =>{
-    return API.post('/auth/register', {email,password,confirmPassword})
+export const register = async({email,name,surname,password,confirmPassword}) =>{
+    return API.post('/auth/register', {email,name,surname,password,confirmPassword})
 }
 
 
