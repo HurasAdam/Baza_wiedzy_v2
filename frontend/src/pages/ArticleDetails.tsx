@@ -15,6 +15,13 @@ import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { IoMdArrowDropright } from "react-icons/io";
 import { formatDate } from '@/lib/utils';
 import { FaCalendarCheck } from 'react-icons/fa6';
+import { Dropdown } from '@/components/core/Dropdown';
+import { HiDotsHorizontal } from "react-icons/hi";
+import { FaStar } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const ArticleDetails = () => {
     const { id } = useParams();
@@ -25,6 +32,14 @@ const {data:article} = useQuery({
         return articlesApi.getArticle({id})
     }
 })
+
+const profileMenuOptions= [
+  {label:"Dodaj do ulubionych", icon:<FaStar/>, actionHandler: () => console.log("profil")},
+  {label:"Edytuj", icon:<FaEdit/>, actionHandler: () => console.log("ustawienia")},
+  {label:"Zweryfikuj", icon: article?.isVerified ?<IoArrowBackCircleSharp/>:<FaCheckCircle/> , actionHandler: console.log("OK") },
+  {label:"Usuń", icon:<MdDelete/>, actionHandler: console.log("OK") },
+];
+
 
 
   return (
@@ -71,10 +86,18 @@ const {data:article} = useQuery({
 
 
 <div className='flex justify-end pt-2.5'>
-  <span className='text-xl'>...</span>
+<Dropdown 
+
+position={{
+  side: "center", // Otwiera dropdown po prawej stronie
+  align: "start", // Wyrównuje do początku elementu trigger
+  sideOffset: -116, // Przesunięcie w osi pionowej
+  alignOffset: 20, // Przesunięcie w osi poziomej
+}}
+options={profileMenuOptions} triggerBtn={<div className='mt-0.5'><HiDotsHorizontal className='cursor-pointer'/></div>}/>
 </div>
 <div>
-    <span className='text-sm text-gray-700'>Tagi</span>
+    <span className='text-sm font-semibold text-gray-500'>Tagi</span>
 <div className='py-2.5 px-0.5 space-x-1 space-y-1.5'>
   
     {article?.tags?.map((tag)=>{
@@ -87,7 +110,7 @@ const {data:article} = useQuery({
 
 {/* STATUS */}
 <div>
-<span>Status</span>
+<span className='text-sm text-slate-500 font-semibold'>Status</span>
 {article?.isVerified ? (
               <span className="font-semibold flex items-center gap-x-6">
                 <IoCheckmarkCircle className="h-5 w-5 text-green-500" />{" "}
@@ -95,7 +118,7 @@ const {data:article} = useQuery({
               </span>
             ) : (
               <span className="font-semibold flex items-center gap-x-3">
-                <BsFillQuestionCircleFill className="h-5 w-5 text-secondary text-gray-700" />
+                <BsFillQuestionCircleFill className="h-5 w-5 text-secondary text-slate-600" />
                 Nie zweryfikowany
               </span>
             )}

@@ -3,9 +3,9 @@ import { Outlet } from 'react-router-dom'
 
 const AuthLayout = () => {
   return (
-    <section className='min-h-screen flex w-full bg-blue-100'>
+    <section className='min-h-screen flex w-full bg-customDark'>
       <div className='flex-1 my-auto hidden lg:flex flex-col items-center mt-20'>
-        <h1 className=' text-6xl text-indigo-800 font-bold'>Baza wiedzy</h1>
+        <h1 className=' text-5xl text-neutral-100 font-semibold font-inter'>Baza wiedzy</h1>
 {/* <img className='w-auto max-h-[700px]' src={CONSTANTS.IMAGES.landingImage} alt="" /> */}
 
 </div>

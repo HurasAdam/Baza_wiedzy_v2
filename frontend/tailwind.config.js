@@ -16,6 +16,7 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+			customDark: 'rgb(24, 24, 27)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -57,6 +58,11 @@ export default {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
+
+		  fontFamily:{
+		
+			inter: ['Inter', 'sans-serif']
+		  },
   		keyframes: {
   			'accordion-down': {
   				from: {

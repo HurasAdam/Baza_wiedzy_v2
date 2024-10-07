@@ -27,14 +27,23 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
   
-  export function Dropdown({ triggerBtn,options=[] }: { triggerBtn: React.ReactNode,options:[] }) {
+  export function Dropdown({ triggerBtn,options=[], position = {align:"center"} }: { triggerBtn: React.ReactNode,options:[]}) {
+
+
+
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           {triggerBtn}
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuContent
+        className="w-52"
+        side={position?.side || "bottom"} // Ustawienie pozycji "side" z props, domyślnie "bottom"
+        align={position?.align || "center"} // Ustawienie pozycji "align" z props, domyślnie "start"
+        sideOffset={position?.sideOffset || 1} // Domyślne przesunięcie w pionie
+        alignOffset={position?.alignOffset || 0} // Domyślne przesunięcie w poziomie
+      >
+          {/* <DropdownMenuLabel></DropdownMenuLabel> */}
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
 
