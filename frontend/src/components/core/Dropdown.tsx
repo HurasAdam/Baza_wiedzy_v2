@@ -44,7 +44,7 @@ import {
         alignOffset={position?.alignOffset || 0} // Domyślne przesunięcie w poziomie
       >
           {/* <DropdownMenuLabel></DropdownMenuLabel> */}
-          <DropdownMenuSeparator />
+          
           <DropdownMenuGroup>
 
 

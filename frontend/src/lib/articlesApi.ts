@@ -38,10 +38,15 @@ export const getArticle = async({id}) =>{
 }
 
 
+export const verifyArticle = async({id,isVerified})=>{
+  return API.post(`/articles/article/${id}/verify`,{isVerified})
+}
+
 
 
 export  const articlesApi ={
     getAllArticles,
     createArticle,
-    getArticle
+    getArticle,
+    verifyArticle
 } 

@@ -22,7 +22,7 @@ const formSchema = z.object({
     }),
   });
  
-export function LoginForm({onSave}) {
+export function LoginForm({onSave,isError}) {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,6 +57,13 @@ return (
        i korzystaj z gotowych szablonów odpowiedzi
         </p>
       </div>
+
+     
+          {isError && (
+            <div  className="text-orange-600 text-sm font-semibold text-center">
+              E-mail lub hasło są nieprawidłowe
+            </div>
+          )}
 
       <div className='flex flex-col gap-y-6'>
         <FormField

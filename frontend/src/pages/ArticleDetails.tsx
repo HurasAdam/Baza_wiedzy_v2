@@ -1,6 +1,6 @@
 import BadgeLabel from '@/components/core/BadgeLabel';
 import { articlesApi } from '@/lib/articlesApi';
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
     Accordion,
     AccordionContent,
@@ -25,6 +25,7 @@ import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const ArticleDetails = () => {
     const { id } = useParams();
+    const queryClient = useQueryClient();
 
 const {data:article} = useQuery({
     queryKey:["article",id],
@@ -33,10 +34,26 @@ const {data:article} = useQuery({
     }
 })
 
-const profileMenuOptions= [
+
+const {mutate} = useMutation({
+  mutationFn:({id,isVerified})=>{
+    return articlesApi.verifyArticle({id,isVerified})
+  },
+  onSuccess:()=>{
+  queryClient.invalidateQueries(["article",id])
+  }
+})
+
+
+
+
+
+
+
+const articleDropdownOptions= [
   {label:"Dodaj do ulubionych", icon:<FaStar/>, actionHandler: () => console.log("profil")},
   {label:"Edytuj", icon:<FaEdit/>, actionHandler: () => console.log("ustawienia")},
-  {label:"Zweryfikuj", icon: article?.isVerified ?<IoArrowBackCircleSharp/>:<FaCheckCircle/> , actionHandler: console.log("OK") },
+  {label:"Zweryfikuj", icon: article?.isVerified ?<IoArrowBackCircleSharp/>:<FaCheckCircle/> , actionHandler:()=>mutate({id, isVerified: true }) },
   {label:"Usuń", icon:<MdDelete/>, actionHandler: console.log("OK") },
 ];
 
@@ -94,7 +111,7 @@ position={{
   sideOffset: -116, // Przesunięcie w osi pionowej
   alignOffset: 20, // Przesunięcie w osi poziomej
 }}
-options={profileMenuOptions} triggerBtn={<div className='mt-0.5'><HiDotsHorizontal className='cursor-pointer'/></div>}/>
+options={articleDropdownOptions} triggerBtn={<div className='mt-0.5'><HiDotsHorizontal className='cursor-pointer'/></div>}/>
 </div>
 <div>
     <span className='text-sm font-semibold text-gray-500'>Tagi</span>
