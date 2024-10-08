@@ -1,7 +1,8 @@
 
-import { OK } from "../constants/http";
+import { CONFLICT, OK } from "../constants/http";
 import ArticleModel from "../models/Article.model";
 import { createArticle, getArticle } from "../services/article.service";
+import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
 import { constructSearchQuery } from "../utils/constructSearchQuery";
 import { newArticleSchema } from "./article.schemas";
@@ -75,4 +76,20 @@ export const getArticleHandler = catchErrors(
         const article = await getArticle({userId,articleId:id});
         return res.status(OK).json(article);
     }
+)
+
+
+export const verifyArticleHandler = catchErrors(
+  async(req,res)=>{
+    const {id} = req.params;
+    const {isVerified} = req.body;
+
+    const article = await ArticleModel.findById({_id:id})
+
+    appAssert(article, CONFLICT, "Article not found");
+
+    article.isVerified = isVerified;
+    await article.save();
+    res.status(OK).json({message:`${isVerified ? "Artykuł został zweryfikowany" :"Artykuł został oznaczony jako do weryfikacji"}`})
+  }
 )
