@@ -1,6 +1,7 @@
 
-import { CONFLICT, OK } from "../constants/http";
+import { CONFLICT, NOT_FOUND, OK } from "../constants/http";
 import ArticleModel from "../models/Article.model";
+import UserModel from "../models/User.model";
 import { createArticle, getArticle } from "../services/article.service";
 import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
@@ -91,5 +92,35 @@ export const verifyArticleHandler = catchErrors(
     article.isVerified = isVerified;
     await article.save();
     res.status(OK).json({message:`${isVerified ? "Artykuł został zweryfikowany" :"Artykuł został oznaczony jako do weryfikacji"}`})
+  }
+)
+
+
+export const markAsFavouriteHandler = catchErrors(
+  async(req,res)=>{
+    const { id } = req.params;
+    const {userId}:{userId:string} = req;
+
+    const user = await UserModel.findById({_id:userId});
+    appAssert(user,NOT_FOUND,"User not found");
+
+    const article = await ArticleModel.findById({_id:id});
+    appAssert(article, NOT_FOUND, "Article not found");
+
+    const isFavorite = user?.favourites.includes(article._id);
+
+    if (isFavorite) {
+      user.favourites = user?.favourites.filter(
+        (favoriteId) => favoriteId.toString() !== article._id.toString()
+      );
+    } else {
+      user.favourites.push(article._id);
+    }
+
+    await UserModel.findByIdAndUpdate(userId, { favourites: user.favourites });
+
+
+
+    res.status(OK).json({message:`${isFavorite ? "Usunięto artykuł z listy ulubionych":" Dodano artkuł do listy ulubionych"}`});
   }
 )

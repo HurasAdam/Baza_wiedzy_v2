@@ -15,7 +15,7 @@ export interface UserDocument extends mongoose.Document {
     UserDocument,
     "_id" | "email" | "verified" | "createdAt" | "updatedAt" | "__v"
   >;
-  favourites:[{type:String, default:[]}];
+  favourites: mongoose.Types.ObjectId[];
 }
 
 
