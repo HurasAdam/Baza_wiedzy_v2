@@ -12,16 +12,18 @@ import React from 'react'
 import { useParams } from 'react-router-dom';
 import { IoCheckmarkCircle } from 'react-icons/io5';
 import { BsFillQuestionCircleFill } from "react-icons/bs";
-import { IoMdArrowDropright } from "react-icons/io";
+import { IoMdArrowDropright, IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { formatDate } from '@/lib/utils';
 import { FaCalendarCheck } from 'react-icons/fa6';
 import { Dropdown } from '@/components/core/Dropdown';
 import { HiDotsHorizontal } from "react-icons/hi";
 import { FaStar } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
+import { TiArrowBack } from "react-icons/ti";
 import { FaCheckCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
+import { toast } from '@/hooks/use-toast';
 
 const ArticleDetails = () => {
     const { id } = useParams();
@@ -39,8 +41,27 @@ const {mutate} = useMutation({
   mutationFn:({id,isVerified})=>{
     return articlesApi.verifyArticle({id,isVerified})
   },
-  onSuccess:()=>{
+  onSuccess:(data)=>{
   queryClient.invalidateQueries(["article",id])
+  toast({
+    title: "Sukces",
+    description: data.message,
+    duration: 3550
+  })
+  }
+})
+
+const {mutate:markAsFavouriteHandler} = useMutation({
+  mutationFn:({id})=>{
+    return articlesApi.markArticleAsFavourite({id})
+  },
+  onSuccess:(data)=>{
+  queryClient.invalidateQueries(["article",id])
+  toast({
+    title: "Sukces",
+    description: data?.message,
+    duration: 3550
+  })
   }
 })
 
@@ -51,9 +72,33 @@ const {mutate} = useMutation({
 
 
 const articleDropdownOptions= [
-  {label:"Dodaj do ulubionych", icon:<FaStar/>, actionHandler: () => console.log("profil")},
+  {label:"Dodaj do ulubionych", icon:<FaStar/>, actionHandler: () => markAsFavouriteHandler({id})},
   {label:"Edytuj", icon:<FaEdit/>, actionHandler: () => console.log("ustawienia")},
-  {label:"Zweryfikuj", icon: article?.isVerified ?<IoArrowBackCircleSharp/>:<FaCheckCircle/> , actionHandler:()=>mutate({id, isVerified: true }) },
+
+  ...(article?.isVerified
+    ? [
+        {
+          label: "Cofnij weryfikację",
+        
+    
+            actionHandler:()=>{
+              mutate({ id, isVerified: false })},
+          icon: <TiArrowBack />,
+          }
+      ]
+    : [
+        {
+          label: "Zweryfikuj",
+        
+   
+            actionHandler:()=>{
+              mutate({ id, isVerified: true })},
+       
+          icon: <IoMdCheckmarkCircleOutline />,
+        },
+      ]),
+
+  // {label:"Zweryfikuj", icon: article?.isVerified ?<IoArrowBackCircleSharp/>:<FaCheckCircle/> , actionHandler:()=>mutate({id, isVerified: true }) },
   {label:"Usuń", icon:<MdDelete/>, actionHandler: console.log("OK") },
 ];
 

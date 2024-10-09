@@ -42,11 +42,16 @@ export const verifyArticle = async({id,isVerified})=>{
   return API.post(`/articles/article/${id}/verify`,{isVerified})
 }
 
+export const markArticleAsFavourite = async({id})=>{
+  return API.post(`/articles/article/${id}/markAsFavourite`)
+}
+
 
 
 export  const articlesApi ={
     getAllArticles,
     createArticle,
     getArticle,
-    verifyArticle
+    verifyArticle,
+    markArticleAsFavourite
 } 
