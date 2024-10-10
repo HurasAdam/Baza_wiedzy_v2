@@ -58,9 +58,14 @@ const user = await UserModel.findById(userId);
   appAssert(article, CONFLICT, "Article not found");
   appAssert(user, CONFLICT, "User not found");
 
-  // const isFavorite = user?.favourites.includes(article._id);
+  const isFavorite = user?.favourites.includes(article._id);
 
-  return article;
+  const articleObj = {
+    ...article.toObject(), 
+    isFavourite: isFavorite || false, 
+  };
+
+  return articleObj;
 }
 
 
