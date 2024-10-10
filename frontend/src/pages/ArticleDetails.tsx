@@ -20,7 +20,6 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { FaStar } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { TiArrowBack } from "react-icons/ti";
-import { FaCheckCircle } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { toast } from '@/hooks/use-toast';
@@ -72,7 +71,7 @@ const {mutate:markAsFavouriteHandler} = useMutation({
 
 
 const articleDropdownOptions= [
-  {label:"Dodaj do ulubionych", icon:<FaStar/>, actionHandler: () => markAsFavouriteHandler({id})},
+  {label:`${article?.isFavourite ? "Usuń z ulubionych":"Dodaj do ulubionych"}`, icon:<FaStar/>, actionHandler: () => markAsFavouriteHandler({id})},
   {label:"Edytuj", icon:<FaEdit/>, actionHandler: () => console.log("ustawienia")},
 
   ...(article?.isVerified
@@ -109,9 +108,9 @@ const articleDropdownOptions= [
 {/* LEFT SIDE */}
 <div className=' flex flex-col space-y-3.5'>
 
-<div className='border py-3.5 px-5 rounded-md'>
+<div className='border py-3.5 px-5 rounded-md flex items-center justify-between'>
 <span className='text-2xl'>{article?.title}</span>
-
+{article?.isFavourite &&<FaStar className='w-5 h-5'/>}
 </div>
 
 
@@ -147,7 +146,8 @@ const articleDropdownOptions= [
 {/* TAGS */}
 
 
-<div className='flex justify-end pt-2.5'>
+<div className='flex justify-end pt-3'>
+
 <Dropdown 
 
 position={{
@@ -157,6 +157,7 @@ position={{
   alignOffset: 20, // Przesunięcie w osi poziomej
 }}
 options={articleDropdownOptions} triggerBtn={<div className='mt-0.5'><HiDotsHorizontal className='cursor-pointer'/></div>}/>
+
 </div>
 <div>
     <span className='text-sm font-semibold text-gray-500'>Tagi</span>
