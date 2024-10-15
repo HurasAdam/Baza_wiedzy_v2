@@ -1,12 +1,13 @@
 
 import { Navigate, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import UserMenu from "../components/UserMenu";
 import Navbar from "../components/Navbar";
 import { Toaster } from "@/components/ui/toaster"
+import { useAlertModal } from "@/hooks/useAlertModal";
 
 const RootLayout = () => {
   const { user, isLoading } = useAuth();
+ 
 
   return isLoading ? (
   
@@ -25,8 +26,9 @@ const RootLayout = () => {
 
     <div className="flex flex-col max-w-8xl  mx-auto">
     <Navbar  />
-      <Outlet />
+      <Outlet/>
       <Toaster/>
+
       </div>
    
   ) 

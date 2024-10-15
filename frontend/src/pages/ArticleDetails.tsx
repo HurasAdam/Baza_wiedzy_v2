@@ -11,6 +11,7 @@ import {
 import React from 'react'
 import { useParams } from 'react-router-dom';
 import { IoCheckmarkCircle } from 'react-icons/io5';
+import { useOutletContext } from "react-router-dom";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { IoMdArrowDropright, IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { formatDate } from '@/lib/utils';
@@ -23,10 +24,16 @@ import { TiArrowBack } from "react-icons/ti";
 import { MdDelete } from "react-icons/md";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { toast } from '@/hooks/use-toast';
+import { useAlertModal } from '@/hooks/useAlertModal';
+import { useModalContext } from '@/contexts/ModalContext';
 
 const ArticleDetails = () => {
     const { id } = useParams();
     const queryClient = useQueryClient();
+ 
+    const { openModal } = useModalContext();
+
+
 
 const {data:article} = useQuery({
     queryKey:["article",id],
@@ -65,7 +72,15 @@ const {mutate:markAsFavouriteHandler} = useMutation({
 })
 
 
-
+const deleteArticleHandler = () => {
+  openModal(
+    "Are you absolutely sure?",
+    "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+    () => {
+      console.log("Account deleted!"); // Zastąp właściwą logiką usunięcia konta
+    }
+  );
+};
 
 
 
@@ -98,7 +113,9 @@ const articleDropdownOptions= [
       ]),
 
   // {label:"Zweryfikuj", icon: article?.isVerified ?<IoArrowBackCircleSharp/>:<FaCheckCircle/> , actionHandler:()=>mutate({id, isVerified: true }) },
-  {label:"Usuń", icon:<MdDelete/>, actionHandler: console.log("OK") },
+  {label:"Usuń", icon:<MdDelete/>, actionHandler:()=>{
+    deleteArticleHandler()
+  } },
 ];
 
 
@@ -107,7 +124,6 @@ const articleDropdownOptions= [
     <div className=' p-9 grid grid-cols-[5fr_2fr] gap-4'>
 {/* LEFT SIDE */}
 <div className=' flex flex-col space-y-3.5'>
-
 <div className='border py-3.5 px-5 rounded-md flex items-center justify-between'>
 <span className='text-2xl'>{article?.title}</span>
 {article?.isFavourite &&<FaStar className='w-5 h-5'/>}

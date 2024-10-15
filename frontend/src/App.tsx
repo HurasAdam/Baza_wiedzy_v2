@@ -31,6 +31,7 @@ setNavigate(navigate);
 
   return (
     <Routes>
+   
       <Route  element={<RootLayout />}>
   
      <Route index path="articles" element={<SearchPage/>} />
