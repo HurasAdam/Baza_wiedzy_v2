@@ -1,5 +1,5 @@
 
-import { CONFLICT, NOT_FOUND, OK } from "../constants/http";
+import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "../constants/http";
 import ArticleModel from "../models/Article.model";
 import UserModel from "../models/User.model";
 import { createArticle, getArticle } from "../services/article.service";
@@ -165,5 +165,16 @@ export const getFavouriteArticlesHandler = catchErrors(
       totalPages: Math.ceil(totalFavouriteArticles / pageSize),
     });
 
+  }
+)
+
+export const deleteArticleHandler = catchErrors(
+  async(req,res)=>{
+    const { id } = req.params;
+    const article = await ArticleModel.findById({_id:id});
+    appAssert(article,NOT_FOUND,"Article not found");
+    const deletedArticle = await ArticleModel.findByIdAndDelete({_id:id});
+    appAssert(deletedArticle,INTERNAL_SERVER_ERROR, "Something went wrong");
+    return res.status(OK).json({message:"Artykuł został usunięty."})
   }
 )
