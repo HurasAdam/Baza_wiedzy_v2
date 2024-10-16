@@ -19,8 +19,8 @@ const ArticleCard = ({data,className}) => {
         <span>{data.title}</span>
         <span><FaStar/></span>
       </CardTitle>
-      <CardDescription className='text-xs flex items-center gap-1'>
-<IoCheckmarkCircle className='w-4 h-4'/>zwerifykowany
+ <CardDescription className='text-xs flex items-center gap-1'>
+ {   data?.isVerified &&  <><IoCheckmarkCircle className='w-4 h-4'/>zwerifykowany</>}
       </CardDescription>
     
     </CardHeader>

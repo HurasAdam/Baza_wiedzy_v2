@@ -50,9 +50,9 @@ import {
 
       {options.map(({icon,label, actionHandler})=>{
         return(
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem className="cursor-pointer" onClick={()=>actionHandler()}>
        <div className="mr-2 w-4 h-4 flex items-center">{icon}</div>
-          <span onClick={()=>actionHandler()}>{label}</span>
+          <span >{label}</span>
        
         </DropdownMenuItem>
         )

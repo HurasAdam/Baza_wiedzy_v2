@@ -9,7 +9,7 @@ import {
   } from "@/components/ui/accordion"
   
 import React from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { IoCheckmarkCircle } from 'react-icons/io5';
 import { useOutletContext } from "react-router-dom";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
@@ -30,7 +30,7 @@ import { useModalContext } from '@/contexts/ModalContext';
 const ArticleDetails = () => {
     const { id } = useParams();
     const queryClient = useQueryClient();
- 
+ const navigate = useNavigate()
     const { openModal } = useModalContext();
 
 
@@ -71,18 +71,58 @@ const {mutate:markAsFavouriteHandler} = useMutation({
   }
 })
 
+const {mutate:deleteArticleMutation} = useMutation({
+  mutationFn:({id})=>{
+    return articlesApi.deleteArticle({id})
+  },
+  onSuccess:(data)=>{
+    queryClient.invalidateQueries("articles");
+    navigate("/articles")
+  
+  toast({
+    title: "Sukces",
+    description: data?.message,
+    duration: 3550
+  })
+  }
+})
 
-const deleteArticleHandler = () => {
+
+
+const deleteArticleHandler = ({id}) => {
   openModal(
     "Are you absolutely sure?",
-    "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+    "This action cannot be undone. This will permanently delete this article.",
     () => {
-      console.log("Account deleted!"); // Zastąp właściwą logiką usunięcia konta
+      deleteArticleMutation({id})
     }
   );
 };
 
+const verifyArticleHandler = ({id,isVerified}) => {
 
+  const modalTitle = !isVerified
+  ? "Cofnięcie weryfikacji artykułu"
+  : "Potwierdzenie weryfikacji artykułu";
+
+const modalDescription = !isVerified
+  ? "Czy na pewno chcesz cofnąć weryfikację tego artykułu? To może wpłynąć na jego wiarygodność."
+  : "Czy na pewno chcesz zweryfikować ten artykuł? Zweryfikowany artykuł będzie oznaczony jako wiarygodny.";
+
+
+
+
+  openModal(
+    modalTitle,
+    modalDescription,
+    () => {
+     
+      
+        mutate({id,isVerified})
+      
+    }
+  );
+};
 
 
 const articleDropdownOptions= [
@@ -96,7 +136,7 @@ const articleDropdownOptions= [
         
     
             actionHandler:()=>{
-              mutate({ id, isVerified: false })},
+              verifyArticleHandler({ id, isVerified: false })},
           icon: <TiArrowBack />,
           }
       ]
@@ -106,7 +146,7 @@ const articleDropdownOptions= [
         
    
             actionHandler:()=>{
-              mutate({ id, isVerified: true })},
+              verifyArticleHandler({ id, isVerified: true })},
        
           icon: <IoMdCheckmarkCircleOutline />,
         },
@@ -114,7 +154,7 @@ const articleDropdownOptions= [
 
   // {label:"Zweryfikuj", icon: article?.isVerified ?<IoArrowBackCircleSharp/>:<FaCheckCircle/> , actionHandler:()=>mutate({id, isVerified: true }) },
   {label:"Usuń", icon:<MdDelete/>, actionHandler:()=>{
-    deleteArticleHandler()
+    deleteArticleHandler({id})
   } },
 ];
 
