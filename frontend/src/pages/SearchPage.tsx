@@ -1,14 +1,15 @@
 import ArticleCard from '@/components/ArticleCard'
 import { MultiSelect } from '@/components/ui/multiSelect'
 import { articlesApi } from '@/lib/articlesApi'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 import { Cat, Dog, Fish, Rabbit, Turtle } from "lucide-react";
 import { SearchBar } from '@/components/SearchBar'
 import useArticleFilters from '@/hooks/useArticleFilters'
+import { toast } from '@/hooks/use-toast'
 
 const frameworksList = [
   { value: "react", label: "React", icon: Turtle },
@@ -19,6 +20,8 @@ const frameworksList = [
 ];
 
 const SearchPage = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const {title,tags,author,setFilters,page,verified,limit} = useArticleFilters();
   const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>([]);
 
@@ -36,6 +39,25 @@ const {data:articles} = useQuery({
 })
 
 
+const {mutate:markAsFavouriteHandler} = useMutation({
+  mutationFn:({id})=>{
+    return articlesApi.markArticleAsFavourite({id})
+  },
+  onSuccess:(data)=>{
+  queryClient.invalidateQueries(["articles"])
+  toast({
+    title: "Sukces",
+    description: data?.message,
+    duration: 3550
+  })
+  }
+})
+
+const toggleArticleAsFavouriteHandler = ({id})=>{
+
+  markAsFavouriteHandler({id})
+}
+
 
   return (
 <div className='grid grid-cols-[3fr_11fr] gap-5 py-6 min-h-screen'>
@@ -48,12 +70,13 @@ const {data:articles} = useQuery({
 <div className='flex flex-col gap-2'>
       {articles?.data?.map((article)=>{
         return(
-      <Link to={`/articles/${article?._id}`} className='min-w-[100%] mx-auto cursor-pointer'>
+      <div   onClick={() => navigate(`/articles/${article._id}`)} className='min-w-[100%] mx-auto cursor-pointer'>
           <ArticleCard 
+          toggleArticleAsFavouriteHandler={toggleArticleAsFavouriteHandler}
           data={article}
           className=""
           />
-      </Link>
+      </div>
         )
       })}
 

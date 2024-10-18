@@ -26,9 +26,10 @@ export const createArticleHandler = catchErrors(
 
 export const getArticlesHandler = catchErrors(
     async (req,res) => {
-   
+      const { userId } = req;
         const query = constructSearchQuery(req.query);
-
+        const user = await UserModel.findById(userId).select('favourites');
+        const favouritesList = user?.favourites;
 
         const limit = parseInt(req.query.limit?.toString() || "20")
     const pageSize = limit;
@@ -50,11 +51,21 @@ export const getArticlesHandler = catchErrors(
           .skip(skipp)
           .limit(pageSize)
           .sort(sortBy); 
-    
+    console.log(favouritesList)
+
+
+
         const total = await ArticleModel.countDocuments(query);
+    const articlesWithFavourites =articles.map(article =>({
+...article.toObject(),
+isFavourite:favouritesList?.some(favId=>favId.equals(article._id))
+    }));
     
+
+
+
         const responseObject = {
-          data: articles,
+          data: articlesWithFavourites,
           pagination: {
             total,
             page: pageNumber,
