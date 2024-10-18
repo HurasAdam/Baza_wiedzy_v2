@@ -36,8 +36,8 @@ import {
             <AlertDialogDescription>{description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
+            <AlertDialogCancel onClick={onCancel}>Anuluj</AlertDialogCancel>
+            <AlertDialogAction onClick={onConfirm}>Potwierdź</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
