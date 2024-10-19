@@ -46,6 +46,15 @@ export const markArticleAsFavourite = async({id})=>{
   return API.post(`/articles/article/${id}/markAsFavourite`)
 }
 
+export const updateArticle = async({id,formData})=>{
+
+  console.log("ID")
+  console.log(id)
+  console.log("formData")
+  console.log(formData)
+  return API.put(`/articles/article/${id}/update`,formData)
+}
+
 export const deleteArticle = async({id})=>{
   return API.delete(`/articles/article/${id}/delete`)
 }
@@ -57,5 +66,6 @@ export  const articlesApi ={
     getArticle,
     verifyArticle,
     markArticleAsFavourite,
-    deleteArticle
+    deleteArticle,
+    updateArticle
 } 

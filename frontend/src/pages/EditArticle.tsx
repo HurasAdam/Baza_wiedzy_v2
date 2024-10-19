@@ -18,8 +18,8 @@ const EditArticle = ({article}) => {
     
 
       const {mutate}= useMutation({
-        mutationFn:({formData})=>{
-          return articlesApi.createArticle({formData})
+        mutationFn:({id,formData})=>{
+          return articlesApi.updateArticle({id,formData})
         },
         onSuccess:()=>{
           navigate("/articles")
@@ -32,8 +32,8 @@ const EditArticle = ({article}) => {
       })
 
 
-      const onSave = ({formData})=>{
-        return mutate({formData})
+      const onSave = ({id,formData})=>{
+        return mutate({id,formData})
       }
 
       const formatedTags = data?.map((tag) => {

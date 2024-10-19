@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "./ui/textarea"
 import MultipleSelector, { MultiSelect } from "./ui/MultiSelector";
 import { useMemo, useState } from "react";
+import { useModalContext } from "@/contexts/ModalContext";
 
 
  
@@ -45,6 +46,7 @@ const formSchema = z.object({
  
 export function ArticleForm({onSave,tags,article}) {
 
+  const { closeContentModal} = useModalContext();
 
   // ...
 
@@ -79,7 +81,9 @@ export function ArticleForm({onSave,tags,article}) {
       tags: values.tags.map(tag => tag.value), // Przekształcenie tagów na ID (value)
     };
 
-
+if(article){
+  return onSave({id:article._id,formData:transformedValues})
+}
     onSave({formData:transformedValues})
   }
 
@@ -194,7 +198,13 @@ export function ArticleForm({onSave,tags,article}) {
 
         
 
-        <Button type="submit">Submit</Button>
+<div className="flex justify-end space-x-4">
+<Button type="button"
+onClick={closeContentModal}
+variant="outline">Anuluj</Button>
+<Button type="submit">{article ? "Zapisz":"Utwórz"}</Button>
+
+</div>
       </form>
     </Form>
   )

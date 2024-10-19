@@ -6,10 +6,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
  
 export function ContentModal({isOpen,children, onClose,title,description}) {
   return (
@@ -22,12 +20,12 @@ export function ContentModal({isOpen,children, onClose,title,description}) {
           {description}
           </DialogDescription>
         </DialogHeader>
+
+        <DialogFooter>
         <div className="grid gap-4 py-4 filter-none backdrop-blur-sm">
      {children}
         </div>
-        <DialogFooter>
-
-           <Button type="button" onClick={onClose}>Anuluj</Button>
+    
         </DialogFooter>
       </DialogContent>
     </Dialog>
