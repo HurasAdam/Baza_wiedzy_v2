@@ -8,6 +8,7 @@ import Modal from "./SearchModal";
 import SearchModal from "./SearchModal";
 import { useAppContext } from "../../contexts/AppContext";
 import ConversationSummaryForm from "../forms/ConversationSummaryForm";
+import { IoIosSettings } from "react-icons/io";
 import { MdNoteAdd, MdOutlineSearch, MdPhoneInTalk } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
@@ -166,7 +167,11 @@ const NavLinkItem: React.FC = ({ element }) => {
         </NavLink>
         {/* <NotificationPanel notifications={notifications} /> */}
         {/* <Drawer /> */}
-        <button onClick={openDrawer}>Draw</button>
+        <button 
+         className="shadow-xl  border  bg-slate-600 group   transition-all hover:font-bold px-2 py-2 rounded-lg  font-semibold  text-slate-100 "
+        onClick={openDrawer}>
+          <IoIosSettings/>
+        </button>
         <Dropdown options={profileMenuOptions} triggerBtn={<div><UserAvatar/></div>}/>
         <SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
  

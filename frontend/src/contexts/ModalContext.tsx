@@ -1,44 +1,57 @@
 import { AlertModal } from "@/components/core/AlertModal";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { ContentModal } from "@/components/core/ContentModal";
+import React, { useCallback, useContext, useState } from "react";
 
-import React from "react";
-
-
+// Stwórz kontekst
 const ModalContext = React.createContext(undefined);
 
+export const ModalContextProvider = ({ children }: { children: React.ReactNode }) => {
+  // Stany dla AlertModal
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertModal, setModalContent] = useState({
+    title: "",
+    description: "",
+    onConfirm: () => {},
+  });
 
+  // Stany dla ContentModal
+  const [isContentModalOpen, setIsContentModalOpen] = useState<boolean>(false);
+  const [contentModal, setContentModal] = useState({
+    title:"",
+    description:"",
+    content: null as React.ReactNode | null, 
+  });
 
-export const ModalContextProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+  // Funkcje dla AlertModal
+  const openModal = useCallback((title: string, description: string, onConfirm: () => void) => {
+    setModalContent({ title, description, onConfirm });
+    setIsAlertOpen(true);
+  }, []);
 
-    const [isOpen, setIsOpen] = useState(false);
-    const [modalContent, setModalContent] = useState({
-      title: "",
-      description: "",
-      onConfirm: () => {}, 
-    });
+  const closeModal = useCallback(() => {
+    setIsAlertOpen(false);
+  }, []);
 
-    const openModal = useCallback((title: string, description: string, onConfirm: () => void) => {
-        setModalContent({ title, description, onConfirm });
-        setIsOpen(true);
-      }, []);
-    
-      const closeModal = useCallback(() => {
-        setIsOpen(false);
-      }, []);
-    
-      const confirmModal = useCallback(() => {
-        if (modalContent.onConfirm) {
-          modalContent.onConfirm(); // Wywołaj funkcję przekazaną w `onConfirm`
-        }
-        closeModal(); // Zamknij modal po zatwierdzeniu
-      }, [modalContent, closeModal]);
-    
+  const confirmModal = useCallback(() => {
+    if (alertModal.onConfirm) {
+      alertModal.onConfirm();
+    }
+    closeModal();
+  }, [alertModal, closeModal]);
 
+  // Funkcje dla ContentModal
+  const openContentModal = useCallback(
+    ({ title, description, content }: { title: string; description: string; content: React.ReactNode }) => {
+      setContentModal({ title, description, content });
+      setIsContentModalOpen(true);
+    },
+    []
+  );
 
+  const closeContentModal = useCallback(() => {
+    setIsContentModalOpen(false);
+    setContentModal({ title: "", description: "", content: null });
+  }, []);
 
 
   return (
@@ -46,29 +59,44 @@ export const ModalContextProvider = ({
       value={{
         openModal,
         closeModal,
-        confirmModal
-        
-     
-      
+        confirmModal,
+        openContentModal,
+        closeContentModal,
       }}
     >
+      {/* Memoized AlertModal */}
+      {isAlertOpen && (
+        <MemoizedAlertModal
+          isOpen={isAlertOpen}
+          title={alertModal.title}
+          description={alertModal.description}
+          onCancel={closeModal}
+          onConfirm={confirmModal}
+        />
+      )}
 
-
-
-<AlertModal
-        isOpen={isOpen}
-        title={modalContent.title}
-        description={modalContent.description}
-        onCancel={closeModal}
-        onConfirm={confirmModal}
-      />
-
-
+      {/* Memoized ContentModal */}
+      {isContentModalOpen && (
+        <MemoizedContentModal 
+        isOpen={isContentModalOpen} 
+        onClose={closeContentModal}
+        title={contentModal.title}
+        description={contentModal.description}
+        >
+         {contentModal.content}
+        </MemoizedContentModal>
+      )}
 
       {children}
     </ModalContext.Provider>
   );
 };
+
+// Memoized AlertModal
+const MemoizedAlertModal = React.memo(AlertModal);
+
+// Memoized ContentModal
+const MemoizedContentModal = React.memo(ContentModal);
 
 export const useModalContext = () => {
   const context = useContext(ModalContext);

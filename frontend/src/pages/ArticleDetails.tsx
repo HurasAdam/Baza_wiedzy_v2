@@ -27,12 +27,14 @@ import { toast } from '@/hooks/use-toast';
 import { useAlertModal } from '@/hooks/useAlertModal';
 import { useModalContext } from '@/contexts/ModalContext';
 import ArticleDetailsSkeleton from '@/components/ArticleDetailsSkeleton';
+import { ArticleForm } from '@/components/ArticleForm';
+import EditArticle from './EditArticle';
 
 const ArticleDetails = () => {
     const { id } = useParams();
     const queryClient = useQueryClient();
  const navigate = useNavigate()
-    const { openModal } = useModalContext();
+    const { openModal, openContentModal } = useModalContext();
 
 
 
@@ -109,26 +111,26 @@ const verifyArticleHandler = ({id,isVerified}) => {
 const modalDescription = !isVerified
   ? "Czy na pewno chcesz cofnąć weryfikację tego artykułu? To może wpłynąć na jego wiarygodność."
   : "Czy na pewno chcesz zweryfikować ten artykuł? Zweryfikowany artykuł będzie oznaczony jako wiarygodny.";
-
-
-
-
   openModal(
     modalTitle,
     modalDescription,
     () => {
-     
-      
         mutate({id,isVerified})
-      
     }
   );
 };
 
 
+const EditArticleHandler = (article) =>{
+  openContentModal({title:"Edytuj Artykuł", description:"Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.", content:<EditArticle article={article}/>})
+}
+
+
+
+
 const articleDropdownOptions= [
   {label:`${article?.isFavourite ? "Usuń z ulubionych":"Dodaj do ulubionych"}`, icon:<FaStar/>, actionHandler: () => markAsFavouriteHandler({id})},
-  {label:"Edytuj", icon:<FaEdit/>, actionHandler: () => console.log("ustawienia")},
+  {label:"Edytuj", icon:<FaEdit/>, actionHandler: () => EditArticleHandler(article)},
 
   ...(article?.isVerified
     ? [

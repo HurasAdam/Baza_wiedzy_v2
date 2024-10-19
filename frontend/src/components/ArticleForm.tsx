@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "./ui/textarea"
 import MultipleSelector, { MultiSelect } from "./ui/MultiSelector";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 
  
@@ -32,44 +32,55 @@ const formSchema = z.object({
     clientDescription: z.string().min(10, {
       message: "Odpowiedź dla klienta jest wymagana.",
     }),
-    tags: z.array(z.string()).nonempty({
+    tags: z.array(
+      z.object({
+        label: z.string(), // label musi być stringiem
+        value: z.string(), // value to string (np. id tagu)
+      })
+    ).nonempty({
       message: "Musisz dodać co najmniej jeden tag.",
-    }), // tags to tablica stringów i musi zawierać przynajmniej jeden element
-    isVerified: z.boolean().optional(), // Dodajemy isVerified, jeśli jest opcjonalny
+    }),
+    isVerified: z.boolean().optional(), 
   });
  
-export function ArticleForm({onSave,tags}) {
+export function ArticleForm({onSave,tags,article}) {
 
-  const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>(["react", "angular"]);
+
   // ...
+
+  const defaultTags = useMemo(
+    () => tags?.map(tag => {
+      return {label:tag.name, value:tag._id}
+    }),
+    [article]
+  );
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        title: "",
-        employeeDescription:"",
-        clientDescription:"",
-        tags:[],
-        isVerified:false
+      title: article ? article.title : "",
+      employeeDescription: article ? article.employeeDescription : "",
+      clientDescription: article ? article.clientDescription : "",
+      tags: article ? article?.tags?.map((tag)=>{
+        return {label:tag?.name, value:tag?._id}
+      }): [], // Użyj tablicy z ID tagów
+      isVerified: article ? article.isVerified : false,
     },
-  })
+  });
   
 
-  const xd = form.watch("tags");
-  console.log(xd)
-  const frameworksList = [
-    { value: "react", label: "React", },
-    { value: "angular", label: "Angular",  },
-    { value: "vue", label: "Vue",  },
-    { value: "svelte", label: "Svelte",  },
-    { value: "ember", label: "Ember", },
-  ];
+ 
+// console.log(form.watch('tags'))
   
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
-    onSave({formData:values})
+ 
+    const transformedValues = {
+      ...values,
+      tags: values.tags.map(tag => tag.value), // Przekształcenie tagów na ID (value)
+    };
+
+
+    onSave({formData:transformedValues})
   }
 
  
@@ -99,13 +110,16 @@ export function ArticleForm({onSave,tags}) {
   control={form.control}
   name="tags"
   render={({ field }) => (
+   
     <FormItem>
       <FormLabel>Tags</FormLabel>
       <FormControl>
         <MultipleSelector
           defaultOptions={tags && tags}
-          value={tags.filter(option => field.value.includes(option.value))} // Dopasowanie wartości do formatu wieloselektora
-          onChange={(selected) => field.onChange(selected.map(item => item.value))} // Aktualizujemy stan formularza
+       
+      
+          value={field.value} // Dopasowanie wartości do formatu wieloselektora
+          onChange={(selected) => field.onChange(selected.map(item => item))} 
           placeholder="Wybierz tag..."
           emptyIndicator={
             <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
@@ -132,7 +146,7 @@ export function ArticleForm({onSave,tags}) {
               <FormControl>
               <Textarea
                   placeholder="Tell us a little bit about yourself"
-                    className="resize-none h-60"
+                    className="resize-none h-60 scrollbar-custom"
                   {...field}
                 />
               </FormControl>
@@ -154,7 +168,7 @@ export function ArticleForm({onSave,tags}) {
               <FormControl>
               <Textarea
                   placeholder="Tell us a little bit about yourself"
-                    className="resize-none h-60"
+                    className="resize-none h-60 scrollbar-custom"
                   {...field}
                 />
               </FormControl>

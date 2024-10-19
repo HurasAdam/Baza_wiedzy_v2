@@ -24,7 +24,7 @@ const RootLayout = () => {
   />):(
    
 
-    <div className="flex flex-col max-w-8xl  mx-auto">
+    <div className="flex flex-col max-w-8xl  mx-auto ">
     <Navbar  />
       <Outlet/>
       <Toaster/>

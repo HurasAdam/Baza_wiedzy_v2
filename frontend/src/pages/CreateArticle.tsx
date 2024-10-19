@@ -19,10 +19,7 @@ const navigate = useNavigate();
 
 
 
-const formatedTags = data?.map((tag)=>{
-  return {label:tag.name, value:tag._id}
-})
-console.log(formatedTags)
+
 
 const {mutate}= useMutation({
   mutationFn:({formData})=>{
@@ -41,6 +38,10 @@ const {mutate}= useMutation({
 const onSave = ({formData})=>{
   return mutate({formData})
 }
+
+const formatedTags = data?.map((tag) => {
+  return { label: tag.name, value: tag._id };
+});
 
   return (
     <div>
