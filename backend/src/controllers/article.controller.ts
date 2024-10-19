@@ -189,3 +189,26 @@ export const deleteArticleHandler = catchErrors(
     return res.status(OK).json({message:"Artykuł został usunięty."})
   }
 )
+
+
+export const updateArticleHandler = catchErrors(
+  async(req,res)=>{
+    const { id } = req.params;
+    const { title, clientDescription, employeeDescription, tags } =req.body;
+
+
+    console.log(tags)
+    const article = await ArticleModel.findById({_id:id});
+    appAssert(article,NOT_FOUND,"Article not found");
+
+    article.title = title || article.title
+    article.clientDescription = clientDescription || article.clientDescription
+    article.employeeDescription = employeeDescription || article.employeeDescription
+    article.tags = tags || article.tags
+
+    const updatedArticle = await article.save();
+  
+      res.status(OK).json({message:"Artykuł został zaktualizowany"})
+  
+  }
+)

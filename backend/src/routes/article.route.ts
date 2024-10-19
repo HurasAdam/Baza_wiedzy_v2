@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createArticleHandler, deleteArticleHandler, getArticleHandler, getArticlesHandler, getFavouriteArticlesHandler, markAsFavouriteHandler, verifyArticleHandler } from "../controllers/article.controller";
+import { createArticleHandler, deleteArticleHandler, getArticleHandler, getArticlesHandler, getFavouriteArticlesHandler, markAsFavouriteHandler, updateArticleHandler, verifyArticleHandler } from "../controllers/article.controller";
 
 
 const articleRoutes = Router();
@@ -12,6 +12,7 @@ articleRoutes.get("/",getArticlesHandler);
 articleRoutes.get("/:id",getArticleHandler);
 articleRoutes.post("/article/:id/verify", verifyArticleHandler);
 articleRoutes.post("/article/:id/markAsFavourite", markAsFavouriteHandler);
+articleRoutes.put("/article/:id/update", updateArticleHandler);
 articleRoutes.get("/articles/favourites", getFavouriteArticlesHandler);
 articleRoutes.delete("/article/:id/delete", deleteArticleHandler);
 
