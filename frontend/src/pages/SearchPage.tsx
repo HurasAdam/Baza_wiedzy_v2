@@ -10,6 +10,8 @@ import { Cat, Dog, Fish, Rabbit, Turtle } from "lucide-react";
 import { SearchBar } from '@/components/SearchBar'
 import useArticleFilters from '@/hooks/useArticleFilters'
 import { toast } from '@/hooks/use-toast'
+import ArticleDetails from './ArticleDetails'
+import { useModalContext } from '@/contexts/ModalContext'
 
 const frameworksList = [
   { value: "react", label: "React", icon: Turtle },
@@ -20,6 +22,7 @@ const frameworksList = [
 ];
 
 const SearchPage = () => {
+  const {openContentModal} = useModalContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const {title,tags,author,setFilters,page,verified,limit} = useArticleFilters();
@@ -39,7 +42,7 @@ const {data:articles} = useQuery({
 })
 
 
-const {mutate:markAsFavouriteHandler} = useMutation({
+const {mutate:markAsFavouriteHandler,isLoading} = useMutation({
   mutationFn:({id})=>{
     return articlesApi.markArticleAsFavourite({id})
   },
@@ -70,13 +73,32 @@ const toggleArticleAsFavouriteHandler = ({id})=>{
 <div className='flex flex-col gap-2'>
       {articles?.data?.map((article)=>{
         return(
-      <div   onClick={() => navigate(`/articles/${article._id}`)} className='min-w-[100%] mx-auto cursor-pointer'>
-          <ArticleCard 
-          toggleArticleAsFavouriteHandler={toggleArticleAsFavouriteHandler}
-          data={article}
-          className=""
+          <div
+          onClick={() => {
+            const articleViewPreference = localStorage.getItem('articleView');
+            if (articleViewPreference === 'modal') {
+              // Otwórz modal
+              openContentModal({
+                title: "Edytuj Artykuł",
+                description: "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu.",
+                content: <ArticleDetails type="modal" articleId={article._id} />,
+                enableOutsideClickClose: true,
+                size: 'lg'
+              });
+            } else {
+              // Przekieruj na stronę
+              navigate(`/articles/${article._id}`);
+            }
+          }}
+          className='min-w-[100%] mx-auto cursor-pointer'
+        >
+          <ArticleCard
+            isLoading={isLoading}
+            toggleArticleAsFavouriteHandler={toggleArticleAsFavouriteHandler}
+            data={article}
+            className=""
           />
-      </div>
+        </div>
         )
       })}
 

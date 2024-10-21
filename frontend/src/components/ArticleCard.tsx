@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaStar } from "react-icons/fa6";
 import { IoCheckmarkCircle } from "react-icons/io5";
+import { LuInspect } from "react-icons/lu";
 import {
     Card,
     CardContent,
@@ -10,14 +11,42 @@ import {
     CardTitle,
   } from "@/components/ui/card"
 import BadgeLabel from './core/BadgeLabel'
+import { useModalContext } from '@/contexts/ModalContext';
+import ArticleDetails from '@/pages/ArticleDetails';
+import { useNavigate } from 'react-router-dom';
 
-const ArticleCard = ({data,className,toggleArticleAsFavouriteHandler}) => {
+const ArticleCard = ({data,className,toggleArticleAsFavouriteHandler,isLoading}) => {
+  const  navigate = useNavigate();
+const {openContentModal} = useModalContext();
+const articleViewPreference = localStorage.getItem('articleView');
+
+const quickViewArticleHandler = (article) => {
+
+    if (articleViewPreference === 'modal') {
+    
+      openContentModal({
+        title: "Edytuj Artykuł",
+        description: "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
+        content: <ArticleDetails type="modal" articleId={article._id} />,
+        enableOutsideClickClose: true,
+        size: "lg",
+      });
+    } else {
+      // Jeśli preferencje użytkownika to "page", przekieruj na nową stronę
+      navigate(`/articles/${article._id}`);
+    }
+  };
+
+
+
+
   return (
     <Card className={className}>
         <CardHeader>
             <CardTitle className='text-lg flex justify-between'>
                 <span>{data.title}</span>
-                <span 
+
+    <span 
                 onClick={(e) => {
                     e.stopPropagation(); // Zatrzymaj propagację, aby nie otwierało artykułu
                     toggleArticleAsFavouriteHandler({ id: data?._id });
@@ -28,7 +57,11 @@ const ArticleCard = ({data,className,toggleArticleAsFavouriteHandler}) => {
                         className={data?.isFavourite ? "" : "text-gray-200/60"}
                     />
                 </span>
+            
+              
+  
             </CardTitle>
+        
             <CardDescription className='text-xs flex items-center gap-1'>
                 {data?.isVerified && (
                     <>
@@ -39,10 +72,18 @@ const ArticleCard = ({data,className,toggleArticleAsFavouriteHandler}) => {
             </CardDescription>
         </CardHeader>
 
-        <CardFooter className='space-x-1 flex'>
-            {data?.tags?.map(({ name }) => (
+        <CardFooter className='space-x-1 flex justify-between'>
+      <div>
+      {data?.tags?.map(({ name }) => (
                 <BadgeLabel key={name} variant="secondary" label={name} />
             ))}
+      </div>
+          <button onClick={(e)=>{
+            e.stopPropagation();
+            quickViewArticleHandler(data)
+          }}>
+            <LuInspect/>
+          </button>
         </CardFooter>
     </Card>
 );

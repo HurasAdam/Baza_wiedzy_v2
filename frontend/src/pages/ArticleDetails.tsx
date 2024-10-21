@@ -30,7 +30,7 @@ import ArticleDetailsSkeleton from '@/components/ArticleDetailsSkeleton';
 import { ArticleForm } from '@/components/ArticleForm';
 import EditArticle from './EditArticle';
 
-const ArticleDetails = () => {
+const ArticleDetails = ({articleId,type}) => {
     const { id } = useParams();
     const queryClient = useQueryClient();
  const navigate = useNavigate()
@@ -39,9 +39,13 @@ const ArticleDetails = () => {
 
 
 const {data:article, isLoading, isFetching} = useQuery({
-    queryKey:["article",id],
+  
+    queryKey:["article",id || articleId],
     queryFn:()=>{
-        return articlesApi.getArticle({id})
+      
+          return articlesApi.getArticle({id:id || articleId})
+     
+    
     }
 })
 
@@ -62,7 +66,7 @@ const {mutate} = useMutation({
 
 const {mutate:markAsFavouriteHandler} = useMutation({
   mutationFn:({id})=>{
-    return articlesApi.markArticleAsFavourite({id})
+    return articlesApi.markArticleAsFavourite({id:id || articleId})
   },
   onSuccess:(data)=>{
   queryClient.invalidateQueries(["article",id])
@@ -97,7 +101,7 @@ const deleteArticleHandler = ({id}) => {
     "Are you absolutely sure?",
     "This action cannot be undone. This will permanently delete this article.",
     () => {
-      deleteArticleMutation({id})
+      deleteArticleMutation({id:id ||articleId})
     }
   );
 };
@@ -115,14 +119,17 @@ const modalDescription = !isVerified
     modalTitle,
     modalDescription,
     () => {
-        mutate({id,isVerified})
+        mutate({id:id||articleId,isVerified})
     }
   );
 };
 
 
 const EditArticleHandler = (article) =>{
-  openContentModal({title:"Edytuj Artykuł", description:"Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.", content:<EditArticle article={article}/>})
+  openContentModal(
+    {title:"Edytuj Artykuł", 
+      description:"Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.", 
+      content:<EditArticle type={id ? "view" :"modal"} article={article} />,size:"lg" })
 }
 
 
@@ -211,7 +218,7 @@ if(isFetching && !isLoading){
 {/* TAGS */}
 
 
-<div className='flex justify-end pt-3'>
+<div className='flex justify-end pt-2.5'>
 
 <Dropdown 
 
@@ -338,7 +345,7 @@ options={articleDropdownOptions} triggerBtn={<div className='mt-0.5'><HiDotsHori
 {/* TAGS */}
 
 
-<div className='flex justify-end pt-3'>
+<div className='flex justify-end pt-2.5'>
 
 <Dropdown 
 
@@ -351,7 +358,9 @@ position={{
 options={articleDropdownOptions} triggerBtn={<div className='mt-0.5'><HiDotsHorizontal className='cursor-pointer'/></div>}/>
 
 </div>
+
 <div>
+
     <span className='text-sm font-semibold text-gray-500'>Tagi</span>
 <div className='py-2.5 px-0.5 space-x-1 space-y-1.5'>
   

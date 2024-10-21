@@ -20,10 +20,12 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
     title:"",
     description:"",
     content: null as React.ReactNode | null, 
+    enableOutsideClickClose:true,
+    size:"lg"
   });
 
   // Funkcje dla AlertModal
-  const openModal = useCallback((title: string, description: string, onConfirm: () => void) => {
+  const openModal = useCallback((title: string, description: string, onConfirm: () => void, ) => {
     setModalContent({ title, description, onConfirm });
     setIsAlertOpen(true);
   }, []);
@@ -41,8 +43,8 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
 
   // Funkcje dla ContentModal
   const openContentModal = useCallback(
-    ({ title, description, content }: { title: string; description: string; content: React.ReactNode }) => {
-      setContentModal({ title, description, content });
+    ({ title, description, content,enableOutsideClickClose,size }: { title: string; description: string; content: React.ReactNode, enableOutsideClickClose:boolean }) => {
+      setContentModal({ title, description, content, enableOutsideClickClose,size });
       setIsContentModalOpen(true);
     },
     []
@@ -78,10 +80,12 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
       {/* Memoized ContentModal */}
       {isContentModalOpen && (
         <MemoizedContentModal 
+        size={contentModal.size}
         isOpen={isContentModalOpen} 
         onClose={closeContentModal}
         title={contentModal.title}
         description={contentModal.description}
+        enableOutsideClickClose={contentModal.enableOutsideClickClose}
         >
          {contentModal.content}
         </MemoizedContentModal>

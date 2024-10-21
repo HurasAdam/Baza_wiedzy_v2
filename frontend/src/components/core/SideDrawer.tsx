@@ -13,21 +13,6 @@ import {
 } from "@/components/ui/drawer";
 import { ScrollArea } from "../ui/scroll-area";
 
-const data = [
-  { goal: 400 },
-  { goal: 300 },
-  { goal: 200 },
-  { goal: 300 },
-  { goal: 200 },
-  { goal: 278 },
-  { goal: 189 },
-  { goal: 239 },
-  { goal: 300 },
-  { goal: 200 },
-  { goal: 278 },
-  { goal: 189 },
-  { goal: 349 },
-];
 
 interface SideDrawerProps {
   isOpen: boolean;
@@ -35,11 +20,11 @@ interface SideDrawerProps {
 }
 
 export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
-  const [goal, setGoal] = React.useState(350);
-
-  function onClick(adjustment: number) {
-    setGoal(Math.max(200, Math.min(400, goal + adjustment)));
+ 
+  const handleArticleView = () =>{
+    localStorage.setItem('articleView', 'modal'); // lub 'page'
   }
+
 
   return (
     
@@ -57,41 +42,15 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
               </DrawerHeader>
               <div className='p-4 pb-0 space-y-4'>
                 <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 1</p>
+                 <button 
+                 className="bg-blue-200 px-8 py-2 rounded-md font-semibold"
+                 onClick={handleArticleView}
+                 >OK</button>
                 </div>
                 <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
                   <p>Image 2</p>
                 </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 3</p>
-                </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 4</p>
-                </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 4</p>
-                </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 5</p>
-                </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 6</p>
-                </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 7</p>
-                </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 8</p>
-                </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 9</p>
-                </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 10</p>
-                </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 11</p>
-                </div>
+       
               </div>
             </div>
           </ScrollArea>

@@ -20,6 +20,8 @@ import { Textarea } from "./ui/textarea"
 import MultipleSelector, { MultiSelect } from "./ui/MultiSelector";
 import { useMemo, useState } from "react";
 import { useModalContext } from "@/contexts/ModalContext";
+import { useNavigate } from "react-router-dom";
+import ArticleDetails from "@/pages/ArticleDetails";
 
 
  
@@ -44,10 +46,10 @@ const formSchema = z.object({
     isVerified: z.boolean().optional(), 
   });
  
-export function ArticleForm({onSave,tags,article}) {
+export function ArticleForm({onSave,tags,article,type}) {
 
-  const { closeContentModal} = useModalContext();
-
+  const { openModal,closeContentModal,openContentModal} = useModalContext();
+const navigate = useNavigate();
   // ...
 
   const defaultTags = useMemo(
@@ -87,10 +89,27 @@ if(article){
     onSave({formData:transformedValues})
   }
 
+
+  const quickViewArticleHandler = (article,type) =>{
+    if(type ==="view"){
+     return closeContentModal()
+    }else{
+      openContentModal(
+        {title:"Edytuj Artykuł", 
+          description:"Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.", 
+          content:<ArticleDetails articleId={article._id}/>, 
+          enableOutsideClickClose:true, 
+          size:"lg"})
+    }
+  }
+
+
+
+
  
   return (
     <Form {...form} >
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8  w-[1120px] px-10">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8   3xl:w-[1120px] px-10 w-full">
         <FormField
        
           control={form.control}
@@ -194,13 +213,18 @@ if(article){
 
 
 
-
+closeContentModal
 
         
 
 <div className="flex justify-end space-x-4">
 <Button type="button"
-onClick={closeContentModal}
+onClick={()=>{
+  openModal(`${
+    article ? "Czy na pewno chcesz opuścić edycję?" :"Czy na pewno chcesz kreator dodawania?"}`
+    ,"Wprowadzone zmiany nie zostały zapisane. Czy na pewno chcesz opuścić ten widok?",
+    ()=>quickViewArticleHandler(article,type))
+}}
 variant="outline">Anuluj</Button>
 <Button type="submit">{article ? "Zapisz":"Utwórz"}</Button>
 
