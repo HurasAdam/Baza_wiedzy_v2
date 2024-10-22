@@ -12,6 +12,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { ScrollArea } from "../ui/scroll-area";
+import { Switch } from "../ui/switch";
 
 
 interface SideDrawerProps {
@@ -21,9 +22,26 @@ interface SideDrawerProps {
 
 export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
  
-  const handleArticleView = () =>{
-    localStorage.setItem('articleView', 'modal'); // lub 'page'
-  }
+  const [isChecked, setIsChecked] = React.useState(false);
+
+  // Używamy useEffect, aby ustawić początkową wartość z localStorage
+  React.useEffect(() => {
+    const savedView = localStorage.getItem("articleView");
+    if (savedView === "modal") {
+      setIsChecked(true);
+    } else {
+      setIsChecked(false);
+    }
+  }, []);
+
+
+
+  const handleArticleViewChange = (checked: boolean) => {
+    setIsChecked(checked);
+    localStorage.setItem("articleView", checked ? "modal" : "page");
+  };
+  
+
 
 
   return (
@@ -40,16 +58,19 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
                   schemes.
                 </DrawerDescription>
               </DrawerHeader>
-              <div className='p-4 pb-0 space-y-4'>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                 <button 
-                 className="bg-blue-200 px-8 py-2 rounded-md font-semibold"
-                 onClick={handleArticleView}
-                 >OK</button>
-                </div>
-                <div className='bg-muted flex items-center justify-center rounded-lg h-32'>
-                  <p>Image 2</p>
-                </div>
+              <div className='p-4 px-6 pb-0 space-y-4'>
+               
+           <div className="flex justify-between">
+            <span>
+              Otwieraj artykuł w oknie modalnym
+            </span>
+           <Switch
+                      checked={isChecked}
+                      onCheckedChange={handleArticleViewChange}
+                    />
+              
+           </div>
+           
        
               </div>
             </div>
