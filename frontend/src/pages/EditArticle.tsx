@@ -1,5 +1,4 @@
 import { ArticleForm } from '@/components/ArticleForm'
-import { ArticleFormSkeleton } from '@/components/ArticleFormSkeleton'
 import { useModalContext } from '@/contexts/ModalContext'
 import { toast } from '@/hooks/use-toast'
 import { articlesApi } from '@/lib/articlesApi'

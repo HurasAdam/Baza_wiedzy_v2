@@ -46,7 +46,7 @@ const formSchema = z.object({
     isVerified: z.boolean().optional(), 
   });
  
-export function ArticleForm({onSave,tags,article,type}) {
+export function ArticleForm({onSave,tags,article,type,className}) {
 
   const { openModal,closeContentModal,openContentModal} = useModalContext();
 const navigate = useNavigate();
@@ -73,14 +73,14 @@ const navigate = useNavigate();
   
 
  
-// console.log(form.watch('tags'))
+
   
 
   function onSubmit(values: z.infer<typeof formSchema>) {
  
     const transformedValues = {
       ...values,
-      tags: values.tags.map(tag => tag.value), // Przekształcenie tagów na ID (value)
+      tags: values.tags.map(tag => tag.value),
     };
 
 if(article){
@@ -109,7 +109,7 @@ if(article){
  
   return (
     <Form {...form} >
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8   3xl:w-[1120px] px-10 w-full">
+      <form onSubmit={form.handleSubmit(onSubmit)} className={`${className} space-y-8    px-10 `}>
         <FormField
        
           control={form.control}

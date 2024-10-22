@@ -45,7 +45,11 @@ const formatedTags = data?.map((tag) => {
 
   return (
     <div>
-  {      formatedTags && <ArticleForm onSave={onSave} tags={formatedTags}/>}
+  {      formatedTags && <ArticleForm 
+  onSave={onSave} 
+  tags={formatedTags}
+  className="2xl:w-[1120px]"
+  />}
  
     </div>
   )
