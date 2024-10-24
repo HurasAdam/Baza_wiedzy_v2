@@ -78,12 +78,7 @@ const quickViewArticleHandler = (article) => {
                 <BadgeLabel key={name} variant="secondary" label={name} />
             ))}
       </div>
-          <button onClick={(e)=>{
-            e.stopPropagation();
-            quickViewArticleHandler(data)
-          }}>
-            <LuInspect/>
-          </button>
+     
         </CardFooter>
     </Card>
 );

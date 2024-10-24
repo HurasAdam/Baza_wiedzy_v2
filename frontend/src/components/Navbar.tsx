@@ -116,7 +116,7 @@ const NavLinkItem: React.FC = ({ element }) => {
 };
 
   return (
-    <div className="flex justify-between items-center bg-white px-4 py-3 2xl:py-[11px] sticky z-40 top-0 border-b rounded-tl-2xl ">
+    <div className="flex justify-between items-center bg-white px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0  rounded-tl-2xl ">
       <div className="flex gap-4">
         <button
           // onClick={()=>dispatch(setOpenSidebar(true))}
@@ -132,11 +132,7 @@ const NavLinkItem: React.FC = ({ element }) => {
         </div>
         <div className=" flex justify-around w-full items-center space-x-3.5 ">
 
-{navigationItems.map((element)=>{
-  return(
-  <NavLinkItem element={element}/>
-  )
-})}
+
 </div>
       </div>
 
