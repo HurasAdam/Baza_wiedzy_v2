@@ -17,6 +17,8 @@ import UserAvatar from "./core/UserAvatar";
 import { Dropdown } from "./core/Dropdown";
 import {LogOut,Settings,User,} from "lucide-react";
 import clsx from "clsx";
+import { NavUser } from "./nav-user";
+import useAuth from "@/hooks/useAuth";
 
 const Navbar: React.FC = ({ notifications }) => {
 //   const {showContentModal} = useAppContext();
@@ -25,7 +27,7 @@ const Navbar: React.FC = ({ notifications }) => {
   const navigate = useNavigate()
   const path = location.pathname.split("/")[1];
   const [isModalOpen, setIsModalOpen] = useState(false)
-
+  const { user, isLoading } = useAuth();
 
   const { mutate:logoutUser } = useMutation({
     mutationFn: () => {
@@ -170,7 +172,7 @@ const NavLinkItem: React.FC = ({ element }) => {
         </button>
         <Dropdown options={profileMenuOptions} triggerBtn={<div><UserAvatar/></div>}/>
         <SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
- 
+        <NavUser user={user} />
       </div>
     </div>
   );

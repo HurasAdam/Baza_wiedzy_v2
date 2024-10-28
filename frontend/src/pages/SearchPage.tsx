@@ -63,11 +63,9 @@ const toggleArticleAsFavouriteHandler = ({id})=>{
 
 
   return (
-<div className='grid grid-cols-[3fr_11fr] gap-5 py-6 min-h-screen'>
+<div className='grid grid-row  xl:grid-cols-[15fr_4fr] gap-5 py-6 min-h-screen p-6'>
 
-<div className='border px-6 py-5 rounded max-h-[700px] sticky top-[70px] '>
-  <SearchBar/>
-</div>
+
 
 
 <div className='flex flex-col gap-2'>
@@ -108,7 +106,9 @@ const toggleArticleAsFavouriteHandler = ({id})=>{
 
 
     </div>
-
+    <div className='border  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white'>
+  <SearchBar/>
+</div>
 
 
 </div>

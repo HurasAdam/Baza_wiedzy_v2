@@ -111,19 +111,12 @@ console.log(selected)
   setFilters({ author: selected }); // Ustaw filtry
 }
 
-  const frameworksList = [
-    { value: "react", label: "React", },
-    { value: "angular", label: "Angular",  },
-    { value: "vue", label: "Vue",  },
-    { value: "svelte", label: "Svelte",  },
-    { value: "ember", label: "Ember", },
-  ];
-  
+
 
 
  
   return (
-<div className="space-y-5 ">
+<div className="space-y-5  ">
   <div className="space-y-1.5 relative ">
     <label htmlFor="">
       Tytuł
@@ -170,11 +163,13 @@ placeholder="Wybierz tag..."
       </div>
 
 
+
 <SelectBox 
 
 data={formatedAuthors}
 label="Autor"
 onChange={urlAuthroHandler}/>
+
 
 
         <Button 

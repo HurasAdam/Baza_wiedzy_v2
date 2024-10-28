@@ -1,128 +1,49 @@
 import * as React from "react"
-import {
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
+import {Command} from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
 import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { adminNavbarOptions } from "@/constants"
+import { NavProjects } from "./nav-projects"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Panel",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-  
-    },
-    {
-      title: "Baza wiedzy",
-      url: "#",
-      icon: Bot,
-
-    },
-    {
-      title: "Rejestr rozmów",
-      url: "#",
-      icon: BookOpen,
-
-    },
-    {
-      title: "Działy i kontakty",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Helpdesk",
-          url: "#",
-        },
-        {
-          title: "Sprzedaż i szkolenia",
-          url: "#",
-        },
-        {
-          title: "Administracja",
-          url: "#",
-        },
-        {
-          title: "Dział umawiania spotkań",
-          url: "#",
-        },
-      ],
-    },
-  ],
-
-  projects: [
-    {
-      name: "Ulubione Artykuł",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Planer",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Przypomnienia",
-      url: "#",
-      icon: Map,
-    },
-  ],
-}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar variant="inset" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
+    <Sidebar variant="sidebar" {...props}>
+      <SidebarHeader className="bg-gray-800 text-gray-200 ">
+        <SidebarMenu  >
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Command className="size-4" />
+         
+      <div className="flex space-x-2 py-2 px-1.5">
+              
+      <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-teal-700 text-sidebar-primary-foreground">
+                  <Command className="size-4 text-green-200" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Baza Wiedzy</span>
-                  <span className="truncate text-xs">Librus</span>
+                  <span className="truncate font-semibold text-neutral-300">SąsiadWPotrzebie</span>
+                  <span className="truncate text-xs text-emerald-500">Panel Admina</span>
                 </div>
-              </a>
-            </SidebarMenuButton>
+             
+      </div>
+         
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-
+      <SidebarContent className="bg-gray-800 text-gray-200 py-2.5 ">
+        <NavMain items={adminNavbarOptions.navMain} />
+        <NavProjects items={adminNavbarOptions.navMy} />
+      
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
+      <SidebarFooter className="bg-gray-800 text-gray-200">
+      <NavSecondary items={adminNavbarOptions.navFooter} className="mt-auto" />
       </SidebarFooter>
     </Sidebar>
   )

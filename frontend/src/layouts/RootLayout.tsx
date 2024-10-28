@@ -15,13 +15,16 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import useAuth from "@/hooks/useAuth"
-import { Navigate, Outlet } from "react-router-dom"
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom"
 import Navbar from "@/components/Navbar"
+import { NavUser } from "@/components/nav-user"
+import { adminNavbarOptions, breadcrumbTranslations } from "@/constants"
 
 export default function RootLayout() {
 
   const { user, isLoading } = useAuth();
- console.log(user)
+  const {pathname} =useLocation();
+  const pathSegments = pathname.replace(/^\/admin/, "").split("/").filter(Boolean);
 
   return isLoading ? (
   
@@ -38,44 +41,68 @@ export default function RootLayout() {
   />):(
 
 
-    <SidebarProvider>
+<SidebarProvider >
+      <AppSidebar />
+      <SidebarInset className="bg-zinc-100">
+     <div className="flex items-center w-full bg-white justify-between sticky top-0 shadow z-20 px-2.5 rounded-b">
+     <SidebarTrigger className="-ml-1" />
+     <Navbar/>
+ 
+     </div>
+     
       
-      <AppSidebar  />
       
-      <SidebarInset>
-      <Navbar/>
-        <header className="flex h-16 shrink-0 items-center gap-2">
-          
+        <header className="flex h-16 shrink-0  items-center gap-2 justify-between   sticky top-0">
+
           <div className="flex items-center gap-2 px-4">
-            
-            <SidebarTrigger className="-ml-1" />
+          
             <Separator orientation="vertical" className="mr-2 h-4" />
-            
             <Breadcrumb>
-            
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
+                  <BreadcrumbLink >
+                  <Link to="/admin">Pulpit</Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>
+                  {pathSegments.map((segment, index) => {
+                  // Construct the path up to the current segment
+                  const to = `/admin/${pathSegments.slice(0, index + 1).join("/")}`;
+                  const translatedSegment = breadcrumbTranslations[segment] || segment; // Użyj tłumaczenia lub oryginalnej nazwy
+                  return (
+                  
+         
+                
+                       <BreadcrumbItem>
+                        <BreadcrumbLink>
+                          <Link to={to}>
+                            {/* Capitalize and show segment */}
+                            {translatedSegment.charAt(0).toUpperCase() + translatedSegment.slice(1)}
+                          </Link>
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
+                      
+           
+               
+                  );
+                })}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
           </div>
           
-        </header>
         
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-    
-  <Outlet/>
-  <Toaster/>
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-        </div>
+       
+       
+        </header>
+
+<Outlet/>
+<Toaster/>
       </SidebarInset>
     </SidebarProvider>
+
   )
 }
