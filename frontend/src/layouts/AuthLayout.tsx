@@ -1,7 +1,16 @@
+import useAuth from '@/hooks/useAuth';
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 
 const AuthLayout = () => {
+
+  const { user, isLoading } = useAuth();
+
+
+
+if(user){
+  return <Navigate to="/articles"/>
+}else{
   return (
     <section className='min-h-screen flex w-full bg-customDark'>
       <div className='flex-1 my-auto hidden lg:flex flex-col items-center mt-20'>
@@ -17,6 +26,11 @@ const AuthLayout = () => {
 
     </section>
   )
+}
+
+
+
+
 }
 
 export default AuthLayout

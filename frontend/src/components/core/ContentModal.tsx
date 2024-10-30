@@ -34,7 +34,8 @@ export function ContentModal({isOpen,children, onClose,title,description,enableO
       <DialogContent 
         className={`
           ${modalSizeHandler(size)}  // Szerokość zależna od propsa size
-         
+         filter-none 
+      
           min-h-[90vh] max-h-[90vh] 
           overflow-y-auto scrollbar-custom`}
         onInteractOutside={(e) => {
@@ -53,7 +54,7 @@ export function ContentModal({isOpen,children, onClose,title,description,enableO
         </DialogHeader>
 
         <DialogFooter>
-        <div className="w-full gap-4 py-4 filter-none backdrop-blur-sm h-screen">
+        <div className="w-full gap-4 py-4 filter-none h-screen">
      {children}
         </div>
     
