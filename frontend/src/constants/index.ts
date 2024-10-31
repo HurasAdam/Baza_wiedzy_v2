@@ -73,11 +73,11 @@ export  const adminNavbarOptions = {
          },
        ],
     navFooter:[
-      {
-        title:"Powrót",
-        url:"/",
-        icon: IoMdArrowRoundBack,
-      }
+      // {
+      //   title:"Powrót",
+      //   url:"/",
+      //   icon: IoMdArrowRoundBack,
+      // }
     ]
   
   }

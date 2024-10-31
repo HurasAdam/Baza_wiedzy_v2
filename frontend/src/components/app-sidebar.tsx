@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 import { adminNavbarOptions } from "@/constants"
 import { NavProjects } from "./nav-projects"
+import { IMAGES } from "@/constants/images"
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -24,12 +25,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
          
       <div className="flex space-x-2 py-2 px-1.5">
               
-      <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-teal-700 text-sidebar-primary-foreground">
-                  <Command className="size-4 text-green-200" />
+      <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-transparent text-sidebar-primary-foreground">
+                  {/* <Command className="size-4 text-green-200" /> */}
+                  <img src={IMAGES.Logo} alt="" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold text-neutral-300">SąsiadWPotrzebie</span>
-                  <span className="truncate text-xs text-emerald-500">Panel Admina</span>
+                  <span className="truncate font-semibold text-neutral-300">Baza wiedzy</span>
+                  <span className="truncate text-xs font-semibold text-orange-600/90">Librus</span>
                 </div>
              
       </div>

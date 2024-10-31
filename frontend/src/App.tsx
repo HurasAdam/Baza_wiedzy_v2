@@ -21,6 +21,7 @@ import FavouritesPage from "./pages/FavouritesPage";
 import TodosBoardPage from "./pages/TodosBoardPage";
 import CreateArticle from "./pages/CreateArticle";
 import ArticleDetails from "./pages/ArticleDetails";
+import Dashboard from "./pages/Dashboard";
 
 
 
@@ -33,8 +34,8 @@ setNavigate(navigate);
     <Routes>
    
       <Route  element={<RootLayout />}>
-  
-     <Route index path="articles" element={<SearchPage/>} />
+      <Route index path="dashboard" element={<Dashboard/>} />
+     <Route  path="articles" element={<SearchPage/>} />
      <Route path="statistics" element={<StatisticsPage />} />
      <Route path="articles/new-article" element={<CreateArticle />} />
      <Route path="articles/:id" element={<ArticleDetails />} />
