@@ -61,7 +61,7 @@ export default function RootLayout() {
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink >
-                  <Link to="/admin">Pulpit</Link>
+                  <Link to="/">Pulpit</Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
@@ -69,7 +69,7 @@ export default function RootLayout() {
                   <BreadcrumbPage>
                   {pathSegments.map((segment, index) => {
                   // Construct the path up to the current segment
-                  const to = `/admin/${pathSegments.slice(0, index + 1).join("/")}`;
+                  const to = `/${pathSegments.slice(0, index + 1).join("/")}`;
                   const translatedSegment = breadcrumbTranslations[segment] || segment; // Użyj tłumaczenia lub oryginalnej nazwy
                   return (
                   

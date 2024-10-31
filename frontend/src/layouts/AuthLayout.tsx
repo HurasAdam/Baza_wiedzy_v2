@@ -9,7 +9,7 @@ const AuthLayout = () => {
 
 
 if(user){
-  return <Navigate to="/articles"/>
+  return <Navigate to="/dashboard"/>
 }else{
   return (
     <section className='min-h-screen flex w-full bg-customDark'>
