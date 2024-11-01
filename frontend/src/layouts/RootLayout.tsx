@@ -43,9 +43,9 @@ export default function RootLayout() {
 
 <SidebarProvider >
       <AppSidebar />
-      <SidebarInset className="bg-zinc-100">
-     <div className="flex items-center w-full bg-white justify-between sticky top-0 shadow z-20 px-2.5 rounded-b">
-     <SidebarTrigger className="-ml-1" />
+      <SidebarInset className="bg-zinc-100 px-4">
+     <div className="flex  items-center w-full justify-between sticky top-0  z-20 px-2.5 rounded-b">
+     {/* <SidebarTrigger className="-ml-1" /> */}
      <Navbar/>
  
      </div>

@@ -31,6 +31,7 @@ const navigate = useNavigate();
 setNavigate(navigate);
 
   return (
+    <div className="bg-zinc-100">
     <Routes>
    
       <Route  element={<RootLayout />}>
@@ -74,6 +75,7 @@ setNavigate(navigate);
       <Route path="/password/forgot" element={<ForgotPassword />} />
       <Route path="/password/reset" element={<ResetPassword />} /> */}
     </Routes>
+    </div>
   )
 }
 

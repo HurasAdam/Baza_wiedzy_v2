@@ -18,7 +18,7 @@ import { IMAGES } from "@/constants/images"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar variant="sidebar" {...props}>
+    <Sidebar variant="sidebar" {...props} className="">
       <SidebarHeader className="bg-gray-800 text-gray-200 ">
         <SidebarMenu  >
           <SidebarMenuItem>
@@ -32,6 +32,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold text-neutral-300">Baza wiedzy</span>
                   <span className="truncate text-xs font-semibold text-orange-600/90">Librus</span>
+                  
                 </div>
              
       </div>

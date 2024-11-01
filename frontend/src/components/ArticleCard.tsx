@@ -73,9 +73,9 @@ const quickViewArticleHandler = (article) => {
         </CardHeader>
 
         <CardFooter className='space-x-1 flex justify-between'>
-      <div>
+      <div className='space-x-1'>
       {data?.tags?.map(({ name }) => (
-                <BadgeLabel key={name} variant="secondary" label={name} />
+                <BadgeLabel className="rounded-md bg-slate-200" key={name} variant="secondary" label={name} />
             ))}
       </div>
      

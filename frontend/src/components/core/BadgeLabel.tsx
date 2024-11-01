@@ -1,8 +1,8 @@
 import React from 'react'
 import { Badge } from "@/components/ui/badge"
-const BadgeLabel = ({variant,label}) => {
+const BadgeLabel = ({variant,label,className}) => {
   return (
-     <Badge variant={variant}>{label}</Badge>
+     <Badge className={className} variant={variant}>{label}</Badge>
   )
 }
 
