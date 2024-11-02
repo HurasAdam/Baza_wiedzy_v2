@@ -19,6 +19,7 @@ import {LogOut,Settings,User,} from "lucide-react";
 import clsx from "clsx";
 import { NavUser } from "./nav-user";
 import useAuth from "@/hooks/useAuth";
+import useScrollY from "@/hooks/useScrollY";
 
 const Navbar: React.FC = ({ notifications }) => {
 //   const {showContentModal} = useAppContext();
@@ -28,7 +29,7 @@ const Navbar: React.FC = ({ notifications }) => {
   const path = location.pathname.split("/")[1];
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { user, isLoading } = useAuth();
-
+  const isScrolled = useScrollY();
   const { mutate:logoutUser } = useMutation({
     mutationFn: () => {
       return api.logout();
@@ -118,7 +119,7 @@ const NavLinkItem: React.FC = ({ element }) => {
 };
 
   return (
-    <div className="flex justify-between w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0  rounded-tl-2xl ">
+    <div className={clsx("flex justify-between w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0  rounded-tl-2xl", isScrolled ? "bg-white border-b-2":"")}>
       <div className="flex gap-4">
         <button
           // onClick={()=>dispatch(setOpenSidebar(true))}
