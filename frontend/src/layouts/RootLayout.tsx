@@ -43,8 +43,8 @@ export default function RootLayout() {
 
 <SidebarProvider >
       <AppSidebar />
-      <SidebarInset className="bg-zinc-100 px-4">
-     <div className="flex  items-center w-full justify-between sticky top-0  z-20 px-2.5 rounded-b">
+      <SidebarInset className="bg-zinc-100 ">
+     <div className="flex  items-center w-full justify-between sticky top-0  z-20 rounded-b">
      {/* <SidebarTrigger className="-ml-1" /> */}
      <Navbar/>
  
@@ -99,7 +99,9 @@ export default function RootLayout() {
        
         </header>
 
+<div className="px-4 py-1">
 <Outlet/>
+</div>
 <Toaster/>
       </SidebarInset>
     </SidebarProvider>

@@ -12,6 +12,7 @@ import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { IoCheckmarkCircle } from 'react-icons/io5';
 import { useOutletContext } from "react-router-dom";
+import { IoArrowBack } from "react-icons/io5";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { IoMdArrowDropright, IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { formatDate } from '@/lib/utils';
@@ -29,6 +30,7 @@ import { useModalContext } from '@/contexts/ModalContext';
 import ArticleDetailsSkeleton from '@/components/ArticleDetailsSkeleton';
 import { ArticleForm } from '@/components/ArticleForm';
 import EditArticle from './EditArticle';
+import { Button } from '@/components/ui/button';
 
 const ArticleDetails = ({articleId,type}) => {
     const { id } = useParams();
@@ -177,7 +179,7 @@ if(isLoading ){
 
 if(isFetching && !isLoading){
   return (
-    <div className=' p-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[5fr_2fr] gap-4'>
+    <div className=' p-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[5fr_2fr] gap-5'>
     {/* LEFT SIDE */}
     <div className=' flex flex-col space-y-3.5  '>
     <div className=' py-3.5 px-5  flex items-center justify-between rounded-xl bg-neutral-50 shadow '>
@@ -186,7 +188,7 @@ if(isFetching && !isLoading){
     </div>
     
     
-    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow   px-7 py-1 '>
+    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow   px-8 py-1 '>
       <AccordionItem value="item-1" className='border-0 '>
         <AccordionTrigger className='text-lg'>Opis dla pracownika</AccordionTrigger>
         <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base  '>
@@ -198,7 +200,7 @@ if(isFetching && !isLoading){
     
     
     
-    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow    px-7 py-1 '>
+    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow    px-8 py-1 '>
       <AccordionItem value="item-1" className='border-0 '>
         <AccordionTrigger className='text-lg'>Odpowiedź dla klienta</AccordionTrigger>
         <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]'>
@@ -306,130 +308,137 @@ if(isFetching && !isLoading){
 
 
   return (
-    <div className=' p-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[5fr_2fr] gap-4'>
-{/* LEFT SIDE */}
-<div className=' flex flex-col space-y-3.5  '>
-<div className=' py-3.5 px-5  flex items-center justify-between rounded-xl bg-neutral-50 shadow '>
-<span className='text-2xl'>{article?.title}</span>
-{article?.isFavourite &&<FaStar className='w-5 h-5'/>}
-</div>
-
-
-<Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow   px-7 py-1 '>
-  <AccordionItem value="item-1" className='border-0 '>
-    <AccordionTrigger className='text-lg'>Opis dla pracownika</AccordionTrigger>
-    <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base  '>
-      {article?.employeeDescription}
-    </AccordionContent>
-  </AccordionItem>
-</Accordion>
-
-
-
-
-<Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow    px-7 py-1 '>
-  <AccordionItem value="item-1" className='border-0 '>
-    <AccordionTrigger className='text-lg'>Odpowiedź dla klienta</AccordionTrigger>
-    <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]'>
-      {article?.clientDescription}
-    </AccordionContent>
-  </AccordionItem>
-</Accordion>
-
-
-</div>
-
-
-{/* RIGHT SIDE */}
-<div className='border xl:pb-8 xl:px-8 h-fit min-h-[300px] 2xl:sticky top-[75px] rounded-xl bg-neutral-50 shadow  flex flex-col gap-2'>
-    <div className='space-y-4'>
-
-{/* TAGS */}
-
-
-<div className='flex justify-end pt-2.5'>
-
-<Dropdown 
-
-position={{
-  side: "center", // Otwiera dropdown po prawej stronie
-  align: "start", // Wyrównuje do początku elementu trigger
-  sideOffset: -116, // Przesunięcie w osi pionowej
-  alignOffset: 20, // Przesunięcie w osi poziomej
-}}
-options={articleDropdownOptions} triggerBtn={<div className='mt-0.5'><HiDotsHorizontal className='cursor-pointer'/></div>}/>
-
-</div>
-
-<div>
-
-    <span className='text-sm font-semibold text-gray-500'>Tagi</span>
-<div className='py-2.5 px-0.5 space-x-1 space-y-1.5'>
-  
-    {article?.tags?.map((tag)=>{
-        return(
-            <BadgeLabel className="bg-badge_primary" label={tag?.name}/>
-        )
-    })}
-</div>
-</div>
-
-{/* STATUS */}
-<div>
-<span className='text-sm text-slate-500 font-semibold'>Status</span>
-{article?.isVerified ? (
-              <span className="font-semibold flex items-center gap-x-6">
-                <IoCheckmarkCircle className="h-5 w-5 text-green-500" />{" "}
-                Zweryfikowany
-              </span>
-            ) : (
-              <span className="font-semibold flex items-center gap-x-3">
-                <BsFillQuestionCircleFill className="h-5 w-5 text-secondary text-slate-600" />
-                Nie zweryfikowany
-              </span>
-            )}
-</div>
-
-
-{/* ID */}
-<div className="flex flex-col ">
-            <span className="text-sm text-slate-500 font-semibold">
-              ID:{" "}
-            </span>
-
-            <span className="font-semibold flex items-center gap-x-3">
-              <IoMdArrowDropright className="h-5 w-5 text-slate-600" />
-              {article?._id}
-            </span>
-          </div>
-
-
-{/* CREATEDAT */}
-
-<div className="flex flex-col">
-            <span className="text-sm text-slate-500 font-semibold">
-              Dodano:{" "}
-            </span>
-
-            <span className="font-semibold flex items-center gap-x-6">
-              <FaCalendarCheck className="h-5 w-5 text-slate-600" />
-              {formatDate(article?.createdAt)}
-            </span>
-          </div>
-
-
-
-
-
-
-
-
-
-
-</div>
-</div>
-
+    <div className=' p-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[5fr_2fr] gap-5'>
+    {/* LEFT SIDE */}
+   
+    <div className=' flex flex-col space-y-1.5 '>
+   <Button 
+   onClick={()=> navigate(-1)}
+   className='w-fit cursor-pointer rounded-2xl border-transparent bg-transparent hover:bg-neutral-200 ' 
+   variant="outline">
+   <IoArrowBack className='  w-5 h-5 text-grey-800 hover:text-slate-800/90  '/>
+   </Button>
+    <div className=' py-3.5 px-5  flex items-center justify-between rounded-xl bg-neutral-50 shadow '>
+    <span className='text-2xl'>{article?.title}</span>
+    {article?.isFavourite &&<FaStar className='w-5 h-5'/>}
     </div>
+    
+    
+    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow   px-8 py-1 '>
+      <AccordionItem value="item-1" className='border-0 '>
+        <AccordionTrigger className='text-lg'>Opis dla pracownika</AccordionTrigger>
+        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base  '>
+          {article?.employeeDescription}
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+    
+    
+    
+    
+    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow    px-8 py-1 '>
+      <AccordionItem value="item-1" className='border-0 '>
+        <AccordionTrigger className='text-lg'>Odpowiedź dla klienta</AccordionTrigger>
+        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]'>
+          {article?.clientDescription}
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
+    
+    
+    </div>
+    
+    
+    {/* RIGHT SIDE */}
+    <div className='border xl:pb-8 xl:px-8 h-fit min-h-[300px] 2xl:sticky top-[75px] rounded-xl bg-neutral-50 shadow  flex flex-col gap-2'>
+        <div className='space-y-4'>
+    
+    {/* TAGS */}
+    
+    
+    <div className='flex justify-end pt-2.5'>
+    
+    <Dropdown 
+    
+    position={{
+      side: "center", // Otwiera dropdown po prawej stronie
+      align: "start", // Wyrównuje do początku elementu trigger
+      sideOffset: -116, // Przesunięcie w osi pionowej
+      alignOffset: 20, // Przesunięcie w osi poziomej
+    }}
+    options={articleDropdownOptions} triggerBtn={<div className='mt-0.5'><HiDotsHorizontal className='cursor-pointer'/></div>}/>
+    
+    </div>
+    
+    <div>
+    
+        <span className='text-sm font-semibold text-gray-500'>Tagi</span>
+    <div className='py-2.5 px-0.5 space-x-1 space-y-1.5'>
+      
+        {article?.tags?.map((tag)=>{
+            return(
+                <BadgeLabel className="bg-badge_primary" label={tag?.name}/>
+            )
+        })}
+    </div>
+    </div>
+    
+    {/* STATUS */}
+    <div>
+    <span className='text-sm text-slate-500 font-semibold'>Status</span>
+    {article?.isVerified ? (
+                  <span className="font-semibold flex items-center gap-x-6">
+                    <IoCheckmarkCircle className="h-5 w-5 text-green-500" />{" "}
+                    Zweryfikowany
+                  </span>
+                ) : (
+                  <span className="font-semibold flex items-center gap-x-3">
+                    <BsFillQuestionCircleFill className="h-5 w-5 text-secondary text-slate-600" />
+                    Nie zweryfikowany
+                  </span>
+                )}
+    </div>
+    
+    
+    {/* ID */}
+    <div className="flex flex-col ">
+                <span className="text-sm text-slate-500 font-semibold">
+                  ID:{" "}
+                </span>
+    
+                <span className="font-semibold flex items-center gap-x-3">
+                  <IoMdArrowDropright className="h-5 w-5 text-slate-600" />
+                  {article?._id}
+                </span>
+              </div>
+    
+    
+    {/* CREATEDAT */}
+    
+    <div className="flex flex-col">
+                <span className="text-sm text-slate-500 font-semibold">
+                  Dodano:{" "}
+                </span>
+    
+                <span className="font-semibold flex items-center gap-x-6">
+                  <FaCalendarCheck className="h-5 w-5 text-slate-600" />
+                  {formatDate(article?.createdAt)}
+                </span>
+              </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    </div>
+    </div>
+    
+        </div>
   )
 }
 
