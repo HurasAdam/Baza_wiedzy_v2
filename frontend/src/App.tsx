@@ -16,12 +16,12 @@ import SalesPage from "./pages/SalesPage";
 import AdministrationPage from "./pages/AdministrationPage";
 import AppointmentPage from "./pages/AppointmentPage";
 import StatisticsPage from "./pages/StatisticsPage";
-import CoversationReportPage from "./pages/CoversationReportPage";
 import FavouritesPage from "./pages/FavouritesPage";
 import TodosBoardPage from "./pages/TodosBoardPage";
 import CreateArticle from "./pages/CreateArticle";
 import ArticleDetails from "./pages/ArticleDetails";
 import Dashboard from "./pages/Dashboard";
+import CallRegister from "./pages/CallRegister";
 
 
 
@@ -40,8 +40,8 @@ setNavigate(navigate);
      <Route path="statistics" element={<StatisticsPage />} />
      <Route path="articles/new-article" element={<CreateArticle />} />
      <Route path="articles/:id" element={<ArticleDetails />} />
-     <Route path="coversation-report" element={<CoversationReportPage />} />
-     <Route path="favourites" element={<FavouritesPage />} />
+     <Route path="call-register" element={<CallRegister />} />
+     <Route path="favourite-articles" element={<FavouritesPage />} />
      <Route path="todos-board" element={<TodosBoardPage />} />
         {/* <Route path="settings" element={<Settings />} />  */}
 

@@ -14,43 +14,43 @@ export  const adminNavbarOptions = {
       title:"Pulpit",
       url:"/dashboard",
       icon: MdOutlineDashboard,
-      isActive:true,
+     
       
      },
       {
         title: "Baza wiedzy",
         url: "/articles",
         icon: PiUsersFill,
-        isActive: true,
+      
      
       },
       {
         title: "Rejestr rozmów",
-        url: "helpType",
+        url: "call-register",
         icon: LuHelpingHand,
 
       },
   
       {
         title: "Działy i kontakty",
-        url: "/admin/comments",
+        url: "/departments",
         icon: FaRegComments,
         items: [
             {
               title: "Helpdesk",
-              url: "/admin/material-help",
+              url: "departments/helpdesk",
             },
             {
               title: "Sprzedaż i szkolenia",
-              url: "/admin/medical-help",
+              url: "departments/sales",
             },
             {
               title: "Administracja",
-              url: "/admin/psychological-help",
+              url: "departments/administration",
             },
             {
                 title: "Dział umawiania spotkań",
-                url: "/admin/psychological-help",
+                url: "departments/appointment",
               },
           ],
       },
@@ -66,18 +66,18 @@ export  const adminNavbarOptions = {
         },
          {
            title: "Planner",
-           url: "/planner",
+           url: "/todos-board",
            icon: PiUsersFill,
            isActive: true,
         
          },
        ],
     navFooter:[
-      // {
-      //   title:"Powrót",
-      //   url:"/",
-      //   icon: IoMdArrowRoundBack,
-      // }
+      {
+        title:"Powrót",
+        url:"/todos-board",
+        icon: IoMdArrowRoundBack,
+      }
     ]
   
   }

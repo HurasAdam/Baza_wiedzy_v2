@@ -179,9 +179,15 @@ if(isLoading ){
 
 if(isFetching && !isLoading){
   return (
-    <div className=' p-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[5fr_2fr] gap-5'>
+    <div className=' px-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[5fr_2fr] gap-5'>
     {/* LEFT SIDE */}
-    <div className=' flex flex-col space-y-3.5  '>
+    <div className=' flex flex-col space-y-1.5  '>
+    <Button 
+   onClick={()=> navigate(-1)}
+   className='w-fit cursor-pointer rounded-2xl border-transparent bg-transparent hover:bg-neutral-200 ' 
+   variant="outline">
+   <IoArrowBack className='  w-5 h-5 text-grey-800 hover:text-slate-800/90  '/>
+   </Button>
     <div className=' py-3.5 px-5  flex items-center justify-between rounded-xl bg-neutral-50 shadow '>
     <span className='text-2xl'>{article?.title}</span>
     {article?.isFavourite &&<FaStar className='w-5 h-5'/>}
@@ -214,7 +220,7 @@ if(isFetching && !isLoading){
     
     
     {/* RIGHT SIDE */}
-    <div className='border xl:pb-8 xl:px-8 h-fit min-h-[300px] 2xl:sticky top-[75px] rounded-xl bg-neutral-50 shadow  flex flex-col gap-2'>
+    <div className='border xl:pb-8 xl:px-8 h-fit min-h-[300px] 2xl:sticky top-[75px] rounded-xl bg-neutral-50 shadow  flex flex-col gap-2 mt-11'>
         <div className='space-y-4'>
     
     {/* TAGS */}
@@ -308,7 +314,7 @@ if(isFetching && !isLoading){
 
 
   return (
-    <div className=' p-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[5fr_2fr] gap-5'>
+    <div className=' px-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[5fr_2fr] gap-5'>
     {/* LEFT SIDE */}
    
     <div className=' flex flex-col space-y-1.5 '>
@@ -350,7 +356,7 @@ if(isFetching && !isLoading){
     
     
     {/* RIGHT SIDE */}
-    <div className='border xl:pb-8 xl:px-8 h-fit min-h-[300px] 2xl:sticky top-[75px] rounded-xl bg-neutral-50 shadow  flex flex-col gap-2'>
+    <div className='border xl:pb-8 xl:px-8 h-fit min-h-[300px] 2xl:sticky top-[75px] rounded-xl bg-neutral-50 shadow  flex flex-col gap-2 mt-11'>
         <div className='space-y-4'>
     
     {/* TAGS */}

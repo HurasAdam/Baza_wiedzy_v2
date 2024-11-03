@@ -73,8 +73,9 @@ setSelectedView(view)
 }
 
 const viewOptions = [
-  { label: "table", onClick: () => toggleView("table"), icon:TbTable },
+
   { label: "grid", onClick: () => toggleView("grid"), icon:BiCard },
+  { label: "table", onClick: () => toggleView("table"), icon:TbTable }
 ]
 
   return (
@@ -82,14 +83,14 @@ const viewOptions = [
 
 <div className='grid grid-row  xl:grid-cols-[15fr_4fr] gap-5'>
 
-<div className='flex  space-x-2   justify-end '>
-  <div className='flex bg-white rounded-lg '>
+<div className='flex     justify-end '>
+  <div className='flex bg-white rounded-lg h-fit '>
 {viewOptions.map((item)=>{
   const isSelected = item.label ===selectedView
   return(
     <div
     onClick={item.onClick}
-    className={isSelected ? "bg-blue-100 rounded-lg px-4 cursor-pointer flex items-center ":"px-4 rounded-lg px-2 flex items-center cursor-pointer"}
+    className={isSelected ? "bg-blue-200/50 rounded-lg px-3 cursor-pointer flex items-center ":"px-3 py-2.5 rounded-lg  flex items-center cursor-pointer"}
     >
       <item.icon className='w-4 h-4'/>
       </div>
@@ -107,7 +108,7 @@ const viewOptions = [
 
 
     
-<div className='grid grid-row  xl:grid-cols-[15fr_4fr] gap-5 py-6 min-h-screen '>
+<div className='grid grid-row  xl:grid-cols-[15fr_4fr] gap-5 py-6 min-h-screen px-4 '>
 
 
 

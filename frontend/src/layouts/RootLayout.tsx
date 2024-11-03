@@ -1,4 +1,4 @@
-import { AppSidebar } from "@/components/app-sidebar"
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,6 +19,7 @@ import { Link, Navigate, Outlet, useLocation } from "react-router-dom"
 import Navbar from "@/components/Navbar"
 import { NavUser } from "@/components/nav-user"
 import { adminNavbarOptions, breadcrumbTranslations } from "@/constants"
+import { AppSidebar } from "@/components/AppSidebar"
 
 export default function RootLayout() {
 

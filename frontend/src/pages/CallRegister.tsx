@@ -1,9 +1,9 @@
 import React from 'react'
 
-const CoversationReportPage = () => {
+const CallRegister = () => {
   return (
     <div>CoversationReportPage</div>
   )
 }
 
-export default CoversationReportPage
+export default CallRegister
