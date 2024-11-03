@@ -43,7 +43,8 @@ export function NavProjects({
       <SidebarMenu className="">
         {items.map((item) => {
           // Ustawienie isActive, aby sprawdzało, czy ścieżka pathname zawiera główną lub jedną z podścieżek.
-          const isActiveMain = pathname === item.url || item.items?.some(subItem => pathname === subItem.url);
+          
+          const isActiveMain = pathname.startsWith(item.url) || item.items?.some((subItem) => pathname.startsWith(subItem.url));
           const hasSubItems = item.items && item.items.length > 0;
 
           return (
@@ -58,17 +59,17 @@ export function NavProjects({
                   <SidebarMenuButton
                     asChild
                     tooltip={item.title}
-                  
+              
                   >
                     {hasSubItems ? (
-                      <div className="hover:bg-teal-500 hover:text-neutral-50">
-                        <item.icon className="hover:text-orange-600" />
+                      <div className="">
+                        <item.icon />
                         <span>{item.title}</span>
                       </div>
                     ) : (
                       <Link
                         to={item.url}
-                        className={`hover:bg-teal-500 ${isActiveMain ? "bg-teal-600 text-white" : ""}`}
+                        className={`${isActiveMain ? "bg-neutral-100 text-slate-800 hover:bg-neutral-100 hover:text-slate-800  " : ""}`}
                       >
                         <item.icon />
                         <span>{item.title}</span>

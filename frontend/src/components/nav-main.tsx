@@ -34,7 +34,6 @@ export function NavMain({
   }[];
 }) {
   const { pathname } = useLocation();
-
   return (
     <SidebarGroup>
       <SidebarGroupLabel className="text-slate-500 text-xs">
@@ -42,8 +41,9 @@ export function NavMain({
       </SidebarGroupLabel>
       <SidebarMenu className="">
         {items.map((item) => {
-          // Ustawienie isActive, aby sprawdzało, czy ścieżka pathname zawiera główną lub jedną z podścieżek.
-          const isActiveMain = pathname === item.url || item.items?.some(subItem => pathname === subItem.url);
+        
+          const isActiveMain =
+          pathname.startsWith(item.url) || item.items?.some((subItem) => pathname.startsWith(subItem.url));
           const hasSubItems = item.items && item.items.length > 0;
 
           return (
@@ -58,17 +58,20 @@ export function NavMain({
                   <SidebarMenuButton
                     asChild
                     tooltip={item.title}
-                  
+            
+                
                   >
                     {hasSubItems ? (
-                      <div className="hover:bg-teal-500 hover:text-neutral-50">
-                        <item.icon className="hover:text-orange-600" />
+                      <div  
+                      className={`${isActiveMain ? "bg-neutral-100 text-slate-800 hover:bg-neutral-100 hover:text-slate-800  " : ""}`}
+                      >
+                        <item.icon  />
                         <span>{item.title}</span>
                       </div>
                     ) : (
                       <Link
                         to={item.url}
-                        className={`hover:bg-teal-500 ${isActiveMain ? "bg-teal-600 text-white" : ""}`}
+                        className={`${isActiveMain ? "bg-neutral-100 text-slate-800 hover:bg-neutral-100 hover:text-slate-800  " : ""}`}
                       >
                         <item.icon />
                         <span>{item.title}</span>
@@ -78,8 +81,8 @@ export function NavMain({
                 </CollapsibleTrigger>
                 {hasSubItems ? (
                   <>
-                    <SidebarMenuAction className="data-[state=open]:rotate-90">
-                      <ChevronRight />
+                    <SidebarMenuAction className="data-[state=open]:rotate-90 group">
+                      <ChevronRight className="text-white group-hover:text-gray-800 pointer-events-none " />
                       <span className="sr-only">Toggle</span>
                     </SidebarMenuAction>
                     <CollapsibleContent>
@@ -88,12 +91,12 @@ export function NavMain({
                           const isSubItemActive = pathname === subItem.url;
                           return (
                             <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton asChild>
+                              <SidebarMenuSubButton 
+                              className="text-neutral-300 "
+                              asChild>
                                 <Link
                                   to={subItem.url}
-                                  className={`hover:bg-gray-600 text-gray-400 ${
-                                    isSubItemActive ? "bg-teal-600 text-gray-50" : "text-gray-100"
-                                  }`}
+                        
                                 >
                                   <span>{subItem.title}</span>
                                 </Link>
