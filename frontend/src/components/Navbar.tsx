@@ -95,7 +95,8 @@ const Navbar: React.FC = ({ notifications }) => {
 
 
   const profileMenuOptions= [
-    {label:"profil", icon:<User/>, actionHandler: () => console.log("profil")},
+    {label:"Profil", icon:<User/>, actionHandler: () => console.log("profil")},
+    {label:"Panel Admina", icon:<User/>, actionHandler: () => navigate("/admin")},
     {label:"Ustawienia", icon:<Settings/>, actionHandler: () => console.log("ustawienia")},
     {label:"Wyloguj się", icon:<LogOut/>, actionHandler: logoutUser },
   ];
@@ -160,7 +161,7 @@ const NavLinkItem: React.FC = ({ element }) => {
       
         <NavLink
           className="shadow-xl  border  bg-slate-600 group   transition-all hover:font-bold px-2 py-2 rounded-lg  font-semibold  text-slate-100 "
-          to="articles/new-article"
+          to="new-article"
         >
           <MdNoteAdd className="text-secondary  w-4 h-4 group-hover:text-white"/>
         </NavLink>

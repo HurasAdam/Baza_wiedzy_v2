@@ -20,6 +20,7 @@ import Navbar from "@/components/Navbar"
 import { NavUser } from "@/components/nav-user"
 import { adminNavbarOptions, breadcrumbTranslations } from "@/constants"
 import { AppSidebar } from "@/components/AppSidebar"
+import { IMAGES } from "@/constants/images"
 
 export default function RootLayout() {
 
@@ -43,7 +44,11 @@ export default function RootLayout() {
 
 
 <SidebarProvider >
-      <AppSidebar />
+      <AppSidebar
+          title ="Baza wiedzy"
+    subtitle ="Librus"
+      image={IMAGES.Logo}
+      />
       <SidebarInset className="bg-zinc-100 ">
      <div className="flex  items-center w-full justify-between sticky top-0  z-20 rounded-b">
      {/* <SidebarTrigger className="-ml-1" /> */}

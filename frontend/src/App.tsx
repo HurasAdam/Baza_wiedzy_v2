@@ -22,6 +22,8 @@ import CreateArticle from "./pages/CreateArticle";
 import ArticleDetails from "./pages/ArticleDetails";
 import Dashboard from "./pages/Dashboard";
 import CallRegister from "./pages/CallRegister";
+import AdminLayout from "./layouts/AdminLayout";
+import AdminDashboard from "./pages/AdminDashboard";
 
 
 
@@ -38,7 +40,7 @@ setNavigate(navigate);
       <Route index path="dashboard" element={<Dashboard/>} />
      <Route  path="articles" element={<SearchPage/>} />
      <Route path="statistics" element={<StatisticsPage />} />
-     <Route path="articles/new-article" element={<CreateArticle />} />
+     <Route path="new-article" element={<CreateArticle />} />
      <Route path="articles/:id" element={<ArticleDetails />} />
      <Route path="call-register" element={<CallRegister />} />
      <Route path="favourite-articles" element={<FavouritesPage />} />
@@ -60,13 +62,16 @@ setNavigate(navigate);
           </Route>
 {/*  */}
 
-
-
-
       </Route>
 
-      <Route path="/" element={<AuthLayout />}>
-  
+      <Route path="admin" element={<AdminLayout/>}>
+
+<Route index element={<AdminDashboard/>}/>
+</Route>
+
+
+
+      <Route path="/" element={<AuthLayout />}>  
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
    </Route>
