@@ -16,7 +16,8 @@ import { NavProjects } from "./nav-projects"
 import { IMAGES } from "@/constants/images"
 
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+export function AppSidebar({title, subtitle,image, extraText, ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="sidebar" {...props} className="">
       <SidebarHeader className="bg-gray-800 text-gray-200  py-2.5 px-2.5 ">
@@ -27,16 +28,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               
       <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-transparent text-sidebar-primary-foreground">
                   {/* <Command className="size-4 text-green-200" /> */}
-                  <img src={IMAGES.Logo}  alt="" />
+                  <img src={image}  alt="" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold text-neutral-300 text-md">Baza wiedzy</span>
-                  <span className="truncate text-xs font-semibold text-orange-600/90 ">Librus</span>
+                  <span className="truncate font-semibold text-neutral-300 text-md">{title}</span>
+                  <span className="truncate text-xs font-semibold text-orange-600/90 ">{subtitle}</span>
+              
                   
                 </div>
              
       </div>
-         
+      {extraText &&   <div className="flex mt-3 px-11">
+        <span className="truncate text-md font-semibold text-neutral-200/90  ">{extraText}</span>
+      </div>   }
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
