@@ -81,7 +81,7 @@ const viewOptions = [
   return (
     <div>
 
-<div className='grid grid-row  xl:grid-cols-[15fr_4fr] gap-5'>
+<div className='grid grid-row  xl:grid-cols-[15fr_4fr] gap-5  px-4'>
 
 <div className='flex     justify-end '>
   <div className='flex bg-white rounded-lg h-fit '>
@@ -99,8 +99,8 @@ const viewOptions = [
 </div>
   </div>
 
-<div className='flex justify-end'>
-<Button className='w-fit '>Nowy artykuł</Button>
+<div className='flex justify-end '>
+<Button className='w-[35%] bg-teal-700/80 '>Nowy artykuł</Button>
 </div>
 
 </div>

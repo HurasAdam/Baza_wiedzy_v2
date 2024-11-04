@@ -52,7 +52,7 @@ const navigate = useNavigate();
             onClick={()=>navigate(`/articles/${item._id}`)}
             >
               <TableCell className="font-medium ">{item.title}</TableCell>
-              <TableCell className="font-medium ">
+              <TableCell className="font-medium space-x-0.5 ">
             {item?.tags.map((tag)=>{
               return(
                 <BadgeLabel variant="outline" className="bg-blue-300/40  rounded-md border-none " label={tag?.name}/>
