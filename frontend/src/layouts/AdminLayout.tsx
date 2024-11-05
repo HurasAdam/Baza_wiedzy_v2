@@ -19,7 +19,7 @@ import {
   import { Link, Navigate, Outlet, useLocation } from "react-router-dom"
   import Navbar from "@/components/Navbar"
   import { NavUser } from "@/components/nav-user"
-  import { adminNavbarOptions, breadcrumbTranslations } from "@/constants"
+  import { ADMIN_NAVBAR_OPTIONS,  breadcrumbTranslations } from "@/constants"
   import { AppSidebar } from "@/components/AppSidebar"
 import { IMAGES } from '@/constants/images'
 const AdminLayout = () => {
@@ -32,7 +32,8 @@ const AdminLayout = () => {
     image = {IMAGES.Logo}
     title ="Baza wiedzy"
     subtitle ="Librus"
-    extraText="Panel admina"
+    extraText="Admin"
+    options={ADMIN_NAVBAR_OPTIONS}
     />
     <SidebarInset className="bg-zinc-100 ">
    <div className="flex  items-center w-full justify-between sticky top-0  z-20 rounded-b">

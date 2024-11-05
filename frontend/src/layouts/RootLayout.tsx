@@ -18,7 +18,7 @@ import useAuth from "@/hooks/useAuth"
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom"
 import Navbar from "@/components/Navbar"
 import { NavUser } from "@/components/nav-user"
-import { adminNavbarOptions, breadcrumbTranslations } from "@/constants"
+import { adminNavbarOptions, breadcrumbTranslations, NAVBAR_OPTIONS } from "@/constants"
 import { AppSidebar } from "@/components/AppSidebar"
 import { IMAGES } from "@/constants/images"
 
@@ -48,6 +48,7 @@ export default function RootLayout() {
           title ="Baza wiedzy"
     subtitle ="Librus"
       image={IMAGES.Logo}
+      options={NAVBAR_OPTIONS.navMain}
       />
       <SidebarInset className="bg-zinc-100 ">
      <div className="flex  items-center w-full justify-between sticky top-0  z-20 rounded-b">

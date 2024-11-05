@@ -3,7 +3,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { LuHelpingHand } from "react-icons/lu";
 import { MdOutlineDashboard } from "react-icons/md";
 import { PiUsersFill } from "react-icons/pi";
-export  const adminNavbarOptions = {
+export  const NAVBAR_OPTIONS = {
     user: {
       name: "shadcn",
       email: "m@example.com",
@@ -54,23 +54,23 @@ export  const adminNavbarOptions = {
               },
           ],
       },
-      
+      {
+        title:"Ulubione artykuły",
+        url:"/favourite-articles",
+        icon: MdOutlineDashboard,
+        isActive:true,
+        
+       },
+        {
+          title: "Planner",
+          url: "/todos-board",
+          icon: PiUsersFill,
+          isActive: true,
+       
+        },
     ],
     navMy: [
-        {
-         title:"Ulubione artykuły",
-         url:"/favourite-articles",
-         icon: MdOutlineDashboard,
-         isActive:true,
-         
-        },
-         {
-           title: "Planner",
-           url: "/todos-board",
-           icon: PiUsersFill,
-           isActive: true,
         
-         },
        ],
     navFooter:[
       {
@@ -81,6 +81,66 @@ export  const adminNavbarOptions = {
     ]
   
   }
+
+  export  const ADMIN_NAVBAR_OPTIONS =  [
+     {
+      title:"Pulpit",
+      url:"/admin",
+      icon: MdOutlineDashboard,
+     
+      
+     },
+      {
+        title: "Tagi",
+        url: "/admin/tags",
+        icon: PiUsersFill,
+      
+     
+      },
+      {
+        title: "Tematy rozmów",
+        url: "/admin/call-topics",
+        icon: LuHelpingHand,
+
+      },
+  
+      {
+        title: "Statystyki",
+        url: "/admin/stats",
+        icon: FaRegComments,
+        items: [
+            {
+              title: "BZB",
+              url: "departments/helpdesk",
+            },
+            {
+              title: "GSMN",
+              url: "departments/sales",
+            },
+            {
+              title: "MSZ",
+              url: "departments/administration",
+            },
+    
+          ],
+      },
+      {
+        title:"Ulubione artykuły",
+        url:"/favourite-articles",
+        icon: MdOutlineDashboard,
+        isActive:true,
+        
+       },
+        {
+          title: "Planner",
+          url: "/todos-board",
+          icon: PiUsersFill,
+          isActive: true,
+       
+        },
+    ]
+
+
 
 
   export const breadcrumbTranslations: Record<string, string> = {
