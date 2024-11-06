@@ -14,6 +14,7 @@ import ArticleDetails from './ArticleDetails'
 import { useModalContext } from '@/contexts/ModalContext'
 import { DataTable } from '@/components/core/DataTable'
 import { Button } from '@/components/ui/button'
+import QuickArticleDetails from '@/components/QuickArticleDetails'
 
 const frameworksList = [
   { value: "react", label: "React", icon: Turtle },
@@ -123,9 +124,9 @@ const viewOptions = [
             if (articleViewPreference === 'modal') {
               // Otwórz modal
               openContentModal({
-                title: "Edytuj Artykuł",
-                description: "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu.",
-                content: <ArticleDetails type="modal" articleId={article._id} />,
+              
+              
+                content: <QuickArticleDetails type="modal" articleId={article._id} />,
                 enableOutsideClickClose: true,
                 size: 'lg'
               });

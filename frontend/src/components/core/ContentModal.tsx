@@ -46,11 +46,11 @@ export function ContentModal({isOpen,children, onClose,title,description,enableO
               e.preventDefault();
             }}
       >
-        <DialogHeader className="space-y-1">
-          <DialogTitle className="text-xl ">{title}</DialogTitle>
-          <DialogDescription className="text-sm">
+        <DialogHeader className="space-y-1 px-8">
+      {  title &&  <DialogTitle className="text-xl ">{title}</DialogTitle>}
+   {  description &&     <DialogDescription className="text-sm">
           {description}
-          </DialogDescription>
+          </DialogDescription>}
         </DialogHeader>
 
         <DialogFooter>
