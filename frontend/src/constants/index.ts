@@ -85,7 +85,7 @@ export  const NAVBAR_OPTIONS = {
   export  const ADMIN_NAVBAR_OPTIONS =  [
      {
       title:"Pulpit",
-      url:"/admin",
+      url:"/admin/dashboard",
       icon: MdOutlineDashboard,
      
       

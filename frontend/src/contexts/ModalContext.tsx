@@ -21,7 +21,7 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
     description:"",
     content: null as React.ReactNode | null, 
     enableOutsideClickClose:true,
-    size:"lg"
+    size:"md"
   });
 
   // Funkcje dla AlertModal

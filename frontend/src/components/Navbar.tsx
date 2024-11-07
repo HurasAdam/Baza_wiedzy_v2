@@ -96,7 +96,7 @@ const Navbar: React.FC = ({ notifications }) => {
 
   const profileMenuOptions= [
     {label:"Profil", icon:<User/>, actionHandler: () => console.log("profil")},
-    {label:"Panel Admina", icon:<User/>, actionHandler: () => navigate("/admin")},
+    {label:"Panel Admina", icon:<User/>, actionHandler: () => navigate("/admin/dashboard")},
     {label:"Ustawienia", icon:<Settings/>, actionHandler: () => console.log("ustawienia")},
     {label:"Wyloguj się", icon:<LogOut/>, actionHandler: logoutUser },
   ];

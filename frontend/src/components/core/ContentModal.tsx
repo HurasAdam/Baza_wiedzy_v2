@@ -16,7 +16,7 @@ export function ContentModal({isOpen,children, onClose,title,description,enableO
       case "sm":
         return "md:max-w-[40vw] min-w-[40vw]"; // Mały modal na md i większych ekranach
       case "md":
-        return "md:max-w-[80vw] md:min-w-[80vw]"; // Średni modal na md i większych ekranach
+        return "md:max-w-[66vw] md:min-w-[66vw]"; // Średni modal na md i większych ekranach
       case "lg":
         return "xl:max-w-[70vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]"; // Duży modal na lg i większych ekranach, a na md większy
       default:

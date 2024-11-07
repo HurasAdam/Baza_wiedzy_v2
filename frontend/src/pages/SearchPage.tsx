@@ -128,7 +128,7 @@ const viewOptions = [
               
                 content: <QuickArticleDetails type="modal" articleId={article._id} />,
                 enableOutsideClickClose: true,
-                size: 'lg'
+                size: 'md'
               });
             } else {
               // Przekieruj na stronę

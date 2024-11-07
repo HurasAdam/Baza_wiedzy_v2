@@ -24,6 +24,7 @@ import Dashboard from "./pages/Dashboard";
 import CallRegister from "./pages/CallRegister";
 import AdminLayout from "./layouts/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
+import TagsPage from "./pages/TagsPage";
 
 
 
@@ -66,7 +67,8 @@ setNavigate(navigate);
 
       <Route path="admin" element={<AdminLayout/>}>
 
-<Route index element={<AdminDashboard/>}/>
+<Route index path="dashboard" element={<AdminDashboard/>}/>
+<Route  path="tags" element={<TagsPage/>}/>
 </Route>
 
 
