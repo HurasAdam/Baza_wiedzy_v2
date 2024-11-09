@@ -42,7 +42,7 @@ const navigate = useNavigate();
 
           </TableRow>
         </TableHeader>
-        <TableBody className="border border-gray-200  ">
+        <TableBody className=" border-gray-200  ">
           {data?.map((item) => (
             
 

@@ -59,7 +59,7 @@ export default function RootLayout() {
      
       
       
-        <header className="flex h-16 shrink-0  items-center gap-2 justify-between   sticky top-0">
+        <header className="flex h-16 shrink-0  items-center gap-2 justify-between   sticky top-0 ">
 
           <div className="flex items-center gap-2 px-4">
           
@@ -106,7 +106,7 @@ export default function RootLayout() {
        
         </header>
 
-<div className="px-4 py-1">
+<div className="px-4 py-1 ">
 <Outlet/>
 </div>
 <Toaster/>

@@ -15,6 +15,7 @@ import { useModalContext } from '@/contexts/ModalContext'
 import { DataTable } from '@/components/core/DataTable'
 import { Button } from '@/components/ui/button'
 import QuickArticleDetails from '@/components/QuickArticleDetails'
+import QuickViewSection from '@/components/QuickViewSection'
 
 const frameworksList = [
   { value: "react", label: "React", icon: Turtle },
@@ -26,6 +27,7 @@ const frameworksList = [
 
 const SearchPage = () => {
   const [selectedView,setSelectedView] = useState("grid")
+  const [selectedArticle, setSelectedArticle] = useState("");
   const {openContentModal} = useModalContext();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -73,6 +75,11 @@ const toggleView = (view)=>{
 setSelectedView(view)
 }
 
+
+const handleCloseQuickView= () =>{
+  setSelectedArticle(null)
+}
+
 const viewOptions = [
 
   { label: "grid", onClick: () => toggleView("grid"), icon:BiCard },
@@ -80,9 +87,9 @@ const viewOptions = [
 ]
 
   return (
-    <div>
+    <div className=''>
 
-<div className='grid grid-row  xl:grid-cols-[15fr_4fr] gap-5  px-4'>
+<div className='grid grid-row  xl:grid-cols-[15fr_4fr] gap-5  px-4 '>
 
 <div className='flex     justify-end '>
   <div className='flex bg-white rounded-lg h-fit '>
@@ -100,7 +107,7 @@ const viewOptions = [
 </div>
   </div>
 
-<div className='flex justify-end '>
+<div className='flex justify-end  '>
 <Button className='w-[35%] bg-teal-700/80 '>Nowy artykuł</Button>
 </div>
 
@@ -109,58 +116,55 @@ const viewOptions = [
 
 
     
-<div className='grid grid-row  xl:grid-cols-[15fr_4fr] gap-5 py-6 min-h-screen px-4 '>
+{selectedView ==="grid" && (<div className='grid grid-row  xl:grid-cols-[12fr_16fr] gap-4 py-6 min-h-screen px-3   '>
 
 
 
 
-{selectedView ==="grid" && (<div className='flex flex-col gap-2'>
+<div className='flex flex-col gap-1.5 px-1.5  '>
 
       {articles?.data?.map((article)=>{
         return(
           <div
-          onClick={() => {
-            const articleViewPreference = localStorage.getItem('articleView');
-            if (articleViewPreference === 'modal') {
-              // Otwórz modal
-              openContentModal({
-              
-              
-                content: <QuickArticleDetails type="modal" articleId={article._id} />,
-                enableOutsideClickClose: true,
-                size: 'md'
-              });
-            } else {
-              // Przekieruj na stronę
-              navigate(`/articles/${article._id}`);
-            }
-          }}
-          className='min-w-[100%] mx-auto cursor-pointer'
+  onClick={()=>setSelectedArticle(article._id)}
+          className={`min-w-[100%] mx-auto  cursor-pointer flex-1 `}
         >
           <ArticleCard
             isLoading={isLoading}
             toggleArticleAsFavouriteHandler={toggleArticleAsFavouriteHandler}
             data={article}
             className=""
+            isSelected={selectedArticle === article._id}
           />
+      
         </div>
         )
       })}
-    </div>)}
+    </div>
 
 
-    {selectedView ==="table" && <DataTable
+
+
+
+    {/* <div className='border  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white'>
+  <SearchBar/>
+</div> */}
+{ <QuickViewSection 
+onClose={handleCloseQuickView}
+articleId={selectedArticle}/>}
+
+</div>)}
+
+
+{selectedView ==="table" && (
+      <div className='bg-white p-4 rounded-xl shadow'>
+        <DataTable
 data={articles?.data}
 />
+      </div>
+    )
 }
 
-
-    <div className='border  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white'>
-  <SearchBar/>
-</div>
-
-
-</div>
 </div>
   )
 }

@@ -14,13 +14,15 @@ import BadgeLabel from './core/BadgeLabel'
 import { useModalContext } from '@/contexts/ModalContext';
 import ArticleDetails from '@/pages/ArticleDetails';
 import { useNavigate } from 'react-router-dom';
+import { Button } from './ui/button';
+import QuickArticleDetails from './QuickArticleDetails';
 
-const ArticleCard = ({data,className,toggleArticleAsFavouriteHandler,isLoading}) => {
+const ArticleCard = ({data,className,toggleArticleAsFavouriteHandler,isLoading,isSelected}) => {
   const  navigate = useNavigate();
 const {openContentModal} = useModalContext();
 const articleViewPreference = localStorage.getItem('articleView');
 
-const quickViewArticleHandler = (article) => {
+const quickViewArticleHandler = (article,isSelected) => {
 
     if (articleViewPreference === 'modal') {
     
@@ -41,7 +43,12 @@ const quickViewArticleHandler = (article) => {
 
 
   return (
-    <Card className={className}>
+    <Card 
+    
+    // onClick={() => {
+    //   navigate(`/articles/${data._id}`)
+    // }}
+    className={`${className} ${isSelected ? "bg-slate-100 shadow-lg border-slate-400/80": ""}`}>
         <CardHeader>
             <CardTitle className='text-lg flex justify-between'>
                 <span>{data.title}</span>
@@ -56,6 +63,7 @@ const quickViewArticleHandler = (article) => {
                         
                         className={data?.isFavourite ? "" : "text-gray-200/60"}
                     />
+               
                 </span>
             
               
@@ -63,6 +71,7 @@ const quickViewArticleHandler = (article) => {
             </CardTitle>
         
             <CardDescription className='text-xs flex items-center gap-1'>
+              
                 {data?.isVerified && (
                     <>
                         <IoCheckmarkCircle className='w-4 h-4' />
@@ -78,8 +87,22 @@ const quickViewArticleHandler = (article) => {
                 <BadgeLabel className="rounded-md bg-slate-200" key={name} variant="secondary" label={name} />
             ))}
       </div>
-     
+      <Button
+    
+      variant="outline"
+      onClick={(e)=>{
+        e.stopPropagation();
+        openContentModal({
+              
+              
+          content: <QuickArticleDetails type="modal" articleId={data._id} />,
+          enableOutsideClickClose: true,
+          size: 'md'
+        });
+      }}
+      >Zobacz</Button>
         </CardFooter>
+       
     </Card>
 );
 }
