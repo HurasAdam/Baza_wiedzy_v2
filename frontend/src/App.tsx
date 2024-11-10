@@ -34,7 +34,7 @@ const navigate = useNavigate();
 setNavigate(navigate);
 
   return (
-    <div className="bg-zinc-100">
+    <div className="bg-zinc-100 ">
     <Routes>
    
       <Route  element={<RootLayout />}>

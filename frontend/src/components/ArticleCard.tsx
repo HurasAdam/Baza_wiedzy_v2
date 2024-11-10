@@ -48,9 +48,9 @@ const quickViewArticleHandler = (article,isSelected) => {
     // onClick={() => {
     //   navigate(`/articles/${data._id}`)
     // }}
-    className={`${className} ${isSelected ? "bg-slate-100 shadow-lg border-slate-400/80": ""}`}>
+    className={`${className} ${isSelected ? "bg-indigo-100 shadow-lg border-indigo-200": ""}`}>
         <CardHeader>
-            <CardTitle className='text-lg flex justify-between'>
+            <CardTitle className='text-sm flex justify-between '>
                 <span>{data.title}</span>
 
     <span 
@@ -70,7 +70,7 @@ const quickViewArticleHandler = (article,isSelected) => {
   
             </CardTitle>
         
-            <CardDescription className='text-xs flex items-center gap-1'>
+            {/* <CardDescription className='text-xs flex items-center gap-1'>
               
                 {data?.isVerified && (
                     <>
@@ -78,10 +78,10 @@ const quickViewArticleHandler = (article,isSelected) => {
                         zweryfikowany
                     </>
                 )}
-            </CardDescription>
+            </CardDescription> */}
         </CardHeader>
 
-        <CardFooter className='space-x-1 flex justify-between'>
+        {/* <CardFooter className='space-x-1 flex justify-between'>
       <div className='space-x-1'>
       {data?.tags?.map(({ name }) => (
                 <BadgeLabel className="rounded-md bg-slate-200" key={name} variant="secondary" label={name} />
@@ -101,7 +101,7 @@ const quickViewArticleHandler = (article,isSelected) => {
         });
       }}
       >Zobacz</Button>
-        </CardFooter>
+        </CardFooter> */}
        
     </Card>
 );

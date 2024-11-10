@@ -188,8 +188,10 @@ if(isLoading ){
     <div className=' flex flex-col space-y-1.5 '>
 
     <div className='  px-5 mb-2 flex flex-col justify-between rounded-xl  '>
-    {article?.isFavourite &&<FaStar className='w-5 h-5'/>}
-    <span className='text-xl font-semibold text-gray-800'>{article?.title}</span>
+ <div className='flex items-center gap-x-1'>
+ {article?.isFavourite &&<FaStar className='w-5 h-5'/>}
+ <span className='text-xl font-semibold text-gray-800'>{article?.title}</span>
+ </div>
 
     <div className='py-2.5 px-0.5 space-x-1 space-y-1.5'>
       
@@ -205,7 +207,7 @@ if(isLoading ){
     <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl   px-8 py-1 '>
       <AccordionItem value="item-1" className='border-0 '>
         <AccordionTrigger className='text-lg px-2.5 py-3 bg-blue-50 rounded-lg border border-blue-100 '>Opis dla pracownika</AccordionTrigger>
-        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base  '>
+        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-sm text-gray-900  '>
           {article?.employeeDescription}
         </AccordionContent>
       </AccordionItem>
@@ -217,7 +219,7 @@ if(isLoading ){
     <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl    px-8 py-1 '>
       <AccordionItem value="item-1" className='border-0 '>
         <AccordionTrigger className='text-lg px-2.5 py-3 bg-blue-50 rounded-lg border border-blue-100'>Odpowiedź dla klienta</AccordionTrigger>
-        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]'>
+        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px] text-sm text-gray-900 '>
           {article?.clientDescription}
         </AccordionContent>
       </AccordionItem>

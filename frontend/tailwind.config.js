@@ -16,7 +16,7 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
-			badge_primary: "rgb(234, 100, 84)",
+  			badge_primary: 'rgb(234, 100, 84)',
   			customDark: 'rgb(24, 24, 27)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

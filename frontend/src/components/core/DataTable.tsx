@@ -29,7 +29,7 @@ const navigate = useNavigate();
 
     return (
       <Table className="bg-white">
-        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableCaption>Pagination</TableCaption>
         <TableHeader className="bg-gray-400/20">
           <TableRow className="hover:bg-transparent py-0.5  ">
             {

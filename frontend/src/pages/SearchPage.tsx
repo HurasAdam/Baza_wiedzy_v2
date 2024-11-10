@@ -89,7 +89,7 @@ const viewOptions = [
   return (
     <div className=''>
 
-<div className='grid grid-row  xl:grid-cols-[15fr_4fr] gap-5  px-4 '>
+<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-5  px-4 '>
 
 <div className='flex     justify-end '>
   <div className='flex bg-white rounded-lg h-fit '>
@@ -108,7 +108,7 @@ const viewOptions = [
   </div>
 
 <div className='flex justify-end  '>
-<Button className='w-[35%] bg-teal-700/80 '>Nowy artykuł</Button>
+<Button className=' bg-blue-900/90 '>Nowy artykuł</Button>
 </div>
 
 </div>
@@ -116,18 +116,18 @@ const viewOptions = [
 
 
     
-{selectedView ==="grid" && (<div className='grid grid-row  xl:grid-cols-[12fr_16fr] gap-4 py-6 min-h-screen px-3   '>
+{selectedView ==="grid" && (<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-4 py-6 min-h-screen px-3   '>
 
 
 
 
-<div className='flex flex-col gap-1.5 px-1.5  '>
+<div className='flex flex-col gap-1.5 overflow-y-auto'>
 
       {articles?.data?.map((article)=>{
         return(
           <div
   onClick={()=>setSelectedArticle(article._id)}
-          className={`min-w-[100%] mx-auto  cursor-pointer flex-1 `}
+          className={`min-w-[100%] mx-auto  cursor-pointer  `}
         >
           <ArticleCard
             isLoading={isLoading}
@@ -157,10 +157,16 @@ articleId={selectedArticle}/>}
 
 
 {selectedView ==="table" && (
-      <div className='bg-white p-4 rounded-xl shadow'>
+      <div className=' grid grid-cols-[10fr_3fr] gap-3.5'>
+        <div className='bg-white p-4 rounded-xl shadow'>
         <DataTable
 data={articles?.data}
 />
+        </div>
+
+<div className='border  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white min-h-[84vh]'>
+  <SearchBar/>
+</div>
       </div>
     )
 }

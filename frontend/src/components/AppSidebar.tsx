@@ -1,60 +1,172 @@
-import * as React from "react"
-import {Command} from "lucide-react"
 
+import * as React from "react"
+import {
+  AudioWaveform,
+  BookOpen,
+  Bot,
+  Command,
+  Frame,
+  GalleryVerticalEnd,
+  Map,
+  PieChart,
+  Settings2,
+  SquareTerminal,
+} from "lucide-react"
 import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
+import { NavProjects } from "@/components/nav-projects"
+import { NavUser } from "@/components/nav-user"
+import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar"
-import { adminNavbarOptions, NAVBAR_OPTIONS } from "@/constants"
-import { NavProjects } from "./nav-projects"
-import { IMAGES } from "@/constants/images"
-
-
-
-export function AppSidebar({title, subtitle,image, extraText, options, ...props }: React.ComponentProps<typeof Sidebar>) {
-
-
+import { NAVBAR_OPTIONS } from "@/constants"
+// This is sample data.
+const data = {
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
+  teams: [
+    {
+      name: "Acme Inc",
+      logo: GalleryVerticalEnd,
+      plan: "Enterprise",
+    },
+    {
+      name: "Acme Corp.",
+      logo: AudioWaveform,
+      plan: "Startup",
+    },
+    {
+      name: "Evil Corp.",
+      logo: Command,
+      plan: "Free",
+    },
+  ],
+  navMain: [
+    {
+      title: "Playground",
+      url: "#",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "History",
+          url: "#",
+        },
+        {
+          title: "Starred",
+          url: "#",
+        },
+        {
+          title: "Settings",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Models",
+      url: "#",
+      icon: Bot,
+      items: [
+        {
+          title: "Genesis",
+          url: "#",
+        },
+        {
+          title: "Explorer",
+          url: "#",
+        },
+        {
+          title: "Quantum",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Documentation",
+      url: "#",
+      icon: BookOpen,
+      items: [
+        {
+          title: "Introduction",
+          url: "#",
+        },
+        {
+          title: "Get Started",
+          url: "#",
+        },
+        {
+          title: "Tutorials",
+          url: "#",
+        },
+        {
+          title: "Changelog",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Settings",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "General",
+          url: "#",
+        },
+        {
+          title: "Team",
+          url: "#",
+        },
+        {
+          title: "Billing",
+          url: "#",
+        },
+        {
+          title: "Limits",
+          url: "#",
+        },
+      ],
+    },
+  ],
+  projects: [
+    {
+      name: "Design Engineering",
+      url: "#",
+      icon: Frame,
+    },
+    {
+      name: "Sales & Marketing",
+      url: "#",
+      icon: PieChart,
+    },
+    {
+      name: "Travel",
+      url: "#",
+      icon: Map,
+    },
+  ],
+}
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar variant="sidebar" {...props} className="">
-      <SidebarHeader className="bg-gray-800 text-gray-200  py-2.5 px-2.5 ">
-        <SidebarMenu  >
-          <SidebarMenuItem>
-         
-      <div className="flex space-x-2.5 py-2 px-1.5 items-center ">
-              
-      <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-transparent text-sidebar-primary-foreground">
-                  {/* <Command className="size-4 text-green-200" /> */}
-                  <img src={image}  alt="" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold text-neutral-300 text-md">{title}</span>
-        {       extraText&&   <span className="truncate text-lg font-semibold text-neutral-200/90  ">{extraText}</span>}
-                  <span className="truncate text-xs font-semibold text-orange-600/90 ">{subtitle}</span>
-              
-                  
-                </div>
-             
-      </div>
-   
-        
- 
-          </SidebarMenuItem>
-        </SidebarMenu>
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader className="bg-blue-950">
+        <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
-      <SidebarContent className="bg-gray-800 text-gray-200 py-2.5  ">
-        <NavMain items={options} />
-      
-     
+      <SidebarContent className="bg-blue-950 text-blue-100/90 ">
+        <NavMain items={NAVBAR_OPTIONS.navMain} />
+  
       </SidebarContent>
-      <SidebarFooter className="bg-gray-800 text-gray-200">
-    
+      <SidebarFooter className="bg-blue-950">
+        <NavUser user={data.user} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   )
 }
