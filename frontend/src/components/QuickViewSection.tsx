@@ -15,7 +15,7 @@ if(!articleId){
 }
     
   return (
-    <div className='shadow bg-white rounded-xl overflow-y-auto min-h-[82vh] max-h-[82vh] sticky top-16 right-0 scrollbar-custom'>
+    <div className=' bg-white border shadow  rounded-xl overflow-y-auto min-h-[80vh] max-h-[80vh] sticky top-16 right-0 scrollbar-custom'>
    <div className='flex justify-end absolute top-0 right-0'>
    <Button
    onClick={onClose}

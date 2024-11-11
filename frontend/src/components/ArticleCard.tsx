@@ -2,6 +2,7 @@ import React from 'react';
 import { FaStar } from "react-icons/fa6";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { LuInspect } from "react-icons/lu";
+import { FaFolderOpen } from "react-icons/fa6";
 import {
     Card,
     CardContent,
@@ -13,7 +14,7 @@ import {
 import BadgeLabel from './core/BadgeLabel'
 import { useModalContext } from '@/contexts/ModalContext';
 import ArticleDetails from '@/pages/ArticleDetails';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import QuickArticleDetails from './QuickArticleDetails';
 
@@ -48,12 +49,11 @@ const quickViewArticleHandler = (article,isSelected) => {
     // onClick={() => {
     //   navigate(`/articles/${data._id}`)
     // }}
-    className={`${className} ${isSelected ? "bg-indigo-100 shadow-lg border-indigo-200": ""}`}>
-        <CardHeader>
-            <CardTitle className='text-sm flex justify-between '>
-                <span>{data.title}</span>
-
-    <span 
+    className={`${className} ${isSelected ? "bg-indigo-100 shadow-lg relative border-indigo-200": "relative"}`}>
+        <CardHeader className=' py-1'>
+            <CardTitle className='text-sm flex justify-between  '>
+              <div className='flex items-center gap-x-1'>
+              <span 
                 onClick={(e) => {
                     e.stopPropagation(); // Zatrzymaj propagację, aby nie otwierało artykułu
                     toggleArticleAsFavouriteHandler({ id: data?._id });
@@ -65,43 +65,24 @@ const quickViewArticleHandler = (article,isSelected) => {
                     />
                
                 </span>
-            
-              
+        <span>{data.title}</span>
+              </div>
+               
+<Link to={`/articles/${data._id}`}>
+<FaFolderOpen className='w-5 h-5 text-blue-950/90 hover:text-slate-500'/>
+</Link>
+ 
   
             </CardTitle>
         
-            {/* <CardDescription className='text-xs flex items-center gap-1'>
-              
-                {data?.isVerified && (
-                    <>
-                        <IoCheckmarkCircle className='w-4 h-4' />
-                        zweryfikowany
-                    </>
-                )}
-            </CardDescription> */}
+          {/* <CardDescription className='text-xs flex items-center gap-1'>
+                        
+
+    
+            </CardDescription>  */}
         </CardHeader>
 
-        {/* <CardFooter className='space-x-1 flex justify-between'>
-      <div className='space-x-1'>
-      {data?.tags?.map(({ name }) => (
-                <BadgeLabel className="rounded-md bg-slate-200" key={name} variant="secondary" label={name} />
-            ))}
-      </div>
-      <Button
-    
-      variant="outline"
-      onClick={(e)=>{
-        e.stopPropagation();
-        openContentModal({
-              
-              
-          content: <QuickArticleDetails type="modal" articleId={data._id} />,
-          enableOutsideClickClose: true,
-          size: 'md'
-        });
-      }}
-      >Zobacz</Button>
-        </CardFooter> */}
+   
        
     </Card>
 );

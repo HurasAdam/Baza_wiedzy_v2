@@ -47,30 +47,8 @@ export default function RootLayout() {
     <AppSidebar />
     <SidebarInset>
 <Navbar/>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0 border bg-neutral-50">
-      <header className="flex  h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-      
-      <div className="flex items-center gap-2 px-4">
-      
-        <Separator orientation="vertical" className="mr-2 h-4" />
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-            <Link to="/dashboard">
-              <BreadcrumbLink >
-                Baza Wiedzy
-              </BreadcrumbLink>
-              </Link>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage className="text-2xl">Artykuły</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-2.5  bg-neutral-50 h-screen">
 
-    </header>
 <Outlet/>
       </div>
     </SidebarInset>

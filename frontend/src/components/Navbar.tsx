@@ -121,7 +121,7 @@ const NavLinkItem: React.FC = ({ element }) => {
 };
 
   return (
-    <div className={clsx("flex justify-between w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0  rounded-tl-2xl", isScrolled ? "bg-white border-b-2":"")}>
+    <div className={clsx("flex justify-between border-b border-b-neutral-200 w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0  rounded-tl-2xl", isScrolled ? "bg-white border-b-2":"")}>
       <div className="flex gap-4">
         <button
           // onClick={()=>dispatch(setOpenSidebar(true))}
