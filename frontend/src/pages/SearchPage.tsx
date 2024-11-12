@@ -91,7 +91,7 @@ const viewOptions = [
   return (
     <div className=' rounded-lg  min-h-[90vh]'>
 
-<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-5  px-4 py-2 relative max-w-[1700px] mx-auto bg-white shadow border rounded-lg  '>
+<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-5  px-4 py-2 relative max-w-[1700px] mx-auto   '>
 <div className='font-semibold flex items-center gap-x-1.5 text-2xl text-sky-950'>
   <SiPowerpages/>Baza artykułów
   </div>
@@ -141,6 +141,7 @@ visibleFields={{ title: true, tags: false, author: false }} />
           className={`min-w-[100%] mx-auto  cursor-pointer  `}
         >
           <ArticleCard
+          viewType={selectedView}
             isLoading={isLoading}
             toggleArticleAsFavouriteHandler={toggleArticleAsFavouriteHandler}
             data={article}
@@ -169,11 +170,9 @@ articleId={selectedArticle}/>}
 
 
 {selectedView ==="table" && (
-      <div className=' grid grid-cols-[4fr_13fr] gap-3.5 px-2.5 '>
-        <div className='shadow border border-neutral-200  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white min-h-[84vh]'>
-  <SearchBar visibleFields={{ title: true, tags: true, author: true }} />
-</div>
-        <div className='p-4 rounded-xl  border bg-white space-y-1.5'>
+      <div className=' grid grid-cols-[13fr_4fr] gap-3.5 px-2.5 py-6 max-w-[1740px] mx-auto  '>
+
+        <div className='py-7 px-7 rounded-xl  border bg-white space-y-1.5'>
         {/* <DataTable
 data={articles?.data}
 /> */}
@@ -196,7 +195,9 @@ data={articles?.data}
       })}
         </div>
 
-
+        <div className='shadow border border-neutral-200  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white min-h-[84vh]'>
+  <SearchBar visibleFields={{ title: true, tags: true, author: true }} />
+</div>
       </div>
     )
 }
