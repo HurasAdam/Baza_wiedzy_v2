@@ -23,6 +23,9 @@ import { useModalContext } from "@/contexts/ModalContext";
 import { useNavigate } from "react-router-dom";
 import ArticleDetails from "@/pages/ArticleDetails";
 
+const MAX_TITLE_LENGTH = 90;
+const MAX_EMPLOYEE_DESCRIPTION_LENGTH = 9000;
+const MAX_CLIENT_DESCRIPTION_LENGTH = 9000;
 
  
 const formSchema = z.object({
@@ -72,7 +75,9 @@ const navigate = useNavigate();
   });
   
 
- 
+  const employeeDescriptionValue = form.watch("employeeDescription", "");
+  const clientDescriptionValue = form.watch("clientDescription", "");
+  const titleValue = form.watch("title", "");
 
   
 
@@ -109,7 +114,7 @@ if(article){
  
   return (
     <Form {...form} >
-      <form onSubmit={form.handleSubmit(onSubmit)} className={`${className} space-y-8    px-10 `}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className={`${className} space-y-4    px-10 `}>
         <FormField
        
           control={form.control}
@@ -120,8 +125,8 @@ if(article){
               <FormControl>
                 <Input placeholder="Jak odnotować zastępstwo" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
+              <FormDescription className={`${ titleValue.length>0 ? "text-slate-600" :"text-transparent"}`}>
+         {titleValue.length}/{MAX_TITLE_LENGTH} znaków
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -135,7 +140,7 @@ if(article){
   render={({ field }) => (
    
     <FormItem>
-      <FormLabel>Tags</FormLabel>
+      <FormLabel>Tagi</FormLabel>
       <FormControl>
         <MultipleSelector
           defaultOptions={tags && tags}
@@ -151,7 +156,7 @@ if(article){
           }
         />
       </FormControl>
-      <FormDescription>Wybierz frameworki, które lubisz.</FormDescription>
+      <FormDescription>Wybierz i przypisz tag</FormDescription>
       <FormMessage />
     </FormItem>
   )}
@@ -173,8 +178,8 @@ if(article){
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
+         <FormDescription className={`${ employeeDescriptionValue.length>0 ? "text-slate-600" :"text-transparent"}`}>
+         {employeeDescriptionValue.length}/{MAX_EMPLOYEE_DESCRIPTION_LENGTH} znaków
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -195,8 +200,8 @@ if(article){
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
+              <FormDescription className={`${ clientDescriptionValue.length>0 ? "text-slate-600" :"text-transparent"}`}>
+         {clientDescriptionValue.length}/{MAX_CLIENT_DESCRIPTION_LENGTH} znaków
               </FormDescription>
               <FormMessage />
             </FormItem>
