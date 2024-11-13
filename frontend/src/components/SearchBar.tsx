@@ -26,7 +26,9 @@ import { api } from "@/lib/api";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
 import { SelectBox } from "./core/SelectBox";
 import { Separator } from "@radix-ui/react-separator";
-
+import { IMAGES } from "@/constants/images";
+import { HiMiniXMark } from "react-icons/hi2";
+import { IoIosSearch } from "react-icons/io";
 
  
 const formSchema = z.object({
@@ -121,22 +123,25 @@ console.log(selected)
     <label htmlFor="">
       Tytuł
     </label>
+    <IoIosSearch className="absolute bottom-2 left-[2%] text-blue-950 w-5 h-5 pointer-events-none"/>
                 <Input 
                 value={title}
-                placeholder="Jak odnotować zastępstwo" 
+                  className="pl-9"
+                placeholder="Wyszukaj"
                      onChange={(e) => {
-                  
+                 
                       urlTitleHandler(e);   
                     }}
                 />
          
-      {   title.length>0 &&  <button 
-      type="button"
-      onClick={clearTitleHandler}
-      className="border px-2 rounded-lg bg-slate-600 hover:bg-slate-500 text-neutral-50 absolute top-[3%] right-[3%]">X</button>}
+      {   title.length>0 && <HiMiniXMark
+   type="button"
+   onClick={clearTitleHandler}
+   className="absolute bottom-2 right-[3%] w-6 h-6 cursor-pointer hover:text-blue-800"
+/> }
 
 </div>  
-        
+
 
 
 <div className="space-y-1.5">
