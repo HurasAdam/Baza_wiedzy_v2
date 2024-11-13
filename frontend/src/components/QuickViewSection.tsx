@@ -1,16 +1,17 @@
 import React from 'react'
 import QuickArticleDetails from './QuickArticleDetails'
 import { Button } from './ui/button'
+import { IMAGES } from '@/constants/images'
 
 const QuickViewSection = ({articleId,onClose}) => {
 
 
 if(!articleId){
     return(
-        <div className='shadow bg-neutral-100 rounded-xl overflow-y-auto min-h-[82vh] max-h-[82vh] sticky top-16 right-0 '>
+        <div className='  rounded-xl  min-h-[82vh] max-h-[82vh] sticky top-16 right-0  '>
             
-            
-            No content</div>
+            <img src={IMAGES.data_placeholder} alt="" />
+            </div>
     )
 }
     

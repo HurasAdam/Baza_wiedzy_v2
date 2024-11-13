@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button'
 import QuickArticleDetails from '@/components/QuickArticleDetails'
 import QuickViewSection from '@/components/QuickViewSection'
 import { BasicSearchBar } from '@/components/BasicSearchBar'
+import useArticleViewType from '@/hooks/useArticleViewType'
 
 const frameworksList = [
   { value: "react", label: "React", icon: Turtle },
@@ -30,16 +31,15 @@ const frameworksList = [
 const SearchPage = () => {
   const [selectedView,setSelectedView] = useState("grid")
   const [selectedArticle, setSelectedArticle] = useState("");
-  const {openContentModal} = useModalContext();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
+
   const {title,tags,author,setFilters,page,verified,limit} = useArticleFilters();
-  const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>([]);
 
 
 
 
-
+const [viewType,updateViewType] = useArticleViewType("articleView","table")
+console.log(selectedView)
 
   const queryParams={
     page,title,tags,author,verified,limit
@@ -84,8 +84,8 @@ const handleCloseQuickView= () =>{
 
 const viewOptions = [
 
-  { label: "grid", onClick: () => toggleView("grid"), icon:BiCard },
-  { label: "table", onClick: () => toggleView("table"), icon:TbTable }
+  { label: "grid", onClick: () => updateViewType("grid"), icon:BiCard },
+  { label: "table", onClick: () => updateViewType("table"), icon:TbTable }
 ]
 
   return (
@@ -102,7 +102,7 @@ const viewOptions = [
 <div>Filters</div>
   <div className='flex bg-white rounded-lg h-fit '>
 {viewOptions.map((item)=>{
-  const isSelected = item.label ===selectedView
+  const isSelected = item.label ===viewType
   return(
     <div
     onClick={item.onClick}
@@ -125,7 +125,7 @@ const viewOptions = [
 
 
     
-{selectedView ==="grid" && (<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-4 py-6 h-fit px-3  max-w-[1740px] mx-auto '>
+{viewType ==="grid" && (<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-4 py-6 h-fit px-3  max-w-[1740px] mx-auto '>
 
 
 
@@ -169,7 +169,7 @@ articleId={selectedArticle}/>}
 </div>)}
 
 
-{selectedView ==="table" && (
+{viewType ==="table" && (
       <div className=' grid grid-cols-[13fr_4fr] gap-3.5 px-2.5 py-6 max-w-[1740px] mx-auto  '>
 
         <div className='py-7 px-7 rounded-xl  border bg-white space-y-1.5'>

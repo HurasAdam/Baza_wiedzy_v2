@@ -36,7 +36,7 @@ const ArticleDetails = ({articleId,type}) => {
     const { id } = useParams();
     const queryClient = useQueryClient();
  const navigate = useNavigate()
-    const { openModal, openContentModal } = useModalContext();
+    const { openModal, openContentModal,closeContentModal } = useModalContext();
 
 
 
@@ -87,6 +87,9 @@ const {mutate:deleteArticleMutation} = useMutation({
   onSuccess:(data)=>{
     queryClient.invalidateQueries("articles");
     navigate("/articles")
+    if(type ==="modal"){
+      closeContentModal()
+    }
   
   toast({
     title: "Sukces",
@@ -100,8 +103,8 @@ const {mutate:deleteArticleMutation} = useMutation({
 
 const deleteArticleHandler = ({id}) => {
   openModal(
-    "Are you absolutely sure?",
-    "This action cannot be undone. This will permanently delete this article.",
+    "Czy jestes pewien?",
+    "Czy jesteś pewien, że chcesz usunąć ten artykuł? Potwierdź, aby kontynuować.",
     () => {
       deleteArticleMutation({id:id ||articleId})
     }

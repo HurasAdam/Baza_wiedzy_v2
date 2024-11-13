@@ -101,8 +101,8 @@ const {mutate:deleteArticleMutation} = useMutation({
 
 const deleteArticleHandler = ({id}) => {
   openModal(
-    "Are you absolutely sure?",
-    "This action cannot be undone. This will permanently delete this article.",
+    "Czy jestes pewien?",
+    "Czy jesteś pewien, że chcesz usunąć ten artykuł? Potwierdź, aby kontynuować..",
     () => {
       deleteArticleMutation({id:id ||articleId})
     }

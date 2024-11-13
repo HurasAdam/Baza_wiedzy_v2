@@ -25,19 +25,16 @@ const articleViewPreference = localStorage.getItem('articleView');
 
 const quickViewArticleHandler = (article,isSelected) => {
 
-    if (articleViewPreference === 'modal') {
+
     
       openContentModal({
-        title: "Edytuj Artykuł",
-        description: "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
+        title: article?.title,
+        description: "",
         content: <ArticleDetails type="modal" articleId={article._id} />,
         enableOutsideClickClose: true,
         size: "lg",
       });
-    } else {
-      // Jeśli preferencje użytkownika to "page", przekieruj na nową stronę
-      navigate(`/articles/${article._id}`);
-    }
+
   };
 
 
