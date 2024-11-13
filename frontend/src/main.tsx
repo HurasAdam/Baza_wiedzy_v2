@@ -16,7 +16,7 @@ createRoot(document.getElementById('root')!).render(
           <ModalContextProvider>
     <App />
     </ModalContextProvider>
-    <ReactQueryDevtools DevtoolsPosition="bottom-right" initialIsOpen={false} />
+    {/* <ReactQueryDevtools DevtoolsPosition="bottom-right" initialIsOpen={false} /> */}
     </BrowserRouter>
     </QueryClientProvider>
 

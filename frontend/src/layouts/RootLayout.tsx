@@ -51,6 +51,7 @@ export default function RootLayout() {
 
 <Outlet/>
       </div>
+      <Toaster/>
     </SidebarInset>
   </SidebarProvider>
 

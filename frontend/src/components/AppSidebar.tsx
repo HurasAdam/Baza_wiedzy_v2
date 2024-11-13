@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
+
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import {
@@ -24,6 +25,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { NAVBAR_OPTIONS } from "@/constants"
+import { IMAGES } from "@/constants/images"
 // This is sample data.
 const data = {
   user: {
@@ -33,9 +35,9 @@ const data = {
   },
   teams: [
     {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      name: "Baza Wiedzy",
+      logo: IMAGES.Logo,
+      plan: "Librus",
     },
     {
       name: "Acme Corp.",
