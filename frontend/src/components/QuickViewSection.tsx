@@ -8,9 +8,11 @@ const QuickViewSection = ({articleId,onClose}) => {
 
 if(!articleId){
     return(
-        <div className='  rounded-xl  min-h-[82vh] max-h-[82vh] sticky top-16 right-0  '>
+        <div className='  rounded-xl  min-h-[82vh] max-h-[82vh] sticky top-16 right-0 overflow-hidden '>
             
-            <img src={IMAGES.data_placeholder} alt="" />
+            <img 
+            className='object-contain w-full h-[94vh] '
+            src={IMAGES.data_placeholder} alt="" />
             </div>
     )
 }

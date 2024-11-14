@@ -18,29 +18,15 @@ import { Switch } from "../ui/switch";
 interface SideDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  children:React.ReactNode
 }
 
-export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
+export function SideDrawer({ isOpen, onClose, children }: SideDrawerProps) {
  
-  const [isChecked, setIsChecked] = React.useState(false);
-
-  // Używamy useEffect, aby ustawić początkową wartość z localStorage
-  React.useEffect(() => {
-    const savedView = localStorage.getItem("articleView");
-    if (savedView === "modal") {
-      setIsChecked(true);
-    } else {
-      setIsChecked(false);
-    }
-  }, []);
 
 
 
-  const handleArticleViewChange = (checked: boolean) => {
-    setIsChecked(checked);
-    localStorage.setItem("articleView", checked ? "modal" : "page");
-  };
-  
+
 
 
 
@@ -54,25 +40,10 @@ export function SideDrawer({ isOpen, onClose }: SideDrawerProps) {
               <DrawerHeader>
                 <DrawerTitle>Theme Color Options</DrawerTitle>
                 <DrawerDescription>
-                  * Selected option will be applied to all layout elements (navbar, toolbar, etc.). You can also create your own theme options and color
-                  schemes.
+               {children}
                 </DrawerDescription>
               </DrawerHeader>
-              <div className='p-4 px-6 pb-0 space-y-4'>
-               
-           <div className="flex justify-between">
-            <span>
-              Otwieraj artykuł w oknie modalnym
-            </span>
-           <Switch
-                      checked={isChecked}
-                      onCheckedChange={handleArticleViewChange}
-                    />
-              
-           </div>
-           
        
-              </div>
             </div>
           </ScrollArea>
         </DrawerContent>

@@ -21,6 +21,8 @@ import { NavUser } from "./nav-user";
 import useAuth from "@/hooks/useAuth";
 import useScrollY from "@/hooks/useScrollY";
 import { SidebarTrigger } from "./ui/sidebar";
+import { Switch } from "./ui/switch";
+import { SearchBar } from "./SearchBar";
 
 const Navbar: React.FC = ({ notifications }) => {
 //   const {showContentModal} = useAppContext();
@@ -175,7 +177,23 @@ const NavLinkItem: React.FC = ({ element }) => {
           <IoIosSettings/>
         </button>
         <Dropdown options={profileMenuOptions} triggerBtn={<div><UserAvatar/></div>}/>
-        <SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
+        <SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer} >
+        <div className='p-4 px-6 pb-0 space-y-4'>
+               <SearchBar/>
+               <div className="flex justify-between">
+                <span>
+                  Zweryfikowane
+                </span>
+               <Switch
+                          checked={false}
+                          
+                        />
+                  
+               </div>
+               
+           
+                  </div>
+        </SideDrawer>
         {/* <NavUser user={user} /> */}
       </div>
     </div>

@@ -14,19 +14,14 @@ import ArticleDetails from './ArticleDetails'
 import { SiPowerpages } from "react-icons/si";
 import { useModalContext } from '@/contexts/ModalContext'
 import { DataTable } from '@/components/core/DataTable'
-import { Button } from '@/components/ui/button'
+
 import QuickArticleDetails from '@/components/QuickArticleDetails'
 import QuickViewSection from '@/components/QuickViewSection'
 import { BasicSearchBar } from '@/components/BasicSearchBar'
 import useArticleViewType from '@/hooks/useArticleViewType'
+import { SideDrawer } from '@/components/core/SideDrawer'
+import { IoFilter } from "react-icons/io5";
 
-const frameworksList = [
-  { value: "react", label: "React", icon: Turtle },
-  { value: "angular", label: "Angular", icon: Cat },
-  { value: "vue", label: "Vue", icon: Dog },
-  { value: "svelte", label: "Svelte", icon: Rabbit },
-  { value: "ember", label: "Ember", icon: Fish },
-];
 
 const SearchPage = () => {
   const [selectedView,setSelectedView] = useState("grid")
@@ -34,6 +29,8 @@ const SearchPage = () => {
   const queryClient = useQueryClient();
 
   const {title,tags,author,setFilters,page,verified,limit} = useArticleFilters();
+const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
 
 
 
@@ -78,6 +75,14 @@ setSelectedView(view)
 }
 
 
+const closeDrawer = () =>{
+  setIsDrawerOpen(false)
+}
+
+const openDrawer = () =>{
+  setIsDrawerOpen(true);
+}
+
 const handleCloseQuickView= () =>{
   setSelectedArticle(null)
 }
@@ -99,7 +104,7 @@ const viewOptions = [
 
 
 
-<div>Filters</div>
+
   <div className='flex bg-white rounded-lg h-fit '>
 {viewOptions.map((item)=>{
   const isSelected = item.label ===viewType
@@ -119,26 +124,34 @@ const viewOptions = [
 {/* <div className='flex justify-end  '>
 <Button className=' bg-blue-900/90 '>Nowy artykuł</Button>
 </div> */}
-
+   
 </div>
 
 
 
     
-{viewType ==="grid" && (<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-4 py-6 h-fit px-3  max-w-[1740px] mx-auto '>
+{viewType ==="grid" && (<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-4  h-fit px-3  max-w-[1740px] mx-auto '>
 
 
 
 
 <div className='flex flex-col gap-1.5 '>
+  <div className='flex justify-end px-6'>
+  <IoFilter 
+  className='hover:text-blue-800 cursor-pointer w-5 h-5'
+onClick={openDrawer}>Filters</IoFilter>
+  </div>
+
 <BasicSearchBar 
 className="flex items-center w-full justify-between"
 visibleFields={{ title: true, tags: false, author: false }} />
+
+<div className='py-6 flex flex-col gap-[3px]'>
       {articles?.data?.map((article)=>{
         return(
           <div
   onClick={()=>setSelectedArticle(article._id)}
-          className={`min-w-[100%] mx-auto  cursor-pointer  `}
+          className={`min-w-[100%] mx-auto  cursor-pointer   `}
         >
           <ArticleCard
           viewType={selectedView}
@@ -152,7 +165,7 @@ visibleFields={{ title: true, tags: false, author: false }} />
         </div>
         )
       })}
-      
+      </div>
     </div>
 
 
@@ -162,9 +175,12 @@ visibleFields={{ title: true, tags: false, author: false }} />
     {/* <div className='border  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white'>
   <SearchBar/>
 </div> */}
+<div className='py-6'>
 { <QuickViewSection 
 onClose={handleCloseQuickView}
 articleId={selectedArticle}/>}
+
+</div>
 
 </div>)}
 
@@ -201,7 +217,7 @@ data={articles?.data}
       </div>
     )
 }
-
+<SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
 </div>
   )
 }
