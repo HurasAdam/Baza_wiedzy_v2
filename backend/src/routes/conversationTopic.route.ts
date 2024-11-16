@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { createConversationTopicHandler } from "../controllers/conversationTopic.controller";
 
 
 
@@ -8,7 +9,7 @@ const conversationTopicRoutes = Router();
 // prefix /conversation-topics
 
 conversationTopicRoutes.get("/")
-conversationTopicRoutes.post("/create");
+conversationTopicRoutes.post("/create", createConversationTopicHandler);
 
 
 

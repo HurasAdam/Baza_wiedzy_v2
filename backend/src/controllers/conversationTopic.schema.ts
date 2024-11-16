@@ -7,7 +7,7 @@ export const conversationTopicSchema = z.string().min(2, { message: "Title must 
 
 
 export const newConversationTopicSchema = z.object({
-    name:conversationTopicSchema,
+    title:conversationTopicSchema,
 
 })
 
