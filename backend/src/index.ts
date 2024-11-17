@@ -14,6 +14,8 @@ import sessionRoutes from "./routes/session.route";
 import articleRoutes from "./routes/article.route";
 import tagRoutes from "./routes/tag.route";
 import conversationTopicRoutes from "./routes/conversationTopic.route";
+import conversationReportRoutes from "./routes/conversationReport.route";
+
 
 
 const app = express();
@@ -42,6 +44,7 @@ app.use("/sessions", authenticate,sessionRoutes);
 app.use("/articles",authenticate, articleRoutes);
 app.use("/tags",authenticate, tagRoutes);
 app.use("/conversation-topics",authenticate, conversationTopicRoutes);
+app.use("/conversation-report",authenticate, conversationReportRoutes);
 
 app.use(errorHandler);
 
