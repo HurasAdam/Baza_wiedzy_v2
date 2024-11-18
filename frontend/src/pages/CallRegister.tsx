@@ -4,6 +4,7 @@ import { conversationTopicApi } from '@/lib/conversationTopicsApi'
 import { useQuery } from '@tanstack/react-query'
 import { PiPhoneCallFill } from "react-icons/pi";
 import React from 'react'
+import ConversationReportCard from '@/components/ConversationReportCard';
 
 const CallRegister = () => {
   const { data: conversationTopics } = useQuery({
@@ -23,30 +24,7 @@ const CallRegister = () => {
       <div className='flex flex-col gap-3.5'>
       {conversationTopics?.map((topic) => {
         return (
-          <div className="border rounded-lg p-5 grid grid-cols-2 max-w-6xl  gap-4  bg-white shadow-xs">
-          {/* Kolumna z tytułem tematu */}
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold">{topic?.title}</h3>
-          </div>
-    
-          {/* Kolumna z polem tekstowym i przyciskiem */}
-          <div>
-            <Textarea
-           
-           
-              placeholder="Wpisz opis tematu..."
-              className="w-full mb-2"
-            />
-      <div className='flex justify-end'>
-      <Button
-        
-        className="mt-2 bg-blue-500 text-white p-5  rounded-md w-fit"
-      >
-        Wyślij
-      </Button>
-      </div>
-          </div>
-        </div>
+<ConversationReportCard topic={topic}/>
         )
       })}
       </div>

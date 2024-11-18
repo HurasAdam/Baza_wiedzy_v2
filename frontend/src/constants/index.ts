@@ -3,6 +3,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { LuHelpingHand } from "react-icons/lu";
 import { MdOutlineDashboard } from "react-icons/md";
 import { PiUsersFill } from "react-icons/pi";
+import { IoStatsChart } from "react-icons/io5";
 export  const NAVBAR_OPTIONS = {
     user: {
       name: "shadcn",
@@ -65,6 +66,13 @@ export  const NAVBAR_OPTIONS = {
           title: "Planner",
           url: "/todos-board",
           icon: PiUsersFill,
+          isActive: true,
+       
+        },
+        {
+          title: "Statystyki",
+          url: "/statistics",
+          icon: IoStatsChart,
           isActive: true,
        
         },

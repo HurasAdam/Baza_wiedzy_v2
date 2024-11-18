@@ -172,7 +172,7 @@ const {user} = useAuth();
   
       </SidebarContent>
       <SidebarFooter className="bg-blue-950">
-        <NavUser user={data.user} userr={user} />
+        {/* <NavUser user={data.user} userr={user} /> */}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

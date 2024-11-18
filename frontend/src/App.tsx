@@ -46,6 +46,7 @@ setNavigate(navigate);
      <Route path="call-register" element={<CallRegister />} />
      <Route path="favourite-articles" element={<FavouritesPage />} />
      <Route path="todos-board" element={<TodosBoardPage />} />
+     <Route path="statistics" element={<StatisticsPage />} />
         {/* <Route path="settings" element={<Settings />} />  */}
 
 
