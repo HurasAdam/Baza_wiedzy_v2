@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUserHandler, getUsersHandler } from "../controllers/user.controller";
+import { getUserHandler, getUsersHandler, getUsersWithReportCountHandler } from "../controllers/user.controller";
 import { getSessionsHandler } from "../controllers/session.controller";
 
  const userRoutes = Router();
@@ -8,5 +8,6 @@ import { getSessionsHandler } from "../controllers/session.controller";
 
 userRoutes.get("/",getUserHandler);
 userRoutes.get("/users",getUsersHandler);
+userRoutes.get("/statistics",getUsersWithReportCountHandler);
 
 export default userRoutes;
