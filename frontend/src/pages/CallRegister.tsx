@@ -6,8 +6,17 @@ import { PiPhoneCallFill } from "react-icons/pi";
 import React from 'react'
 import ConversationReportCard from '@/components/ConversationReportCard';
 
+
+export interface ITopic{
+  _id:string;
+  title:string;
+  createdBy:string;
+  __v:number;
+}
+
+
 const CallRegister = () => {
-  const { data: conversationTopics } = useQuery({
+  const { data: conversationTopics=[] } = useQuery({
     queryKey: ["conversationTopics"],
     queryFn: () => {
       return conversationTopicApi.getConversationTopics()
@@ -22,7 +31,7 @@ const CallRegister = () => {
         </h2>
       {/* Mapa po tematach */}
       <div className='flex flex-col gap-3.5'>
-      {conversationTopics?.map((topic) => {
+      {conversationTopics?.map((topic:ITopic) => {
         return (
 <ConversationReportCard topic={topic}/>
         )

@@ -144,7 +144,7 @@ if(article){
       <FormControl>
         <MultipleSelector
           defaultOptions={tags && tags}
-       
+       className="bg-white"
       
           value={field.value} // Dopasowanie wartości do formatu wieloselektora
           onChange={(selected) => field.onChange(selected.map(item => item))} 

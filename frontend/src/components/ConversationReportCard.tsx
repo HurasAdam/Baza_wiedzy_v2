@@ -1,51 +1,61 @@
-import React, { useState } from 'react'
-import { Button } from './ui/button'
-import { Textarea } from './ui/textarea'
+import  { useState,FC } from 'react'
 import { ConversationReportForm } from './ConversationReportForm'
 import { useMutation } from '@tanstack/react-query'
 import { conversationReportApi } from '@/lib/conversationReportsApi'
+import { ITopic } from '@/pages/CallRegister';
 
-const ConversationReportCard = ({topic}) => {
-
-    const [isFormDisabled, setIsFormDisabled] = useState(false);
-const {mutate,isLoading} = useMutation({
-    mutationFn:(formData)=>{
-        return(
-            conversationReportApi.sendConversationReport(formData)
-        )
-    },
-    onSuccess:() => {
-        // Po wysłaniu danych, zablokuj formularz na 2 sekundy
-        setIsFormDisabled(true);
-        setTimeout(() => {
-          setIsFormDisabled(false); // Po 2 sekundach, włącz formularz z powrotem
-        }, 2000);
-      },
-})
-
-
-    const onSave = (formData) =>{
-        console.log("DANE")
-        console.log(formData)
-        mutate(formData)
-    }
-
-
-  return (
-    <div className="border rounded-lg p-5 grid grid-cols-2 max-w-6xl  gap-4  bg-white shadow-xs">
-    {/* Kolumna z tytułem tematu */}
-    <div className="flex-1">
-      <h3 className="text-lg font-semibold">{topic?.title}</h3>
-    </div>
-
-   <ConversationReportForm 
-   isFormDisabled={isFormDisabled}
-isLoading={isLoading}
-   onSave={onSave}
-   topic={topic}/>
-
-  </div>
-  )
+interface IConversationReportCardProps{
+  topic:ITopic
 }
 
-export default ConversationReportCard
+const ConversationReportCard:FC<IConversationReportCardProps> = ({ topic }) => {
+console.log("topik")
+console.log(topic)
+    const [isFormDisabled, setIsFormDisabled] = useState(false);
+    const [buttonColor, setButtonColor] = useState('bg-slate-800');
+    const [buttonText, setButtonText] = useState('Wyślij');
+    const { mutate, isPending } = useMutation({
+        mutationFn: (formData) => {
+            return conversationReportApi.sendConversationReport(formData);
+        },
+        onSuccess: () => {
+            setButtonText('Wysłano!');
+            
+            setTimeout(() => {
+                setButtonColor('bg-slate-800 hover:bg-slate-700'); 
+                setButtonText('Wyślij');
+                setIsFormDisabled(false);
+            }, 700); 
+        },
+        onError: () => {
+      
+            setButtonText('Błąd');
+        },
+        onSettled: () => {
+            setIsFormDisabled(false); 
+        }
+    });
+
+    const onSave = (formData) => {
+        setIsFormDisabled(true); 
+        mutate(formData);
+    };
+
+    return (
+        <div className="border rounded-lg p-5 grid grid-cols-2 max-w-6xl gap-4 bg-white shadow-xs">
+            <div className="flex-1">
+                <h3 className="text-lg font-semibold">{topic?.title}</h3>
+            </div>
+            <ConversationReportForm 
+                isFormDisabled={isFormDisabled}
+                isLoading={isPending}
+                onSave={onSave}
+                topic={topic}
+                buttonColor={buttonColor}
+                buttonText={buttonText} 
+            />
+        </div>
+    );
+};
+
+export default ConversationReportCard;
