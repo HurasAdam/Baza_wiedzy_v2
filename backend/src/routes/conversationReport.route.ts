@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { addConversationReportHandler } from "../controllers/conversationReport.controller";
+import { addConversationReportHandler, getAllCoversationReportsHandler } from "../controllers/conversationReport.controller";
 
 
 
 
 const conversationReportRoutes = Router();
 
-// prefix /conversation
+// prefix /conversation-report
 
-conversationReportRoutes.get("/",)
+conversationReportRoutes.get("/",getAllCoversationReportsHandler)
 conversationReportRoutes.post("/add",addConversationReportHandler);
 
 

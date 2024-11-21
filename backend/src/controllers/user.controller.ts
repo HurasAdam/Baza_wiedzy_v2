@@ -20,20 +20,62 @@ export const getUserHandler = catchErrors(async (req, res) => {
 
 
   export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
-    // 1. Pobierz wszystkich użytkowników
-    const users = await UserModel.find(); // Pobiera wszystkich użytkowników z kolekcji
-
-    // 2. Pobierz liczbę raportów dla każdego użytkownika (jeśli nie ma raportu, ustaw 0)
-    const userReportCounts = await Promise.all(
-        users.map(async (user) => {
-            const reportCount = await ConversationReportModel.countDocuments({ createdBy: user._id });
-            return {
-                _id: user._id,
-                username: user.name, // Zakładamy, że użytkownicy mają pole 'username'
-                reportCount: reportCount || 0, // Jeśli brak raportów, ustaw 0
-            };
-        })
-    );
-
-    return res.status(OK).json(userReportCounts);
-});
+    // 1. Użyj agregacji w MongoDB, aby policzyć liczbę raportów dla każdego użytkownika
+    const usersWithReportCount = await ConversationReportModel.aggregate([
+      // Krok 1: Zgrupuj raporty po użytkowniku i policz ich liczbę
+      {
+        $group: {
+          _id: "$createdBy", // Grupujemy po użytkowniku
+          reportCount: { $sum: 1 }, // Zliczamy raporty
+        },
+      },
+      // Krok 2: Połącz z danymi użytkownika (populate)
+      {
+        $lookup: {
+          from: "users", // Kolekcja użytkowników
+          localField: "_id", // Pole, które łączy (ID użytkownika)
+          foreignField: "_id", // Pole w kolekcji użytkowników
+          as: "user", // Zapisz połączone dane użytkownika w polu "user"
+        },
+      },
+      {
+        $unwind: "$user", // Rozpakowujemy dane użytkownika
+      },
+      {
+        $project: {
+          _id: "$user._id",
+          name: "$user.name",
+          surname: "$user.surname",
+          reportCount: 1, // Liczba raportów
+        },
+      },
+      // Krok 3: Posortuj użytkowników po liczbie raportów w malejącej kolejności
+      {
+        $sort: {
+          reportCount: -1, // Malejąco
+        },
+      },
+    ]);
+  
+    // 2. Pobierz wszystkich użytkowników z kolekcji `User` (w tym tych bez raportów)
+    const allUsers = await UserModel.find();
+  
+    // 3. Połącz użytkowników z agregacji z użytkownikami bez raportów
+    const usersWithZeroReports = allUsers.filter(user => 
+      !usersWithReportCount.some(report => report._id.toString() === user._id.toString())
+    ).map(user => ({
+      _id: user._id,
+      name: user.name,
+      surname: user.surname,
+      reportCount: 0, // Użytkownicy bez raportów mają liczbę raportów 0
+    }));
+  
+    // 4. Połącz wyniki i posortuj
+    const allUsersWithReportCounts = [
+      ...usersWithReportCount,
+      ...usersWithZeroReports,
+    ];
+  
+    // 5. Zwróć posortowaną listę użytkowników
+    return res.status(OK).json(allUsersWithReportCounts);
+  });
