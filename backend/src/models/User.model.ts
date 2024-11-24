@@ -1,9 +1,9 @@
 import mongoose,{Schema} from "mongoose";
 import { compareValue, hashValue } from "../utils/bcrypt";
-
+import { ObjectId } from 'mongodb';
 
 export interface UserDocument extends mongoose.Document {
-  _id:string,
+  _id: ObjectId;
   name:string,
   surname:string,
   email: string;
