@@ -1,6 +1,6 @@
 import  { useState,FC } from 'react'
 import { ConversationReportForm } from './ConversationReportForm'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { conversationReportApi } from '@/lib/conversationReportsApi'
 import { ITopic } from '@/pages/CallRegister';
 
@@ -14,13 +14,14 @@ console.log(topic)
     const [isFormDisabled, setIsFormDisabled] = useState(false);
     const [buttonColor, setButtonColor] = useState('bg-slate-800');
     const [buttonText, setButtonText] = useState('Wyślij');
+    const queryClient = useQueryClient();
     const { mutate, isPending } = useMutation({
         mutationFn: (formData) => {
             return conversationReportApi.sendConversationReport(formData);
         },
         onSuccess: () => {
             setButtonText('Wysłano!');
-            
+            queryClient.invalidateQueries(["conversationReports"])
             setTimeout(() => {
                 setButtonColor('bg-slate-800 hover:bg-slate-700'); 
                 setButtonText('Wyślij');

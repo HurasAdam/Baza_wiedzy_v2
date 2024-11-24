@@ -11,7 +11,13 @@ const getCoversationReportStats = async()=>{
 }
 
 
+const getConversationReportValues = async()=>{
+    return API.get("/conversation-report")
+}
+
+
 export const conversationReportApi ={
     sendConversationReport,
-    getCoversationReportStats
+    getCoversationReportStats,
+    getConversationReportValues
 }
