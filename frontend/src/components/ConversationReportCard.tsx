@@ -37,9 +37,11 @@ console.log(topic)
         }
     });
 
-    const onSave = (formData) => {
-        setIsFormDisabled(true); 
-        mutate(formData);
+    const onSave = (formData, resetForm) => {
+        setIsFormDisabled(true);
+        mutate(formData, {
+            onSuccess: () => resetForm()
+        });
     };
 
     return (

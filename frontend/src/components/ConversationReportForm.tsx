@@ -24,7 +24,7 @@ const formSchema = z.object({
 });
 
 interface IConversationReportForm{
-  onSave:(formData: z.infer<typeof formSchema>)=>void;
+  onSave:(formData: z.infer<typeof formSchema>, formReset:()=>void)=>void;
   topic:string;
   className?:string;
   isLoading:boolean;
@@ -46,7 +46,7 @@ export function ConversationReportForm({ onSave, topic, className, isLoading, is
   const employeeDescriptionValue = form.watch("description", "");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave(values);
+    onSave(values, form.reset); // Przekazanie reset do nadrzędnego komponentu
   }
 
   return (
@@ -61,7 +61,7 @@ export function ConversationReportForm({ onSave, topic, className, isLoading, is
               <FormLabel className="text-slate-700 text-xs">Skrótowy opis rozmowy</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Tell us a little bit about yourself"
+                  placeholder="Skrócony opis rozmowy"
                   className="resize-none h-10 scrollbar-custom"
                   {...field}
                 />
