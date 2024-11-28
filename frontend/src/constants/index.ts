@@ -4,6 +4,7 @@ import { LuHelpingHand } from "react-icons/lu";
 import { MdOutlineDashboard } from "react-icons/md";
 import { PiUsersFill } from "react-icons/pi";
 import { IoStatsChart } from "react-icons/io5";
+import { IoArrowBackOutline } from "react-icons/io5";
 export  const NAVBAR_OPTIONS = {
     user: {
       name: "shadcn",
@@ -149,7 +150,15 @@ export  const NAVBAR_OPTIONS = {
     ]
 
 
-
+    export  const ADMIN_NAVBAR_OPTIONS_SECONDARY =  [
+      {
+        title: "Powrót",
+        url: "/",
+        icon: IoArrowBackOutline,
+        isActive: true,
+     
+      },
+    ]
 
   export const breadcrumbTranslations: Record<string, string> = {
     dashboard: "Pulpit",

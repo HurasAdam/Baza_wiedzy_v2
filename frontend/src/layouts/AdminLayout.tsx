@@ -20,15 +20,16 @@ import {
   import Navbar from "@/components/Navbar"
   import { NavUser } from "@/components/nav-user"
   import { ADMIN_NAVBAR_OPTIONS,  breadcrumbTranslations } from "@/constants"
-  import { AppSidebar } from "@/components/AppSidebar"
+
 import { IMAGES } from '@/constants/images'
+import { AdminSidebar } from '@/components/AdminSidebar'
 const AdminLayout = () => {
     const {pathname} =useLocation();
     const pathSegments = pathname.replace(/^\/admin/, "").split("/").filter(Boolean);
 
   return (
     <SidebarProvider >
-    <AppSidebar 
+    <AdminSidebar
     image = {IMAGES.Logo}
     title ="Baza wiedzy"
     subtitle ="Librus"

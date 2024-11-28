@@ -164,14 +164,14 @@ const {user} = useAuth();
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="bg-blue-950">
+      <SidebarHeader className="bg-slate-800">
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
-      <SidebarContent className="bg-blue-950 text-blue-100/90 ">
+      <SidebarContent className="bg-slate-800 text-blue-100/90 ">
         <NavMain items={NAVBAR_OPTIONS.navMain} />
   
       </SidebarContent>
-      <SidebarFooter className="bg-blue-950">
+      <SidebarFooter className="bg-slate-800">
         {/* <NavUser user={data.user} userr={user} /> */}
       </SidebarFooter>
       <SidebarRail />
