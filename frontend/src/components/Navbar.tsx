@@ -23,6 +23,8 @@ import useScrollY from "@/hooks/useScrollY";
 import { SidebarTrigger } from "./ui/sidebar";
 import { Switch } from "./ui/switch";
 import { SearchBar } from "./SearchBar";
+import { useModalContext } from "@/contexts/ModalContext";
+import ShortcutCallRegisterForm from "./forms/ShortcutCallRegisterForm";
 
 const Navbar: React.FC = ({ notifications }) => {
 //   const {showContentModal} = useAppContext();
@@ -32,6 +34,7 @@ const Navbar: React.FC = ({ notifications }) => {
   const path = location.pathname.split("/")[1];
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { user, isLoading } = useAuth();
+  const {openContentModal} = useModalContext();
   const isScrolled = useScrollY();
   const { mutate:logoutUser } = useMutation({
     mutationFn: () => {
@@ -150,12 +153,12 @@ const NavLinkItem: React.FC = ({ element }) => {
       <div className="flex gap-1 lg:gap-3 items-center">
       
       <button
-    //   onClick={()=>{
-    //     showContentModal({
-    //       isOpen:true,
-    //       childrenComponent:(<ConversationSummaryForm/>)
-    //     })
-    //   }}
+      onClick={()=>{
+        openContentModal({
+        
+          content:(<ShortcutCallRegisterForm/>)
+        })
+      }}
           className=" border bg-slate-600 group  transition-all hover:font-bold px-2  py-2 rounded-lg shadow-xl   font-semibold  text-slate-100 "
        
         >

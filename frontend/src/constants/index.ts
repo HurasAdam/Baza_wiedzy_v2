@@ -2,9 +2,15 @@ import { FaRegComments } from "react-icons/fa6";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { LuHelpingHand } from "react-icons/lu";
 import { MdOutlineDashboard } from "react-icons/md";
+import { AiFillHome } from "react-icons/ai";
+import { SiPowerpages } from "react-icons/si";
 import { PiUsersFill } from "react-icons/pi";
 import { IoStatsChart } from "react-icons/io5";
 import { IoArrowBackOutline } from "react-icons/io5";
+import { GoStarFill } from "react-icons/go";
+import { FaAddressBook } from "react-icons/fa";
+import { MdPhoneCallback } from "react-icons/md";
+import { FaTasks } from "react-icons/fa";
 export  const NAVBAR_OPTIONS = {
     user: {
       name: "shadcn",
@@ -13,30 +19,30 @@ export  const NAVBAR_OPTIONS = {
     },
     navMain: [
      {
-      title:"Pulpit",
+      title:"Start",
       url:"/dashboard",
-      icon: MdOutlineDashboard,
+      icon: AiFillHome,
      
       
      },
       {
         title: "Baza wiedzy",
         url: "/articles",
-        icon: PiUsersFill,
+        icon: SiPowerpages,
       
      
       },
       {
         title: "Rejestr rozmów",
         url: "call-register",
-        icon: LuHelpingHand,
+        icon: MdPhoneCallback,
 
       },
   
       {
         title: "Działy i kontakty",
         url: "/departments",
-        icon: FaRegComments,
+        icon: FaAddressBook,
         items: [
             {
               title: "Helpdesk",
@@ -59,21 +65,22 @@ export  const NAVBAR_OPTIONS = {
       {
         title:"Ulubione artykuły",
         url:"/favourite-articles",
-        icon: MdOutlineDashboard,
+        icon: GoStarFill,
         isActive:true,
         
        },
-        {
-          title: "Planner",
-          url: "/todos-board",
-          icon: PiUsersFill,
-          isActive: true,
-       
-        },
+    
         {
           title: "Statystyki",
           url: "/statistics",
           icon: IoStatsChart,
+          isActive: true,
+       
+        },
+        {
+          title: "Planner",
+          url: "/todos-board",
+          icon: FaTasks,
           isActive: true,
        
         },
