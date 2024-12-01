@@ -29,39 +29,18 @@ import { Separator } from "@radix-ui/react-separator";
 import { IMAGES } from "@/constants/images";
 import { HiMiniXMark } from "react-icons/hi2";
 import { IoIosSearch } from "react-icons/io";
+import { useModalContext } from "@/contexts/ModalContext";
+import { ComboboxDemo, SelectDemo } from "./core/ComboBox";
+
+
 
  
-const formSchema = z.object({
-    title: z.string().min(2, {
-      message: "Username must be at least 2 characters.",
-    }),
-    employeeDescription: z.string().min(6, {
-      message: "Odpowiedź dla pracownika jest wymagana.",
-    }),
-    clientDescription: z.string().min(10, {
-      message: "Odpowiedź dla klienta jest wymagana.",
-    }),
-    tags: z.array(z.string()).nonempty({
-      message: "Musisz dodać co najmniej jeden tag.",
-    }), // tags to tablica stringów i musi zawierać przynajmniej jeden element
-    isVerified: z.boolean().optional(), // Dodajemy isVerified, jeśli jest opcjonalny
-  });
- 
-export function SearchBar({onSave}) {
+export function SearchBar({immediate=false}) {
 
   const {title, setFilters,tags,author,verified} = useArticleFilters();
-  const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>(["react", "angular"]);
-  // ...
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-        title: "",
-        employeeDescription:"",
-        clientDescription:"",
-        tags:[],
-        isVerified:false
-    },
-  })
+  const {closeContentModal} = useModalContext()
+ 
+
 
 
 
@@ -88,15 +67,35 @@ const formatedAuthors = authors?.map((author)=>{
 const formatedTags = data?.map((tag)=>{
   return {label:tag.name, value:tag._id}
 })
+const selectedTags = formatedTags?.filter(tag => tags.includes(tag.value));
+
+const form = useForm({
+   
+  defaultValues: {
+      title: title,
+      author:author,
+      tags:selectedTags,
+     
+  },
+})
+
 
 
 const urlTitleHandler = (e) =>{
-setFilters({title:e.target.value})
+  if(immediate){
+    setFilters({title:e.target.value})
+  }
+  form.setValue("title",e.target.value)
+
 }
 
 const urltagsHandler =(selected) =>{
+if(immediate){
+  setFilters({tags:selected})
+}
+form.setValue("tags",selected)
 
-   setFilters({tags:selected})
+   
 
 }
   
@@ -104,28 +103,69 @@ const clearTitleHandler = ()=>{
   setFilters({title:""})
 }
 
+const clearAuthorHandler = (e) => {
+ 
+  if(immediate){
+    setFilters({ author: "" });
+  }
+  form.setValue("author","")
+
+
+};
+
 const resetFiltersHandler = () =>{
+if(immediate){
   setFilters({title:"", tags:[], author:""})
+}
+form.setValue("title","");
+form.setValue("tags",[]);
+form.setValue("author","")
+
 }
  
 const urlAuthroHandler = (selected) => {
-console.log(selected)
-  setFilters({ author: selected }); // Ustaw filtry
+if(immediate){
+  setFilters({ author: selected }); 
+}
+  form.setValue("author",selected)
 }
 
+const titleValue = form.watch("title")
+const tagsValue = form.watch("tags")
+const authorValue = form.watch("author")
+
+console.log("ULR AUTOR")
+console.log(form.watch("author"))
+
+
+const currentTags = immediate
+  ? formatedTags?.filter(option => tags.includes(option.value)) // Dla immediate = true
+  : form.watch("tags"); // Dla immediate = false (używamy stanu formularza)
+
+  const currentAutor = immediate ? author: form.watch("author")
+
+
+const onSave = () =>{
+  setFilters({
+    title:titleValue,
+    tags:tagsValue,
+    author:authorValue
+  })
+  closeContentModal()
+}
 
 
 
  
   return (
-<div className="space-y-5  ">
+<div className="space-y-6  ">
   <div className="space-y-1.5 relative ">
-    <label htmlFor="">
+    <label htmlFor=""className="text-sm text-gray-500" >
       Tytuł
     </label>
     <IoIosSearch className="absolute bottom-2 left-[2%] text-blue-950 w-5 h-5 pointer-events-none"/>
                 <Input 
-                value={title}
+                value={immediate ? title : form.watch("title")}
                   className="pl-9"
                 placeholder="Wyszukaj"
                      onChange={(e) => {
@@ -145,16 +185,17 @@ console.log(selected)
 
 
 <div className="space-y-1.5">
-  <label htmlFor="">
+  <label htmlFor="" className="text-sm text-gray-500">
     Tagi
   </label>
  {    formatedTags &&   <MultipleSelector
+  className="bg-white"
 placeholder="Wybierz tag..."
           defaultOptions={formatedTags && formatedTags}
-          value={formatedTags?.filter(option => tags.includes(option.value))} // Dopasowanie wartości do formatu wieloselektora
+          value={currentTags} 
           onChange={(selected) => {
-          (selected.map(item => item.value)); // Aktualizujemy stan formularza
-            urltagsHandler(selected); // Aktualizujemy stan filtrów i URL
+          (selected.map(item => item.value));
+            urltagsHandler(selected); 
           }}
           // placeholder={field.value.length === 0 ? "Wybierz tag..." : ""} 
           emptyIndicator={
@@ -167,19 +208,37 @@ placeholder="Wybierz tag..."
 
       </div>
 
-
+ 
+<div className="relative ">
+{   currentAutor && <HiMiniXMark
+   type="button"
+   onClick={(e)=>clearAuthorHandler(e)}
+   className="absolute bottom-2 right-[3%] w-6 h-6 cursor-pointer hover:text-blue-800"
+/> }
 
 <SelectBox 
-
-data={formatedAuthors}
 label="Autor"
-onChange={urlAuthroHandler}/>
+onChange={urlAuthroHandler}
+clearAuthorHandler={clearAuthorHandler}
+value={currentAutor}
+data={formatedAuthors}/>
+</div>
 
 
-
-        <Button 
+      <div className="flex justify-end gap-3">
+  <Button 
+      variant="ghost"
+      className="hover:bg-gray-200"
         onClick={resetFiltersHandler}
         type="button">Wyczyść</Button>
+      
+   
+        
+        
+{    !immediate  &&        <Button 
+        onClick={onSave}
+        type="button">Zastosuj</Button>}
+      </div>
         </div>
  
   )

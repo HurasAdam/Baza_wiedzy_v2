@@ -9,12 +9,12 @@ import {
 } from "@/components/ui/dialog"
 
  
-export function ContentModal({isOpen,children, onClose,title,description,enableOutsideClickClose, size }) {
+export function ContentModal({isOpen,children, onClose,title ="",description = "",enableOutsideClickClose, size }) {
 
   const modalSizeHandler = (size) => {
     switch (size) {
       case "sm":
-        return "md:max-w-[40vw] min-w-[40vw]"; // Mały modal na md i większych ekranach
+        return "md:max-w-[45vw] min-w-[45vw]"; // Mały modal na md i większych ekranach
       case "md":
         return "md:max-w-[66vw] md:min-w-[66vw]"; // Średni modal na md i większych ekranach
       case "lg":
@@ -78,14 +78,18 @@ export function ContentModal({isOpen,children, onClose,title,description,enableO
     
     >
       <DialogHeader>
-        <DialogTitle className="flex items-center gap-0.5">
+        <DialogTitle className="flex items-center gap-0.5 ">
        
-          {title}</DialogTitle>
+          {title && title}</DialogTitle>
         <DialogDescription>
        {description}
         </DialogDescription>
+        <div className="h-9"></div>
+     <div className="">
+     {children}
+     </div>
       </DialogHeader>
-{children}
+      
       {/* <DialogFooter>
         <Button type="submit">Save changes</Button>
       </DialogFooter> */}

@@ -11,20 +11,20 @@ import {
 } from "@/components/ui/select"
 import useArticleFilters from "@/hooks/useArticleFilters";
 
-export function SelectBox({data,onChange,label}) {
+export function SelectBox({data,onChange,label, value}) {
   const {title, setFilters,tags,author,verified} = useArticleFilters();
   return (
-<div>
-  <label htmlFor="">{label}</label>
+<div className="flex flex-col gap-1.5">
+  <label htmlFor="" className="text-sm text-gray-500">{label}</label>
 <Select onValueChange={onChange}
-value={author}
+value={(value)}
 >
       <SelectTrigger >
         <SelectValue placeholder="Wybierz autora" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Autorzy</SelectLabel>
+          
           {data?.map(({label,value})=>{
             return(
               <SelectItem 

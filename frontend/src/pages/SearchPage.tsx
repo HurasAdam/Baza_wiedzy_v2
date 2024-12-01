@@ -21,6 +21,7 @@ import { BasicSearchBar } from '@/components/BasicSearchBar'
 import useArticleViewType from '@/hooks/useArticleViewType'
 import { SideDrawer } from '@/components/core/SideDrawer'
 import { IoFilter } from "react-icons/io5";
+import { Button } from '@/components/ui/button'
 
 
 const SearchPage = () => {
@@ -29,6 +30,7 @@ const SearchPage = () => {
   const queryClient = useQueryClient();
 
   const {title,tags,author,setFilters,page,verified,limit} = useArticleFilters();
+  const {openContentModal} = useModalContext();
 const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
 
@@ -36,7 +38,7 @@ const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
 
 const [viewType,updateViewType] = useArticleViewType("articleView","table")
-console.log(selectedView)
+
 
   const queryParams={
     page,title,tags,author,verified,limit
@@ -136,10 +138,16 @@ const viewOptions = [
 
 
 <div className='flex flex-col gap-1.5 '>
-  <div className='flex justify-end px-6'>
-  <IoFilter 
-  className='hover:text-blue-800 cursor-pointer w-5 h-5'
-onClick={openDrawer}>Filters</IoFilter>
+  <div className='flex justify-end px-3 '>
+  
+  <Button
+  variant="ghost"
+  className='hover:bg-blue-100 rounded-lg text-slate-600 flex items-center gap-x-1.5'
+onClick={()=>openContentModal({size:"sm",title:"Filtry", content:(<div className='px-2 '><SearchBar /></div>)})}>
+Filtruj
+  <IoFilter className='w-4 h-4'/>
+</Button>
+
   </div>
 
 <BasicSearchBar 
@@ -212,7 +220,7 @@ data={articles?.data}
         </div>
 
         <div className='shadow border border-neutral-200  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white min-h-[84vh]'>
-  <SearchBar visibleFields={{ title: true, tags: true, author: true }} />
+  <SearchBar visibleFields={{ title: true, tags: true, author: true }} immediate={true} />
 </div>
       </div>
     )

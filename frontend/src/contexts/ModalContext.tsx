@@ -43,7 +43,7 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
 
   // Funkcje dla ContentModal
   const openContentModal = useCallback(
-    ({ title, description, content,enableOutsideClickClose,size }: { title: string; description: string; content: React.ReactNode, enableOutsideClickClose:boolean }) => {
+    ({ title = "", description="", content =null ,enableOutsideClickClose,size }: { title?: string; description?: string; content?: React.ReactNode, enableOutsideClickClose:boolean, sieze?:string }) => {
       setContentModal({ title, description, content, enableOutsideClickClose,size });
       setIsContentModalOpen(true);
     },
