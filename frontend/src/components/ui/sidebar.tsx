@@ -3,8 +3,8 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
-import { PanelLeft } from "lucide-react"
-
+import { LuChevronsRight } from "react-icons/lu";
+import { LuChevronsLeft } from "react-icons/lu";
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -177,6 +177,9 @@ const Sidebar = React.forwardRef<
   ) => {
     const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
+    console.log("state")
+    console.log(state)
+
     if (collapsible === "none") {
       return (
         <div
@@ -263,7 +266,7 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar,state } = useSidebar()
 
   return (
     <Button
@@ -278,7 +281,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <PanelLeft />
+{state ==='expanded' ? <LuChevronsLeft  className="w-5 h-5 text-blue-950"/> :<LuChevronsRight className="w-5 h-5 text-blue-950"/>}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )

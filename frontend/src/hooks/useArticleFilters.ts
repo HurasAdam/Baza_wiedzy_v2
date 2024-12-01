@@ -63,6 +63,17 @@ const useArticleFilters = ()=>{
         });
     }, []);
 
+    const getActiveFiltersCount = useCallback(() => {
+        let count = 0;
+        if (title) count++;
+        if (tags.length > 0) count++;
+        if (author) count++;
+        if (verified !== null && verified !== undefined) count++;
+        if (limit) count++;
+        return count;
+    }, [title, tags, author, verified, limit]);
+
+
 return {
     title,
     tags,
@@ -70,7 +81,8 @@ return {
     author,
     verified,
     limit,
-    setFilters
+    setFilters,
+    getActiveFiltersCount
 }
 
 }

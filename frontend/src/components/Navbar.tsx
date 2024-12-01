@@ -134,7 +134,7 @@ const NavLinkItem: React.FC = ({ element }) => {
         >
           <GiHamburgerMenu />
         </button>
-        <SidebarTrigger className="-ml-1" />
+        <SidebarTrigger className="-ml-1 hover:bg-transparent " />
     {/* <div className="w-40  md:w-[250px] lg:w-[350px] flex items-center py-2 px-3 gap-2 rounded-full bg-slate-100 ">
           <MdOutlineSearch />
           <button className="w-full text-left px-1.5 hover:text-blue-200  text-gray-400 text-sm" onClick={() => setIsModalOpen(true)}>Szukaj</button>

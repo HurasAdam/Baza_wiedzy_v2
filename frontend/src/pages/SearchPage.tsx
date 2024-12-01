@@ -14,7 +14,7 @@ import ArticleDetails from './ArticleDetails'
 import { SiPowerpages } from "react-icons/si";
 import { useModalContext } from '@/contexts/ModalContext'
 import { DataTable } from '@/components/core/DataTable'
-
+import { HiMiniXMark } from "react-icons/hi2";
 import QuickArticleDetails from '@/components/QuickArticleDetails'
 import QuickViewSection from '@/components/QuickViewSection'
 import { BasicSearchBar } from '@/components/BasicSearchBar'
@@ -29,9 +29,10 @@ const SearchPage = () => {
   const [selectedArticle, setSelectedArticle] = useState("");
   const queryClient = useQueryClient();
 
-  const {title,tags,author,setFilters,page,verified,limit} = useArticleFilters();
+  const {title,tags,author,setFilters,page,verified,limit, getActiveFiltersCount} = useArticleFilters();
   const {openContentModal} = useModalContext();
 const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+const activeFiltersCount = getActiveFiltersCount();
 
 
 
@@ -141,18 +142,26 @@ const viewOptions = [
   <div className='flex justify-end px-3 '>
   
   <Button
-  variant="ghost"
-  className='hover:bg-blue-100 rounded-lg text-slate-600 flex items-center gap-x-1.5'
+  variant="outline"
+  className={`${activeFiltersCount >0 ? "bg-blue-500 text-neutral-50":"hover:bg-blue-100 rounded-lg text-slate-600 flex items-center gap-x-1.5"} `}
 onClick={()=>openContentModal({size:"sm",title:"Filtry", content:(<div className='px-2 '><SearchBar /></div>)})}>
-Filtruj
-  <IoFilter className='w-4 h-4'/>
-</Button>
+   <IoFilter className='w-4 h-4'/>
+{activeFiltersCount > 0 ? `+ ${activeFiltersCount} więcej filtrów` :"więcej filtrów"}
 
+ 
+</Button>
+{activeFiltersCount >0 &&(<Button
+  variant="ghost"
+  className='hover:bg-transparent'
+
+>
+ <HiMiniXMark className='w-5 h-5'/>
+</Button>)}
   </div>
 
 <BasicSearchBar 
 className="flex items-center w-full justify-between"
-visibleFields={{ title: true, tags: false, author: false }} />
+visibleFields={{ title: true, tags: true, author: false }} />
 
 <div className='py-6 flex flex-col gap-[3px]'>
       {articles?.data?.map((article)=>{
