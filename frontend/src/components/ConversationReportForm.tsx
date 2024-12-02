@@ -51,14 +51,14 @@ export function ConversationReportForm({ onSave, topic, className, isLoading, is
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={`${className} px-5`}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className={`${className} px-1 grid grid-cols-[3fr_1fr] gap-5`}>
         <FormField
           disabled={isLoading}
           control={form.control}
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-slate-700 text-xs">Skrótowy opis rozmowy</FormLabel>
+              <FormLabel className="text-slate-700 text-xs">Komentarz <span className="text-xs text-slate-500">(opcjonalnie)</span></FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Skrócony opis rozmowy"
@@ -66,7 +66,7 @@ export function ConversationReportForm({ onSave, topic, className, isLoading, is
                   {...field}
                 />
               </FormControl>
-              <FormDescription className={`${employeeDescriptionValue.length > 0 ? "text-slate-600 text-sm" : "text-transparent"}`}>
+              <FormDescription className={`${employeeDescriptionValue.length > 0 ? "text-gray-500  text-xs" : "text-transparent"}`}>
                 {employeeDescriptionValue.length}/{MAX_EMPLOYEE_DESCRIPTION_LENGTH} znaków
               </FormDescription>
               <FormMessage className="text-sm" />
@@ -74,7 +74,7 @@ export function ConversationReportForm({ onSave, topic, className, isLoading, is
           )}
         />
 
-        <div className="flex justify-end space-x-4">
+        <div className="flex flex-col items-end justify-end my-7">
           <Button
             className={`${buttonColor} w-24 h-10 flex justify-center items-center`}
             disabled={isLoading || isFormDisabled}
@@ -86,6 +86,8 @@ export function ConversationReportForm({ onSave, topic, className, isLoading, is
               buttonText
             )}
           </Button>
+
+          
         </div>
       </form>
     </Form>

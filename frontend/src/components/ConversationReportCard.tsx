@@ -9,8 +9,7 @@ interface IConversationReportCardProps{
 }
 
 const ConversationReportCard:FC<IConversationReportCardProps> = ({ topic }) => {
-console.log("topik")
-console.log(topic)
+
     const [isFormDisabled, setIsFormDisabled] = useState(false);
     const [buttonColor, setButtonColor] = useState('bg-slate-800');
     const [buttonText, setButtonText] = useState('Wyślij');
