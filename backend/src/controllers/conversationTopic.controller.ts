@@ -2,6 +2,7 @@ import { OK } from "../constants/http";
 import ConversationTopicModel from "../models/ConversationTopic.model";
 import { createConversationTopic } from "../services/conversationTopic.service";
 import catchErrors from "../utils/catchErrors";
+import { constructSearchQuery } from "../utils/constructSearchQuery";
 import { conversationTopicSchema, newConversationTopicSchema } from "./conversationTopic.schema";
 
 export const createConversationTopicHandler = catchErrors(
@@ -18,7 +19,9 @@ return res.status(OK).json(newTag)
 
 export const getConversationTopicsHandler = catchErrors(
     async(req,res)=>{
-      const conversationTopics = await ConversationTopicModel.find({});
+
+        const query = constructSearchQuery(req.query);
+      const conversationTopics = await ConversationTopicModel.find(query);
       return res.status(OK).json(conversationTopics);
     }
 )
