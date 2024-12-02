@@ -22,6 +22,7 @@ import useArticleViewType from '@/hooks/useArticleViewType'
 import { SideDrawer } from '@/components/core/SideDrawer'
 import { IoFilter } from "react-icons/io5";
 import { Button } from '@/components/ui/button'
+import { useDebounce } from '@/hooks/useDebounce'
 
 
 const SearchPage = () => {
@@ -40,9 +41,10 @@ const activeFiltersCount = getActiveFiltersCount();
 
 const [viewType,updateViewType] = useArticleViewType("articleView","table")
 
+const {debouncedValue} = useDebounce({value:title,delay:250})
 
   const queryParams={
-    page,title,tags,author,verified,limit
+    page,title:debouncedValue,tags,author,verified,limit
   }
 
 
