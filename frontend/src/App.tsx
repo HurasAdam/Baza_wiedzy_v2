@@ -1,11 +1,6 @@
 import {Routes,Route, useNavigate, Navigate} from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import VerifyEmail from "./pages/VerifyEmail";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import Profile from "./pages/SearchPage";
-import Settings from "./pages/Settings";
 import { setNavigate } from "./lib/navigation";
 import SearchPage from "./pages/SearchPage";
 import AuthLayout from "./layouts/AuthLayout";
@@ -25,7 +20,8 @@ import CallRegister from "./pages/CallRegister";
 import AdminLayout from "./layouts/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
 import TagsPage from "./pages/TagsPage";
-
+import ProductsPage from "./pages/ProductsPage";
+import ConversationTopicsPage from "./pages/CoversationTopicsPage";
 
 
 function App() {
@@ -70,6 +66,8 @@ setNavigate(navigate);
 
 <Route index path="dashboard" element={<AdminDashboard/>}/>
 <Route  path="tags" element={<TagsPage/>}/>
+<Route  path="products" element={<ProductsPage/>}/>
+<Route  path="conversation-topics" element={<ConversationTopicsPage/>}/>
 </Route>
 
 
