@@ -24,7 +24,7 @@ return (
    
        className='rounded-lg bg-blue-600 text-white font-semibold py-2'
 
-       >Dodaj tag</Button>
+       >Dodaj nowy tag</Button>
        </div>
       </div>
 

@@ -62,7 +62,7 @@ export function ConversationReportForm({ onSave, topic, className, isLoading, is
               <FormControl>
                 <Textarea
                   placeholder="Skrócony opis rozmowy"
-                  className="resize-none h-10 scrollbar-custom"
+                  className="resize-none min-h-[65px] scrollbar-custom"
                   {...field}
                 />
               </FormControl>

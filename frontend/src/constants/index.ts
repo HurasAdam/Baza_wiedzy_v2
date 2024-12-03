@@ -114,8 +114,15 @@ export  const NAVBAR_OPTIONS = {
      
       },
       {
+        title: "Produkty",
+        url: "/admin/products",
+        icon: PiUsersFill,
+      
+     
+      },
+      {
         title: "Tematy rozmów",
-        url: "/admin/call-topics",
+        url: "/admin/conversation-topics",
         icon: LuHelpingHand,
 
       },
