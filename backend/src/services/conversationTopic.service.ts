@@ -5,6 +5,7 @@ import appAssert from "../utils/appAssert";
 
 interface CreateConversationTopicRequest {
     title: string;
+    product:string;
 
   }
 
@@ -15,13 +16,14 @@ interface CreateConversationTopicParams {
   }
 
 export const createConversationTopic = async({request, userId}:CreateConversationTopicParams)=>{
-    const {title} = request;
+    const {title,product} = request;
 
     const conversationTopic = await ConversationTopicModel.exists({title});
     appAssert(!conversationTopic, CONFLICT, "Conversation topic already exists");
 
     const createdConversationTopic = await ConversationTopicModel.create({
         title,
+        product,
         createdBy:userId
     })
     return createdConversationTopic;
