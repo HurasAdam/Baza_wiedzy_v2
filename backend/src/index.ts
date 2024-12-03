@@ -15,6 +15,7 @@ import articleRoutes from "./routes/article.route";
 import tagRoutes from "./routes/tag.route";
 import conversationTopicRoutes from "./routes/conversationTopic.route";
 import conversationReportRoutes from "./routes/conversationReport.route";
+import productRoutes from "./routes/product.route";
 
 
 
@@ -43,6 +44,7 @@ app.use("/user", authenticate,userRoutes);
 app.use("/sessions", authenticate,sessionRoutes);
 app.use("/articles",authenticate, articleRoutes);
 app.use("/tags",authenticate, tagRoutes);
+app.use("/products",authenticate, productRoutes);
 app.use("/conversation-topics",authenticate, conversationTopicRoutes);
 app.use("/conversation-report",authenticate, conversationReportRoutes);
 
