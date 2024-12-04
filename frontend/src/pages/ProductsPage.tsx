@@ -1,4 +1,6 @@
+import { ColorPicker } from '@/components/ColorPicker';
 import { Button } from '@/components/ui/button';
+import { useModalContext } from '@/contexts/ModalContext';
 import { productsApi } from '@/lib/productsApi';
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
@@ -6,6 +8,9 @@ import { AiFillProduct } from "react-icons/ai";
 import { MdDelete, MdEdit } from 'react-icons/md';
 
 const ProductsPage = () => {
+
+  const {openContentModal} = useModalContext()
+  const [selectedColor, setSelectedColor] = React.useState('#000000');
 
 const {data:products} = useQuery({
     queryFn:()=>{
@@ -21,7 +26,11 @@ return (
         <h2 className='text-xl font-bold text-gray-600 flex items-center gap-2 '><AiFillProduct className="text-blue-900"/>Lista Produktów</h2>
        <div className=' mx-5 '>
        <Button 
-   
+   onClick={()=>{
+    openContentModal({title:"Dodaj produkt", description:"Wypełnij wymagane dane i zatwierdź, aby dodać nowy produkt", content:(<div>
+      <ColorPicker value={selectedColor} onChange={(color)=>{setSelectedColor(color)}} items={[{value:'#e11d48', label:''}, {value:'#db2777', label:''}, {value:'#c026d3', label:''}, {value:'#9333ea', label:''}, {value:'#4f46e5', label:''}, {value:'#0284c7', label:''}, {value:'#0d9488', label:''}, {value:'#059669', label:''}, {value:'#16a34a', label:''}, {value:'#ca8a04', label:''}, {value:'#ea580c', label:''}, {value:'#dc2626', label:''}, {value:'#000000', label:''}, {value:'#ffffff', label:''}]}/>
+    </div>)})
+   }}
        className='rounded-lg bg-blue-600 text-white font-semibold py-2'
 
        >Dodaj nowy produkt</Button>
@@ -57,6 +66,13 @@ className='text-rose-600/60 cursor-pointer hover:text-rose-500'
         )
     })}
   </div>
+
+
+
+
+
+
+
 
     </div>
   )
