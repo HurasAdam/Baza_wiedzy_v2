@@ -22,7 +22,8 @@ onValueChange={onChange}
 value={(value)}
 >
       <SelectTrigger >
-        <SelectValue placeholder={placeholder || "Wybierz autora"} />
+        <SelectValue 
+        placeholder={placeholder || "Wybierz autora"} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>

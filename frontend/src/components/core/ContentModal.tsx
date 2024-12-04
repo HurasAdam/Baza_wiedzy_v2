@@ -14,7 +14,7 @@ export function ContentModal({isOpen,children, onClose,title ="",description = "
   const modalSizeHandler = (size) => {
     switch (size) {
       case "sm":
-        return "md:max-w-[45vw] min-w-[45vw]"; // Mały modal na md i większych ekranach
+        return "md:max-w-[38vw] min-w-[38vw] "; // Mały modal na md i większych ekranach
       case "md":
         return "md:max-w-[66vw] md:min-w-[66vw]"; // Średni modal na md i większych ekranach
       case "lg":
@@ -26,44 +26,10 @@ export function ContentModal({isOpen,children, onClose,title ="",description = "
 
 
 
-  console.log(size)
+
 
   return (
-    // <Dialog open={isOpen} onOpenChange={onClose} >
 
-    //   <DialogContent 
-    //     className={`
-    //       ${modalSizeHandler(size)}  // Szerokość zależna od propsa size
-    //      filter-none 
-    //   bg-neutral-100
-    //       min-h-[90vh] max-h-[90vh] 
-    //       overflow-y-auto scrollbar-custom`}
-    //     onInteractOutside={(e) => {
-    //       if (!enableOutsideClickClose) e.preventDefault();
-    //     }}
-    //          onInteractOutside={(e) => {
-    //           if(!enableOutsideClickClose)
-    //           e.preventDefault();
-    //         }}
-    //   >
-    //     <DialogHeader className="space-y-1 px-8">
-    //   {  title &&  <DialogTitle className="text-xl ">{title}</DialogTitle>}
-    // <DialogDescription className="text-sm text-gray-800">
-    //       {description}
-    //       {/* <div className="w-full gap-4 py-4 filter-none h-screen">
-    //  {children}
-    //     </div> */}
-    //       </DialogDescription>
-    //     </DialogHeader>
-
-    //     <DialogFooter>
- 
-    //     <div className="w-full gap-4 py-4 filter-none h-screen ">
-    //  {children}
-    //     </div>
-    //     </DialogFooter>
-    //   </DialogContent>
-    // </Dialog>
     <Dialog open={isOpen} onOpenChange={onClose} >
     {/* <DialogTrigger asChild>
       <Button variant="outline">Edit Profile</Button>
@@ -73,7 +39,7 @@ export function ContentModal({isOpen,children, onClose,title ="",description = "
             ${modalSizeHandler(size)}  // Szerokość zależna od propsa size
          filter-none 
         bg-neutral-100
-            min-h-[90vh] max-h-[90vh] 
+            min-h-[60vh] h-fit max-h-[92vh]
          overflow-y-auto scrollbar-custom`}
     
     >

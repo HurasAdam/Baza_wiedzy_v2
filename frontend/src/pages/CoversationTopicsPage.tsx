@@ -1,4 +1,7 @@
+
+import ConversationTopicForm from '@/components/forms/conversationTopicForm';
 import { Button } from '@/components/ui/button';
+import { useModalContext } from '@/contexts/ModalContext';
 import { conversationTopicApi } from '@/lib/conversationTopicsApi';
 import { productsApi } from '@/lib/productsApi';
 import { useQuery } from '@tanstack/react-query'
@@ -7,6 +10,7 @@ import { MdSubject } from "react-icons/md";
 import { MdDelete, MdEdit } from 'react-icons/md';
 
 const CoversationTopicsPage = () => {
+  const {openContentModal} = useModalContext()
 
 const {data:products} = useQuery({
     queryFn:()=>{
@@ -22,10 +26,10 @@ return (
         <h2 className='text-xl font-bold text-gray-600 flex items-center gap-2 '><MdSubject className="text-blue-900"/>Lista tematów rozmów</h2>
        <div className=' mx-5 '>
        <Button 
-   
+   onClick={()=>openContentModal({size:"sm",title:"Dodaj nowy temat rozmowy", content:(<ConversationTopicForm/>)})}
        className='rounded-lg bg-blue-600 text-white font-semibold py-2'
 
-       >Dodaj nowy produkt</Button>
+       >Dodaj nowy temat</Button>
        </div>
       </div>
 

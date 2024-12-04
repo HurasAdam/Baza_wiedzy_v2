@@ -5,7 +5,14 @@ import API from "@/config/api.client"
 
 }
 
+const createProduct = async (formData) =>{
+    console.log(formData)
+    return API.post("/products/create",formData);
+
+}
+
 
 export  const productsApi ={
-    getAllProducts
+    getAllProducts,
+    createProduct
 } 

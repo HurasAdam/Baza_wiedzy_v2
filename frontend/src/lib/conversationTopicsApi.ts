@@ -7,18 +7,20 @@ export const getConversationTopics = async(searchParams) =>{
 
     queryParams.append("title", searchParams.title );
  
-
-
-  
-
-
     return API.get(`/conversation-topics/?${queryParams}`);
+}
+
+export const createConversationTopic = async(formData) =>{
+
+    return API.post(`/conversation-topics/create`,formData);
 }
 
 
 
 
 
+
 export  const conversationTopicApi ={
-    getConversationTopics
+    getConversationTopics,
+    createConversationTopic
 } 
