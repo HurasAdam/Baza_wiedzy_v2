@@ -6,7 +6,7 @@ import { createProductHandler, getProductsHandler } from "../controllers/product
 
 const productRoutes = Router();
 
-// prefix /sessions
+// prefix /products
 
 productRoutes.get("/", getProductsHandler);
 productRoutes.post("/create",createProductHandler);

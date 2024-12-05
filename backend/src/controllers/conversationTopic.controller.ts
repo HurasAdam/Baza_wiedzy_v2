@@ -21,7 +21,7 @@ export const getConversationTopicsHandler = catchErrors(
     async(req,res)=>{
 
         const query = constructSearchQuery(req.query);
-      const conversationTopics = await ConversationTopicModel.find(query).populate([{ path: "product", select: ["name","-_id"] }]);
+      const conversationTopics = await ConversationTopicModel.find(query).populate([{ path: "product", select: ["name","labelColor","-_id"] }]);
       return res.status(OK).json(conversationTopics);
     }
 )

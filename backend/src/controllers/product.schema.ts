@@ -6,7 +6,7 @@ export const productNameSchema = z.string().min(2, { message: "Product name must
 
 export const newProductSchema = z.object({
     name:productNameSchema,
-
+    labelColor:z.string()
 })
 
 
