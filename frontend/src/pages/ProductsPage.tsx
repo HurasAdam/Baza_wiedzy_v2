@@ -1,4 +1,5 @@
 import { ColorPicker } from '@/components/ColorPicker';
+import ProductForm from '@/components/forms/ProductForm';
 import { Button } from '@/components/ui/button';
 import { useModalContext } from '@/contexts/ModalContext';
 import { productsApi } from '@/lib/productsApi';
@@ -10,7 +11,7 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 const ProductsPage = () => {
 
   const {openContentModal} = useModalContext()
-  const [selectedColor, setSelectedColor] = React.useState('#000000');
+
 
 const {data:products} = useQuery({
     queryFn:()=>{
@@ -27,9 +28,7 @@ return (
        <div className=' mx-5 '>
        <Button 
    onClick={()=>{
-    openContentModal({title:"Dodaj produkt", description:"Wypełnij wymagane dane i zatwierdź, aby dodać nowy produkt", content:(<div>
-      <ColorPicker value={selectedColor} onChange={(color)=>{setSelectedColor(color)}} items={[{value:'#e11d48', label:''}, {value:'#db2777', label:''}, {value:'#c026d3', label:''}, {value:'#9333ea', label:''}, {value:'#4f46e5', label:''}, {value:'#0284c7', label:''}, {value:'#0d9488', label:''}, {value:'#059669', label:''}, {value:'#16a34a', label:''}, {value:'#ca8a04', label:''}, {value:'#ea580c', label:''}, {value:'#dc2626', label:''}, {value:'#000000', label:''}, {value:'#ffffff', label:''}]}/>
-    </div>)})
+    openContentModal({size:"sm",title:"Dodaj produkt", description:"Wypełnij wymagane dane i zatwierdź, aby dodać nowy produkt", content:(<ProductForm/>)})
    }}
        className='rounded-lg bg-blue-600 text-white font-semibold py-2'
 

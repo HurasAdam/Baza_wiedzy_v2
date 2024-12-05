@@ -30,19 +30,19 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({value, onChange, items}
     setIsOpen(false) // Zamknij Popover po wyborze koloru
   }
 
-
+console.log(color)
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        <Button className="bg-transparent hover:bg-white/10">
+      <PopoverTrigger asChild >
+        <Button className="bg-transparent hover:bg-white/10  ">
           <div
             style={{ backgroundColor: color }}
-            className="w-7 h-7 rounded-md mr-2 border border-white/10"
+            className="w-7 h-7 rounded-md  border border-white/10 relative "
           ></div>
-          <p>{color}</p>
+        
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="space-y-4">
+      <PopoverContent className="space-y-4 absolute top-50 left-[20%]  2xl:top-0 2xl:left-[-30px]">
         {items && (
           <div className="flex flex-wrap gap-2">
             {items.map((item, index) => (

@@ -5,6 +5,7 @@ import appAssert from "../utils/appAssert";
 
 interface CreateProductRequest {
     name: string;
+    labelColor:string;
   }
 
 
@@ -14,14 +15,15 @@ interface CreateProductParams {
   }
 
 export const createProduct = async({request, userId}:CreateProductParams)=>{
-    const {name} = request;
+    const {name,labelColor} = request;
 
     const product = await ProductModel.exists({name});
     appAssert(!product, CONFLICT, "Product already exists");
 
     const createdProduct = await ProductModel.create({
         name,
-        createdBy:userId
+        createdBy:userId,
+        labelColor
     })
     return createdProduct;
 }
