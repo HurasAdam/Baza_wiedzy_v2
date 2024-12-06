@@ -117,7 +117,7 @@ const {mutate} = useMutation({
                 
             <Button 
                
-                type="submit">Dodaj temat</Button>
+                type="submit">Dodaj produkt</Button>
               </div>
                 </form>
          

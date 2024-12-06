@@ -30,7 +30,7 @@ const MAX_CLIENT_DESCRIPTION_LENGTH = 9000;
  
 const formSchema = z.object({
     title: z.string().min(2, {
-      message: "Username must be at least 2 characters.",
+      message: "Tytuł jest wymagany.",
     }),
     employeeDescription: z.string().min(6, {
       message: "Odpowiedź dla pracownika jest wymagana.",
@@ -114,7 +114,7 @@ if(article){
  
   return (
     <Form {...form} >
-      <form onSubmit={form.handleSubmit(onSubmit)} className={`${className} space-y-4    px-10 `}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className={`${className} space-y-2    px-10 `}>
         <FormField
        
           control={form.control}
@@ -156,7 +156,7 @@ if(article){
           }
         />
       </FormControl>
-      <FormDescription>Wybierz i przypisz tag</FormDescription>
+    
       <FormMessage />
     </FormItem>
   )}
@@ -207,20 +207,6 @@ if(article){
             </FormItem>
           )}
         />
-
-
-
-
-
-
-
-
-
-
-
-closeContentModal
-
-        
 
 <div className="flex justify-end space-x-4">
 <Button type="button"

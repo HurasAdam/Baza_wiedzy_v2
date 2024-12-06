@@ -46,7 +46,7 @@ const {debouncedValue} = useDebounce({value:title,delay:250})
   const queryParams={
     page,title:debouncedValue,tags,author,verified,limit
   }
-
+console.log(viewType)
 
 const {data:articles} = useQuery({
   queryKey:["articles",queryParams],
@@ -65,7 +65,8 @@ const {mutate:markAsFavouriteHandler,isLoading} = useMutation({
   toast({
     title: "Sukces",
     description: data?.message,
-    duration: 3550
+    duration: 3550000,
+variant:"success"
   })
   }
 })
