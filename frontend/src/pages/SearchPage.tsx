@@ -46,7 +46,7 @@ const {debouncedValue} = useDebounce({value:title,delay:250})
   const queryParams={
     page,title:debouncedValue,tags,author,verified,limit
   }
-console.log(viewType)
+
 
 const {data:articles} = useQuery({
   queryKey:["articles",queryParams],
@@ -147,7 +147,7 @@ const viewOptions = [
   <Button
   variant="outline"
   className={`${activeFiltersCount >0 ? "bg-blue-500 text-neutral-50":"hover:bg-blue-100 rounded-lg text-slate-600 flex items-center gap-x-1.5"} `}
-onClick={()=>openContentModal({size:"sm",title:"Filtry", content:(<div className='px-2 '><SearchBar /></div>)})}>
+onClick={()=>openContentModal({size:"sm",title:"Filtry", content:(<div className='px-2 '><SearchBar immediate={false}/></div>)})}>
    <IoFilter className='w-4 h-4'/>
 {activeFiltersCount > 0 ? `+ ${activeFiltersCount} więcej filtrów` :"więcej filtrów"}
 
@@ -164,7 +164,7 @@ onClick={()=>openContentModal({size:"sm",title:"Filtry", content:(<div className
 
 <BasicSearchBar 
 className="flex items-center w-full justify-between"
-visibleFields={{ title: true, tags: true, author: false }} />
+visibleFields={{ title: true, tags: false, author: false }} />
 
 <div className='py-6 flex flex-col gap-[3px]'>
       {articles?.data?.map((article)=>{

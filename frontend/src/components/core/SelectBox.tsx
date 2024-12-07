@@ -12,7 +12,7 @@ import {
 import useArticleFilters from "@/hooks/useArticleFilters";
 
 export function SelectBox({data,onChange,label, value,placeholder}) {
-  const {title, setFilters,tags,author,verified} = useArticleFilters();
+
   return (
 <div className="flex flex-col ">
   <label htmlFor="" className="text-sm text-gray-500">{label}</label>

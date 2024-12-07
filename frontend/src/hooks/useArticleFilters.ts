@@ -5,7 +5,6 @@ const useArticleFilters = ()=>{
     const [searchParams, setSearchParams] = useSearchParams();
 
 
-
     const title = searchParams.get("title") || "";
     const tags = searchParams.getAll("tags");
     const page = searchParams.get("page") ||1;
@@ -13,8 +12,16 @@ const useArticleFilters = ()=>{
     const verified = searchParams.get("verified");
     const limit = searchParams.get("limit");
 
+
+
+    
+// console.log("TAGS")
+// console.log(tags)
     const setFilters = useCallback((filters) => {
+console.log("filters")
+console.log(filters)
         setSearchParams((params) => {
+        
             if (filters.title !== undefined) {
                 if (filters.title === "") {
                     params.delete("title"); 

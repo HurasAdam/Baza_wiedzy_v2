@@ -52,16 +52,6 @@ export function BasicSearchBar({onSave,visibleFields}) {
   const {title, setFilters,tags,author,verified} = useArticleFilters();
   const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>(["react", "angular"]);
   // ...
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-        title: "",
-        employeeDescription:"",
-        clientDescription:"",
-        tags:[],
-        isVerified:false
-    },
-  })
 
 
 
@@ -72,6 +62,7 @@ export function BasicSearchBar({onSave,visibleFields}) {
     }
   })
 
+
 const {data:authors} = useQuery({
   queryKey:["authros"],
   queryFn:()=>{
@@ -80,14 +71,30 @@ const {data:authors} = useQuery({
 })
 
 
+const formatedTags = data?.map((tag)=>{
+  return {label:tag.name, value:tag._id}
+})
+
+
+
+const form = useForm<z.infer<typeof formSchema>>({
+  resolver: zodResolver(formSchema),
+  defaultValues: {
+      title: title ||"",
+      employeeDescription:"",
+      clientDescription:"",
+      tags: tags?.map(tagId => formatedTags?.find(tag => tag.value === tagId)) || [], // Mapuj tagi z URL na obiekty
+      isVerified:false
+  },
+})
+
+
+
 const formatedAuthors = authors?.map((author)=>{
   return {label:author.name, value:author?._id}
 })
 
 
-const formatedTags = data?.map((tag)=>{
-  return {label:tag.name, value:tag._id}
-})
 
 
 const urlTitleHandler = (e) =>{
@@ -114,7 +121,7 @@ console.log(selected)
 }
 
 
-
+const currentTags = formatedTags?.filter(option => tags.includes(option.value)) || [];
 
  
   return (

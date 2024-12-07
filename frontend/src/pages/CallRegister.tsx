@@ -12,6 +12,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { tagsApi } from '@/lib/tagsApi';
 import { HiMiniXMark } from 'react-icons/hi2';
 import { SelectBox } from '@/components/core/SelectBox';
+import { productsApi } from '@/lib/productsApi';
 
 
 export interface ITopic{
@@ -26,11 +27,14 @@ const CallRegister = () => {
 
 
   const [title, setTitle] = useState<string>("");
+  const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedTag, setSelectedTag] = useState<string>("");
   const {debouncedValue} = useDebounce({value:title,delay:250})
   const queryParams={
     title:debouncedValue,
+    product:selectedProduct
   }
+
 
 
   const { data: conversationTopics=[] } = useQuery({
@@ -40,24 +44,28 @@ const CallRegister = () => {
     }
   })
 
-  const {data:tags}= useQuery({
-    queryKey:["tags"],
+  const {data:products}= useQuery({
+    queryKey:["products"],
     queryFn:()=>{
-      return tagsApi.getAllTags()
+      return productsApi.getAllProducts()
     }
   })
 
-  const formatedTags = tags
-  ? [{ label: "Wszystkie", value: "all" }, ...tags?.map((tag) => ({ label: tag.name, value: tag._id }))]
+  const formatedTags = products
+  ? [{ label: "Wszystkie", value: "all" }, ...products?.map((tag) => ({ label: tag.name, value: tag._id }))]
   : [{ label: "Brak produktów", value: "brak" }];
 
 
 
-  // const selectedTags = formatedTags?.filter(tag => tags.includes(tag.value));
 
-const handleSelectTag = (selected) =>{
-  setSelectedTag(selected)
-}
+
+  const handleSelectTag = (selected) => {
+    if (selected === "all") {
+      setSelectedProduct(""); // Pusty string oznacza brak filtra
+    } else {
+      setSelectedProduct(selected); // Inne wartości są normalnie ustawiane
+    }
+  };
 
 console.log("selectedTag")
 console.log(selectedTag)

@@ -84,8 +84,10 @@ const form = useForm({
 const urlTitleHandler = (e) =>{
   if(immediate){
     setFilters({title:e.target.value})
+ 
+  }else{
+    form.setValue("title",e.target.value)
   }
-  form.setValue("title",e.target.value)
 
 }
 
@@ -93,9 +95,9 @@ const urltagsHandler =(selected) =>{
 if(immediate){
   setFilters({tags:selected})
 }
-form.setValue("tags",selected)
-
-   
+else{
+  form.setValue("tags",selected)
+}
 
 }
   
@@ -105,21 +107,23 @@ const clearTitleHandler = ()=>{
 
 const clearAuthorHandler = (e) => {
  
-  if(immediate){
-    setFilters({ author: "" });
-  }
-  form.setValue("author","")
+  // if(immediate){
+  //   setFilters({ author: "" });
+  // }
+  // form.setValue("author","")
 
 
 };
 
 const resetFiltersHandler = () =>{
-if(immediate){
-  setFilters({title:"", tags:[], author:""})
-}
-form.setValue("title","");
-form.setValue("tags",[]);
-form.setValue("author","")
+// if(immediate){
+//   setFilters({title:"", tags:[], author:""})
+// }else{
+//   form.setValue("title","");
+// form.setValue("tags",[]);
+// form.setValue("author","")
+// }
+
 
 }
  
@@ -134,8 +138,7 @@ const titleValue = form.watch("title")
 const tagsValue = form.watch("tags")
 const authorValue = form.watch("author")
 
-console.log("ULR AUTOR")
-console.log(form.watch("author"))
+
 
 
 const currentTags = immediate
@@ -147,11 +150,12 @@ const currentTags = immediate
 
 const onSave = () =>{
   setFilters({
-    title:titleValue,
+    // title:titleValue,
     tags:tagsValue,
-    author:authorValue
+    // author:authorValue
   })
   closeContentModal()
+  form.reset()
 }
 
 
