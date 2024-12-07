@@ -15,6 +15,12 @@ export const constructSearchQuery = (queryParams: any) => {
           : [queryParams.tags],
       };
     }
+
+    // Filtrowanie po produkcie
+    if (queryParams.product) {
+      console.log("Product ID:", queryParams.product);
+      constructedQuery.product = queryParams.product; // Bez $all, bo to pojedyncze ID
+  }
  
     if (queryParams.author) {
       constructedQuery.createdBy = queryParams.author;

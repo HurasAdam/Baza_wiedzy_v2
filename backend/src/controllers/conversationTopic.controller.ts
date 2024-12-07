@@ -20,8 +20,12 @@ return res.status(OK).json(newTag)
 export const getConversationTopicsHandler = catchErrors(
     async(req,res)=>{
 
+console.log(req.query)
+
         const query = constructSearchQuery(req.query);
-      const conversationTopics = await ConversationTopicModel.find(query).populate([{ path: "product", select: ["name","labelColor","-_id"] }]);
+        const conversationTopics = await ConversationTopicModel.find(query)
+        .populate([{ path: "product", select: ["name", "labelColor", "-_id"] }])  // Załadowanie produktów
+        .sort('product.name');  // Sortowanie według nazwy produktu
       return res.status(OK).json(conversationTopics);
     }
 )
