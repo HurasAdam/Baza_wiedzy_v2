@@ -1,6 +1,6 @@
 import { OK } from "../constants/http";
 import ConversationTopicModel from "../models/ConversationTopic.model";
-import { createConversationTopic } from "../services/conversationTopic.service";
+import { createConversationTopic, getConversationTopic } from "../services/conversationTopic.service";
 import catchErrors from "../utils/catchErrors";
 import { constructSearchQuery } from "../utils/constructSearchQuery";
 import { conversationTopicSchema, newConversationTopicSchema } from "./conversationTopic.schema";
@@ -27,5 +27,15 @@ console.log(req.query)
         .populate([{ path: "product", select: ["name", "labelColor", "-_id"] }])  // Załadowanie produktów
         .sort('product.name');  // Sortowanie według nazwy produktu
       return res.status(OK).json(conversationTopics);
+    }
+)
+
+
+export const getSingleConversationTopicHandler = catchErrors(
+    async(req,res)=>{
+        const {id}= req.params;
+        const {userId}:{userId:string} = req;
+        const conversationTopic = await getConversationTopic({userId,topicId:id});
+        return res.status(OK).json(conversationTopic);
     }
 )

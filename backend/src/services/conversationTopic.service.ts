@@ -15,6 +15,11 @@ interface CreateConversationTopicParams {
     userId: string; 
   }
 
+  interface GetConversationTopicParams {
+    topicId: string;
+    userId: string; 
+  }
+
 export const createConversationTopic = async({request, userId}:CreateConversationTopicParams)=>{
     const {title,product} = request;
 
@@ -27,4 +32,11 @@ export const createConversationTopic = async({request, userId}:CreateConversatio
         createdBy:userId
     })
     return createdConversationTopic;
+}
+
+export const getConversationTopic = async({topicId, userId}:GetConversationTopicParams)=>{
+
+const conversationTopic = await ConversationTopicModel.findById({_id:topicId}).populate([{ path: "product", select: ["name"] }]);
+return conversationTopic; 
+
 }
