@@ -52,10 +52,15 @@ return (
              
          <span>    {tag?.title}</span>
          <div className='flex items-center gap-4'>
-<MdEdit 
+          <button
+        onClick={()=>openContentModal({size:"sm",title:"Dodaj nowy temat rozmowy", content:(<ConversationTopicForm topicId={tag?._id}/>)})}
+          >
+          <MdEdit 
            className='w-5 h-5 cursor-pointer text-gray-600/90 hover:text-blue-300'
      
            />
+          </button>
+
 
 <MdDelete 
 className='text-rose-600/60 cursor-pointer hover:text-rose-500'
