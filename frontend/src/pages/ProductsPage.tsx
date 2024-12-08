@@ -46,7 +46,12 @@ return (
        
             >
              <div className='flex justify-between'>
-             <span className='font-semibold text-gray-700/90'>{tag?.name}</span>
+      
+             <div className='flex items-center gap-2 font-semibold text-gray-700/90'>
+             <div 
+                        style={{ backgroundColor: tag?.labelColor }} 
+                    className='w-3.5 h-3.5 rounded-sm bg-orange-200'></div>
+             {tag?.name}</div>
 <div className='flex items-center gap-4'>
 <MdEdit 
            className='w-5 h-5 cursor-pointer text-gray-600/90 hover:text-blue-300'

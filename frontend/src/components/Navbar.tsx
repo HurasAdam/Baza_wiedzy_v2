@@ -155,7 +155,7 @@ const NavLinkItem: React.FC = ({ element }) => {
       <button
       onClick={()=>{
         openContentModal({
-        
+        height:"90",
           content:(<ShortcutCallRegisterForm/>)
         })
       }}

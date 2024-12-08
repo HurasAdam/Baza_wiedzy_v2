@@ -60,16 +60,24 @@ const {mutate} = useMutation({
        mutate(values)
       }
 
-
+      const colorOptions = [
+        { value: '#5d6d7e', label: 'Zgaszony błękitny' },
+        { value: '#a0aec0', label: 'Szaro-niebieski' },
+        { value: '#6b8e23', label: 'Zgaszona zieleń' },
+        { value: '#9b7fbf', label: 'Stonowany fioletowy' },
+        { value: '#d1d5db', label: 'Delikatny szary' },
+        { value: '#d4c68d', label: 'Zgaszona żółć' },
+        { value: '#b94b47', label: 'Przygaszona czerwień' }
+      ]
+              
+         
     return (
         <form 
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8 px-0.5  ">
  
         
-        
-        
-   
+
          
    
         
@@ -103,7 +111,7 @@ const {mutate} = useMutation({
         <label htmlFor=""className="text-sm text-gray-500" >
              Kolor etykiety
             </label>
-        <ColorPicker  value={selectedColor} onChange={(color)=>{handleSelectColor(color)}} items={[{value:'#e11d48', label:''}, {value:'#db2777', label:''}, {value:'#c026d3', label:''}, {value:'#9333ea', label:''}, {value:'#4f46e5', label:''}, {value:'#0284c7', label:''}, {value:'#0d9488', label:''}, {value:'#059669', label:''}, {value:'#16a34a', label:''}, {value:'#ca8a04', label:''}, {value:'#ea580c', label:''}, {value:'#dc2626', label:''}, {value:'#000000', label:''}, {value:'#ffffff', label:''}]}/>
+        <ColorPicker  value={selectedColor} onChange={(color)=>{handleSelectColor(color)}} items={colorOptions}/>
         </div>
               <div className="flex justify-end gap-3 py-10">
           <Button 

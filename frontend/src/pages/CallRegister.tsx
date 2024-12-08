@@ -86,18 +86,16 @@ const handleClearSelectedTag = () =>{
   return (
     <div className=' grid grid-cols-[5fr_2fr] p-3 gap-4  '>
       <div>
-        <div className='grid grid-cols-[1fr_2fr]'>
-      <h2 className='flex gap-1 items-center mb-10'>
+        <div className='grid grid-cols-[1fr_2fr] bg-slate-200 border border-slate-200 p-3 rounded '>
+      <h2 className='flex gap-1 items-center py-4'>
         <PiPhoneCallFill className='w-6 h-6 text-slate-700'/>
         <span className='text-xl font-semibold text-slate-700'>Rejestr tematów rozmów</span>
         
         </h2>
-       
-        </div>
-
-        <div className='grid grid-cols-2 items-center gap-4'>
+        <div className='grid grid-cols-2 items-center gap-4 '>
         <Input 
-        placeholder='Wyszukaj ...'
+        className=''
+        placeholder='Wyszukaj temat rozmowy...'
         onChange={(e)=>setTitle(e.target.value)}/>
    
    <div className="relative">
@@ -115,6 +113,9 @@ value={selectedTag}
 data={formatedTags}/>}
 </div>
 </div>
+        </div>
+
+
 
       <div className='flex flex-col gap-3.5 my-3'>
       {conversationTopics?.map((topic:ITopic) => {

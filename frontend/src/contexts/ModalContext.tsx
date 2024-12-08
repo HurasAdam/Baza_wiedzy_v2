@@ -21,7 +21,8 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
     description:"",
     content: null as React.ReactNode | null, 
     enableOutsideClickClose:true,
-    size:"md"
+    size:"md",
+    height:"60"
   });
 
   // Funkcje dla AlertModal
@@ -43,8 +44,8 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
 
   // Funkcje dla ContentModal
   const openContentModal = useCallback(
-    ({ title = "", description="", content =null ,enableOutsideClickClose,size }: { title?: string; description?: string; content?: React.ReactNode, enableOutsideClickClose:boolean, sieze?:string }) => {
-      setContentModal({ title, description, content, enableOutsideClickClose,size });
+    ({ title = "", description="", content =null ,enableOutsideClickClose,size,height }: { title?: string; description?: string; content?: React.ReactNode, enableOutsideClickClose:boolean, sieze?:string,height?:string }) => {
+      setContentModal({ title, description, content, enableOutsideClickClose,size,height });
       setIsContentModalOpen(true);
     },
     []
@@ -80,6 +81,7 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
       {/* Memoized ContentModal */}
       {isContentModalOpen && (
         <MemoizedContentModal 
+        height={contentModal.height}
         size={contentModal.size}
         isOpen={isContentModalOpen} 
         onClose={closeContentModal}

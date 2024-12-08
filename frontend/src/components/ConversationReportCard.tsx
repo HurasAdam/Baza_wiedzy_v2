@@ -47,9 +47,13 @@ const ConversationReportCard:FC<IConversationReportCardProps> = ({ topic }) => {
         <div className="border rounded-lg px-5 py-3.5 grid grid-cols-2 max-w-6xl gap-4 bg-white shadow-xs">
             <div className="flex-1 flex flex-col gap-4">
                 <span 
-                  style={{ backgroundColor: topic?.product?.labelColor }} 
-  className="text-xs font-semibold px-2 py-1 rounded-md text-neutral-50"
-                >{topic?.product?.name}</span>
+               
+  className="text-xs font-semibold px-2 py-1 rounded-md text-neutral-50 bg-slate-500 flex items-center gap-2"
+                >
+                    <div 
+                        style={{ backgroundColor: topic?.product?.labelColor }} 
+                    className='w-3 h-3 rounded-xs bg-orange-200'></div>
+                    {topic?.product?.name}</span>
                 <h3 className="text-lg font-semibold px-2 py-0.5">{topic?.title}</h3>
              
             </div>
