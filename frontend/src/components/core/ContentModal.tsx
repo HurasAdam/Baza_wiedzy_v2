@@ -9,23 +9,25 @@ import {
 } from "@/components/ui/dialog"
 
  
-export function ContentModal({isOpen,children, onClose,title ="",description = "",enableOutsideClickClose, size }) {
+export function ContentModal({isOpen,children, onClose,title ="",description = "",enableOutsideClickClose, size, height }) {
 
   const modalSizeHandler = (size) => {
     switch (size) {
       case "sm":
-        return "md:max-w-[38vw] min-w-[38vw] "; // Mały modal na md i większych ekranach
+        return " md:max-w-[38vw] min-w-[38vw]  "; // Mały modal na md i większych ekranach
       case "md":
         return "md:max-w-[66vw] md:min-w-[66vw]"; // Średni modal na md i większych ekranach
       case "lg":
         return "xl:max-w-[70vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]"; // Duży modal na lg i większych ekranach, a na md większy
       default:
-        return "max-w-[50vw] min-w-[50vw]"; // Domyślny rozmiar na dużych ekranach
+        return "max-w-[80vw] min-w-[80vw] lg:min-w-[60vw] lg:max-w-[60vw] xl:min-w-[50vw] xl:max-w-[50vw] "; // Domyślny rozmiar na dużych ekranach
     }
   };
 
 
-
+  const modalHeightHandler = (height) => {
+    return height ? `min-h-[${height}vh]` : "min-h-[60vh]";
+  };
 
 
   return (
@@ -36,10 +38,11 @@ export function ContentModal({isOpen,children, onClose,title ="",description = "
     </DialogTrigger> */}
     <DialogContent 
     className={`
+      ${modalHeightHandler(height)}
             ${modalSizeHandler(size)}  // Szerokość zależna od propsa size
          filter-none 
         bg-neutral-100
-            min-h-[60vh] h-fit max-h-[92vh]
+        h-fit max-h-[92vh]
          overflow-y-auto scrollbar-custom`}
     
     >
