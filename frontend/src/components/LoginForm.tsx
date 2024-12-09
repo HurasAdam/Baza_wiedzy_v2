@@ -12,6 +12,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import useAuth from "@/hooks/useAuth"
+import CircleButtonSpinner from "./core/CircleButtonSpinner"
  
 const formSchema = z.object({
     email: z.string().email({
@@ -23,6 +25,7 @@ const formSchema = z.object({
   });
  
 export function LoginForm({onSave,isError}) {
+  const {isLoading} = useAuth();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -102,7 +105,7 @@ return (
             <span className='text-sm text-gray-500 hover:text-gray-700 hover:underline cursor-pointer'>
           Zapomniałeś hasła?
         </span>
-        <Button className="my-0.5" type="submit">Zaloguj</Button>
+        <Button className="my-0.5" type="submit">{isLoading ? <CircleButtonSpinner/>:"Zaloguj"}</Button>
         </div>
       </form>
     </Form>

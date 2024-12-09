@@ -26,6 +26,7 @@ import { SearchBar } from "./SearchBar";
 import { useModalContext } from "@/contexts/ModalContext";
 import ShortcutCallRegisterForm from "./forms/ShortcutCallRegisterForm";
 import { IoIosSearch } from "react-icons/io";
+import { BasicSearchBar } from "./BasicSearchBar";
 
 const Navbar: React.FC = ({ notifications }) => {
 //   const {showContentModal} = useAppContext();
@@ -147,8 +148,13 @@ const NavLinkItem: React.FC = ({ element }) => {
 </div>
 <div className="">
 
-<button 
-onClick={()=>openContentModal({size:"sm"})}
+
+
+
+
+<button
+
+onClick={()=> openContentModal({size:"sm",title:"Filtry", content:(<div className='px-2 '><BasicSearchBar visibleFields={{ title: true, tags: false, author: false  }}  immediate={false}/></div>)})}
 className="flex items-center gap-1 w-[240px] h-full rounded-xl  border border-gray-200 cursor-pointer hover:bg-indigo-50 hover:border-indigo-100 hover:text-slate-500 bg-slate-50 p-0.5 px-3 text-slate-400 text-[14px]">
     <IoIosSearch/>
   wyszukaj artukułu...</button>
