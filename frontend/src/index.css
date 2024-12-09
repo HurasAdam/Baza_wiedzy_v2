@@ -116,3 +116,9 @@
 .spinner-sm{
   animation: spin 1s linear infinite;
 }
+
+
+
+.circleButtonSpinner {
+  animation: spin 1s linear infinite;
+}
