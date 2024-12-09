@@ -31,15 +31,16 @@ import { HiMiniXMark } from "react-icons/hi2";
 import { IoIosSearch } from "react-icons/io";
 import { useModalContext } from "@/contexts/ModalContext";
 import { ComboboxDemo, SelectDemo } from "./core/ComboBox";
+import { useNavigate } from "react-router-dom";
 
 
 
  
-export function SearchBar({immediate=false}) {
+export function SearchBar({immediate=false, visibleFields ={title:true, tags:true, author:true},enableSearchNavigation = false}) {
 
   const {title, setFilters,tags,author,verified} = useArticleFilters();
   const {closeContentModal} = useModalContext()
- 
+ const navigate = useNavigate();
 
 
 
@@ -148,22 +149,52 @@ const currentTags = immediate
   const currentAutor = immediate ? author: form.watch("author")
 
 
-const onSave = () =>{
-  setFilters({
-    // title:titleValue,
-    tags:tagsValue,
-    // author:authorValue
-  })
-  closeContentModal()
-  form.reset()
-}
+  const onSave = () => {
+    // Tworzymy URLSearchParams z filtrami
+
+    if(enableSearchNavigation){
+      const queryParams = new URLSearchParams();
+  
+      if (titleValue) {
+        queryParams.set("title", titleValue);
+      }
+    
+      if (tagsValue && tagsValue.length > 0) {
+        tagsValue.forEach(tag => queryParams.append("tags", tag.value)); // Jeśli używasz wielu tagów
+      }
+    
+      if (authorValue) {
+        queryParams.set("author", authorValue);
+      }
+    
+      // Jeśli masz inne filtry, możesz dodać je w ten sposób
+      // if (verified) {
+      //   queryParams.set("verified", verified);
+      // }
+    
+      // Ustawiamy filtry w URL
+   
+        navigate(`/articles?${queryParams.toString()}`, { replace: true });
+        closeContentModal();
+        form.reset();
+    }else{
+      setFilters({
+        title:titleValue,
+        tags:tagsValue,
+        author:authorValue
+      })
+      closeContentModal();
+      form.reset();
+    }
+ 
+  };
 
 
 
  
   return (
 <div className="space-y-6  ">
-  <div className="space-y-1.5 relative ">
+  { visibleFields.title &&<div className="space-y-1.5 relative ">
     <label htmlFor=""className="text-sm text-gray-500" >
       Tytuł
     </label>
@@ -184,11 +215,11 @@ const onSave = () =>{
    className="absolute bottom-2 right-[3%] w-6 h-6 cursor-pointer hover:text-blue-800"
 /> }
 
-</div>  
+</div>  }
 
 
 
-<div className="space-y-1.5">
+{visibleFields.tags && (<div className="space-y-1.5">
   <label htmlFor="" className="text-sm text-gray-500">
     Tagi
   </label>
@@ -210,10 +241,10 @@ placeholder="Wybierz tag..."
         />}
   
 
-      </div>
+      </div>)}
 
  
-<div className="relative ">
+{visibleFields.author && (<div className="relative ">
 {   currentAutor && <HiMiniXMark
    type="button"
    onClick={(e)=>clearAuthorHandler(e)}
@@ -226,7 +257,7 @@ onChange={urlAuthroHandler}
 clearAuthorHandler={clearAuthorHandler}
 value={currentAutor}
 data={formatedAuthors}/>
-</div>
+</div>)}
 
 
       <div className="flex justify-end gap-3">
@@ -241,6 +272,7 @@ data={formatedAuthors}/>
         
 {    !immediate  &&        <Button 
         onClick={onSave}
+        disabled={enableSearchNavigation && !titleValue}
         type="button">Zastosuj</Button>}
       </div>
         </div>
