@@ -65,7 +65,7 @@ const {mutate:markAsFavouriteHandler,isLoading} = useMutation({
   toast({
     title: "Sukces",
     description: data?.message,
-    duration: 3550000,
+    duration: 3600,
 variant:"success"
   })
   }

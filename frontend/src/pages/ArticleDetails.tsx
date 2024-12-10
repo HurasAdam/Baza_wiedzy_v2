@@ -61,6 +61,7 @@ const {mutate} = useMutation({
   toast({
     title: "Sukces",
     description: data.message,
+    variant:"success",
     duration: 3550
   })
   }
@@ -75,6 +76,7 @@ const {mutate:markAsFavouriteHandler} = useMutation({
   toast({
     title: "Sukces",
     description: data?.message,
+    variant:"success",
     duration: 3550
   })
   }
@@ -94,6 +96,7 @@ const {mutate:deleteArticleMutation} = useMutation({
   toast({
     title: "Sukces",
     description: data?.message,
+    variant:"success",
     duration: 3550
   })
   }

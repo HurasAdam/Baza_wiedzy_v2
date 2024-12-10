@@ -52,6 +52,7 @@ return    closeContentModal()
           toast({
             title: "Sukces",
             description: message,
+            variant:"success",
             duration: 4000
           })
         }
