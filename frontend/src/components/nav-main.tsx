@@ -19,25 +19,29 @@ import {
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router-dom";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string;
-    url: string;
-    icon: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      title: string;
-      url: string;
-    }[];
+
+interface IItem{
+  title:string;
+  url:string;
+}
+
+interface INavMainProps{
+  items:{
+    title:string;
+    url:string;
+    icon:LucideIcon;
+    isActive?:boolean;
+    items?:IItem[]
   }[];
-}) {
+  label?:string
+}
+
+export function NavMain({items,label}:INavMainProps ) {
   const { pathname } = useLocation();
   return (
     <SidebarGroup>
       <SidebarGroupLabel className="text-slate-500 text-xs">
-        Zarządzaj
+       {label}
       </SidebarGroupLabel>
       <SidebarMenu className="">
         {items.map((item) => {
@@ -56,6 +60,7 @@ export function NavMain({
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild className="py-5">
                   <SidebarMenuButton
+               
                     asChild
                     tooltip={item.title}
             
@@ -81,8 +86,8 @@ export function NavMain({
                 </CollapsibleTrigger>
                 {hasSubItems ? (
                   <>
-                    <SidebarMenuAction className="data-[state=open]:rotate-90 group">
-                      <ChevronRight className="text-white group-hover:text-gray-800 pointer-events-none " />
+                    <SidebarMenuAction className="data-[state=open]:rotate-90 group ">
+                      <ChevronRight className="text-orange-600  group-hover:text-orange-700 pointer-events-none  " />
                       <span className="sr-only">Toggle</span>
                     </SidebarMenuAction>
                     <CollapsibleContent>

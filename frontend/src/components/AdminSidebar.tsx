@@ -80,7 +80,9 @@ const {user} = useAuth();
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent className="bg-gray-800 text-blue-100/90 ">
-        <NavMain items={ADMIN_NAVBAR_OPTIONS} />
+        <NavMain 
+        label="Zarządzaj"
+        items={ADMIN_NAVBAR_OPTIONS} />
   
       </SidebarContent>
       <SidebarFooter className="bg-gray-800">

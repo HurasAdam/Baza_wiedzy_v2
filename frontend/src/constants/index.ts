@@ -5,6 +5,7 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { AiFillHome } from "react-icons/ai";
 import { SiPowerpages } from "react-icons/si";
 import { PiUsersFill } from "react-icons/pi";
+import { FaTrash } from "react-icons/fa";
 import { IoStatsChart } from "react-icons/io5";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { GoStarFill } from "react-icons/go";
@@ -160,6 +161,30 @@ export  const NAVBAR_OPTIONS = {
           icon: PiUsersFill,
           isActive: true,
        
+        },
+        {
+          title: "Usunięte",
+          url: "/admin/stats",
+          icon: FaRegComments,
+          items: [
+              {
+                title: "Artykuły",
+                url: "departments/helpdesk",
+              },
+              {
+                title: "Produkty",
+                url: "departments/sales",
+              },
+              {
+                title: "Tagi",
+                url: "departments/administration",
+              },
+              {
+                title: "Tematy rozmów",
+                url: "departments/administration",
+              },
+      
+            ],
         },
     ]
 
