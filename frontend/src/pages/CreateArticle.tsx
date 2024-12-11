@@ -25,12 +25,13 @@ const {mutate}= useMutation({
   mutationFn:({formData})=>{
     return articlesApi.createArticle({formData})
   },
-  onSuccess:()=>{
+  onSuccess:(data)=>{
     navigate("/articles")
     toast({
-      title: "Scheduled: Catch up",
-      description: "Friday, February 10, 2023 at 5:57 PM",
-      duration: 4000
+      title: "Sukces",
+      description:data?.message ,
+      variant:"success",
+      duration: 3400
     })
   }
 })
