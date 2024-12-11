@@ -16,7 +16,7 @@ export const createArticleHandler = catchErrors(
 
 
 
-    return res.status(OK).json(newArticle)
+    return res.status(OK).json({message:"Dodano nowy artykuł", data:newArticle})
     }
 
     
