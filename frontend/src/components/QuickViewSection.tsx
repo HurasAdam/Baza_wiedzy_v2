@@ -1,9 +1,10 @@
-import React from 'react'
+import React from 'react';
+import { HiMiniXMark } from "react-icons/hi2";
 import QuickArticleDetails from './QuickArticleDetails'
 import { Button } from './ui/button'
 import { IMAGES } from '@/constants/images'
 
-const QuickViewSection = ({articleId,onClose}) => {
+const QuickViewSection:React.FC = ({articleId,onClose}) => {
 
 
 if(!articleId){
@@ -22,9 +23,11 @@ if(!articleId){
    <div className='flex justify-end absolute top-0 right-0'>
    <Button
    onClick={onClose}
-   className='hover:bg-blue-900'
+   className='hover:bg-slate-700 px-2.5 py-2  group'
    variant="ghost"
-   >X</Button>
+   >
+    <HiMiniXMark className='w-5 h-5 text-slate-500 group-hover:text-neutral-50'/>
+   </Button>
    </div>
 <QuickArticleDetails articleId={articleId}/>
     </div>

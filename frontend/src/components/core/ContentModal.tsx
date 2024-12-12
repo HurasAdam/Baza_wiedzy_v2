@@ -43,7 +43,9 @@ export function ContentModal({isOpen,children, onClose,title ="",description = "
          filter-none 
         bg-neutral-100
         h-fit max-h-[92vh]
-         overflow-y-auto scrollbar-custom`}
+         overflow-y-auto scrollbar-custom
+         
+         `}
     
     >
       <DialogHeader>

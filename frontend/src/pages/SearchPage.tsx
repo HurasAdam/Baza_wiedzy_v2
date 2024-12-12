@@ -190,11 +190,6 @@ visibleFields={{ title: true, tags: false, author: false }} />
 
 
 
-
-
-    {/* <div className='border  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white'>
-  <SearchBar/>
-</div> */}
 <div className='py-6'>
 { <QuickViewSection 
 onClose={handleCloseQuickView}

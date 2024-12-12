@@ -45,18 +45,18 @@ if(viewType ==="grid"){
     <Card 
     
     className={`${className} ${isSelected ? "bg-indigo-100 shadow-lg relative  border-indigo-200": "relative hover:bg-slate-100 transition-all duration-50"}`}>
-        <CardHeader className=' py-1'>
-            <CardTitle className='text-sm flex justify-between  '>
+        <CardHeader className=' py-1 pr-5 pl-0'>
+            <CardTitle className='text-sm flex justify-between'>
               <div className='flex items-center gap-x-1'>
               <span 
                 onClick={(e) => {
                     e.stopPropagation(); // Zatrzymaj propagację, aby nie otwierało artykułu
                     toggleArticleAsFavouriteHandler({ id: data?._id });
                 }}
-                className=' px-1 flex items-center justify-center border border-transparent rounded-lg hover:border hover:broder hover:border-gray-300/90'>
+                className=' pl-3.5 p-2 py-0.5 flex items-center justify-center border border-transparent rounded-lg  group'>
                     <FaStar
                         
-                        className={data?.isFavourite ? "" : "text-gray-200/60"}
+                        className={data?.isFavourite ? "text-slate-900 group-hover:text-blue-200" : "text-gray-300 group-hover:text-blue-300"}
                     />
                
                 </span>

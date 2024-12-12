@@ -69,7 +69,7 @@ const navigate = useNavigate();
       clientDescription: article ? article.clientDescription : "",
       tags: article ? article?.tags?.map((tag)=>{
         return {label:tag?.name, value:tag?._id}
-      }): [], // Użyj tablicy z ID tagów
+      }): [],
       isVerified: article ? article.isVerified : false,
     },
   });
@@ -123,7 +123,9 @@ if(article){
             <FormItem>
               <FormLabel>Tytuł</FormLabel>
               <FormControl>
-                <Input placeholder="Jak odnotować zastępstwo" {...field} />
+                <Input 
+                className=" border-slate-400/90"
+                placeholder="Jak odnotować zastępstwo" {...field} />
               </FormControl>
               <FormDescription className={`${ titleValue.length>0 ? "text-slate-600" :"text-transparent"}`}>
          {titleValue.length}/{MAX_TITLE_LENGTH} znaków
@@ -144,13 +146,13 @@ if(article){
       <FormControl>
         <MultipleSelector
           defaultOptions={tags && tags}
-       className="bg-white"
+       className="bg-white border-slate-400/90"
       
           value={field.value} // Dopasowanie wartości do formatu wieloselektora
           onChange={(selected) => field.onChange(selected.map(item => item))} 
           placeholder="Wybierz tag..."
           emptyIndicator={
-            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400 ">
               No results found.
             </p>
           }
@@ -174,7 +176,7 @@ if(article){
               <FormControl>
               <Textarea
                   placeholder="Tell us a little bit about yourself"
-                    className="resize-none h-60 scrollbar-custom"
+                    className="resize-none h-60 scrollbar-custom border-slate-400/90"
                   {...field}
                 />
               </FormControl>
@@ -196,7 +198,7 @@ if(article){
               <FormControl>
               <Textarea
                   placeholder="Tell us a little bit about yourself"
-                    className="resize-none h-60 scrollbar-custom"
+                    className="resize-none h-60 scrollbar-custom border-slate-400/90"
                   {...field}
                 />
               </FormControl>
