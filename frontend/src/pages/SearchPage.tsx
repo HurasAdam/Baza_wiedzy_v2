@@ -23,6 +23,8 @@ import { SideDrawer } from '@/components/core/SideDrawer'
 import { IoFilter } from "react-icons/io5";
 import { Button } from '@/components/ui/button'
 import { useDebounce } from '@/hooks/useDebounce'
+import ArticleCardSkeleton from '@/components/ArticleCardSkeleton'
+import Spinner from '@/components/core/Spinner'
 
 
 const SearchPage = () => {
@@ -48,7 +50,7 @@ const {debouncedValue} = useDebounce({value:title,delay:250})
   }
 
 
-const {data:articles} = useQuery({
+const {data:articles, isLoading:isArticlesLoading} = useQuery({
   queryKey:["articles",queryParams],
   queryFn:()=>{
     return articlesApi.getAllArticles(queryParams)
@@ -136,7 +138,7 @@ const viewOptions = [
 
 
     
-{viewType ==="grid" && (<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-4  h-fit px-3  max-w-[1740px] mx-auto '>
+{viewType ==="grid" && (<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-4  h-fit px-3  max-w-[1740px] mx-auto  '>
 
 
 
@@ -166,8 +168,20 @@ onClick={()=>openContentModal({size:"sm",title:"Filtry", content:(<div className
 className="flex items-center w-full justify-between"
 visibleFields={{ title: true, tags: false, author: false }} />
 
-<div className='py-6 flex flex-col gap-[3px]'>
-      {articles?.data?.map((article)=>{
+{
+  isArticlesLoading ? <div  className='py-6 flex flex-col gap-[3px] relative  h-full'>
+    <Spinner 
+color="border-orange-600"
+      className='absolute top-[43%] left-1/2  '
+    />
+
+  </div>:
+  <div className='py-6 flex flex-col gap-[3px]'>
+    
+      {
+      
+      articles?.data.length>0 ?(
+      articles?.data?.map((article)=>{
         return(
           <div
   onClick={()=>setSelectedArticle(article._id)}
@@ -184,8 +198,13 @@ visibleFields={{ title: true, tags: false, author: false }} />
       
         </div>
         )
-      })}
+      })):(
+        <div className='text-center text-gray-500 text-lg py-6'>
+          <img  alt="" />
+        Nie znaleziono artykułów pasujących do wybranych filtrów.
       </div>
+      )}
+      </div>}
     </div>
 
 
