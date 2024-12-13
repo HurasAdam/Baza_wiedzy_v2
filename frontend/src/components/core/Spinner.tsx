@@ -1,12 +1,12 @@
-// Spinner.js
 import React from 'react';
 
-
-const Spinner = () => {
+const Spinner = ({ className = "", color="" }) => {
   return (
-    <div className="spinner">
-      {/* Możesz użyć dowolnej animacji lub ikony, poniżej przykład prostego kręcącego się kółka */}
-      <div className="loader"></div>
+    <div 
+      className={`spinner-wrapper ${className}`} 
+  
+    >
+      <div className={`spinner ${color}`}></div>
     </div>
   );
 };
