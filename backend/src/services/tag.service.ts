@@ -23,5 +23,5 @@ export const createTag = async({request, userId}:CreateTagParams)=>{
         name,
         createdBy:userId
     })
-    return createdTag;
+    return {data:createdTag, message:"Tag został dodany"};
 }
