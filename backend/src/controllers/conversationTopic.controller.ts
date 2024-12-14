@@ -57,13 +57,15 @@ export const updateConversationTopicleHandler = catchErrors(
         appAssert(assignedProduct, NOT_FOUND, "Product not found");
       }
   
-      if (title) {
-        const existingTitle = await ConversationTopicModel.findOne({
-          title: title,
+      if (title && product) {
+        // Sprawdzenie unikalności kombinacji tytuł + produkt
+        const existingTopic = await ConversationTopicModel.findOne({
+          title,
+          product,
           _id: { $ne: id }, // Wykluczamy aktualny temat (który chcemy zaktualizować)
         });
-  
-        appAssert(!existingTitle, CONFLICT, "Tytuł tematu rozmowy już istnieje");
+
+        appAssert(!existingTopic, CONFLICT, "Tytuł tematu rozmowy już istnieje dla tego produktu");
       }
 
       // Aktualizacja tematu rozmowy
@@ -76,4 +78,4 @@ export const updateConversationTopicleHandler = catchErrors(
       // Zwróć odpowiedź po udanej aktualizacji
       res.status(OK).json({ message: "Temat rozmowy został zaktualizowany" });
     }
-  );
+);

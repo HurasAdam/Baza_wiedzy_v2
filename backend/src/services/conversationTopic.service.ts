@@ -20,19 +20,22 @@ interface CreateConversationTopicParams {
     userId: string; 
   }
 
-export const createConversationTopic = async({request, userId}:CreateConversationTopicParams)=>{
-    const {title,product} = request;
+  export const createConversationTopic = async ({ request, userId }: CreateConversationTopicParams) => {
+    const { title, product } = request;
 
-    const conversationTopic = await ConversationTopicModel.exists({title});
-    appAssert(!conversationTopic, CONFLICT, "Conversation topic already exists");
+    // Sprawdzanie, czy temat rozmowy z tym tytułem dla danego produktu już istnieje
+    const conversationTopicExists = await ConversationTopicModel.exists({ title, product });
+    appAssert(!conversationTopicExists, CONFLICT, "Conversation topic with this title already exists for the specified product");
 
+    // Tworzenie nowego tematu rozmowy
     const createdConversationTopic = await ConversationTopicModel.create({
         title,
         product,
-        createdBy:userId
-    })
-    return createdConversationTopic;
-}
+        createdBy: userId,
+    });
+
+    return { data: createdConversationTopic, message: "Conversation topic created successfully" };
+};
 
 export const getConversationTopic = async({topicId, userId}:GetConversationTopicParams)=>{
 
