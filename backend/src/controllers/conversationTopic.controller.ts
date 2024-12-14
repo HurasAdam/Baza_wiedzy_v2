@@ -1,6 +1,8 @@
-import { OK } from "../constants/http";
+import { CONFLICT, NOT_FOUND, OK } from "../constants/http";
 import ConversationTopicModel from "../models/ConversationTopic.model";
+import ProductModel from "../models/Product.model";
 import { createConversationTopic, getConversationTopic } from "../services/conversationTopic.service";
+import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
 import { constructSearchQuery } from "../utils/constructSearchQuery";
 import { conversationTopicSchema, newConversationTopicSchema } from "./conversationTopic.schema";
@@ -39,3 +41,39 @@ export const getSingleConversationTopicHandler = catchErrors(
         return res.status(OK).json(conversationTopic);
     }
 )
+
+export const updateConversationTopicleHandler = catchErrors(
+    async (req, res) => {
+      const { id } = req.params;
+      const { title, product } = req.body;
+  
+      // Sprawdzamy, czy temat rozmowy istnieje
+      const conversationTopic = await ConversationTopicModel.findById(id);
+      appAssert(conversationTopic, NOT_FOUND, "Conversation topic not found");
+  
+      // Jeśli produkt jest podany, sprawdzamy, czy istnieje
+      if (product) {
+        const assignedProduct = await ProductModel.findById(product); // użyj findById, nie find
+        appAssert(assignedProduct, NOT_FOUND, "Product not found");
+      }
+  
+      if (title) {
+        const existingTitle = await ConversationTopicModel.findOne({
+          title: title,
+          _id: { $ne: id }, // Wykluczamy aktualny temat (który chcemy zaktualizować)
+        });
+  
+        appAssert(!existingTitle, CONFLICT, "Tytuł tematu rozmowy już istnieje");
+      }
+
+      // Aktualizacja tematu rozmowy
+      conversationTopic.title = title || conversationTopic.title;
+      conversationTopic.product = product || conversationTopic.product;
+  
+      // Zapisz zmiany w bazie danych
+      const updatedConversationTopic = await conversationTopic.save();
+  
+      // Zwróć odpowiedź po udanej aktualizacji
+      res.status(OK).json({ message: "Temat rozmowy został zaktualizowany" });
+    }
+  );

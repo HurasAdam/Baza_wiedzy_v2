@@ -5,7 +5,7 @@ import { createTagHandler, getTagsHandler } from "../controllers/tag.controller"
 
 const tagRoutes = Router();
 
-// prefix /sessions
+// prefix /tags
 
 tagRoutes.get("/",getTagsHandler)
 tagRoutes.post("/create",createTagHandler);
