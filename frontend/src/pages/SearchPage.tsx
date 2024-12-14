@@ -23,9 +23,8 @@ import { SideDrawer } from '@/components/core/SideDrawer'
 import { IoFilter } from "react-icons/io5";
 import { Button } from '@/components/ui/button'
 import { useDebounce } from '@/hooks/useDebounce'
-import ArticleCardSkeleton from '@/components/ArticleCardSkeleton'
 import Spinner from '@/components/core/Spinner'
-
+import { IoIosSearch } from 'react-icons/io'
 
 const SearchPage = () => {
   const [selectedView,setSelectedView] = useState("grid")
@@ -199,9 +198,10 @@ color="border-orange-600"
         </div>
         )
       })):(
-        <div className='text-center text-gray-500 text-lg py-6'>
-          <img  alt="" />
-        Nie znaleziono artykułów pasujących do wybranych filtrów.
+        <div className='mx-auto flex items-center gap-2 text-gray-500 text-lg mt-36  '>
+   <IoIosSearch className='w-8 h-8 text-slate-500'/>
+     <span className='text-md  text-slate-500/90 font-semibold'>Nie znaleziono pasujących artykułów ...</span>
+ 
       </div>
       )}
       </div>}
@@ -222,7 +222,7 @@ articleId={selectedArticle}/>}
 {viewType ==="table" && (
       <div className=' grid grid-cols-[13fr_4fr] gap-3.5 px-2.5 py-6 max-w-[1740px] mx-auto  '>
 
-        <div className='py-7 px-7 rounded-xl  border bg-white space-y-1.5'>
+        <div className='py-5 px-5 rounded-xl   space-y-1.5'>
         {/* <DataTable
 data={articles?.data}
 /> */}

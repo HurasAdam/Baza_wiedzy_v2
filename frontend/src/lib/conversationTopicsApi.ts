@@ -17,12 +17,20 @@ export const getConversationTopic = async({id}) =>{
     return API.get(`/conversation-topics/${id}`);
 }
  
+export const updateConversationTopic = async({id,formData})=>{
 
+    console.log("ID")
+    console.log(id)
+    console.log("formData")
+    console.log(formData)
+    return API.put(`/conversation-topics/topic/${id}/update`,formData)
+  }
 
 
 
 export  const conversationTopicApi ={
     getConversationTopics,
     createConversationTopic,
-    getConversationTopic
+    getConversationTopic,
+    updateConversationTopic
 } 
