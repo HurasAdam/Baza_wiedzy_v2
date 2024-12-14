@@ -5,9 +5,12 @@ export const getAllTags = async() =>{
 }
 
 
-
+export const createTag = async(tagForm) =>{
+    return API.post('/tags/create',tagForm);
+}
 
 
 export  const tagsApi ={
-    getAllTags
+    getAllTags,
+    createTag
 } 

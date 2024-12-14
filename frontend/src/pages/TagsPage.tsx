@@ -1,4 +1,7 @@
+
+import TagForm from '@/components/forms/TagForm';
 import { Button } from '@/components/ui/button';
+import { useModalContext } from '@/contexts/ModalContext';
 import { tagsApi } from '@/lib/tagsApi'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
@@ -6,6 +9,7 @@ import { HiOutlineHashtag } from 'react-icons/hi';
 import { MdDelete, MdEdit } from 'react-icons/md';
 
 const TagsPage = () => {
+  const {openContentModal, closeContentModal} = useModalContext()
 
 const {data:tags} = useQuery({
     queryFn:()=>{
@@ -21,7 +25,9 @@ return (
         <h2 className='text-xl font-bold text-gray-600 flex items-center gap-2 '><HiOutlineHashtag className="text-blue-900"/>Lista Tagów</h2>
        <div className=' mx-5 '>
        <Button 
-   
+      onClick={()=>{
+        openContentModal({height:"fit",size:"sm",title:"Dodaj tag", description:"Wypełnij wymagane dane i zatwierdź, aby dodać nowy tag", content:(<TagForm/>)})
+       }}
        className='rounded-lg bg-blue-600 text-white font-semibold py-2'
 
        >Dodaj nowy tag</Button>
