@@ -17,6 +17,7 @@ export interface UserDocument extends mongoose.Document {
     "_id" | "email" | "verified" | "createdAt" | "updatedAt" | "__v"
   >;
   favourites: mongoose.Types.ObjectId[];
+  role:string;
 }
 
 
@@ -27,6 +28,7 @@ const userSchema = new Schema<UserDocument>({
     password:{type:String, required:true},
     verified:{type:Boolean, required:true, default:false},
     favourites: [{ type: Schema.Types.ObjectId, ref: "Article" }],
+    role: { type: String, required: true, default: "user" }, // Default role is "user"
 },{
     timestamps:true
 })
