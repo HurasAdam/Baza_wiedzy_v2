@@ -84,7 +84,7 @@ const {mutate:markAsFavouriteHandler} = useMutation({
 
 const {mutate:deleteArticleMutation} = useMutation({
   mutationFn:({id})=>{
-    return articlesApi.deleteArticle({id})
+    return articlesApi.trashArticle({id})
   },
   onSuccess:(data)=>{
     queryClient.invalidateQueries("articles");
