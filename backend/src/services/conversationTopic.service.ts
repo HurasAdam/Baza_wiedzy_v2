@@ -1,4 +1,4 @@
-import { CONFLICT } from "../constants/http";
+import { CONFLICT, NOT_FOUND } from "../constants/http";
 import ConversationTopicModel from "../models/ConversationTopic.model";
 import TagModel from "../models/Tag.model";
 import appAssert from "../utils/appAssert";
@@ -42,4 +42,13 @@ export const getConversationTopic = async({topicId, userId}:GetConversationTopic
 const conversationTopic = await ConversationTopicModel.findById({_id:topicId}).populate([{ path: "product", select: ["name"] }]);
 return conversationTopic; 
 
+}
+
+
+export const deleteConversationTopic = async({topicId}:{topicId:string})=>{
+  const conversationTopic = await ConversationTopicModel.findById({_id:topicId});
+  appAssert(conversationTopic, NOT_FOUND, "Conversation topic not found");
+
+  const deleteConversationTopic = await ConversationTopicModel.findByIdAndDelete({_id:topicId})
+  return {message:"Conversataion topic deleted sucessfully"}
 }

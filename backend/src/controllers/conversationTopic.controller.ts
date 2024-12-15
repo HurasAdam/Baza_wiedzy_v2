@@ -1,7 +1,7 @@
 import { CONFLICT, NOT_FOUND, OK } from "../constants/http";
 import ConversationTopicModel from "../models/ConversationTopic.model";
 import ProductModel from "../models/Product.model";
-import { createConversationTopic, getConversationTopic } from "../services/conversationTopic.service";
+import { createConversationTopic, deleteConversationTopic, getConversationTopic } from "../services/conversationTopic.service";
 import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
 import { constructSearchQuery } from "../utils/constructSearchQuery";
@@ -41,6 +41,18 @@ export const getSingleConversationTopicHandler = catchErrors(
         return res.status(OK).json(conversationTopic);
     }
 )
+
+
+export const deleteConversationTopicHandler = catchErrors(
+  async(req,res)=>{
+      const {id}= req.params;
+
+      const conversationTopic = await deleteConversationTopic({topicId:id});
+      return res.status(OK).json(conversationTopic);
+  }
+)
+
+
 
 export const updateConversationTopicleHandler = catchErrors(
     async (req, res) => {
