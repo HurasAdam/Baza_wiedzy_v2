@@ -25,3 +25,9 @@ export const createTag = async({request, userId}:CreateTagParams)=>{
     })
     return {data:createdTag, message:"Tag został dodany"};
 }
+
+
+export const getTag = async({tagId}:{tagId:string})=>{
+  const tag = await TagModel.findById({_id:tagId})
+  return tag; 
+  }
