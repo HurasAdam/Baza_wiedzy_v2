@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { createArticleHandler, deleteArticleHandler, getArticleHandler, getArticlesHandler, getFavouriteArticlesHandler, markAsFavouriteHandler, updateArticleHandler, verifyArticleHandler } from "../controllers/article.controller";
+import { createArticleHandler, deleteArticleHandler, getArticleHandler, getArticlesHandler, getFavouriteArticlesHandler, getTrashedArticlesHandler, markAsFavouriteHandler, trashArticleHandler, updateArticleHandler, verifyArticleHandler } from "../controllers/article.controller";
+import roleGuard from "../middleware/roleGuard";
 
 
 const articleRoutes = Router();
@@ -8,12 +9,14 @@ const articleRoutes = Router();
 
 // articleRoutes.get("/",getSessionsHandler)
 articleRoutes.post("/create",createArticleHandler);
-articleRoutes.get("/",getArticlesHandler);
+articleRoutes.get("/", getArticlesHandler);
+articleRoutes.get("/trashed", getTrashedArticlesHandler);
 articleRoutes.get("/:id",getArticleHandler);
 articleRoutes.post("/article/:id/verify", verifyArticleHandler);
 articleRoutes.post("/article/:id/markAsFavourite", markAsFavouriteHandler);
 articleRoutes.put("/article/:id/update", updateArticleHandler);
 articleRoutes.get("/articles/favourites", getFavouriteArticlesHandler);
 articleRoutes.delete("/article/:id/delete", deleteArticleHandler);
+articleRoutes.put("/article/:id/trash", trashArticleHandler);
 
 export default articleRoutes;

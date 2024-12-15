@@ -27,7 +27,7 @@ export const createArticleHandler = catchErrors(
 export const getArticlesHandler = catchErrors(
     async (req,res) => {
       const { userId } = req;
-        const query = constructSearchQuery(req.query);
+      const query = { ...constructSearchQuery(req.query), isTrashed: { $ne: true } };
         const user = await UserModel.findById(userId).select('favourites');
         const favouritesList = user?.favourites;
 
@@ -78,6 +78,63 @@ isFavourite:favouritesList?.some(favId=>favId.equals(article._id))
   
     }
 )
+
+
+export const getTrashedArticlesHandler = catchErrors(
+  async (req,res) => {
+    const { userId } = req;
+    const query = { ...constructSearchQuery(req.query), isTrashed: { $ne: false } };
+      const user = await UserModel.findById(userId).select('favourites');
+      const favouritesList = user?.favourites;
+
+      const limit = parseInt(req.query.limit?.toString() || "20")
+  const pageSize = limit;
+      const pageNumber = parseInt(
+        req.query.page ? req.query.page.toString() : "1"
+      );
+      const skipp = (pageNumber - 1) * pageSize;
+      const sortBy = req.query.sortBy ? req.query.sortBy.toString() : '-createdAt';
+      const articles = await ArticleModel.find(query)
+        .select([
+          "-clientDescription",
+          "-employeeDescription",
+          "-verifiedBy",
+          "-updatedAt",
+          "-viewsCounter",
+          "-__v",
+        ])
+        .populate([{ path: "tags", select: ["name","shortname"] },{path:"createdBy",select:["name","surname"]}])
+        .skip(skipp)
+        .limit(pageSize)
+        .sort(sortBy); 
+  console.log(favouritesList)
+
+
+
+      const total = await ArticleModel.countDocuments(query);
+  const articlesWithFavourites =articles.map(article =>({
+...article.toObject(),
+isFavourite:favouritesList?.some(favId=>favId.equals(article._id))
+  }));
+  
+
+
+
+      const responseObject = {
+        data: articlesWithFavourites,
+        pagination: {
+          total,
+          page: pageNumber,
+          pages: Math.ceil(total / pageSize),
+        },
+      };
+  
+      
+  return res.status(OK).json(responseObject);
+
+  }
+)
+
 
 
 export const getArticleHandler = catchErrors(
@@ -176,6 +233,19 @@ export const getFavouriteArticlesHandler = catchErrors(
       totalPages: Math.ceil(totalFavouriteArticles / pageSize),
     });
 
+  }
+)
+
+
+export const trashArticleHandler = catchErrors(
+  async(req,res)=>{
+    const { id } = req.params;
+    const article = await ArticleModel.findById({_id:id});
+    appAssert(article, NOT_FOUND, "Article not found");
+
+article.isTrashed = true;
+await article.save();
+return res.status(OK).json({message:"Artykuł został usunięty"})
   }
 )
 
