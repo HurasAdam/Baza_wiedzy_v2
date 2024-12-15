@@ -2,14 +2,16 @@
 import TagForm from '@/components/forms/TagForm';
 import { Button } from '@/components/ui/button';
 import { useModalContext } from '@/contexts/ModalContext';
+import { toast } from '@/hooks/use-toast';
 import { tagsApi } from '@/lib/tagsApi'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
 import { HiOutlineHashtag } from 'react-icons/hi';
 import { MdDelete, MdEdit } from 'react-icons/md';
 
 const TagsPage = () => {
-  const {openContentModal, closeContentModal} = useModalContext()
+  const {openContentModal, closeContentModal, openModal} = useModalContext()
+const queryClient = useQueryClient();
 
 const {data:tags} = useQuery({
     queryFn:()=>{
@@ -17,6 +19,56 @@ const {data:tags} = useQuery({
     },
     queryKey:["tags"]
 });
+
+
+const {mutate:deleteTagMutation} = useMutation({
+  mutationFn:(id)=>{
+    return tagsApi.deleteTag(id)
+  },
+  onSuccess:()=>{
+    closeContentModal()
+    queryClient.invalidateQueries(["tags"]);
+    toast({
+      title: "Sukces",
+      description:"Tag został usunięty pomyślnie",
+      variant:"success",
+      duration: 3400
+    })
+  },
+  onError:(error)=>{
+
+    if (error?.status === 404) {
+      toast({
+        title: "Błąd",
+        description: "Wystąpił błąd. Nie znaleziono tagu",
+        variant: "destructive",
+        duration: 3400,
+      })
+      } else {
+        // Obsługa innych błędów
+        toast({
+          title: "Błąd",
+          description: "Wystąpił błąd. Spróbuj ponownie.",
+          variant: "destructive",
+          duration: 3400,
+        });
+      }
+  }
+})
+
+
+
+const deleteTagHandler = (id) => {
+  openModal(
+    "Czy jestes pewien?",
+    "Czy jesteś pewien, że chcesz usunąć ten Tag? Potwierdź, aby kontynuować.",
+    () => {
+      deleteTagMutation(id)
+    }
+  );
+};
+
+
 
 
 return (
@@ -47,13 +99,14 @@ return (
              <span className='font-semibold text-gray-700/90'>{tag?.name}</span>
 <div className='flex items-center gap-4'>
 <MdEdit 
+  onClick={()=>openContentModal({size:"sm",title:"Dodaj nowy temat rozmowy", content:(<TagForm tagId={tag?._id}/>)})}
            className='w-5 h-5 cursor-pointer text-gray-600/90 hover:text-blue-300'
      
            />
 
 <MdDelete 
 className='text-rose-600/60 cursor-pointer hover:text-rose-500'
-
+onClick={()=>deleteTagHandler(tag?._id)}
 />
 
 </div>
