@@ -28,6 +28,34 @@ export const getAllArticles = async(searchParams) =>{
     return API.get(`/articles/?${queryParams}`);
 }
 
+export const getAllTrashedArticles = async(searchParams) =>{
+
+
+  const queryParams = new URLSearchParams();
+  queryParams.append("page", searchParams.page);
+  queryParams.append("title", searchParams.title );
+  queryParams.append("author", searchParams.author );
+
+  if(searchParams.limit !==null && searchParams.limit !==undefined){
+    queryParams.append("limit",searchParams.limit);
+  }
+  if (searchParams.verified !== null && searchParams.verified !== undefined) {
+    queryParams.append("verified", searchParams.verified);
+}
+
+  if (searchParams.tags && searchParams.tags.length > 0) {
+    searchParams.tags.forEach((tag) => {
+      queryParams.append("tags", tag);
+    });
+  }
+
+
+
+
+
+  return API.get(`/articles/trashed/?${queryParams}`);
+}
+
 
 export const createArticle = async({formData})=>{
     return API.post('/articles/create',formData)
@@ -59,6 +87,10 @@ export const deleteArticle = async({id})=>{
   return API.delete(`/articles/article/${id}/delete`)
 }
 
+export const trashArticle = async({id})=>{
+  return API.put(`/articles/article/${id}/trash`)
+}
+
 
 export  const articlesApi ={
     getAllArticles,
@@ -67,5 +99,7 @@ export  const articlesApi ={
     verifyArticle,
     markArticleAsFavourite,
     deleteArticle,
-    updateArticle
+    updateArticle,
+    trashArticle,
+    getAllTrashedArticles
 } 
