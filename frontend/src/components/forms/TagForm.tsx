@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { IoIosSearch } from 'react-icons/io';
 import { Input } from '../ui/input';
 import { SelectBox } from '../core/SelectBox';
@@ -10,23 +10,27 @@ import { useModalContext } from '@/contexts/ModalContext';
 import { tagsApi } from '@/lib/tagsApi';
 import { toast } from '@/hooks/use-toast';
 
-const TagForm = () => {
+const TagForm = ({tagId}) => {
   const {closeContentModal} = useModalContext()
 const queryClient = useQueryClient()
 
 
+   const {data:tag}= useQuery({
+        queryKey:["conversationTopic",tagId],
+        queryFn:()=>{
+          return tagsApi.getTag({id:tagId})
+        },
+        enabled: !!tagId
+      })
 
 
 
 
+console.log(tag)
 
     const form = useForm({
-   
         defaultValues: {
-            name: "",
-            
-         
-           
+            name: tagId ? tag?.name : ""
         },
       })
       
@@ -65,8 +69,55 @@ const {mutate} = useMutation({
 })
 
 
+    useEffect(() => {
+        if (tag) {
+          form.reset({
+            name: tag.name || '',
+           
+          });
+        }
+      }, [tag, form.reset]);
+
+
+const {mutate:updateTagMutation} = useMutation({
+  mutationFn:({id,formData})=>{
+    return tagsApi.updateTag({id,formData})
+  },  onSuccess:()=>{
+    closeContentModal()
+    queryClient.invalidateQueries(["tags"]);
+    toast({
+      title: "Sukces",
+      description:"Tag został zaktualizowany pomyślnie",
+      variant:"success",
+      duration: 3400
+    })
+  },
+  onError:(error)=>{
+
+    if (error?.status === 409) {
+        // Jeśli kod błędu to 409, ustaw błąd w polu "name"
+        form.setError("name", {
+          message: "Tag o podanej nazwie już istnieje  (nazwa tagu musi być unikalna)", // Wiadomość dla użytkownika
+        });
+      } else {
+        // Obsługa innych błędów
+        toast({
+          title: "Błąd",
+          description: "Wystąpił błąd. Spróbuj ponownie.",
+          variant: "destructive",
+          duration: 3400,
+        });
+      }
+  }
+})
+
+
+
       function onSubmit(values) {
-    console.log(values)
+
+        if(tagId){
+          return updateTagMutation({id:tagId,formData:values})
+        }
        mutate(values)
       }
 
@@ -124,7 +175,7 @@ const {mutate} = useMutation({
                 
             <Button 
                
-                type="submit">Dodaj tag</Button>
+                type="submit">{tagId ? "Aktualizuj" :"Dodaj tag"}</Button>
               </div>
                 </form>
          
