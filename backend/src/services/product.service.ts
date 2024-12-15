@@ -1,4 +1,5 @@
-import { CONFLICT } from "../constants/http";
+import { CONFLICT, NOT_FOUND } from "../constants/http";
+import ConversationTopicModel from "../models/ConversationTopic.model";
 import ProductModel from "../models/Product.model";
 import TagModel from "../models/Tag.model";
 import appAssert from "../utils/appAssert";
@@ -27,3 +28,26 @@ export const createProduct = async({request, userId}:CreateProductParams)=>{
     })
     return createdProduct;
 }
+
+
+export const deleteProduct = async ({ productId }: { productId: string }) => {
+  // Znajdź produkt w bazie
+  const product = await ProductModel.findById({ _id: productId });
+  appAssert(product, NOT_FOUND, "Product not found");
+
+  // Sprawdź, czy istnieją powiązane tematy rozmów
+  const relatedTopicsCount = await ConversationTopicModel.countDocuments({
+    product: productId,
+  });
+
+  appAssert(
+    relatedTopicsCount === 0,
+    CONFLICT,
+    "Cannot delete product. It is used in one or more conversation topics."
+  );
+
+  // Usuń produkt, jeśli brak powiązań
+  await ProductModel.findByIdAndDelete({ _id: productId });
+
+  return { message: "Product deleted successfully" };
+};

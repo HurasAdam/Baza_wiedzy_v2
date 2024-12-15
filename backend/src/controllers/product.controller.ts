@@ -1,6 +1,6 @@
 import { OK } from "../constants/http";
 import ProductModel from "../models/Product.model";
-import { createProduct } from "../services/product.service";
+import { createProduct, deleteProduct } from "../services/product.service";
 import catchErrors from "../utils/catchErrors";
 import { newProductSchema } from "./product.schema";
 
@@ -15,6 +15,17 @@ return res.status(OK).json(newProduct)
 
     }
 )
+
+
+
+export const deleteProductHandler = catchErrors(
+    async(req,res)=>{
+        const {id}= req.params;
+  
+        const conversationTproduct  = await deleteProduct({productId:id});
+        return res.status(OK).json(conversationTproduct);
+    }
+  )
 
 export const getProductsHandler = catchErrors(
     async(req,res)=>{
