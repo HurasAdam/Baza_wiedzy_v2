@@ -10,6 +10,7 @@ const articleSchema = new Schema(
     clientDescription: { type: String, required: true },
     verifiedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
     viewsCounter: { type: Number, default: 0 },
+    isTrashed: { type: Boolean, default: false },
   },
 
   { timestamps: true }
