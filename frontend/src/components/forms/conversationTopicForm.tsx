@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { IoIosSearch } from 'react-icons/io';
-import { Input } from '../ui/input';
 import { SelectBox } from '../core/SelectBox';
 import { Button } from '../ui/button';
 import { useForm } from 'react-hook-form';
@@ -40,19 +38,19 @@ const queryClient = useQueryClient();
 
 
       const handleProductSelect = (selected) => {
-  
-          form.setValue("product",selected)
+        form.setValue("product", selected, { shouldValidate: true }); // Ustaw wartość
+        if (selected) {
+          form.clearErrors("product"); // Wyczyść błąd, jeśli wartość została wybrana
         }
-
+      };
 
     const form = useForm({
    
         defaultValues: {
             title: topicId ? conversationTopic?.title:"",
             product: topicId ? conversationTopic?.product?._id :"",
-         
-           
         },
+         mode: "onSubmit"
       })
       
 
@@ -78,7 +76,7 @@ const {mutate} = useMutation({
 
     if (error?.status === 409) {
         // Jeśli kod błędu to 409, ustaw błąd w polu "name"
-        setErrorMessage("Temat o podanej nazwie już istnieje  (temat rozmowy musi być unikalny)")
+        setErrorMessage("Dla wybranego produktu istnieje już temat o podanej nazwie (temat rozmowy może wystapić tylko raz dla każdego z produktów)")
         
        
       } else {
@@ -107,7 +105,7 @@ const {mutate:updateTopicMutation} = useMutation({
     if (error?.status === 409) {
         // Jeśli kod błędu to 409, ustaw błąd w polu "name"
         
-          setErrorMessage("Temat o podanej nazwie już istnieje  (temat rozmowy musi być unikalny)")
+          setErrorMessage("Temat o podanej nazwie już istnieje (temat rozmowy musi być unikalny)")
         
       } else {
         // Obsługa innych błędów
@@ -123,7 +121,17 @@ const {mutate:updateTopicMutation} = useMutation({
 
 
 
+
+
+
       function onSubmit(values) {
+
+        if (!values.product) {
+          form.setError("product", { type: "manual", message: "Wybierz produkt z listy" }); // Ustaw błąd
+          return;
+        }
+
+
     if(topicId){
       return updateTopicMutation(values)
     }else{
@@ -150,10 +158,17 @@ else{
     label="Produkt"
  placeholder="Wybierz produkt"
     onChange={handleProductSelect}
-    // clearAuthorHandler={clearAuthorHandler}
     value={form.watch("product")}
     data={formatedProducts}
     />
+         {
+             form.formState.errors.product && (
+                <span className='text-sm text-red-500 mx-1.5'>
+                    {form.formState.errors.product?.message}
+                </span>
+             )
+             
+             }
     </div>
     
     <div className="space-y-1.5 relative ">
@@ -162,22 +177,24 @@ else{
         </label>
       
         <Textarea
-        {...form.register("title",{required:"wprowadź temat rozmowy"})}
+        {...form.register("title",{required:"wprowadź temat rozmowy",minLength:{value:3,message:"temat rozmowy musi zawierac conajmniej 3 znaki"}})}
               placeholder="wprowadź temat rozmowy"
               className=" resize-none min-h-[110px] scrollbar-custom"
              
             />
 
              {
-             form.formState.errors.name && (
+             form.formState.errors.title && (
                 <span className='text-sm text-red-500 mx-1.5'>
-                    {form.formState.errors.name?.message}
+                    {form.formState.errors.title?.message}
                 </span>
              )
              
              }
   
-    {errorMessage && <span className='text-sm text-red-500 mx-1.5'>{errorMessage}</span>}
+   <div className='px-2'>
+   {errorMessage && <span className='text-sm text-red-500 mx-1.5'>{errorMessage}</span>}
+   </div>
     </div> 
     
           <div className="flex justify-end gap-3 py-10">
