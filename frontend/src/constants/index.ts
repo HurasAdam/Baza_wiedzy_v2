@@ -148,43 +148,13 @@ export  const NAVBAR_OPTIONS = {
     
           ],
       },
-      {
-        title:"Ulubione artykuły",
-        url:"/favourite-articles",
-        icon: MdOutlineDashboard,
-        isActive:true,
-        
-       },
+
+
         {
-          title: "Planner",
-          url: "/todos-board",
-          icon: PiUsersFill,
-          isActive: true,
-       
-        },
-        {
-          title: "Usunięte",
-          url: "/admin/stats",
+          title: "Usunięte artykuły",
+          url: "/admin/removed-articles",
           icon: FaRegComments,
-          items: [
-              {
-                title: "Artykuły",
-                url: "departments/helpdesk",
-              },
-              {
-                title: "Produkty",
-                url: "departments/sales",
-              },
-              {
-                title: "Tagi",
-                url: "departments/administration",
-              },
-              {
-                title: "Tematy rozmów",
-                url: "departments/administration",
-              },
-      
-            ],
+   
         },
     ]
 

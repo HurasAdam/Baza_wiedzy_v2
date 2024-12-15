@@ -2,16 +2,17 @@ import { ColorPicker } from '@/components/ColorPicker';
 import ProductForm from '@/components/forms/ProductForm';
 import { Button } from '@/components/ui/button';
 import { useModalContext } from '@/contexts/ModalContext';
+import { toast } from '@/hooks/use-toast';
 import { productsApi } from '@/lib/productsApi';
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
 import { AiFillProduct } from "react-icons/ai";
 import { MdDelete, MdEdit } from 'react-icons/md';
 
 const ProductsPage = () => {
 
-  const {openContentModal} = useModalContext()
-
+  const {openContentModal,openModal} = useModalContext()
+const queryClient = useQueryClient();
 
 const {data:products} = useQuery({
     queryFn:()=>{
@@ -19,6 +20,62 @@ const {data:products} = useQuery({
     },
     queryKey:["products"]
 });
+
+
+const { mutate: deleteProductMutation } = useMutation({
+  mutationFn: (id) => {
+    return productsApi.deleteProduct(id);
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries("products");
+    toast({
+      title: "Sukces",
+      description: "Produkt został usunięty pomyślnie",
+      variant: "success",
+      duration: 3400,
+    });
+  },
+  onError: (error) => {
+    if (error?.status ===404) {
+   
+        toast({
+          title: "Błąd",
+          description: "Produkt, który próbujesz usunąć, nie został znaleziony.",
+          variant: "destructive",
+          duration: 4000,
+        });
+    }
+      else if(error?.status ===409){
+        toast({
+          title: "Błąd",
+          description:
+            "Nie można usunąć produktu. Jest on powiązany z jednym lub większą liczbą tematów rozmów.",
+          variant: "warning",
+          duration: 4000,
+        });
+      }
+      else{
+        toast({
+          title: "Błąd",
+          description: "Wystąpił błąd. Spróbuj ponownie.",
+          variant: "destructive",
+          duration: 3400,
+        });
+    }
+  
+  },
+  
+});
+
+const deleteProduct = (id) => {
+  openModal(
+    "Czy jestes pewien?",
+    "Czy jesteś pewien, że chcesz usunąć wybrany produkt? Potwierdź, aby kontynuować.",
+    () => {
+      deleteProductMutation(id)
+    }
+  );
+};
 
 
 return (
@@ -59,8 +116,9 @@ return (
            />
 
 <MdDelete 
-className='text-rose-600/60 cursor-pointer hover:text-rose-500'
 
+className='text-rose-600/60 cursor-pointer hover:text-rose-500'
+onClick={()=>deleteProduct(tag?._id)}
 />
 
 </div>

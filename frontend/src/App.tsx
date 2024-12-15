@@ -22,6 +22,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import TagsPage from "./pages/TagsPage";
 import ProductsPage from "./pages/ProductsPage";
 import ConversationTopicsPage from "./pages/CoversationTopicsPage";
+import RemovedArticlesPage from "./pages/RemovedArticlesPage";
 
 
 function App() {
@@ -68,6 +69,7 @@ setNavigate(navigate);
 <Route  path="tags" element={<TagsPage/>}/>
 <Route  path="products" element={<ProductsPage/>}/>
 <Route  path="conversation-topics" element={<ConversationTopicsPage/>}/>
+<Route  path="removed-articles" element={<RemovedArticlesPage/>}/>
 </Route>
 
 

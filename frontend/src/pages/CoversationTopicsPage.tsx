@@ -2,15 +2,17 @@
 import ConversationTopicForm from '@/components/forms/conversationTopicForm';
 import { Button } from '@/components/ui/button';
 import { useModalContext } from '@/contexts/ModalContext';
+import { toast } from '@/hooks/use-toast';
 import { conversationTopicApi } from '@/lib/conversationTopicsApi';
 import { productsApi } from '@/lib/productsApi';
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React from 'react'
 import { MdSubject } from "react-icons/md";
 import { MdDelete, MdEdit } from 'react-icons/md';
 
 const CoversationTopicsPage = () => {
-  const {openContentModal} = useModalContext()
+  const {openContentModal,openModal} = useModalContext();
+  const queryClient = useQueryClient()
 
 const {data:products} = useQuery({
     queryFn:()=>{
@@ -18,6 +20,53 @@ const {data:products} = useQuery({
     },
     queryKey:["coversationTopics"]
 });
+
+
+
+const {mutate:deleteConversationTopicMutation} = useMutation({
+  mutationFn:(id)=>{
+    return conversationTopicApi.deleteConversationTopic(id)
+  },
+  onSuccess:()=>{
+    queryClient.invalidateQueries("coversationTopics");
+    toast({
+      title: "Sukces",
+      description:"Temat rozmowy został usunięty pomyślnie",
+      variant:"success",
+      duration: 3400
+    })
+  },
+    onError:(error)=>{
+  
+      if (error?.status === 404) {
+          // Jeśli kod błędu to 409, ustaw błąd w polu "name"
+          form.setError("name", {
+            message: "Nie znaleziono tematu rozmowy, który próbujesz usunąć.", // Wiadomość dla użytkownika
+          });
+        } else {
+          // Obsługa innych błędów
+          toast({
+            title: "Błąd",
+            description: "Wystąpił błąd. Spróbuj ponownie.",
+            variant: "destructive",
+            duration: 3400,
+          });
+        }
+    }
+})
+
+
+
+const deleteConveresationTopic = (id) => {
+  openModal(
+    "Czy jestes pewien?",
+    "Czy jesteś pewien, że chcesz usunąć ten temat rozmowy? Potwierdź, aby kontynuować.",
+    () => {
+      deleteConversationTopicMutation(id)
+    }
+  );
+};
+
 
 
 return (
@@ -63,6 +112,7 @@ return (
 
 
 <MdDelete 
+onClick={()=>deleteConveresationTopic(tag?._id)}
 className='text-rose-600/60 cursor-pointer hover:text-rose-500'
 
 />

@@ -19,12 +19,15 @@ export const getConversationTopic = async({id}) =>{
  
 export const updateConversationTopic = async({id,formData})=>{
 
-    console.log("ID")
-    console.log(id)
-    console.log("formData")
-    console.log(formData)
     return API.put(`/conversation-topics/topic/${id}/update`,formData)
   }
+
+  export const deleteConversationTopic = async(id)=>{
+
+    return API.delete(`/conversation-topics/topic/${id}/delete`)
+  }
+
+
 
 
 
@@ -32,5 +35,6 @@ export  const conversationTopicApi ={
     getConversationTopics,
     createConversationTopic,
     getConversationTopic,
-    updateConversationTopic
+    updateConversationTopic,
+    deleteConversationTopic
 } 

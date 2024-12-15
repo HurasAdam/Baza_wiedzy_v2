@@ -11,8 +11,13 @@ const createProduct = async (formData) =>{
 
 }
 
+const deleteProduct = async (id) =>{
+    return API.delete(`/products/product/${id}/delete`);
+}
+
 
 export  const productsApi ={
     getAllProducts,
-    createProduct
+    createProduct,
+    deleteProduct
 } 
