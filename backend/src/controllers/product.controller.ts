@@ -1,4 +1,4 @@
-import { NOT_FOUND, OK } from "../constants/http";
+import { CONFLICT, NOT_FOUND, OK } from "../constants/http";
 import ProductModel from "../models/Product.model";
 import { createProduct, deleteProduct, getSingleProduct } from "../services/product.service";
 import appAssert from "../utils/appAssert";
@@ -43,3 +43,27 @@ export const getSingleProductHandler = catchErrors(
         return res.status(OK).json(product);
     }
 )
+
+
+export const updateProductHandler = catchErrors(async (req, res) => {
+    const { id } = req.params;
+    const { name, labelColor } = req.body;
+
+    // Znajdź istniejący produkt po ID
+    const product = await ProductModel.findById({ _id: id });
+    appAssert(product, NOT_FOUND, "Product not found");
+
+    // Jeśli nazwa jest zmieniana, sprawdź, czy produkt z tą nazwą już istnieje
+    if (name && name !== product.name) {
+        const existingProduct = await ProductModel.exists({ name });
+        appAssert(!existingProduct, CONFLICT, "Product with this name already exists");
+    }
+
+    // Zaktualizuj nazwę i kolor etykiety
+    product.name = name || product.name;
+    product.labelColor = labelColor || product.labelColor;
+
+    const updatedProduct = await product.save();
+
+    res.status(OK).json({ message: "Product został zaktualizowany" });
+});

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProductHandler, deleteProductHandler, getProductsHandler, getSingleProductHandler } from "../controllers/product.controller";
+import { createProductHandler, deleteProductHandler, getProductsHandler, getSingleProductHandler, updateProductHandler } from "../controllers/product.controller";
 
 
 
@@ -12,6 +12,7 @@ productRoutes.get("/", getProductsHandler);
 productRoutes.get("/product/:id", getSingleProductHandler);
 productRoutes.post("/create",createProductHandler);
 productRoutes.delete("/product/:id/delete",deleteProductHandler);
+productRoutes.put("/product/:id/update",updateProductHandler);
 
 
 
