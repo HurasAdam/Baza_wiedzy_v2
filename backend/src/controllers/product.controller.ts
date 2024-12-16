@@ -1,6 +1,7 @@
-import { OK } from "../constants/http";
+import { NOT_FOUND, OK } from "../constants/http";
 import ProductModel from "../models/Product.model";
-import { createProduct, deleteProduct } from "../services/product.service";
+import { createProduct, deleteProduct, getSingleProduct } from "../services/product.service";
+import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
 import { newProductSchema } from "./product.schema";
 
@@ -32,5 +33,13 @@ export const getProductsHandler = catchErrors(
        
         const tags = await ProductModel.find({}).select(["-createdBy"]);
         return res.status(OK).json(tags)
+    }
+)
+
+export const getSingleProductHandler = catchErrors(
+    async(req,res)=>{
+        const {id} = req.params;
+      const product = await getSingleProduct({productId:id});
+        return res.status(OK).json(product);
     }
 )

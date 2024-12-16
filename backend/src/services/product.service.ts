@@ -51,3 +51,10 @@ export const deleteProduct = async ({ productId }: { productId: string }) => {
 
   return { message: "Product deleted successfully" };
 };
+
+
+export const getSingleProduct = async ({productId}:{productId:string})=>{
+  const product = await ProductModel.findById({_id:productId});
+  appAssert(product, NOT_FOUND, "Product not found");
+  return product
+}
