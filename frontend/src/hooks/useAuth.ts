@@ -10,6 +10,7 @@ const useAuth = (opts = {}) => {
     queryFn:()=>{
         return  api.getUser()
     },
+    
     staleTime: Infinity,
     ...opts,
   });
