@@ -6,6 +6,7 @@ import { AiFillHome } from "react-icons/ai";
 import { SiPowerpages } from "react-icons/si";
 import { PiUsersFill } from "react-icons/pi";
 import { FaTrash } from "react-icons/fa";
+import { FaTrashCan } from "react-icons/fa6";
 import { IoStatsChart } from "react-icons/io5";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { GoStarFill } from "react-icons/go";
@@ -153,7 +154,7 @@ export  const NAVBAR_OPTIONS = {
         {
           title: "Usunięte artykuły",
           url: "/admin/removed-articles",
-          icon: FaRegComments,
+          icon: FaTrashCan,
    
         },
     ]

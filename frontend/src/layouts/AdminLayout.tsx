@@ -88,7 +88,7 @@ if (user?.role !== "admin") {
     extraText="Admin"
     options={ADMIN_NAVBAR_OPTIONS}
     />
-    <SidebarInset className="bg-zinc-100 ">
+    <SidebarInset className="bg-zinc-50 ">
    <div className="flex  items-center w-full justify-between sticky top-0  z-20 rounded-b">
  
    <Navbar/>

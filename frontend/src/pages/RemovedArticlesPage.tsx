@@ -11,7 +11,7 @@ import { SearchBar } from '@/components/SearchBar'
 import useArticleFilters from '@/hooks/useArticleFilters'
 import { toast } from '@/hooks/use-toast'
 import ArticleDetails from './ArticleDetails'
-import { SiPowerpages } from "react-icons/si";
+import { FaTrashCan } from "react-icons/fa6";
 import { useModalContext } from '@/contexts/ModalContext'
 import { DataTable } from '@/components/core/DataTable'
 import { HiMiniXMark } from "react-icons/hi2";
@@ -25,6 +25,7 @@ import { Button } from '@/components/ui/button'
 import { useDebounce } from '@/hooks/useDebounce'
 import Spinner from '@/components/core/Spinner'
 import { IoIosSearch } from 'react-icons/io'
+import TrashedArticleCard from '@/components/TrashedArticleCard'
 
 const RemovedArticlesPage = () => {
   const [selectedView,setSelectedView] = useState("grid")
@@ -105,7 +106,7 @@ const viewOptions = [
 
 <div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-5  px-4 py-2 relative max-w-[1700px] mx-auto   '>
 <div className='font-semibold flex items-center gap-x-1.5 text-2xl text-sky-950'>
-  <SiPowerpages/>Baza artykułów
+  <FaTrashCan/>Baza usuniętych artykułow
   </div>
 <div className='flex     justify-end '>
 
@@ -137,7 +138,7 @@ const viewOptions = [
 
 
     
-{viewType ==="grid" && (<div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-4  h-fit px-3  max-w-[1740px] mx-auto  '>
+{viewType ==="grid" && (<div className='grid grid-row  xl:grid-cols-[10fr_16fr] gap-4  h-fit px-3  max-w-[1740px] mx-auto  '>
 
 
 
@@ -186,7 +187,7 @@ color="border-orange-600"
   onClick={()=>setSelectedArticle(article._id)}
           className={`min-w-[100%] mx-auto  cursor-pointer   `}
         >
-          <ArticleCard
+          <TrashedArticleCard
           viewType={selectedView}
             isLoading={isLoading}
             toggleArticleAsFavouriteHandler={toggleArticleAsFavouriteHandler}
@@ -232,7 +233,7 @@ data={articles?.data}
   onClick={()=>setSelectedArticle(article._id)}
           className={`min-w-[100%] mx-auto  cursor-pointer   `}
         >
-          <ArticleCard
+          <TrashedArticleCard
             isLoading={isLoading}
             toggleArticleAsFavouriteHandler={toggleArticleAsFavouriteHandler}
             data={article}

@@ -14,7 +14,7 @@ const ProductsPage = () => {
   const {openContentModal,openModal} = useModalContext()
 const queryClient = useQueryClient();
 
-const {data:products} = useQuery({
+const {data:products = []} = useQuery({
     queryFn:()=>{
         return productsApi.getAllProducts()
     },
@@ -49,7 +49,7 @@ const { mutate: deleteProductMutation } = useMutation({
         toast({
           title: "Błąd",
           description:
-            "Nie można usunąć produktu. Jest on powiązany z jednym lub większą liczbą tematów rozmów.",
+            "Nie można usunąć produktu ponieważ jest on powiązany z jednym lub większą liczbą tematów rozmów.",
           variant: "warning",
           duration: 4000,
         });
@@ -95,7 +95,7 @@ return (
 
   
   <div className='flex flex-col gap-4   '>
-    {products?.map((tag)=>{
+    {products&& products?.map((tag)=>{
         return(
             <div 
             key={tag?._id}
@@ -111,6 +111,8 @@ return (
              {tag?.name}</div>
 <div className='flex items-center gap-4'>
 <MdEdit 
+  onClick={()=>openContentModal({size:"sm",title:"Dodaj nowy temat rozmowy", content:( tag && <ProductForm productId={tag?._id}/>)})}
+
            className='w-5 h-5 cursor-pointer text-gray-600/90 hover:text-blue-300'
      
            />

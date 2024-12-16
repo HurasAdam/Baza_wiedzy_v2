@@ -75,17 +75,17 @@ const {user} = useAuth();
 
 
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="bg-gray-800">
+    <Sidebar collapsible="icon" {...props} className="border-slate-800">
+      <SidebarHeader className="bg-slate-950/90">
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
-      <SidebarContent className="bg-gray-800 text-blue-100/90 ">
+      <SidebarContent className="bg-slate-950/90 text-blue-100/90  ">
         <NavMain 
         label="Zarządzaj"
         items={ADMIN_NAVBAR_OPTIONS} />
   
       </SidebarContent>
-      <SidebarFooter className="bg-gray-800">
+      <SidebarFooter className="bg-slate-950/90">
       <NavSecondary items={ADMIN_NAVBAR_OPTIONS_SECONDARY} className="text-orange-700  rounded-xl" />
 
       </SidebarFooter>
