@@ -11,6 +11,8 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
   const [alertModal, setModalContent] = useState({
     title: "",
     description: "",
+    isUsed:false,
+    isChecked:false,
     onConfirm: () => {},
   });
 
@@ -26,8 +28,8 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
   });
 
   // Funkcje dla AlertModal
-  const openModal = useCallback((title: string, description: string, onConfirm: () => void, ) => {
-    setModalContent({ title, description, onConfirm });
+  const openModal = useCallback((title: string, description: string, onConfirm: () => void, isUsed?:boolean, ) => {
+    setModalContent({ title, description, onConfirm,isUsed });
     setIsAlertOpen(true);
   }, []);
 
@@ -70,6 +72,7 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
       {/* Memoized AlertModal */}
       {isAlertOpen && (
         <MemoizedAlertModal
+        isUsed ={alertModal.isUsed }
           isOpen={isAlertOpen}
           title={alertModal.title}
           description={alertModal.description}
