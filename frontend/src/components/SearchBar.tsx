@@ -65,7 +65,7 @@ const formatedAuthors = authors?.map((author)=>{
 })
 
 
-const formatedTags = data?.map((tag)=>{
+const formatedTags = data?.tags?.map((tag)=>{
   return {label:tag.name, value:tag._id}
 })
 const selectedTags = formatedTags?.filter(tag => tags.includes(tag.value));

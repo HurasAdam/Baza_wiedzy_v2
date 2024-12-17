@@ -71,7 +71,7 @@ const {data:authors} = useQuery({
 })
 
 
-const formatedTags = data?.map((tag)=>{
+const formatedTags = data?.tags?.map((tag)=>{
   return {label:tag.name, value:tag._id}
 })
 
@@ -83,7 +83,7 @@ const form = useForm<z.infer<typeof formSchema>>({
       title: title ||"",
       employeeDescription:"",
       clientDescription:"",
-      tags: tags?.map(tagId => formatedTags?.find(tag => tag.value === tagId)) || [], // Mapuj tagi z URL na obiekty
+      tags: tags?.tags?.map(tagId => formatedTags?.find(tag => tag.value === tagId)) || [], // Mapuj tagi z URL na obiekty
       isVerified:false
   },
 })

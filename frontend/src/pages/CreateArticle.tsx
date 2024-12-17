@@ -40,7 +40,7 @@ const onSave = ({formData})=>{
   return mutate({formData})
 }
 
-const formatedTags = data?.map((tag) => {
+const formatedTags = data?.tags?.map((tag) => {
   return { label: tag.name, value: tag._id };
 });
 

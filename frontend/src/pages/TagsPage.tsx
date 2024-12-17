@@ -13,7 +13,7 @@ const TagsPage = () => {
   const {openContentModal, closeContentModal, openModal} = useModalContext()
 const queryClient = useQueryClient();
 
-const {data:tags} = useQuery({
+const {data:tags =[]} = useQuery({
     queryFn:()=>{
         return tagsApi.getAllTags()
     },
@@ -58,13 +58,14 @@ const {mutate:deleteTagMutation} = useMutation({
 
 
 
-const deleteTagHandler = (id) => {
+const deleteTagHandler = (id, isUsed) => {
   openModal(
     "Czy jestes pewien?",
-    "Czy jesteś pewien, że chcesz usunąć ten Tag? Potwierdź, aby kontynuować.",
+    isUsed ? "Tag który chcesz usunąć jest obecnie używany, czy jesteś pewien że chcesz go usunąć ?" : "Czy jesteś pewien, że chcesz usunąć ten Tag? Potwierdź, aby kontynuować.",
     () => {
       deleteTagMutation(id)
-    }
+    },
+    isUsed
   );
 };
 
@@ -88,7 +89,7 @@ return (
 
   
   <div className='flex flex-col gap-4   '>
-    {tags?.map((tag)=>{
+    {tags?.tags?.map((tag)=>{
         return(
             <div 
             key={tag?._id}
@@ -106,7 +107,7 @@ return (
 
 <MdDelete 
 className='text-rose-600/60 cursor-pointer hover:text-rose-500'
-onClick={()=>deleteTagHandler(tag?._id)}
+onClick={()=>deleteTagHandler(tag?._id, tag?.isUsed)}
 />
 
 </div>
