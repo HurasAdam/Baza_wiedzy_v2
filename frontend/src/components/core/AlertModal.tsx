@@ -10,6 +10,7 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog";
   import { Button } from "@/components/ui/button";
+import { useCallback, useState } from "react";
   
   interface AlertModalProps {
     isOpen: boolean;
@@ -17,7 +18,7 @@ import {
     description: string;
     onCancel: () => void;
     onConfirm: () => void;
-    isUsed?:boolean;
+
   }
   
   export function AlertModal({
@@ -27,9 +28,14 @@ import {
     onCancel,
     onConfirm,
     isUsed,
-    isChecked
+ 
   }: AlertModalProps) {
 
+    const [isChecked, setIsChecked] = useState<boolean>(false)
+
+    const handleCheckboxConfirmation = useCallback(()=>{
+setIsChecked((prev)=>!prev)
+    },[])
 
 console.log("isUsed")
 console.log(isUsed)
@@ -49,7 +55,7 @@ console.log(isUsed)
               <input
                 type="checkbox"
                 checked={isChecked}
-                onChange={(e) => onCheckChange(e.target.checked)}
+                onChange={ handleCheckboxConfirmation}
               />
               Potwierdź, że chcesz usunąć tag, który jest już używany w artykule.
             </label>
@@ -57,7 +63,9 @@ console.log(isUsed)
         )}
           <AlertDialogFooter>
             <AlertDialogCancel onClick={onCancel}>Anuluj</AlertDialogCancel>
-            <AlertDialogAction onClick={onConfirm}>Potwierdź</AlertDialogAction>
+            <AlertDialogAction 
+            disabled={!isChecked}
+            onClick={onConfirm}>Potwierdź</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
