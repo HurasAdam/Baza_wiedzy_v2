@@ -11,6 +11,7 @@ import {
   } from "@/components/ui/alert-dialog";
   import { Button } from "@/components/ui/button";
 import { useCallback, useState } from "react";
+import { Input } from "../ui/input";
   
   interface AlertModalProps {
     isOpen: boolean;
@@ -50,21 +51,22 @@ console.log(isUsed)
             <AlertDialogDescription>{description}</AlertDialogDescription>
           </AlertDialogHeader>
           {isUsed && (
-          <div>
-            <label>
-              <input
+          <div className="">
+            <label className="flex items-center gap-1.5  cursor-pointer">
+              <Input
+          className="w-4 h-4 cursor-pointer "
                 type="checkbox"
                 checked={isChecked}
                 onChange={ handleCheckboxConfirmation}
               />
-              Potwierdź, że chcesz usunąć tag, który jest już używany w artykule.
+              Rozumiem <span className="text-gray-400 text-sm">(wymagane)</span>
             </label>
           </div>
         )}
           <AlertDialogFooter>
             <AlertDialogCancel onClick={onCancel}>Anuluj</AlertDialogCancel>
             <AlertDialogAction 
-            disabled={!isChecked}
+            disabled={isUsed && !isChecked}
             onClick={onConfirm}>Potwierdź</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
