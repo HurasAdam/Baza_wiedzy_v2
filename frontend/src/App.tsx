@@ -35,7 +35,8 @@ setNavigate(navigate);
     <Routes>
    
       <Route path="/" element={<RootLayout />}>
-      <Route index path="/dashboard" element={<Dashboard/>} />
+      <Route index  element={<Navigate to="/dashboard" replace/>} />
+      <Route  path="dashboard" element={<Dashboard/>} />
      <Route  path="articles" element={<SearchPage/>} />
      <Route path="statistics" element={<StatisticsPage />} />
      <Route path="new-article" element={<CreateArticle />} />
