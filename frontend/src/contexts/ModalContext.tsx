@@ -22,9 +22,10 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
     title:"",
     description:"",
     content: null as React.ReactNode | null, 
-    enableOutsideClickClose:true,
     size:"md",
-    height:"60"
+    height:"60",
+    closeOnOutsideClick:true,
+ 
   });
 
   // Funkcje dla AlertModal
@@ -46,8 +47,15 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
 
   // Funkcje dla ContentModal
   const openContentModal = useCallback(
-    ({ title = "", description="", content =null ,enableOutsideClickClose,size,height }: { title?: string; description?: string; content?: React.ReactNode, enableOutsideClickClose:boolean, sieze?:string,height?:string }) => {
-      setContentModal({ title, description, content, enableOutsideClickClose,size,height });
+    ({ closeOnOutsideClick = true, title = "", description = "", content = null, size, height }) => {
+      setContentModal({
+        closeOnOutsideClick, 
+        title, 
+        description, 
+        content, 
+        size, 
+        height
+      });
       setIsContentModalOpen(true);
     },
     []
@@ -55,7 +63,7 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
 
   const closeContentModal = useCallback(() => {
     setIsContentModalOpen(false);
-    setContentModal({ title: "", description: "", content: null });
+    setContentModal({ title: "", description: "", content: null,closeOnOutsideClick:true });
   }, []);
 
 
@@ -83,18 +91,19 @@ export const ModalContextProvider = ({ children }: { children: React.ReactNode }
 
       {/* Memoized ContentModal */}
       {isContentModalOpen && (
-        <MemoizedContentModal 
-        height={contentModal.height}
-        size={contentModal.size}
-        isOpen={isContentModalOpen} 
-        onClose={closeContentModal}
-        title={contentModal.title}
-        description={contentModal.description}
-        enableOutsideClickClose={contentModal.enableOutsideClickClose}
-        >
-         {contentModal.content}
-        </MemoizedContentModal>
-      )}
+  <MemoizedContentModal 
+    closeOnOutsideClick={contentModal.closeOnOutsideClick}
+    height={contentModal.height}
+    size={contentModal.size}
+    isOpen={isContentModalOpen} 
+    onClose={closeContentModal}
+    title={contentModal.title}
+    description={contentModal.description}
+
+  >
+    {contentModal.content}
+  </MemoizedContentModal>
+)}
 
       {children}
     </ModalContext.Provider>
