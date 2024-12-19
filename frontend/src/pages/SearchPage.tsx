@@ -142,7 +142,7 @@ const viewOptions = [
 
 
 
-<div className='flex flex-col gap-1.5 '>
+<div className='flex flex-col gap-1.5 px-2  '>
   <div className='flex justify-end px-3 '>
   
   <Button
@@ -209,7 +209,7 @@ color="border-orange-600"
 
 
 
-<div className='py-6'>
+<div className='py-3.5 '>
 { <QuickViewSection 
 onClose={handleCloseQuickView}
 articleId={selectedArticle}/>}

@@ -85,7 +85,13 @@ return (
        <div className=' mx-5 '>
        <Button 
    onClick={()=>{
-    openContentModal({size:"sm",title:"Dodaj produkt", description:"Wypełnij wymagane dane i zatwierdź, aby dodać nowy produkt", content:(<ProductForm/>)})
+    openContentModal(
+      {size:"sm",
+        title:"Dodaj produkt", 
+        description:"Wypełnij wymagane dane i zatwierdź, aby dodać nowy produkt", 
+        content:(<ProductForm/>),
+        closeOnOutsideClick:false,
+        })
    }}
        className='rounded-lg bg-blue-600 text-white font-semibold py-2'
 
@@ -111,7 +117,12 @@ return (
              {tag?.name}</div>
 <div className='flex items-center gap-4'>
 <MdEdit 
-  onClick={()=>openContentModal({size:"sm",title:"Dodaj nowy temat rozmowy", content:( tag && <ProductForm productId={tag?._id}/>)})}
+  onClick={()=>openContentModal(
+    {size:"sm",
+      title:"Dodaj nowy temat rozmowy", 
+      content:( tag && <ProductForm productId={tag?._id}/>),
+      closeOnOutsideClick:false,
+    })}
 
            className='w-5 h-5 cursor-pointer text-gray-600/90 hover:text-blue-300'
      

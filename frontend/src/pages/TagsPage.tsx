@@ -79,7 +79,14 @@ return (
        <div className=' mx-5 '>
        <Button 
       onClick={()=>{
-        openContentModal({height:"fit",size:"sm",title:"Dodaj tag", description:"Wypełnij wymagane dane i zatwierdź, aby dodać nowy tag", content:(<TagForm/>)})
+        openContentModal(
+          {height:"fit"
+            ,size:"sm",
+            title:"Dodaj tag", 
+            description:"Wypełnij wymagane dane i zatwierdź, aby dodać nowy tag", 
+            content:(<TagForm/>),
+            closeOnOutsideClick:false,
+          })
        }}
        className='rounded-lg bg-blue-600 text-white font-semibold py-2'
 
@@ -100,7 +107,13 @@ return (
              <span className='font-semibold text-gray-700/90'>{tag?.name}</span>
 <div className='flex items-center gap-4'>
 <MdEdit 
-  onClick={()=>openContentModal({size:"sm",title:"Dodaj nowy temat rozmowy", content:(<TagForm tagId={tag?._id}/>)})}
+  onClick={()=>openContentModal(
+    {size:"sm",
+      height:"fit",
+      title:"Edytuj Tag",
+       content:(<TagForm tagId={tag?._id}/>),
+       closeOnOutsideClick:false,
+      })}
            className='w-5 h-5 cursor-pointer text-gray-600/90 hover:text-blue-300'
      
            />

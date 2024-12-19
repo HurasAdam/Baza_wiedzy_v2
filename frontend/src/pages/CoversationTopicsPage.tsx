@@ -75,7 +75,12 @@ return (
         <h2 className='text-xl font-bold text-gray-600 flex items-center gap-2 '><MdSubject className="text-blue-900"/>Lista tematów rozmów</h2>
        <div className=' mx-5 '>
        <Button 
-   onClick={()=>openContentModal({size:"sm",title:"Dodaj nowy temat rozmowy", content:(<ConversationTopicForm/>)})}
+   onClick={()=>openContentModal({
+    size:"sm",
+    title:"Dodaj nowy temat rozmowy",
+     content:(<ConversationTopicForm/>),
+     closeOnOutsideClick:false,
+    })}
        className='rounded-lg bg-blue-600 text-white font-semibold py-2'
 
        >Dodaj nowy temat</Button>
@@ -102,7 +107,12 @@ return (
          <span>    {tag?.title}</span>
          <div className='flex items-center gap-4'>
           <button
-        onClick={()=>openContentModal({size:"sm",title:"Dodaj nowy temat rozmowy", content:(<ConversationTopicForm topicId={tag?._id}/>)})}
+        onClick={()=>openContentModal({
+          size:"sm",
+          title:"Edytuj temat rozmowy", 
+          content:(<ConversationTopicForm topicId={tag?._id}/>),
+        closeOnOutsideClick:false,
+        })}
           >
           <MdEdit 
            className='w-5 h-5 cursor-pointer text-gray-600/90 hover:text-blue-300'

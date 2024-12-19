@@ -5,11 +5,15 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
+  DialogOverlay,
   DialogTitle,
 } from "@/components/ui/dialog"
 
  
-export function ContentModal({isOpen,children, onClose,title ="",description = "",enableOutsideClickClose, size, height }) {
+export function ContentModal({isOpen,children, onClose,title ="",description = "", size, height,closeOnOutsideClick   }) {
+
+console.log("closeOnOutsideClick")
+console.log(closeOnOutsideClick)
 
   const modalSizeHandler = (size) => {
     switch (size) {
@@ -37,6 +41,13 @@ export function ContentModal({isOpen,children, onClose,title ="",description = "
       <Button variant="outline">Edit Profile</Button>
     </DialogTrigger> */}
     <DialogContent 
+        onInteractOutside={(e) => {
+          // Zatrzymujemy zamknięcie modalu tylko wtedy, gdy closeOnOutsideClick jest true
+          if (!closeOnOutsideClick) {
+            e.preventDefault(); // Zatrzymuje zamknięcie po kliknięciu na overlay
+          }
+        }}
+
     className={`
       ${modalHeightHandler(height)}
             ${modalSizeHandler(size)}  // Szerokość zależna od propsa size
@@ -64,7 +75,8 @@ export function ContentModal({isOpen,children, onClose,title ="",description = "
       {/* <DialogFooter>
         <Button type="submit">Save changes</Button>
       </DialogFooter> */}
-    </DialogContent>
+    </DialogContent >
+    <DialogOverlay closeOnOutsideClick={true} />
   </Dialog>
   )
 }

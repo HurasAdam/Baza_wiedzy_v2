@@ -32,8 +32,9 @@ return    closeContentModal()
     title: 'Szczegóły artykułu',
     description: 'Zobacz szczegóły artykułu.',
     content: <ArticleDetails articleId={article?._id} />, // Zmiana na ArticleDetails
-    enableOutsideClickClose: true,
+
     size: 'lg',
+
   });
 }
 
@@ -92,7 +93,7 @@ return    closeContentModal()
       if(!formatedTags){
         return(
 <div>
-<ArticleFormSkeleton/>
+a
 </div>
         )
       }

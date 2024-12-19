@@ -135,7 +135,9 @@ const modalDescription = !isVerified
 
 const EditArticleHandler = (article) =>{
   openContentModal(
-    {title:"Edytuj Artykuł", 
+    {
+      closeOnOutsideClick:false,
+      title:"Edytuj Artykuł", 
       description:"Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.", 
       content:<EditArticle type={id ? "view" :"modal"} article={article} />,size:"lg" })
 }
