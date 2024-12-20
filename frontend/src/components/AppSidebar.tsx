@@ -163,7 +163,7 @@ const {user} = useAuth();
 
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} className="font-nunito">
       <SidebarHeader className="bg-slate-800">
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>

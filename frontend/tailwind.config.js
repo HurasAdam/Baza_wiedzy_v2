@@ -70,7 +70,11 @@ export default {
   			}
   		},
   		fontFamily: {
-  			inter: ['Inter', 'sans-serif']
+  			inter: ['Inter', 'sans-serif'],
+			  title: ['Poppins', 'sans-serif'],
+		
+			  montserrat :['Montserrat', 'sans-serif']
+		
   		},
   		keyframes: {
   			'accordion-down': {

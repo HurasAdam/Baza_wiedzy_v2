@@ -104,7 +104,7 @@ const viewOptions = [
     <div className=' rounded-lg  min-h-[90vh]'>
 
 <div className='grid grid-row  xl:grid-cols-[13fr_16fr] gap-5  px-4 py-2 relative max-w-[1700px] mx-auto   '>
-<div className='font-semibold flex items-center gap-x-1.5 text-2xl text-sky-950'>
+<div className='font-semibold font-title flex items-center gap-x-1.5 text-xl text-sky-950'>
   <SiPowerpages/>Baza artykułów
   </div>
 <div className='flex     justify-end '>
@@ -191,7 +191,7 @@ color="border-orange-600"
             isLoading={isLoading}
             toggleArticleAsFavouriteHandler={toggleArticleAsFavouriteHandler}
             data={article}
-            className=""
+           
             isSelected={selectedArticle === article._id}
           />
       
