@@ -28,7 +28,7 @@ const quickViewArticleHandler = (article,isSelected) => {
 
     
       openContentModal({
-        title: article?.title,
+        
         description: "",
         content: <ArticleDetails type="modal" articleId={article._id} />,
         enableOutsideClickClose: true,

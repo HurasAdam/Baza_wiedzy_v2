@@ -22,6 +22,7 @@ import { useMemo, useState } from "react";
 import { useModalContext } from "@/contexts/ModalContext";
 import { useNavigate } from "react-router-dom";
 import ArticleDetails from "@/pages/ArticleDetails";
+import Editor from "./editor/Editor";
 
 const MAX_TITLE_LENGTH = 90;
 const MAX_EMPLOYEE_DESCRIPTION_LENGTH = 9000;
@@ -29,25 +30,36 @@ const MAX_CLIENT_DESCRIPTION_LENGTH = 9000;
 
  
 const formSchema = z.object({
-    title: z.string().min(2, {
-      message: "Tytuł jest wymagany.",
-    }),
-    employeeDescription: z.string().min(6, {
-      message: "Odpowiedź dla pracownika jest wymagana.",
-    }),
-    clientDescription: z.string().min(10, {
-      message: "Odpowiedź dla klienta jest wymagana.",
-    }),
-    tags: z.array(
+  title: z
+    .string()
+    .trim()
+    .min(2, { message: "Tytuł jest wymagany i musi mieć co najmniej 2 znaki." }),
+  employeeDescription: z
+    .string()
+    .refine(
+      (val) => val.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, '').trim().length > 0,
+      {
+        message: "Opis dla pracownika nie może być pusty lub zawierać tylko spacje.",
+      }
+    ),
+  clientDescription: z
+    .string()
+    .refine(
+      (val) => val.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, '').trim().length > 0,
+      {
+        message: "Opis dla klienta nie może być pusty lub zawierać tylko spacje.",
+      }
+    ),
+  tags: z
+    .array(
       z.object({
-        label: z.string(), // label musi być stringiem
-        value: z.string(), // value to string (np. id tagu)
+        label: z.string(),
+        value: z.string(),
       })
-    ).nonempty({
-      message: "Musisz dodać co najmniej jeden tag.",
-    }),
-    isVerified: z.boolean().optional(), 
-  });
+    )
+    .nonempty({ message: "Musisz dodać co najmniej jeden tag." }),
+  isVerified: z.boolean().optional(),
+});
  
 export function ArticleForm({onSave,tags,article,type,className}) {
 
@@ -80,20 +92,33 @@ const navigate = useNavigate();
   const titleValue = form.watch("title", "");
 
   
+  const handleEmployeeDescriptionChange = (content) => {
+    // Zamiana nowych linii na <br> przed zapisaniem
+    const transformedContent = content.replace(/\n/g, "<br>").trim();
+    form.setValue("employeeDescription", transformedContent);
+  };
+  
+  const handleClientDescriptionChange = (content) => {
+    form.setValue("clientDescription", content); // Przechowujemy pełną treść w formularzu (z HTML)
+  };
+
 
   function onSubmit(values: z.infer<typeof formSchema>) {
- 
+    // Usuwamy puste paragrafy (<p><br></p>) oraz ewentualne białe znaki z początku i końca
     const transformedValues = {
       ...values,
-      tags: values.tags.map(tag => tag.value),
+      employeeDescription: values.employeeDescription.replace(/<p><br><\/p>/g, '').trim(),
+      clientDescription: values.clientDescription.replace(/<p><br><\/p>/g, '').trim(),
+      tags: values.tags.map(tag => tag.value), // pozostała logika dla tagów
     };
-
-if(article){
-  return onSave({id:article._id,formData:transformedValues})
-}
-    onSave({formData:transformedValues})
+  
+    // Sprawdzamy, czy artykuł istnieje, jeśli tak to zapisujemy z jego id
+    if (article) {
+      return onSave({ id: article._id, formData: transformedValues });
+    }
+    // W przeciwnym razie zapisujemy nowy artykuł
+    onSave({ formData: transformedValues });
   }
-
 
   const quickViewArticleHandler = (article,type) =>{
     if(type ==="view"){
@@ -171,17 +196,22 @@ if(article){
           control={form.control}
           name="employeeDescription"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="bg-white">
               <FormLabel>Opis dla pracownika</FormLabel>
               <FormControl>
-              <Textarea
+                <Editor
+             onChange = {handleEmployeeDescriptionChange}
+              className="h-[260px] bg-white "
+                {...field}
+                />
+              {/* <Textarea
                   placeholder="Tell us a little bit about yourself"
                     className="resize-none h-60 scrollbar-custom border-slate-400/90"
                   {...field}
-                />
+                /> */}
               </FormControl>
-         <FormDescription className={`${ employeeDescriptionValue.length>0 ? "text-slate-600" :"text-transparent"}`}>
-         {employeeDescriptionValue.length}/{MAX_EMPLOYEE_DESCRIPTION_LENGTH} znaków
+         <FormDescription className={`${ employeeDescriptionValue.length>0 ? "text-slate-600  text-xs font-inter font-semibold px-2.5" :"text-transparent"}`}>
+         {employeeDescriptionValue.replace(/<[^>]+>/g, "").length}/{MAX_EMPLOYEE_DESCRIPTION_LENGTH} znaków
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -193,24 +223,32 @@ if(article){
           control={form.control}
           name="clientDescription"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-full bg-white ">
               <FormLabel>Odpowiedź dla klienta</FormLabel>
               <FormControl>
-              <Textarea
+              {/* <Textarea
                   placeholder="Tell us a little bit about yourself"
                     className="resize-none h-60 scrollbar-custom border-slate-400/90"
                   {...field}
+                /> */}
+                <div className="max-w-full">
+                        <Editor
+                              onChange = {handleClientDescriptionChange}
+                         className="h-[320px]"
+          
+                {...field}
                 />
+                </div>
               </FormControl>
-              <FormDescription className={`${ clientDescriptionValue.length>0 ? "text-slate-600" :"text-transparent"}`}>
-         {clientDescriptionValue.length}/{MAX_CLIENT_DESCRIPTION_LENGTH} znaków
+              <FormDescription className={`${ clientDescriptionValue.length>0 ? "text-slate-600  text-xs font-inter font-semibold px-2.5 " :"text-transparent"}`}>
+              {clientDescriptionValue.replace(/<[^>]+>/g, "").length}/{MAX_CLIENT_DESCRIPTION_LENGTH} znaków
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-<div className="flex justify-end space-x-4">
+<div className="flex justify-end space-x-4 ">
 <Button type="button"
 onClick={()=>{
   openModal(`${

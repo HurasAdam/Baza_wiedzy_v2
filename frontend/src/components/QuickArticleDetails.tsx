@@ -208,19 +208,20 @@ if(isLoading ){
       <AccordionItem value="item-1" className='border-0 '>
         <AccordionTrigger className='text-lg px-2.5 py-3 bg-blue-50 rounded-lg border border-blue-100 '>Opis dla pracownika</AccordionTrigger>
         <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-sm text-gray-900  '>
-          {article?.employeeDescription}
+        
+          <div dangerouslySetInnerHTML={{ __html: article?.employeeDescription }} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
     
     
-    
+   
     
     <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl    px-8 py-1 '>
       <AccordionItem value="item-1" className='border-0 '>
         <AccordionTrigger className='text-lg px-2.5 py-3 bg-blue-50 rounded-lg border border-blue-100'>Odpowiedź dla klienta</AccordionTrigger>
         <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px] text-sm text-gray-900 '>
-          {article?.clientDescription}
+        <div dangerouslySetInnerHTML={{ __html: article?.clientDescription }} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

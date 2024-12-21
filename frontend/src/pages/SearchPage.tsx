@@ -45,7 +45,7 @@ const [viewType,updateViewType] = useArticleViewType("articleView","table")
 const {debouncedValue} = useDebounce({value:title,delay:250})
 
   const queryParams={
-    page,title:debouncedValue,tags,author,verified,limit
+    page,title:debouncedValue,tags,author,verified,limit:20
   }
 
 

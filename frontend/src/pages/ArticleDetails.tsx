@@ -187,26 +187,28 @@ if(isLoading ){
 
 if(isFetching && !isLoading){
   return (
-    <div className=' px-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[5fr_2fr] gap-5'>
+    <div className=' px-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[8fr_3fr] gap-5 article-details '>
     {/* LEFT SIDE */}
-    <div className=' flex flex-col space-y-1.5  '>
-    <Button 
+   
+    <div className=' flex flex-col  '>
+   <Button 
    onClick={()=> navigate(-1)}
    className='w-fit cursor-pointer rounded-2xl border-transparent bg-transparent hover:bg-neutral-200 ' 
    variant="outline">
    <IoArrowBack className='  w-5 h-5 text-grey-800 hover:text-slate-800/90  '/>
    </Button>
-    <div className=' py-3.5 px-5  flex items-center justify-between rounded-xl bg-neutral-50 shadow '>
-    <span className='text-2xl'>{article?.title}</span>
+    <div className=' py-3.5 px-5  flex items-center justify-between    bg-blue-500 text-white  font-serif font-semibold rounded-lg border border-blue-100 '>
+    <span className='text-2xl font-semibold  font-inter '>{article?.title}</span>
     {article?.isFavourite &&<FaStar className='w-5 h-5'/>}
     </div>
     
-    
-    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow   px-8 py-1 '>
-      <AccordionItem value="item-1" className='border-0 '>
-        <AccordionTrigger className='text-lg'>Opis dla pracownika</AccordionTrigger>
-        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base  '>
-          {article?.employeeDescription}
+    <div className='bg-neutral-100 border border-slate-200'>
+    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl  bg-transparent    '>
+      <AccordionItem value="item-1" className=' '>
+        <AccordionTrigger className='text-base  bg-slate-200 px-8 '>
+          Opis dla pracownika</AccordionTrigger>
+        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base border-0 px-8 py-1   '>
+        <div dangerouslySetInnerHTML={{ __html: article?.employeeDescription }} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -214,15 +216,16 @@ if(isFetching && !isLoading){
     
     
     
-    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow    px-8 py-1 '>
+    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl   '>
       <AccordionItem value="item-1" className='border-0 '>
-        <AccordionTrigger className='text-lg'>Odpowiedź dla klienta</AccordionTrigger>
-        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]'>
-          {article?.clientDescription}
+        <AccordionTrigger className='text-base  bg-slate-200 px-8 rounded'>Odpowiedź dla klienta</AccordionTrigger>
+        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]  px-8 py-1 '>
+        <div dangerouslySetInnerHTML={{ __html: article?.clientDescription }} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
     
+    </div>
     
     </div>
     
@@ -322,27 +325,28 @@ if(isFetching && !isLoading){
 
 
   return (
-    <div className=' px-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[5fr_2fr] gap-5'>
+    <div className=' px-9 flex flex-col-reverse  2xl:grid  2xl:grid-cols-[8fr_3fr] gap-5 article-details '>
     {/* LEFT SIDE */}
    
-    <div className=' flex flex-col space-y-1.5 '>
+    <div className=' flex flex-col  '>
    <Button 
    onClick={()=> navigate(-1)}
    className='w-fit cursor-pointer rounded-2xl border-transparent bg-transparent hover:bg-neutral-200 ' 
    variant="outline">
    <IoArrowBack className='  w-5 h-5 text-grey-800 hover:text-slate-800/90  '/>
    </Button>
-    <div className=' py-3.5 px-5  flex items-center justify-between rounded-xl bg-neutral-50 shadow '>
-    <span className='text-2xl'>{article?.title}</span>
+    <div className=' py-3.5 px-5  flex items-center justify-between    bg-blue-500 text-white  font-serif font-semibold rounded-lg border border-blue-100 '>
+    <span className='text-2xl font-semibold  font-inter '>{article?.title}</span>
     {article?.isFavourite &&<FaStar className='w-5 h-5'/>}
     </div>
     
-    
-    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow   px-8 py-1 '>
-      <AccordionItem value="item-1" className='border-0 '>
-        <AccordionTrigger className='text-lg'>Opis dla pracownika</AccordionTrigger>
-        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base  '>
-          {article?.employeeDescription}
+    <div className='bg-neutral-100 border border-slate-200'>
+    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl  bg-transparent    '>
+      <AccordionItem value="item-1" className=' '>
+        <AccordionTrigger className='text-base  bg-slate-200 px-8 '>
+          Opis dla pracownika</AccordionTrigger>
+        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base border-0 px-8 py-1   '>
+        <div dangerouslySetInnerHTML={{ __html: article?.employeeDescription }} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -350,15 +354,16 @@ if(isFetching && !isLoading){
     
     
     
-    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl bg-neutral-50 shadow    px-8 py-1 '>
+    <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl   '>
       <AccordionItem value="item-1" className='border-0 '>
-        <AccordionTrigger className='text-lg'>Odpowiedź dla klienta</AccordionTrigger>
-        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]'>
-          {article?.clientDescription}
+        <AccordionTrigger className='text-base  bg-slate-200 px-8 rounded'>Odpowiedź dla klienta</AccordionTrigger>
+        <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]  px-8 py-1 '>
+        <div dangerouslySetInnerHTML={{ __html: article?.clientDescription }} />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
     
+    </div>
     
     </div>
     

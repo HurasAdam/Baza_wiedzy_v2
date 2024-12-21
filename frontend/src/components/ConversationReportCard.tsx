@@ -54,6 +54,7 @@ const ConversationReportCard:FC<IConversationReportCardProps> = ({ topic }) => {
                         style={{ backgroundColor: topic?.product?.labelColor }} 
                     className='w-3 h-3 rounded-xs bg-orange-200'></div>
                     {topic?.product?.name}</span>
+                
                 <h3 className="text-lg font-semibold px-2 py-0.5">{topic?.title}</h3>
              
             </div>
