@@ -24,7 +24,7 @@ console.log(closeOnOutsideClick)
       case "lg":
         return "xl:max-w-[70vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]"; // Duży modal na lg i większych ekranach, a na md większy
       default:
-        return "max-w-[80vw] min-w-[80vw] lg:min-w-[60vw] lg:max-w-[60vw] xl:min-w-[50vw] xl:max-w-[50vw] "; // Domyślny rozmiar na dużych ekranach
+        return "max-w-[90vw] min-w-[90vw] lg:min-w-[60vw] lg:max-w-[84vw] xl:min-w-[50vw] xl:max-w-[61vw] "; // Domyślny rozmiar na dużych ekranach
     }
   };
 
@@ -60,16 +60,15 @@ console.log(closeOnOutsideClick)
     
     >
       <DialogHeader>
-        <DialogTitle className="flex items-center gap-0.5 ">
-       
-          {title && title}</DialogTitle>
-        <DialogDescription>
+        <DialogTitle className=" ">
+        <div className="h-2.5 "></div>
+        {children}
+          </DialogTitle>
+        {/* <DialogDescription>
        {description}
-        </DialogDescription>
-        <div className="h-9"></div>
-     <div className="">
-     {children}
-     </div>
+        </DialogDescription> */}
+     
+    
       </DialogHeader>
       
       {/* <DialogFooter>
