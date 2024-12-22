@@ -17,6 +17,7 @@ import ArticleDetails from '@/pages/ArticleDetails';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import QuickArticleDetails from './QuickArticleDetails';
+import ArticleDetailsInModal from '@/pages/ArticleDetailsInModal';
 
 const ArticleCard = ({data,className,toggleArticleAsFavouriteHandler,isLoading,isSelected,viewType}) => {
   const  navigate = useNavigate();
@@ -30,9 +31,9 @@ const quickViewArticleHandler = (article,isSelected) => {
       openContentModal({
         
         description: "",
-        content: <ArticleDetails type="modal" articleId={article._id} />,
+        content: <ArticleDetailsInModal type="modal" articleId={article._id} />,
         enableOutsideClickClose: true,
-        size: "lg",
+        size: "xl",
       });
 
   };

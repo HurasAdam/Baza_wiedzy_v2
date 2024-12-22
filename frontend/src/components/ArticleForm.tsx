@@ -23,6 +23,7 @@ import { useModalContext } from "@/contexts/ModalContext";
 import { useNavigate } from "react-router-dom";
 import ArticleDetails from "@/pages/ArticleDetails";
 import Editor from "./editor/Editor";
+import ArticleDetailsInModal from "@/pages/ArticleDetailsInModal";
 
 const MAX_TITLE_LENGTH = 90;
 const MAX_EMPLOYEE_DESCRIPTION_LENGTH = 9000;
@@ -127,9 +128,9 @@ const navigate = useNavigate();
       openContentModal(
         {title:"Edytuj Artykuł", 
           description:"Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.", 
-          content:<ArticleDetails articleId={article._id}/>, 
+          content:<ArticleDetailsInModal articleId={article._id}/>, 
           enableOutsideClickClose:true, 
-          size:"lg"})
+          size:"xl"})
     }
   }
 

@@ -196,20 +196,20 @@ margin-top: 20px;
 }
 
 .article-details p {
-  @apply text-base text-gray-800 dark:text-white bg-neutral-100;
+  @apply text-base text-gray-800 dark:text-white bg-transparent;
 }
 
 .article-details ul, .article-details ol {
-  @apply list-inside pl-4 my-6 bg-neutral-100 ;
+  @apply list-inside pl-4 my-6 bg-transparent ;
 }
 
 
 .article-details ul{
-@apply list-disc bg-neutral-100
+@apply list-disc bg-transparent
 }
 
 .article-details ul li{
-  @apply my-3 bg-neutral-100
+  @apply my-3 bg-transparent
   }
 
 .article-details ol{
@@ -224,6 +224,58 @@ margin-top: 20px;
 
 
 
-/* .article-details button {
-  @apply px-4 py-2 ;
-} */
+/* ARTILCE DETAILS FULL SCREEN STYLES */
+
+
+
+.article-details-in-modal p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: #666;
+}
+
+.article-details-in-modal strong {
+  font-weight: bold;
+  color: #000;
+}
+
+.article-details-in-modal h1 {
+  @apply text-5xl font-extrabold dark:text-white mb-6;
+}
+
+.article-details-in-modal h2 {
+  @apply text-4xl font-bold dark:text-white mb-6;
+}
+
+.article-details-in-modal h3 {
+  @apply text-3xl font-semibold dark:text-white mb-6;
+}
+
+.article-details-in-modal h4 {
+  @apply text-2xl font-medium dark:text-white;
+}
+
+.article-details-in-modal p {
+  @apply text-base text-gray-800 dark:text-white bg-neutral-100;
+}
+
+.article-details-in-modal ul, .article-details-in-modal ol {
+  @apply list-inside pl-4 my-6 bg-neutral-100 ;
+}
+
+.article-details-in-modal ul{
+  @apply list-disc bg-neutral-100;
+}
+
+.article-details-in-modal ul li{
+  @apply my-3 bg-neutral-100;
+}
+
+.article-details-in-modal ol{
+  @apply list-decimal;
+}
+
+.article-details-in-modal li {
+  @apply text-sm text-gray-700 dark:text-gray-300;
+}

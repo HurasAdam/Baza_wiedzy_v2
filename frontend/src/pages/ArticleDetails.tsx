@@ -340,7 +340,7 @@ if(isFetching && !isLoading){
     {article?.isFavourite &&<FaStar className='w-5 h-5'/>}
     </div>
     
-    <div className='bg-neutral-100 border border-slate-200'>
+    <div className='border border-neutral-200 bg-neutral-100'>
     <Accordion type="multiple" collapsible defaultValue={['item-1']} className='rounded-xl  bg-transparent    '>
       <AccordionItem value="item-1" className=' '>
         <AccordionTrigger className='text-base  bg-slate-200 px-8 '>

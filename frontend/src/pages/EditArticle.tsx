@@ -8,6 +8,8 @@ import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import ArticleDetails from './ArticleDetails'
 import Spinner from '@/components/core/Spinner'
+import ArticleDetailsInModal from './ArticleDetailsInModal'
+import { MdEditDocument } from "react-icons/md";
 
 const EditArticle = ({article, type}) => {
 
@@ -31,9 +33,9 @@ return    closeContentModal()
   openContentModal({
     title: 'Szczegóły artykułu',
     description: 'Zobacz szczegóły artykułu.',
-    content: <ArticleDetails articleId={article?._id} />, // Zmiana na ArticleDetails
+    content: <ArticleDetailsInModal articleId={article?._id} />, // Zmiana na ArticleDetails
 
-    size: 'lg',
+    size: 'xl',
 
   });
 }
@@ -100,7 +102,15 @@ a
   return (
     <div>
     {isPending && <Spinner />} {/* Wyświetl spinnera, gdy jest loading */}
-    <ArticleForm tags={formatedTags} onSave={onSave} article={article} type={type}/>
+  
+  <div className='flex flex-col gap-8'>
+ 
+    <div className='mx-9 text-xl text-slate-700 flex items-center gap-1 '>
+    <MdEditDocument className='w-7 h-7'/>
+      <span>Edytu Artykuł</span>
+      </div>
+  <ArticleForm tags={formatedTags} onSave={onSave} article={article} type={type}/>
+  </div>
   </div>
   )
 }
