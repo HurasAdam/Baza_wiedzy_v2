@@ -12,7 +12,12 @@ import { useModalContext } from '@/contexts/ModalContext';
 import { ColorPicker } from '../ColorPicker';
 import { toast } from '@/hooks/use-toast';
 
-const ProductForm = ({productId}) => {
+
+interface IProductFormProps{
+  productId?:string
+}
+
+const ProductForm:React.FC<IProductFormProps> = ({productId}) => {
   const {closeContentModal} = useModalContext()
   const [selectedColor, setSelectedColor] = React.useState('#475569');
 const queryClient = useQueryClient();

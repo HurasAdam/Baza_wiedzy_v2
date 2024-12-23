@@ -1,4 +1,6 @@
+import AddProduct from '@/components/AddProduct';
 import { ColorPicker } from '@/components/ColorPicker';
+import EditProduct from '@/components/EditProduct';
 import ProductForm from '@/components/forms/ProductForm';
 import { Button } from '@/components/ui/button';
 import { useModalContext } from '@/contexts/ModalContext';
@@ -89,7 +91,7 @@ return (
       {size:"sm",
         title:"Dodaj produkt", 
         description:"Wypełnij wymagane dane i zatwierdź, aby dodać nowy produkt", 
-        content:(<ProductForm/>),
+        content:(<AddProduct/>),
         closeOnOutsideClick:false,
         })
    }}
@@ -120,7 +122,7 @@ return (
   onClick={()=>openContentModal(
     {size:"sm",
       title:"Dodaj nowy temat rozmowy", 
-      content:( tag && <ProductForm productId={tag?._id}/>),
+      content:( tag && <EditProduct productId={tag?._id}/>),
       closeOnOutsideClick:false,
     })}
 

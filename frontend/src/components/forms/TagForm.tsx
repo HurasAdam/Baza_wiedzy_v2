@@ -10,7 +10,11 @@ import { useModalContext } from '@/contexts/ModalContext';
 import { tagsApi } from '@/lib/tagsApi';
 import { toast } from '@/hooks/use-toast';
 
-const TagForm = ({tagId}) => {
+interface ITagFormProps{
+  tagId?:string;
+}
+
+const TagForm:React.FC<ITagFormProps> = ({tagId}) => {
   const {closeContentModal} = useModalContext()
 const queryClient = useQueryClient()
 
@@ -22,10 +26,6 @@ const queryClient = useQueryClient()
         },
         enabled: !!tagId
       })
-
-
-
-
 
 
     const form = useForm({

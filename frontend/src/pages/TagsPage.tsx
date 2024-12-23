@@ -1,4 +1,6 @@
 
+import AddTag from '@/components/AddTag';
+import EditTag from '@/components/EditTag';
 import TagForm from '@/components/forms/TagForm';
 import { Button } from '@/components/ui/button';
 import { useModalContext } from '@/contexts/ModalContext';
@@ -84,7 +86,7 @@ return (
             ,size:"sm",
             title:"Dodaj tag", 
             description:"Wypełnij wymagane dane i zatwierdź, aby dodać nowy tag", 
-            content:(<TagForm/>),
+            content:(<AddTag/>),
             closeOnOutsideClick:false,
           })
        }}
@@ -111,7 +113,7 @@ return (
     {size:"sm",
       height:"fit",
       title:"Edytuj Tag",
-       content:(<TagForm tagId={tag?._id}/>),
+       content:(<EditTag tagId={tag?._id}/>),
        closeOnOutsideClick:false,
       })}
            className='w-5 h-5 cursor-pointer text-gray-600/90 hover:text-blue-300'

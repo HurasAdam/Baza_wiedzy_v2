@@ -196,7 +196,7 @@ margin-top: 20px;
 }
 
 .article-details p {
-  @apply text-base text-gray-800 dark:text-white bg-transparent;
+  @apply text-base text-gray-800  dark:text-white bg-transparent;
 }
 
 .article-details ul, .article-details ol {
@@ -257,11 +257,11 @@ margin-top: 20px;
 }
 
 .article-details-in-modal p {
-  @apply text-base text-gray-800 dark:text-white bg-neutral-100;
+  @apply text-base font-normal text-gray-800 dark:text-white bg-neutral-100;
 }
 
 .article-details-in-modal ul, .article-details-in-modal ol {
-  @apply list-inside pl-4 my-6 bg-neutral-100 ;
+  @apply list-inside pl-4 my-6 bg-neutral-100 font-normal ;
 }
 
 .article-details-in-modal ul{
