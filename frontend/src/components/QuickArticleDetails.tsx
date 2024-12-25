@@ -8,37 +8,35 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { useOutletContext } from "react-router-dom";
-import { IoArrowBack } from "react-icons/io5";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { IoMdArrowDropright, IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { formatDate } from "@/lib/utils";
-import { FaCalendarCheck } from "react-icons/fa6";
-import { Dropdown } from "@/components/core/Dropdown";
-import { HiDotsHorizontal } from "react-icons/hi";
+import { FaHistory } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { TiArrowBack } from "react-icons/ti";
 import { MdDelete } from "react-icons/md";
-import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { toast } from "@/hooks/use-toast";
 import { useAlertModal } from "@/hooks/useAlertModal";
 import { useModalContext } from "@/contexts/ModalContext";
 import ArticleDetailsSkeleton from "@/components/ArticleDetailsSkeleton";
 import { ArticleForm } from "@/components/ArticleForm";
 import { BiSolidCopy } from "react-icons/bi";
-
-import { Button } from "@/components/ui/button";
 import EditArticle from "@/pages/EditArticle";
+import { Tooltip } from "@radix-ui/react-tooltip";
+import useCopyToClipboard from "@/hooks/useCopyToClipboard";
 
 const QuickArticleDetails = ({ articleId, type }) => {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { openModal, openContentModal } = useModalContext();
+  const { copyToClipboard } = useCopyToClipboard();
+  const articleRef = useRef(null);
+  const [clipBoardCopyMessage, setClipBoardCopyMessage] =
+    useState<string>("Kopiuj");
 
   const {
     data: article,
@@ -74,8 +72,27 @@ const QuickArticleDetails = ({ articleId, type }) => {
       toast({
         title: "Sukces",
         description: data?.message,
-        duration: 3550,
+        variant: "success",
+        duration: 3400,
       });
+    },
+    onError: (error) => {
+      if (error?.status === 404) {
+        toast({
+          title: "Błąd",
+          description: "Wystąpił błąd. Nie znaleziono artykułu",
+          variant: "destructive",
+          duration: 3400,
+        });
+      } else {
+        // Obsługa innych błędów
+        toast({
+          title: "Błąd",
+          description: "Wystąpił błąd. Spróbuj ponownie.",
+          variant: "destructive",
+          duration: 3400,
+        });
+      }
     },
   });
 
@@ -128,6 +145,16 @@ const QuickArticleDetails = ({ articleId, type }) => {
     });
   };
 
+  const showArticleHistory = (article) => {
+    openContentModal({
+      title: "Edytuj Artykuł",
+      description:
+        "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
+      content: <div>Historia modyfikacji artykułu</div>,
+      size: "lg",
+    });
+  };
+
   const articleDropdownOptions = [
     {
       label: `${
@@ -135,103 +162,113 @@ const QuickArticleDetails = ({ articleId, type }) => {
       }`,
       icon: <FaStar />,
       actionHandler: () => markAsFavouriteHandler({ id }),
+      tooltip: "Dodaj do ulubionych / Usuń z ulubionych",
     },
     {
       label: "Edytuj",
       icon: <FaEdit />,
       actionHandler: () => EditArticleHandler(article),
+      tooltip: "Edytuj artykuł",
     },
 
     ...(article?.isVerified
       ? [
           {
             label: "Cofnij weryfikację",
-
             actionHandler: () => {
               verifyArticleHandler({ id, isVerified: false });
             },
             icon: <TiArrowBack />,
+            tooltip: "Cofnij weryfikację artykułu",
           },
         ]
       : [
           {
             label: "Zweryfikuj",
-
             actionHandler: () => {
               verifyArticleHandler({ id, isVerified: true });
             },
-
             icon: <IoMdCheckmarkCircleOutline />,
+            tooltip: "Zweryfikuj artykuł",
           },
         ]),
-
-    // {label:"Zweryfikuj", icon: article?.isVerified ?<IoArrowBackCircleSharp/>:<FaCheckCircle/> , actionHandler:()=>mutate({id, isVerified: true }) },
+    {
+      label: "Historia modyfikacji",
+      icon: <FaHistory />,
+      actionHandler: () => showArticleHistory(article),
+      tooltip: "Zobacz historię modyfikacji",
+    },
     {
       label: "Usuń",
       icon: <MdDelete />,
       actionHandler: () => {
         deleteArticleHandler({ id });
       },
+      tooltip: "Usuń artykuł",
     },
   ];
+
+  const callbackFn = () => {
+    setClipBoardCopyMessage("Skopiowano!");
+    setTimeout(() => {
+      setClipBoardCopyMessage("Kopiuj"); // Resetowanie wiadomości po pewnym czasie
+    }, 750);
+  };
 
   if (isLoading) {
     return <ArticleDetailsSkeleton />;
   }
 
   return (
-    <div className=" px-6  pb-3 py-5 ">
+    <div className=" px-6 pb-3 py-5 articleDetails-quickView ">
       {/* LEFT SIDE */}
 
       <div className=" flex flex-col space-y-1.5 ">
         <div className="  px-5 mb-2 flex flex-col justify-between rounded-xl  ">
-          <div className="flex gap-1  justify-between">
-            <div className="flex justify-end">
-              {article?.isVerified ? (
-                <div className="flex gap-1.5 items-center text-xs font-inter font-semibold">
-                  <IoCheckmarkCircle className="w-6 h-6 text-emerald-500" />
-                  <div className="flex-col">
-                    <span className="text-slate-500 flex items-center ">
-                      {" "}
-                      Zweryfikował{" "}
-                    </span>
-
-                    <span className="text-slate-700 ">
-                      {article?.verifiedBy?.name +
-                        " " +
-                        article?.verifiedBy.surname}
-                    </span>
-                  </div>
-                </div>
+          <div className="flex gap-1  justify-between  pr-1 mt-1.5 ">
+            {/* <div className="">
+              {" "}
+              {article?.isFavourite ? (
+                <FaStar className="w-5 h-5 text-amber-600/70" />
               ) : (
-                <span className="text-slate-700 text-xs font-inter font-semibold flex items-center gap-1.5 ">
-                  <BsFillQuestionCircleFill className="w-5 h-5 text-slate-600" />{" "}
-                  Niezweryfikowany
-                </span>
+                <FaStar className="w-5 h-5 text-slate-200" />
+              )}
+            </div> */}
+
+            <div
+              className="flex justify-center  h-fit group cursor-pointer "
+              onClick={() => markAsFavouriteHandler({ articleId })}
+            >
+              {" "}
+              {article?.isFavourite ? (
+                <FaStar className="w-5 h-5 text-amber-600/70 group-hover:text-amber-400/90 transition-all duration-75" />
+              ) : (
+                <FaStar className="w-5 h-5 text-slate-200 group-hover:text-blue-200 transition-all" />
               )}
             </div>
-
             <div className="flex gap-2 justify-end px-0 my-3.5">
               {articleDropdownOptions?.map((option) => {
                 return (
-                  <button
-                    onClick={() => option.actionHandler()}
-                    className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
-                  >
-                    {option.icon}
-                  </button>
+                  <Tooltip key={option.label} content={option.tooltip}>
+                    <button
+                      onClick={() => option.actionHandler()}
+                      className="shadow-sm border border-neutral-400 bg-slate-500 transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300 text-slate-100"
+                    >
+                      {option.icon}
+                    </button>
+                  </Tooltip>
                 );
               })}
             </div>
           </div>
 
-          <div className="flex items-center gap-x-1 mt-2">
-            {article?.isFavourite && <FaStar className="w-5 h-5" />}
+          <div className="flex items-start gap-x-1 mt-2">
+            {/* star */}
             <span className="text-xl font-semibold text-gray-800">
               {article?.title}
             </span>
           </div>
-          <div className="py-2.5 px-0.5 space-x-1 space-y-1.5">
+          <div className="py-3 px-0.5 space-x-1 space-y-1.5">
             {article?.tags?.map((tag) => {
               return (
                 <BadgeLabel
@@ -241,11 +278,36 @@ const QuickArticleDetails = ({ articleId, type }) => {
               );
             })}
           </div>
-          <div className="flex px-3.5 justify-end">
-            <button className="flex items-center gap-1  font-semibold text-sm bg-blue-500/90 text-sky-50  px-3 py-2  rounded-md hover:bg-blue-500 hover:border-blue-400 hover:text-white transition-all   ">
+          <div className="flex justify-between px-2.5 mt-4">
+            {article?.isVerified ? (
+              <div className="flex gap-1.5 items-center text-xs font-inter font-semibold">
+                <IoCheckmarkCircle className="w-6 h-6 text-emerald-500" />
+                <div className="flex-col">
+                  <span className="text-slate-500 flex items-center ">
+                    {" "}
+                    Zweryfikował{" "}
+                  </span>
+
+                  <span className="text-slate-700 ">
+                    {article?.verifiedBy?.name +
+                      " " +
+                      article?.verifiedBy.surname}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <span className="text-slate-700 text-xs font-inter font-semibold flex items-center gap-1.5 ">
+                <BsFillQuestionCircleFill className="w-5 h-5 text-slate-600" />{" "}
+                Niezweryfikowany
+              </span>
+            )}
+            <button
+              onClick={() => copyToClipboard(articleRef, callbackFn)}
+              className="flex items-center gap-1  font-semibold text-sm bg-blue-500/90 text-sky-50  px-3 py-2  rounded-md hover:bg-blue-500 hover:border-blue-400 hover:text-white transition-all   "
+            >
               {" "}
               <BiSolidCopy />
-              Kopiuj
+              {clipBoardCopyMessage}
             </button>
           </div>
         </div>
@@ -282,6 +344,7 @@ const QuickArticleDetails = ({ articleId, type }) => {
             </AccordionTrigger>
             <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px] text-sm text-gray-900 ">
               <div
+                ref={articleRef}
                 dangerouslySetInnerHTML={{ __html: article?.clientDescription }}
               />
             </AccordionContent>

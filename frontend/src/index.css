@@ -27,8 +27,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem
-  ;
+    --radius: 0.5rem;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -36,7 +35,8 @@
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%}
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -61,8 +61,7 @@
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
-  ;
+    --chart-5: 340 75% 55%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -70,7 +69,8 @@
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%}
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
 }
 @layer base {
   * {
@@ -102,7 +102,7 @@
   width: 46px;
   height: 46px;
   border: 4px solid rgba(0, 0, 0, 0.1);
-  border-top: 4px solid #3498db; 
+  border-top: 4px solid #3498db;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -116,55 +116,48 @@
   }
 }
 
-.spinner-sm{
+.spinner-sm {
   animation: spin 1s linear infinite;
 }
-
-
 
 .circleButtonSpinner {
   animation: spin 1s linear infinite;
 }
 
-
-
-.ql-editor h3{
+.ql-editor h3 {
   margin-bottom: 0.6rem;
 }
 
-.ql-editor h2{
+.ql-editor h2 {
   margin-bottom: 0.6rem;
 }
 
-.ql-editor h1{
+.ql-editor h1 {
   margin-bottom: 0.6rem;
 }
 
 /* Zawijanie tekstu w edytorze */
 .ql-editor {
-color:#444;
-  width: 100% !important;  /* Zapewnia, że edytor wewnętrzny zajmuje pełną szerokość */
-  word-wrap: break-word !important;  /* Wymusza zawijanie słów */
-  white-space: normal !important;  /* Zapewnia normalne zawijanie tekstu */
-  overflow-wrap: break-word;  /* Alternatywa dla break-word */
-  word-break: break-word;  /* Wymusza łamanie słów */
+  color: #444;
+  width: 100% !important; /* Zapewnia, że edytor wewnętrzny zajmuje pełną szerokość */
+  word-wrap: break-word !important; /* Wymusza zawijanie słów */
+  white-space: normal !important; /* Zapewnia normalne zawijanie tekstu */
+  overflow-wrap: break-word; /* Alternatywa dla break-word */
+  word-break: break-word; /* Wymusza łamanie słów */
 }
 
 /* Zabezpieczenie przed przekroczeniem szerokości kontenera */
 .ql-editor p {
-  
   max-width: 100% !important;
-  margin-bottom: 16px;  /* Ustaw odstęp między paragrafami */
-  line-height: 1.5; 
+  margin-bottom: 16px; /* Ustaw odstęp między paragrafami */
+  line-height: 1.5;
 }
 .ql-editor ol {
-margin-bottom: 10px;
-margin-top: 20px;
+  margin-bottom: 10px;
+  margin-top: 20px;
 }
 
-
 /* EDITOR SYTLES */
-
 
 .article-details p {
   font-size: 1rem;
@@ -177,7 +170,6 @@ margin-top: 20px;
   font-weight: bold;
   color: #000;
 }
-
 
 .article-details h1 {
   @apply text-5xl font-extrabold dark:text-white mb-6;
@@ -199,34 +191,28 @@ margin-top: 20px;
   @apply text-base text-gray-800  dark:text-white bg-transparent;
 }
 
-.article-details ul, .article-details ol {
-  @apply list-inside pl-4 my-6 bg-transparent ;
+.article-details ul,
+.article-details ol {
+  @apply list-inside pl-4 my-6 bg-transparent;
 }
 
-
-.article-details ul{
-@apply list-disc bg-transparent
+.article-details ul {
+  @apply list-disc bg-transparent;
 }
 
-.article-details ul li{
-  @apply my-3 bg-transparent
-  }
+.article-details ul li {
+  @apply my-3 bg-transparent;
+}
 
-.article-details ol{
-  @apply list-decimal
-  }
-  
+.article-details ol {
+  @apply list-decimal;
+}
 
 .article-details li {
   @apply text-sm text-gray-700 dark:text-gray-300;
-  
 }
 
-
-
 /* ARTILCE DETAILS FULL SCREEN STYLES */
-
-
 
 .article-details-in-modal p {
   font-size: 1rem;
@@ -260,22 +246,81 @@ margin-top: 20px;
   @apply text-base font-normal text-gray-800 dark:text-white bg-neutral-100;
 }
 
-.article-details-in-modal ul, .article-details-in-modal ol {
-  @apply list-inside pl-4 my-6 bg-neutral-100 font-normal ;
+.article-details-in-modal ul,
+.article-details-in-modal ol {
+  @apply list-inside pl-4 my-6 bg-neutral-100 font-normal;
 }
 
-.article-details-in-modal ul{
+.article-details-in-modal ul {
   @apply list-disc bg-neutral-100;
 }
 
-.article-details-in-modal ul li{
+.article-details-in-modal ul li {
   @apply my-3 bg-neutral-100;
 }
 
-.article-details-in-modal ol{
+.article-details-in-modal ol {
   @apply list-decimal;
 }
 
 .article-details-in-modal li {
   @apply text-sm text-gray-700 dark:text-gray-300;
 }
+
+/* ARTICLE QUICK VIEW  */
+.articleDetails-quickView p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: #666;
+}
+
+.articleDetails-quickView strong {
+  font-weight: bold;
+  color: #000;
+}
+
+.articleDetails-quickView h1 {
+  @apply text-5xl font-extrabold dark:text-white mb-6;
+}
+
+.articleDetails-quickView h2 {
+  @apply text-4xl font-bold dark:text-white mb-6;
+}
+
+.articleDetails-quickView h3 {
+  @apply text-3xl font-semibold dark:text-white mb-6;
+}
+
+.articleDetails-quickView h4 {
+  @apply text-2xl font-medium dark:text-white;
+}
+
+.articleDetails-quickView p {
+  @apply text-base text-gray-800  dark:text-white bg-transparent;
+}
+
+.articleDetails-quickView ul,
+.articleDetails-quickView ol {
+  @apply list-inside pl-4 my-6 bg-transparent;
+}
+
+.articleDetails-quickView ul {
+  @apply list-disc bg-transparent;
+}
+
+.articleDetails-quickView ul li {
+  @apply my-3 bg-transparent;
+}
+
+.articleDetails-quickView ol {
+  @apply list-decimal;
+}
+
+.articleDetails-quickViewli {
+  @apply text-sm text-gray-700 dark:text-gray-300;
+}
+
+/* .articleDetails-quickView {
+  @apply bg-slate-500;
+} */
