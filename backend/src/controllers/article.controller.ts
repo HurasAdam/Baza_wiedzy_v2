@@ -1,218 +1,205 @@
-
-import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "../constants/http";
+import {
+  CONFLICT,
+  INTERNAL_SERVER_ERROR,
+  NOT_FOUND,
+  OK,
+} from "../constants/http";
 import ArticleModel from "../models/Article.model";
 import UserModel from "../models/User.model";
 import { createArticle, getArticle } from "../services/article.service";
+import { saveArticleChanges } from "../services/articleHistory.service";
 import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
 import { constructSearchQuery } from "../utils/constructSearchQuery";
 import { newArticleSchema } from "./article.schemas";
 
-export const createArticleHandler = catchErrors(
-    async(req,res)=>{
-    const request = newArticleSchema.parse(req.body);
-    const {userId} = req
-    const newArticle = await createArticle({request, userId});
+export const createArticleHandler = catchErrors(async (req, res) => {
+  const request = newArticleSchema.parse(req.body);
+  const { userId } = req;
+  const newArticle = await createArticle({ request, userId });
 
+  return res
+    .status(OK)
+    .json({ message: "Dodano nowy artykuł", data: newArticle });
+});
 
+export const getArticlesHandler = catchErrors(async (req, res) => {
+  const { userId } = req;
+  const query = {
+    ...constructSearchQuery(req.query),
+    isTrashed: { $ne: true },
+  };
+  const user = await UserModel.findById(userId).select("favourites");
+  const favouritesList = user?.favourites;
 
-    return res.status(OK).json({message:"Dodano nowy artykuł", data:newArticle})
-    }
-
-    
-)
-
-
-
-export const getArticlesHandler = catchErrors(
-    async (req,res) => {
-      const { userId } = req;
-      const query = { ...constructSearchQuery(req.query), isTrashed: { $ne: true } };
-        const user = await UserModel.findById(userId).select('favourites');
-        const favouritesList = user?.favourites;
-
-        const limit = parseInt(req.query.limit?.toString() || "20")
-    const pageSize = limit;
-        const pageNumber = parseInt(
-          req.query.page ? req.query.page.toString() : "1"
-        );
-        const skipp = (pageNumber - 1) * pageSize;
-        const sortBy = req.query.sortBy ? req.query.sortBy.toString() : '-createdAt';
-        const articles = await ArticleModel.find(query)
-          .select([
-            "-clientDescription",
-            "-employeeDescription",
-            "-verifiedBy",
-            "-updatedAt",
-            "-viewsCounter",
-            "-__v",
-          ])
-          .populate([{ path: "tags", select: ["name","shortname"] },{path:"createdBy",select:["name","surname"]}])
-          .skip(skipp)
-          .limit(pageSize)
-          .sort(sortBy); 
-    console.log(favouritesList)
-
-
-
-        const total = await ArticleModel.countDocuments(query);
-    const articlesWithFavourites =articles.map(article =>({
-...article.toObject(),
-isFavourite:favouritesList?.some(favId=>favId.equals(article._id))
-    }));
-    
-
-
-
-        const responseObject = {
-          data: articlesWithFavourites,
-          pagination: {
-            total,
-            page: pageNumber,
-            pages: Math.ceil(total / pageSize),
-          },
-        };
-    
-        
-    return res.status(OK).json(responseObject);
-  
-    }
-)
-
-
-export const getTrashedArticlesHandler = catchErrors(
-  async (req,res) => {
-    const { userId } = req;
-    const query = { ...constructSearchQuery(req.query), isTrashed: { $ne: false } };
-      const user = await UserModel.findById(userId).select('favourites');
-      const favouritesList = user?.favourites;
-
-      const limit = parseInt(req.query.limit?.toString() || "20")
+  const limit = parseInt(req.query.limit?.toString() || "20");
   const pageSize = limit;
-      const pageNumber = parseInt(
-        req.query.page ? req.query.page.toString() : "1"
-      );
-      const skipp = (pageNumber - 1) * pageSize;
-      const sortBy = req.query.sortBy ? req.query.sortBy.toString() : '-createdAt';
-      const articles = await ArticleModel.find(query)
-        .select([
-          "-clientDescription",
-          "-employeeDescription",
-          "-verifiedBy",
-          "-updatedAt",
-          "-viewsCounter",
-          "-__v",
-        ])
-        .populate([{ path: "tags", select: ["name","shortname"] },{path:"createdBy",select:["name","surname"]}])
-        .skip(skipp)
-        .limit(pageSize)
-        .sort(sortBy); 
-  console.log(favouritesList)
+  const pageNumber = parseInt(req.query.page ? req.query.page.toString() : "1");
+  const skipp = (pageNumber - 1) * pageSize;
+  const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "-createdAt";
+  const articles = await ArticleModel.find(query)
+    .select([
+      "-clientDescription",
+      "-employeeDescription",
+      "-verifiedBy",
+      "-updatedAt",
+      "-viewsCounter",
+      "-__v",
+    ])
+    .populate([
+      { path: "tags", select: ["name", "shortname"] },
+      { path: "createdBy", select: ["name", "surname"] },
+    ])
+    .skip(skipp)
+    .limit(pageSize)
+    .sort(sortBy);
 
-
-
-      const total = await ArticleModel.countDocuments(query);
-  const articlesWithFavourites =articles.map(article =>({
-...article.toObject(),
-isFavourite:favouritesList?.some(favId=>favId.equals(article._id))
+  const total = await ArticleModel.countDocuments(query);
+  const articlesWithFavourites = articles.map((article) => ({
+    ...article.toObject(),
+    isFavourite: favouritesList?.some((favId) => favId.equals(article._id)),
   }));
-  
 
+  const responseObject = {
+    data: articlesWithFavourites,
+    pagination: {
+      total,
+      page: pageNumber,
+      pages: Math.ceil(total / pageSize),
+    },
+  };
 
-
-      const responseObject = {
-        data: articlesWithFavourites,
-        pagination: {
-          total,
-          page: pageNumber,
-          pages: Math.ceil(total / pageSize),
-        },
-      };
-  
-      
   return res.status(OK).json(responseObject);
+});
 
+export const getTrashedArticlesHandler = catchErrors(async (req, res) => {
+  const { userId } = req;
+  const query = {
+    ...constructSearchQuery(req.query),
+    isTrashed: { $ne: false },
+  };
+  const user = await UserModel.findById(userId).select("favourites");
+  const favouritesList = user?.favourites;
+
+  const limit = parseInt(req.query.limit?.toString() || "20");
+  const pageSize = limit;
+  const pageNumber = parseInt(req.query.page ? req.query.page.toString() : "1");
+  const skipp = (pageNumber - 1) * pageSize;
+  const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "-createdAt";
+  const articles = await ArticleModel.find(query)
+    .select([
+      "-clientDescription",
+      "-employeeDescription",
+      "-verifiedBy",
+      "-updatedAt",
+      "-viewsCounter",
+      "-__v",
+    ])
+    .populate([
+      { path: "tags", select: ["name", "shortname"] },
+      { path: "createdBy", select: ["name", "surname"] },
+    ])
+    .skip(skipp)
+    .limit(pageSize)
+    .sort(sortBy);
+
+  const total = await ArticleModel.countDocuments(query);
+  const articlesWithFavourites = articles.map((article) => ({
+    ...article.toObject(),
+    isFavourite: favouritesList?.some((favId) => favId.equals(article._id)),
+  }));
+
+  const responseObject = {
+    data: articlesWithFavourites,
+    pagination: {
+      total,
+      page: pageNumber,
+      pages: Math.ceil(total / pageSize),
+    },
+  };
+
+  return res.status(OK).json(responseObject);
+});
+
+export const getArticleHandler = catchErrors(async (req, res) => {
+  const { userId }: { userId: string } = req;
+  const { id } = req.params;
+
+  const article = await getArticle({ userId, articleId: id });
+  return res.status(OK).json(article);
+});
+
+export const verifyArticleHandler = catchErrors(async (req, res) => {
+  const { id } = req.params;
+  const { isVerified } = req.body;
+
+  const article = await ArticleModel.findById({ _id: id });
+
+  appAssert(article, CONFLICT, "Article not found");
+
+  article.isVerified = isVerified;
+  await article.save();
+  res.status(OK).json({
+    message: `${
+      isVerified
+        ? "Artykuł został zweryfikowany"
+        : "Artykuł został oznaczony jako do weryfikacji"
+    }`,
+  });
+});
+
+export const markAsFavouriteHandler = catchErrors(async (req, res) => {
+  const { id } = req.params;
+  const { userId }: { userId: string } = req;
+
+  const user = await UserModel.findById({ _id: userId });
+  appAssert(user, NOT_FOUND, "User not found");
+
+  const article = await ArticleModel.findById({ _id: id });
+  appAssert(article, NOT_FOUND, "Article not found");
+
+  const isFavorite = user?.favourites.includes(article._id);
+
+  if (isFavorite) {
+    user.favourites = user?.favourites.filter(
+      (favoriteId) => favoriteId.toString() !== article._id.toString()
+    );
+  } else {
+    user.favourites.push(article._id);
   }
-)
 
+  await UserModel.findByIdAndUpdate(userId, { favourites: user.favourites });
 
+  res.status(OK).json({
+    message: `${
+      isFavorite
+        ? "Usunięto artykuł z listy ulubionych"
+        : " Dodano artkuł do listy ulubionych"
+    }`,
+  });
+});
 
-export const getArticleHandler = catchErrors(
-    async(req,res)=>{
-        const {userId}:{userId:string} = req;
-        const {id}= req.params;
- console.log(id)
-        const article = await getArticle({userId,articleId:id});
-        return res.status(OK).json(article);
-    }
-)
+export const getFavouriteArticlesHandler = catchErrors(async (req, res) => {
+  const { userId }: { userId: string } = req;
+  const pageSize = 15; // Liczba wyników na stronę
+  const pageNumber = parseInt(req.query.page ? req.query.page.toString() : "1");
+  const skip = (pageNumber - 1) * pageSize;
 
+  // Znalezienie użytkownika na podstawie ID i pobranie ulubionych artykułów
+  const user = await UserModel.findById(userId).select("favourites");
 
-export const verifyArticleHandler = catchErrors(
-  async(req,res)=>{
-    const {id} = req.params;
-    const {isVerified} = req.body;
-
-    const article = await ArticleModel.findById({_id:id})
-
-    appAssert(article, CONFLICT, "Article not found");
-
-    article.isVerified = isVerified;
-    await article.save();
-    res.status(OK).json({message:`${isVerified ? "Artykuł został zweryfikowany" :"Artykuł został oznaczony jako do weryfikacji"}`})
+  if (!user) {
+    return res.status(403).json({ message: "User not found" });
   }
-)
 
+  // Wyciągnięcie tablicy ID artykułów z ulubionych
+  const favourites = user.favourites;
 
-export const markAsFavouriteHandler = catchErrors(
-  async(req,res)=>{
-    const { id } = req.params;
-    const {userId}:{userId:string} = req;
-
-    const user = await UserModel.findById({_id:userId});
-    appAssert(user,NOT_FOUND,"User not found");
-
-    const article = await ArticleModel.findById({_id:id});
-    appAssert(article, NOT_FOUND, "Article not found");
-
-    const isFavorite = user?.favourites.includes(article._id);
-
-    if (isFavorite) {
-      user.favourites = user?.favourites.filter(
-        (favoriteId) => favoriteId.toString() !== article._id.toString()
-      );
-    } else {
-      user.favourites.push(article._id);
-    }
-
-    await UserModel.findByIdAndUpdate(userId, { favourites: user.favourites });
-
-
-
-    res.status(OK).json({message:`${isFavorite ? "Usunięto artykuł z listy ulubionych":" Dodano artkuł do listy ulubionych"}`});
-  }
-)
-
-export const getFavouriteArticlesHandler = catchErrors(
-  async(req,res)=>{
-
-    const {userId}:{userId:string} = req;
-    const pageSize = 15; // Liczba wyników na stronę
-    const pageNumber = parseInt(req.query.page ? req.query.page.toString() : "1");
-    const skip = (pageNumber - 1) * pageSize;
-
-    // Znalezienie użytkownika na podstawie ID i pobranie ulubionych artykułów
-    const user = await UserModel.findById(userId).select("favourites");
-
-    if (!user) {
-      return res.status(403).json({ message: "User not found" });
-    }
-
-    // Wyciągnięcie tablicy ID artykułów z ulubionych
-    const favourites = user.favourites;
-
-    // Pobranie artykułów na podstawie ID w ulubionych z paginacją
-    const favouriteArticles = await ArticleModel.find({ _id: { $in: favourites } }).select([
+  // Pobranie artykułów na podstawie ID w ulubionych z paginacją
+  const favouriteArticles = await ArticleModel.find({
+    _id: { $in: favourites },
+  })
+    .select([
       "-clientDescription",
       "-employeeDescription",
       "-createdBy",
@@ -220,65 +207,66 @@ export const getFavouriteArticlesHandler = catchErrors(
       "-createdAt",
       "-viewsCounter",
       "-__v",
-    ]).populate([{ path: "tags", select: ["name"] }])
-      .skip(skip)
-      .limit(pageSize);
+    ])
+    .populate([{ path: "tags", select: ["name"] }])
+    .skip(skip)
+    .limit(pageSize);
 
-    // Jeśli chcesz, możesz również zwrócić całkowitą liczbę ulubionych artykułów, aby obsłużyć paginację na froncie
-    const totalFavouriteArticles = await ArticleModel.countDocuments({ _id: { $in: favourites } });
+  // Jeśli chcesz, możesz również zwrócić całkowitą liczbę ulubionych artykułów, aby obsłużyć paginację na froncie
+  const totalFavouriteArticles = await ArticleModel.countDocuments({
+    _id: { $in: favourites },
+  });
 
-    res.status(200).json({
-      data:favouriteArticles,
-      currentPage: pageNumber,
-      totalPages: Math.ceil(totalFavouriteArticles / pageSize),
-    });
+  res.status(200).json({
+    data: favouriteArticles,
+    currentPage: pageNumber,
+    totalPages: Math.ceil(totalFavouriteArticles / pageSize),
+  });
+});
 
-  }
-)
+export const trashArticleHandler = catchErrors(async (req, res) => {
+  const { id } = req.params;
+  const article = await ArticleModel.findById({ _id: id });
+  appAssert(article, NOT_FOUND, "Article not found");
 
+  article.isTrashed = true;
+  await article.save();
+  return res.status(OK).json({ message: "Artykuł został usunięty" });
+});
 
-export const trashArticleHandler = catchErrors(
-  async(req,res)=>{
-    const { id } = req.params;
-    const article = await ArticleModel.findById({_id:id});
-    appAssert(article, NOT_FOUND, "Article not found");
+export const deleteArticleHandler = catchErrors(async (req, res) => {
+  const { id } = req.params;
+  const article = await ArticleModel.findById({ _id: id });
+  appAssert(article, NOT_FOUND, "Article not found");
+  const deletedArticle = await ArticleModel.findByIdAndDelete({ _id: id });
+  appAssert(deletedArticle, INTERNAL_SERVER_ERROR, "Something went wrong");
+  return res.status(OK).json({ message: "Artykuł został usunięty." });
+});
 
-article.isTrashed = true;
-await article.save();
-return res.status(OK).json({message:"Artykuł został usunięty"})
-  }
-)
+export const updateArticleHandler = catchErrors(async (req, res) => {
+  const { id } = req.params;
+  const { title, clientDescription, employeeDescription, tags } = req.body;
 
-export const deleteArticleHandler = catchErrors(
-  async(req,res)=>{
-    const { id } = req.params;
-    const article = await ArticleModel.findById({_id:id});
-    appAssert(article,NOT_FOUND,"Article not found");
-    const deletedArticle = await ArticleModel.findByIdAndDelete({_id:id});
-    appAssert(deletedArticle,INTERNAL_SERVER_ERROR, "Something went wrong");
-    return res.status(OK).json({message:"Artykuł został usunięty."})
-  }
-)
+  const article = await ArticleModel.findById({ _id: id });
 
+  appAssert(article, NOT_FOUND, "Article not found");
 
-export const updateArticleHandler = catchErrors(
-  async(req,res)=>{
-    const { id } = req.params;
-    const { title, clientDescription, employeeDescription, tags } =req.body;
+  const articleBeforeChanges = { ...article.toObject() };
 
+  article.title = title || article.title;
+  article.clientDescription = clientDescription || article.clientDescription;
+  article.employeeDescription =
+    employeeDescription || article.employeeDescription;
+  article.tags = tags || article.tags;
 
-    console.log(tags)
-    const article = await ArticleModel.findById({_id:id});
-    appAssert(article,NOT_FOUND,"Article not found");
+  const updatedArticle = await article.save();
 
-    article.title = title || article.title
-    article.clientDescription = clientDescription || article.clientDescription
-    article.employeeDescription = employeeDescription || article.employeeDescription
-    article.tags = tags || article.tags
+  await saveArticleChanges({
+    articleId: id,
+    updatedBy: req.userId,
+    articleBeforeChanges,
+    updatedArticle,
+  });
 
-    const updatedArticle = await article.save();
-  
-      res.status(OK).json({message:"Artykuł został zaktualizowany"})
-  
-  }
-)
+  res.status(OK).json({ message: "Artykuł został zaktualizowany" });
+});
