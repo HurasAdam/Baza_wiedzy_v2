@@ -24,9 +24,6 @@ export const createArticle = async ({
   const article = await ArticleModel.exists({ title });
   appAssert(!article, CONFLICT, "Article already exists");
 
-  console.log("request");
-  console.log(request);
-
   const createdArticle = await ArticleModel.create({
     title,
     employeeDescription,
@@ -51,8 +48,6 @@ export const getArticle = async ({ userId, articleId }: getArticleParams) => {
     { path: "createdBy", select: ["name", "surname"] },
     { path: "verifiedBy", select: ["name", "surname"] },
   ]);
-
-  console.log(user);
 
   appAssert(article, CONFLICT, "Article not found");
   appAssert(user, CONFLICT, "User not found");

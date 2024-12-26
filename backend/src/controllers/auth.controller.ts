@@ -1,89 +1,99 @@
 import { CREATED, OK, UNAUTHORIZED } from "../constants/http";
-import { createAccount, loginUser, refreshUserAccessToken, resetPassword, sendPasswordResetEmail, verifyEmail } from "../services/auth.service";
+import {
+  createAccount,
+  loginUser,
+  refreshUserAccessToken,
+  resetPassword,
+  sendPasswordResetEmail,
+  verifyEmail,
+} from "../services/auth.service";
 import catchErrors from "../utils/catchErrors";
 import z from "zod";
-import { clearAuthCookies, getAccessTokenCookieOptions, getRefreshTokenCookieOptions, setAuthCookies } from "../utils/cookies";
-import { emailSchema, loginSchema, registerSchema, resetPasswordSchema, verificationCodeSchema } from "./auth.schemas";
+import {
+  clearAuthCookies,
+  getAccessTokenCookieOptions,
+  getRefreshTokenCookieOptions,
+  setAuthCookies,
+} from "../utils/cookies";
+import {
+  emailSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+  verificationCodeSchema,
+} from "./auth.schemas";
 import { verifyToken } from "../utils/jwt";
 import SessionModel from "../models/session.model";
 import appAssert from "../utils/appAssert";
 
-
-
-
-
-export const registerHandler = catchErrors(
-    async(req,res)=>{
-//validate request
-        const request = registerSchema.parse({
-            ...req.body,
-            userAgent:req.headers["user-agent"]
-        })
-        const {user,accessToken, refreshToken} = await createAccount(request);
-        return setAuthCookies({res, accessToken, refreshToken})
-        .status(CREATED).json(user)
-        
-    }
-
- 
-)
-
-
-export const loginHandler = catchErrors(
-  async(req,res)=>{
-    // validate request
-    const request = loginSchema.parse({...req.body, userAgent: req.headers["user-agent"]});
-
-    //service call
-
-    const {accessToken, refreshToken,} = await loginUser(request);
-
-
-    return setAuthCookies({res, accessToken, refreshToken}).status(OK).json({message:"Login usccessful"})
-  }
-)
-
-
-export const logoutHandler = catchErrors( async(req,res)=>{
-const accessToken = req.cookies.accessToken as string | undefined
-const {payload} = verifyToken(accessToken ||"");
-
-
-if(payload){
-  await SessionModel.findByIdAndDelete(payload.sessionId);
-}
-return clearAuthCookies(res)
-.status(OK)
-.json({ message: "Logout successful" });
+export const registerHandler = catchErrors(async (req, res) => {
+  //validate request
+  const request = registerSchema.parse({
+    ...req.body,
+    userAgent: req.headers["user-agent"],
+  });
+  const { user, accessToken, refreshToken } = await createAccount(request);
+  return setAuthCookies({ res, accessToken, refreshToken })
+    .status(CREATED)
+    .json(user);
 });
 
-export const refreshHandler = catchErrors( async(req,res)=>{
-  const refreshToken = req.cookies.refreshToken as string | undefined
+export const loginHandler = catchErrors(async (req, res) => {
+  // validate request
+  const request = loginSchema.parse({
+    ...req.body,
+    userAgent: req.headers["user-agent"],
+  });
+
+  //service call
+
+  const { accessToken, refreshToken } = await loginUser(request);
+
+  return setAuthCookies({ res, accessToken, refreshToken })
+    .status(OK)
+    .json({ message: "Login usccessful" });
+});
+
+export const logoutHandler = catchErrors(async (req, res) => {
+  const accessToken = req.cookies.accessToken as string | undefined;
+  const { payload } = verifyToken(accessToken || "");
+
+  if (payload) {
+    await SessionModel.findByIdAndDelete(payload.sessionId);
+  }
+  return clearAuthCookies(res)
+    .status(OK)
+    .json({ message: "Logout successful" });
+});
+
+export const refreshHandler = catchErrors(async (req, res) => {
+  const refreshToken = req.cookies.refreshToken as string | undefined;
   appAssert(refreshToken, UNAUTHORIZED, "Missing refresh token");
 
-  const {accessToken, newRefreshToken} = await refreshUserAccessToken(refreshToken);
+  const { accessToken, newRefreshToken } = await refreshUserAccessToken(
+    refreshToken
+  );
 
-if(newRefreshToken){
-  res.cookie("refreshToken", newRefreshToken, getRefreshTokenCookieOptions());
-}
+  if (newRefreshToken) {
+    res.cookie("refreshToken", newRefreshToken, getRefreshTokenCookieOptions());
+  }
 
-  return res.status(OK).cookie("accessToken",accessToken, getAccessTokenCookieOptions()).json({message:"Access token refreshed"})
-})
+  return res
+    .status(OK)
+    .cookie("accessToken", accessToken, getAccessTokenCookieOptions())
+    .json({ message: "Access token refreshed" });
+});
 
+export const verifyEmailHandler = catchErrors(async (req, res) => {
+  const { code } = req.params;
 
-export const verifyEmailHandler = catchErrors( async(req,res)=>{
-  const {code}= req.params;
-  console.log("CODE")
-  console.log(code)
   const verificationCode = verificationCodeSchema.parse(code);
   await verifyEmail(verificationCode);
-  return res.status(OK).json({message:"Email was sucessfully verified"})
-})
-
+  return res.status(OK).json({ message: "Email was sucessfully verified" });
+});
 
 export const sendPasswordResetHandler = catchErrors(async (req, res) => {
   const email = emailSchema.parse(req.body.email);
-
 
   await sendPasswordResetEmail(email);
 
@@ -94,8 +104,9 @@ export const resetPasswordHandler = catchErrors(async (req, res) => {
   const request = resetPasswordSchema.parse(req.body);
 
   // call service
-await resetPassword(request);
+  await resetPassword(request);
 
-return clearAuthCookies(res).status(OK).json({message:"Password reset successful"})
-
-})
+  return clearAuthCookies(res)
+    .status(OK)
+    .json({ message: "Password reset successful" });
+});
