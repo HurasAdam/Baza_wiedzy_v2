@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,13 +7,21 @@ import {
   DialogHeader,
   DialogOverlay,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
- 
-export function ContentModal({isOpen,children, onClose,title ="",description = "", size, height,closeOnOutsideClick   }) {
-
-console.log("closeOnOutsideClick")
-console.log(closeOnOutsideClick)
+export function ContentModal({
+  isOpen,
+  scrollable = true,
+  children,
+  onClose,
+  title = "",
+  description = "",
+  size,
+  height,
+  closeOnOutsideClick,
+}) {
+  console.log("closeOnOutsideClick");
+  console.log(closeOnOutsideClick);
 
   const modalSizeHandler = (size) => {
     switch (size) {
@@ -28,54 +36,54 @@ console.log(closeOnOutsideClick)
     }
   };
 
-
   const modalHeightHandler = (height) => {
     return height ? `min-h-[${height}vh]` : "min-h-[60vh]";
   };
 
-
   return (
-
-    <Dialog open={isOpen} onOpenChange={onClose} >
-    {/* <DialogTrigger asChild>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      {/* <DialogTrigger asChild>
       <Button variant="outline">Edit Profile</Button>
     </DialogTrigger> */}
-    <DialogContent 
+      <DialogContent
         onInteractOutside={(e) => {
           // Zatrzymujemy zamknięcie modalu tylko wtedy, gdy closeOnOutsideClick jest true
           if (!closeOnOutsideClick) {
             e.preventDefault(); // Zatrzymuje zamknięcie po kliknięciu na overlay
           }
         }}
-
-    className={`
+        className={`
       ${modalHeightHandler(height)}
             ${modalSizeHandler(size)}  // Szerokość zależna od propsa size
          filter-none 
         bg-neutral-100
         h-fit max-h-[92vh]
-         overflow-y-auto scrollbar-custom
+           ${scrollable ? "overflow-y-auto" : "overflow-hidden"} 
+         scrollbar-custom
          
+           
          `}
-    
-    >
-      <DialogHeader>
-        <DialogTitle className=" ">
-        <div className="h-2.5 "></div>
-        {children}
+      >
+        <DialogHeader>
+          <DialogTitle className=" ">
+            <div
+              className={`h-full       ${modalHeightHandler(height)} ${
+                !scrollable && "overflow-y-auto "
+              }`}
+            >
+              {children}
+            </div>
           </DialogTitle>
-        {/* <DialogDescription>
+          {/* <DialogDescription>
        {description}
         </DialogDescription> */}
-     
-    
-      </DialogHeader>
-      
-      {/* <DialogFooter>
+        </DialogHeader>
+
+        {/* <DialogFooter>
         <Button type="submit">Save changes</Button>
       </DialogFooter> */}
-    </DialogContent >
-    <DialogOverlay closeOnOutsideClick={true} />
-  </Dialog>
-  )
+      </DialogContent>
+      <DialogOverlay closeOnOutsideClick={true} />
+    </Dialog>
+  );
 }
