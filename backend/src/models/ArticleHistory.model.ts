@@ -4,6 +4,11 @@ import mongoose, { model, Schema } from "mongoose";
 const articleHistorySchema = new Schema(
   {
     articleId: { type: Schema.Types.ObjectId, ref: "Article", required: true },
+    eventType: {
+      type: String,
+      required: true,
+      enum: ["created", "updated", "trashed", "restored", "verified"],
+    },
     changes: [
       {
         field: { type: String, required: true }, // Zmienione pole
