@@ -27,6 +27,7 @@ import { BiSolidCopy } from "react-icons/bi";
 import EditArticle from "@/pages/EditArticle";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import useCopyToClipboard from "@/hooks/useCopyToClipboard";
+import ArticleHistory from "./ArticleHistory";
 
 const QuickArticleDetails = ({ articleId, type }) => {
   const { id } = useParams();
@@ -150,8 +151,10 @@ const QuickArticleDetails = ({ articleId, type }) => {
       title: "Edytuj Artykuł",
       description:
         "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
-      content: <div>Historia modyfikacji artykułu</div>,
+      content: <ArticleHistory articleId={article?._id} />,
       size: "lg",
+      height: "82",
+      scrollable: false,
     });
   };
 
