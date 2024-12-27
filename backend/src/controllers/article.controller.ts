@@ -1,3 +1,4 @@
+import EventType from "../constants/articleEventTypes";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
@@ -7,7 +8,10 @@ import {
 import ArticleModel from "../models/Article.model";
 import UserModel from "../models/User.model";
 import { createArticle, getArticle } from "../services/article.service";
-import { saveArticleChanges } from "../services/articleHistory.service";
+import {
+  getArticleHistory,
+  saveArticleChanges,
+} from "../services/articleHistory.service";
 import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
 import { constructSearchQuery } from "../utils/constructSearchQuery";
@@ -17,6 +21,17 @@ export const createArticleHandler = catchErrors(async (req, res) => {
   const request = newArticleSchema.parse(req.body);
   const { userId } = req;
   const newArticle = await createArticle({ request, userId });
+
+  console.log(newArticle);
+  console.log("newArticle");
+
+  await saveArticleChanges({
+    articleId: newArticle?._id.toString(),
+    updatedBy: req.userId,
+    articleBeforeChanges: null,
+    updatedArticle: newArticle,
+    eventType: EventType.Created,
+  });
 
   return res
     .status(OK)
@@ -127,6 +142,15 @@ export const getArticleHandler = catchErrors(async (req, res) => {
 
   const article = await getArticle({ userId, articleId: id });
   return res.status(OK).json(article);
+});
+
+export const getArticleHistoryHandler = catchErrors(async (req, res) => {
+  const { userId }: { userId: string } = req;
+  const { id } = req.params;
+
+  const articleHistory = await getArticleHistory({ articleId: id });
+  console.log(articleHistory);
+  return res.status(OK).json(articleHistory);
 });
 
 export const verifyArticleHandler = catchErrors(async (req, res) => {
@@ -266,6 +290,7 @@ export const updateArticleHandler = catchErrors(async (req, res) => {
     updatedBy: req.userId,
     articleBeforeChanges,
     updatedArticle,
+    eventType: EventType.Updated,
   });
 
   res.status(OK).json({ message: "Artykuł został zaktualizowany" });
