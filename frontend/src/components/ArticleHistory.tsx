@@ -6,8 +6,12 @@ import ArticleHistoryActivityCard from "./ArticleHistoryActivityCard";
 import { MdOutlineDoneAll, MdOutlineMessage } from "react-icons/md";
 import { FaBug, FaThumbsUp, FaUser } from "react-icons/fa6";
 import { MdBookmarkAdded } from "react-icons/md";
+import { FaClockRotateLeft } from "react-icons/fa6";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import { IoIosAdd } from "react-icons/io";
+import { MdDone } from "react-icons/md";
+
+import { diff_match_patch } from "diff-match-patch";
 
 const ArticleHistory = ({ articleId }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -17,6 +21,40 @@ const ArticleHistory = ({ articleId }) => {
       return articlesApi.getArticleHistory({ id: articleId });
     },
   });
+
+  const stripHTML = (text) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, "text/html");
+    return doc.body.textContent || doc.body.innerText || "";
+  };
+
+  const highlightChanges = (oldText, newText) => {
+    const dmp = new diff_match_patch();
+
+    // Obliczanie różnic między starym i nowym tekstem
+    const diffs = dmp.diff_main(oldText, newText);
+    dmp.diff_cleanupSemantic(diffs); // Opcjonalnie - poprawia spójność zmian
+
+    // Zmienna do przechowywania HTML dla dwóch kolumn
+    let leftText = "";
+    let rightText = "";
+
+    diffs.forEach(([op, text]) => {
+      if (op === 0) {
+        // Brak zmian - zwykły tekst (wyświetlamy w obu kolumnach)
+        leftText += text;
+        rightText += text;
+      } else if (op === 1) {
+        // Dodany tekst - kolor zielony (tylko po prawej)
+        rightText += `<span style="background-color: #e6f7e6; color: green;">${text}</span>`;
+      } else if (op === -1) {
+        // Usunięty tekst - przekreślony, kolor czerwony (tylko po lewej)
+        leftText += `<span style="background-color: #f8d7da; color: red; text-decoration: line-through;">${text}</span>`;
+      }
+    });
+
+    return { leftText, rightText };
+  };
 
   const TASKTYPEICON = {
     commented: (
@@ -49,7 +87,7 @@ const ArticleHistory = ({ articleId }) => {
     setSelectedItem(selected);
   };
   return (
-    <div className="grid grid-cols-[3fr_8fr] h-full gap-1.5 ">
+    <div className="grid grid-cols-[4fr_12fr] h-full gap-1.5 ">
       {/* Lewa kolumna - lista zmian */}
       <div className="border-r overflow-y-auto max-h-[80vh] scrollbar-custom  ">
         {history?.map((historyItem, index) => (
@@ -99,27 +137,75 @@ const ArticleHistory = ({ articleId }) => {
             </div>
           </div>
         ) : (
-          selectedItem?.changes?.map((change, index) => {
-            return (
-              <div key={index} className="max-h-[82vh]">
-                <div>
-                  <strong>{change.field}</strong>
+          <div className=" flex flex-col max-h-[82vh] ">
+            {selectedItem?.changes?.map((change, index) => {
+              const { leftText, rightText } = highlightChanges(
+                change.oldValue,
+                change.newValue
+              );
+
+              // Określenie klasy tła na podstawie pola (field)
+              const backgroundClass =
+                change?.field === "title" ||
+                change?.field === "clientDescription"
+                  ? "bg-transparent" // Pomarańczowe tło dla tych pól
+                  : "bg-transparent"; // Inny kolor tła dla pozostałych, np. brak tła
+
+              return (
+                <div key={index} className=" mb-4 ">
+                  {" "}
+                  {/* Dodajemy odstęp między poszczególnymi zmianami */}
+                  {/* Wyświetlanie zmian w dwóch kolumnach */}
+                  <div
+                    className={`grid grid-cols-2 gap-6 my-4 h-auto pr-2 pl-1 ${backgroundClass}`}
+                  >
+                    {/* Lewa kolumna - tekst przed zmianą */}
+                    <div className="h-auto ">
+                      <h3 className="text-indigo-700/80 font-title text-lg flex items-center gap-2 px-2 mb-2">
+                        <FaClockRotateLeft />
+                        <span>
+                          {
+                            change?.field === "title"
+                              ? "Tytuł"
+                              : change?.field === "employeeDescription"
+                              ? "Uwagi"
+                              : change?.field === "clientDescription"
+                              ? "Odpowiedź dla klienta"
+                              : "Nieznane pole" // Domyślna wartość, jeśli `change?.field` nie pasuje do żadnego z przypadków
+                          }
+                        </span>
+                      </h3>
+                      <div
+                        className="text-slate-600 mt-3 leading-6 text-sm p-4 h-auto "
+                        dangerouslySetInnerHTML={{ __html: leftText }}
+                      />
+                    </div>
+                    {/* Prawa kolumna - tekst po zmianie */}
+                    <div className="min-h-auto">
+                      <h3 className="text-indigo-700/80 font-title text-lg flex items-center gap-2 px-2 mb-2">
+                        <MdDone />
+                        <span>
+                          {
+                            change?.field === "title"
+                              ? "Tytuł"
+                              : change?.field === "employeeDescription"
+                              ? "Uwagi"
+                              : change?.field === "clientDescription"
+                              ? "Odpowiedź dla klienta"
+                              : "Nieznane pole" // Domyślna wartość, jeśli `change?.field` nie pasuje do żadnego z przypadków
+                          }
+                        </span>
+                      </h3>
+                      <div
+                        className="text-slate-600 mt-3 leading-6 text-sm p-4 h-auto "
+                        dangerouslySetInnerHTML={{ __html: rightText }}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div
-                  className="my-2"
-                  dangerouslySetInnerHTML={{
-                    __html: change.oldValue,
-                  }}
-                />
-                <div
-                  className="my-2"
-                  dangerouslySetInnerHTML={{
-                    __html: change.newValue,
-                  }}
-                />
-              </div>
-            );
-          })
+              );
+            })}
+          </div>
         )}
       </div>
     </div>
