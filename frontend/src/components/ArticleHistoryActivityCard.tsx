@@ -9,8 +9,10 @@ const ArticleHistoryActivityCard = ({
 }) => {
   return (
     <div
-      className={`flex space-x-4 px-0.5   ${
-        selectedItem?._id === item?._id ? "bg-slate-200 rounded-lg" : ""
+      className={`flex space-x-4 px-0.5 hover:bg-slate-200 cursor-pointer ${
+        selectedItem?._id === item?._id
+          ? "bg-blue-200 rounded-lg hover:bg-blue-200"
+          : ""
       }`}
       onClick={() => onClick(item)}
     >

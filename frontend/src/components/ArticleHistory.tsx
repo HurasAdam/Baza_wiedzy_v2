@@ -12,6 +12,7 @@ import { IoIosAdd } from "react-icons/io";
 import { MdDone } from "react-icons/md";
 
 import { diff_match_patch } from "diff-match-patch";
+import ARTICLE_HISTORY_FIELD_TRANSLATIONS from "@/enums/articleHistoryFieldTranslations";
 
 const ArticleHistory = ({ articleId }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -87,9 +88,9 @@ const ArticleHistory = ({ articleId }) => {
     setSelectedItem(selected);
   };
   return (
-    <div className="grid grid-cols-[4fr_12fr] h-full gap-1.5 ">
+    <div className="grid grid-cols-[4fr_14fr] h-full gap-1.5 ">
       {/* Lewa kolumna - lista zmian */}
-      <div className="border-r overflow-y-auto max-h-[80vh] scrollbar-custom  ">
+      <div className="border-r overflow-y-auto max-h-[88vh] scrollbar-custom  ">
         {history?.map((historyItem, index) => (
           <ArticleHistoryActivityCard
             onClick={showHistoryDetails}
@@ -102,8 +103,17 @@ const ArticleHistory = ({ articleId }) => {
 
       {/* Prawa kolumna - może być pusta */}
       <div className=" overflow-y-auto h-full  break-words w-full box-border scrollbar-custom ">
-        {selectedItem?.eventType === "created" ? (
-          <div className="max-h-[82vh]   ">
+        {!selectedItem ? (
+          <div className="pt-5 h-full">
+            <div className=" shadow bg-neutral-100 h-full rounded-lg p-6  ">
+              <span className="text-xl font-base text-blue-950">
+                {" "}
+                Wybierz element historii, aby zobaczyć szczegóły.
+              </span>
+            </div>
+          </div>
+        ) : selectedItem?.eventType === "created" ? (
+          <div className="max-h-[88vh]    ">
             {/* Title */}
             <div className="bg-indigo-600/80  rounded    px-6 py-2">
               <span className="text-xs text-slate-200">Tytuł:</span>
@@ -137,74 +147,61 @@ const ArticleHistory = ({ articleId }) => {
             </div>
           </div>
         ) : (
-          <div className=" flex flex-col max-h-[82vh] ">
-            {selectedItem?.changes?.map((change, index) => {
-              const { leftText, rightText } = highlightChanges(
-                change.oldValue,
-                change.newValue
-              );
-
-              // Określenie klasy tła na podstawie pola (field)
-              const backgroundClass =
-                change?.field === "title" ||
-                change?.field === "clientDescription"
-                  ? "bg-transparent" // Pomarańczowe tło dla tych pól
-                  : "bg-transparent"; // Inny kolor tła dla pozostałych, np. brak tła
-
-              return (
-                <div key={index} className=" mb-4 ">
-                  {" "}
-                  {/* Dodajemy odstęp między poszczególnymi zmianami */}
-                  {/* Wyświetlanie zmian w dwóch kolumnach */}
-                  <div
-                    className={`grid grid-cols-2 gap-6 my-4 h-auto pr-2 pl-1 ${backgroundClass}`}
-                  >
-                    {/* Lewa kolumna - tekst przed zmianą */}
-                    <div className="h-auto ">
-                      <h3 className="text-indigo-700/80 font-title text-lg flex items-center gap-2 px-2 mb-2">
-                        <FaClockRotateLeft />
-                        <span>
-                          {
-                            change?.field === "title"
-                              ? "Tytuł"
-                              : change?.field === "employeeDescription"
-                              ? "Uwagi"
-                              : change?.field === "clientDescription"
-                              ? "Odpowiedź dla klienta"
-                              : "Nieznane pole" // Domyślna wartość, jeśli `change?.field` nie pasuje do żadnego z przypadków
-                          }
-                        </span>
-                      </h3>
-                      <div
-                        className="text-slate-600 mt-3 leading-6 text-sm p-4 h-auto "
-                        dangerouslySetInnerHTML={{ __html: leftText }}
-                      />
+          <div className="grid grid-cols-2 gap-6  h-auto pr-2 pl-1">
+            <div className="max-h-[88vh] flex flex-col gap-2 ">
+              <h2 className="px-1.5 py-1.5 font-inter text-slate-700">
+                Poprzednia wersja
+              </h2>
+              {selectedItem?.changes?.map((change) => {
+                const { leftText } = highlightChanges(
+                  change.oldValue,
+                  change.newValue
+                );
+                return (
+                  <div className="">
+                    <div className="bg-slate-400 text-neutral-50 text-base font-inter border px-3.5 py-2 shadow  rounded-t-lg  ">
+                      {" "}
+                      {
+                        ARTICLE_HISTORY_FIELD_TRANSLATIONS[
+                          change?.field || change?.field
+                        ]
+                      }
                     </div>
-                    {/* Prawa kolumna - tekst po zmianie */}
-                    <div className="min-h-auto">
-                      <h3 className="text-indigo-700/80 font-title text-lg flex items-center gap-2 px-2 mb-2">
-                        <MdDone />
-                        <span>
-                          {
-                            change?.field === "title"
-                              ? "Tytuł"
-                              : change?.field === "employeeDescription"
-                              ? "Uwagi"
-                              : change?.field === "clientDescription"
-                              ? "Odpowiedź dla klienta"
-                              : "Nieznane pole" // Domyślna wartość, jeśli `change?.field` nie pasuje do żadnego z przypadków
-                          }
-                        </span>
-                      </h3>
-                      <div
-                        className="text-slate-600 mt-3 leading-6 text-sm p-4 h-auto "
-                        dangerouslySetInnerHTML={{ __html: rightText }}
-                      />
-                    </div>
+                    <div
+                      className="text-slate-600  leading-6 text-sm p-4 h-auto border p-3 shadow bg-white rounded-b-lg  "
+                      dangerouslySetInnerHTML={{ __html: leftText }}
+                    />
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+            <div className="max-h-[88vh] flex flex-col gap-2 ">
+              <h2 className="px-1.5 py-1.5 font-inter text-emerald-700/90">
+                Wersja po zmianach
+              </h2>
+              {selectedItem?.changes?.map((change) => {
+                const { rightText } = highlightChanges(
+                  change.oldValue,
+                  change.newValue
+                );
+                return (
+                  <div>
+                    <div className="bg-emerald-500/90 text-neutral-50 text-base font-inter border px-3.5 py-2 shadow  rounded-t-lg">
+                      {" "}
+                      {
+                        ARTICLE_HISTORY_FIELD_TRANSLATIONS[
+                          change?.field || change?.field
+                        ]
+                      }
+                    </div>
+                    <div
+                      className="text-slate-600 leading-6 text-sm p-4 h-auto border p-3 shadow bg-white rounded-b-lg  "
+                      dangerouslySetInnerHTML={{ __html: rightText }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
