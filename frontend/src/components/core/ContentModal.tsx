@@ -31,6 +31,8 @@ export function ContentModal({
         return "md:max-w-[66vw] md:min-w-[66vw]"; // Średni modal na md i większych ekranach
       case "lg":
         return "xl:max-w-[70vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]"; // Duży modal na lg i większych ekranach, a na md większy
+      case "xl":
+        return "xl:max-w-[76vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]"; // Duży modal na lg i większych ekranach, a na md większy
       default:
         return "max-w-[90vw] min-w-[90vw] lg:min-w-[60vw] lg:max-w-[84vw] xl:min-w-[50vw] xl:max-w-[61vw] "; // Domyślny rozmiar na dużych ekranach
     }
