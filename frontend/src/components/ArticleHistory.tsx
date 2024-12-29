@@ -10,7 +10,8 @@ import { FaClockRotateLeft } from "react-icons/fa6";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import { IoIosAdd } from "react-icons/io";
 import { MdDone } from "react-icons/md";
-
+import { IoIosCheckmark } from "react-icons/io";
+import { FaTrashCan } from "react-icons/fa6";
 import { diff_match_patch } from "diff-match-patch";
 import ARTICLE_HISTORY_FIELD_TRANSLATIONS from "@/enums/articleHistoryFieldTranslations";
 
@@ -64,18 +65,18 @@ const ArticleHistory = ({ articleId }) => {
       </div>
     ),
     created: (
-      <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white">
+      <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white">
         <IoIosAdd size={26} />
       </div>
     ),
     verified: (
-      <div className="w-8 h-8  flex items-center justify-center rounded-full bg-gray-500 text-white">
-        <FaUser size={21} />
+      <div className="w-8 h-8  flex items-center justify-center rounded-full bg-emerald-500 text-white">
+        <IoIosCheckmark size={28} />
       </div>
     ),
     trashed: (
-      <div className="text-red-600">
-        <FaBug size={21} />
+      <div className="w-8 h-8  flex items-center justify-center rounded-full bg-rose-500 text-white">
+        <FaTrashCan size={16} />
       </div>
     ),
     updated: (

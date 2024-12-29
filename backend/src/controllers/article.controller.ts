@@ -160,9 +160,21 @@ export const verifyArticleHandler = catchErrors(async (req, res) => {
   const article = await ArticleModel.findById({ _id: id });
 
   appAssert(article, CONFLICT, "Article not found");
-
+  const isVerifiedChanged = article.isVerified !== isVerified;
   article.isVerified = isVerified;
-  await article.save();
+  const updatedAritlce = await article.save();
+  const updatedAritlceObj = updatedAritlce.toObject();
+
+  if (isVerifiedChanged) {
+    await saveArticleChanges({
+      articleId: id,
+      articleBeforeChanges: article, // Artykuł przed zmianą
+      updatedArticle: updatedAritlceObj, // Artykuł po zmianie
+      updatedBy: req.userId, // Id użytkownika, który dokonał zmiany
+      eventType: EventType.verified, // Typ zdarzenia: 'updated'
+    });
+  }
+
   res.status(OK).json({
     message: `${
       isVerified
@@ -254,7 +266,20 @@ export const trashArticleHandler = catchErrors(async (req, res) => {
   appAssert(article, NOT_FOUND, "Article not found");
 
   article.isTrashed = true;
-  await article.save();
+  const trashedArticle = await article.save();
+
+  const updatedAritlceObj = trashedArticle.toObject();
+
+  if (updatedAritlceObj?.isTrashed) {
+    await saveArticleChanges({
+      articleId: id,
+      articleBeforeChanges: article, // Artykuł przed zmianą
+      updatedArticle: updatedAritlceObj, // Artykuł po zmianie
+      updatedBy: req.userId, // Id użytkownika, który dokonał zmiany
+      eventType: EventType.Trashed, // Typ zdarzenia: 'updated'
+    });
+  }
+
   return res.status(OK).json({ message: "Artykuł został usunięty" });
 });
 
@@ -275,7 +300,7 @@ export const updateArticleHandler = catchErrors(async (req, res) => {
 
   appAssert(article, NOT_FOUND, "Article not found");
 
-  const articleBeforeChanges = { ...article.toObject() };
+  const articleBeforeChanges = article.toObject();
 
   article.title = title || article.title;
   article.clientDescription = clientDescription || article.clientDescription;
@@ -284,12 +309,13 @@ export const updateArticleHandler = catchErrors(async (req, res) => {
   article.tags = tags || article.tags;
 
   const updatedArticle = await article.save();
+  const updatedArticleObject = updatedArticle.toObject();
 
   await saveArticleChanges({
     articleId: id,
     updatedBy: req.userId,
     articleBeforeChanges,
-    updatedArticle,
+    updatedArticle: updatedArticleObject,
     eventType: EventType.Updated,
   });
 
