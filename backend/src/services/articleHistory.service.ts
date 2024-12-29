@@ -4,6 +4,7 @@ import ArticleModel from "../models/Article.model";
 import appAssert from "../utils/appAssert";
 import { NOT_FOUND } from "../constants/http";
 import EventType from "../constants/articleEventTypes";
+import TagModel from "../models/Tag.model";
 
 interface Article {
   _id: Types.ObjectId;
@@ -17,7 +18,6 @@ interface Article {
   isTrashed: boolean;
   isVerified: boolean;
 }
-
 interface Change {
   field: string;
   oldValue: string;
@@ -101,10 +101,22 @@ export const saveArticleChanges = async ({
   eventType,
 }: ISaveArticleChangesProps): Promise<void> => {
   let changes: Change[] = [];
+
+  // Porównaj artykuły, jeżeli zmiany zachodzą (np. zaktualizowany artykuł)
   if (eventType === EventType.Updated && articleBeforeChanges) {
-    changes = compareArticles(articleBeforeChanges, updatedArticle);
+    changes = compareObjects(articleBeforeChanges, updatedArticle);
+
+    // Jeśli zmiany obejmują tagi, sprawdź, czy wszystkie tagi istnieją
+
+    // Jeżeli nie wykryto zmian, nic nie zapisujemy
     if (changes.length === 0) return;
   }
+
+  console.log("articleBeforeChanges");
+  console.log(articleBeforeChanges);
+  console.log("updatedArticle");
+  console.log(updatedArticle);
+  // Zapisujemy historię zmian
   const historyEntry = new ArticleHistoryModel({
     articleId: articleId,
     changes,
@@ -114,55 +126,88 @@ export const saveArticleChanges = async ({
   await historyEntry.save();
 };
 
-const compareArticles = (
-  articleBeforeChanges: Article,
-  updatedArticle: Article
-) => {
+function compareObjects(oldObj: any, newObj: any): Change[] {
   const changes: Change[] = [];
 
-  // Porównanie tytułu
-  if (updatedArticle.title !== articleBeforeChanges.title) {
-    changes.push({
-      field: "title",
-      oldValue: articleBeforeChanges.title,
-      newValue: updatedArticle.title,
-    });
-  }
+  // Lista kluczowych pól, które chcemy porównywać
+  const fieldsToCompare = [
+    "title",
+    "clientDescription",
+    "employeeDescription",
+    "tags",
+    "isVerified",
+    "isTrashed",
+  ];
 
-  // Porównanie opisu klienta
-  if (
-    updatedArticle.clientDescription !== articleBeforeChanges.clientDescription
-  ) {
-    changes.push({
-      field: "clientDescription",
-      oldValue: articleBeforeChanges.clientDescription,
-      newValue: updatedArticle.clientDescription,
-    });
-  }
+  // Przechodzimy po wszystkich kluczach w obiekcie
+  for (const key of fieldsToCompare) {
+    if (oldObj.hasOwnProperty(key)) {
+      const oldValue = oldObj[key];
+      const newValue = newObj[key];
 
-  // Porównanie opisu pracownika
-  if (
-    updatedArticle.employeeDescription !==
-    articleBeforeChanges.employeeDescription
-  ) {
-    changes.push({
-      field: "employeeDescription",
-      oldValue: articleBeforeChanges.employeeDescription,
-      newValue: updatedArticle.employeeDescription,
-    });
-  }
-
-  // Porównanie tagów
-  if (
-    JSON.stringify(updatedArticle.tags) !==
-    JSON.stringify(articleBeforeChanges.tags)
-  ) {
-    changes.push({
-      field: "tags",
-      oldValue: JSON.stringify(articleBeforeChanges.tags),
-      newValue: JSON.stringify(updatedArticle.tags),
-    });
+      // Jeśli wartość się zmieniła, generujemy zmianę
+      if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
+        changes.push({
+          field: key, // Pole zmienione
+          oldValue: JSON.stringify(oldValue), // Stara wartość
+          newValue: JSON.stringify(newValue), // Nowa wartość
+        });
+      }
+    }
   }
 
   return changes;
-};
+}
+
+// const compareArticles = (
+//   articleBeforeChanges: Article,
+//   updatedArticle: Article
+// ) => {
+//   const changes: Change[] = [];
+
+//   // Porównanie tytułu
+//   if (updatedArticle.title !== articleBeforeChanges.title) {
+//     changes.push({
+//       field: "title",
+//       oldValue: articleBeforeChanges.title,
+//       newValue: updatedArticle.title,
+//     });
+//   }
+
+//   // Porównanie opisu klienta
+//   if (
+//     updatedArticle.clientDescription !== articleBeforeChanges.clientDescription
+//   ) {
+//     changes.push({
+//       field: "clientDescription",
+//       oldValue: articleBeforeChanges.clientDescription,
+//       newValue: updatedArticle.clientDescription,
+//     });
+//   }
+
+//   // Porównanie opisu pracownika
+//   if (
+//     updatedArticle.employeeDescription !==
+//     articleBeforeChanges.employeeDescription
+//   ) {
+//     changes.push({
+//       field: "employeeDescription",
+//       oldValue: articleBeforeChanges.employeeDescription,
+//       newValue: updatedArticle.employeeDescription,
+//     });
+//   }
+
+//   // Porównanie tagów
+//   if (
+//     JSON.stringify(updatedArticle.tags) !==
+//     JSON.stringify(articleBeforeChanges.tags)
+//   ) {
+//     changes.push({
+//       field: "tags",
+//       oldValue: JSON.stringify(articleBeforeChanges.tags),
+//       newValue: JSON.stringify(updatedArticle.tags),
+//     });
+//   }
+
+//   return changes;
+// };
