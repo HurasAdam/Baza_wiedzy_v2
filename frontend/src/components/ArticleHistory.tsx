@@ -9,11 +9,15 @@ import { MdBookmarkAdded } from "react-icons/md";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import { IoIosAdd } from "react-icons/io";
+import { MdArticle } from "react-icons/md";
+import { FaFileSignature } from "react-icons/fa6";
 import { MdDone } from "react-icons/md";
 import { IoIosCheckmark } from "react-icons/io";
 import { FaTrashCan } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa";
 import { diff_match_patch } from "diff-match-patch";
 import ARTICLE_HISTORY_FIELD_TRANSLATIONS from "@/enums/articleHistoryFieldTranslations";
+import { IMAGES } from "@/constants/images";
 
 const ArticleHistory = ({ articleId }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -66,7 +70,7 @@ const ArticleHistory = ({ articleId }) => {
     ),
     created: (
       <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white">
-        <IoIosAdd size={26} />
+        <FaFileSignature size={16} />
       </div>
     ),
     verified: (
@@ -104,7 +108,7 @@ const ArticleHistory = ({ articleId }) => {
 
       {/* Prawa kolumna - może być pusta */}
       <div className=" overflow-y-auto h-full  break-words w-full box-border scrollbar-custom ">
-        {!selectedItem ? (
+        {!selectedItem && (
           <div className="pt-5 h-full">
             <div className=" shadow bg-neutral-100 h-full rounded-lg p-6  ">
               <span className="text-xl font-base text-blue-950">
@@ -113,95 +117,217 @@ const ArticleHistory = ({ articleId }) => {
               </span>
             </div>
           </div>
-        ) : selectedItem?.eventType === "created" ? (
+        )}{" "}
+        {selectedItem?.eventType === "created" && (
           <div className="max-h-[88vh]    ">
-            {/* Title */}
-            <div className="bg-indigo-600/80  rounded    px-6 py-2">
-              <span className="text-xs text-slate-200">Tytuł:</span>
-              <div className="text-neutral-50 font-inter text-lg ">
-                {selectedItem?.articleDetails?.title}
+            <div className="h-full min-h-[88vh] flex flex-col gap-6 p-6 bg-white rounded-lg shadow-md border border-indigo-200 ">
+              <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
+                <div>
+                  <div className="w-12 h-12 bg-indigo-500 text-white flex items-center justify-center rounded-full">
+                    <FaFileSignature size={24} />
+                  </div>
+                </div>
+                <div className="flex justify-between items-center w-full">
+                  <h2 className="text-2xl font-semibold text-sky-700">
+                    Artykuł został dodany
+                  </h2>
+                  <span className="text-slate-600 text-base font-semibold ">
+                    {formatDate(selectedItem?.createdAt, true)}
+                  </span>
+                </div>
               </div>
-            </div>
-
-            {/* Employee Description */}
-            <div className="   px-6 py-5">
-              <div className="my-10">
-                <span>Uwagi:</span>
-                <div
-                  className="my-2"
-                  dangerouslySetInnerHTML={{
-                    __html: selectedItem?.articleDetails?.employeeDescription,
-                  }}
-                />
+              <div className="text-center mt-10 mb-14">
+                <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
+                  Artykuł został dodany przez:
+                  <p className="text-indigo-700">
+                    {selectedItem?.updatedBy?.name}{" "}
+                    {selectedItem?.updatedBy?.surname}
+                  </p>
+                </p>
               </div>
+              <div className="border py-3 rounded shadow text-slate-600  leading-6 text-sm ">
+                {/* Title */}
+                <div className="rounded    px-6 py-2 pb-4 border-b border-gray-200 w-ful ">
+                  <span className="">Tytuł:</span>
+                  <div className=" font-inter text-lg ">
+                    {selectedItem?.articleDetails?.title}
+                  </div>
+                </div>
 
-              {/* Client Description */}
-              <div>
-                <strong>Odpowiedź dla klienta:</strong>
-                <div
-                  className="my-2"
-                  dangerouslySetInnerHTML={{
-                    __html: selectedItem?.articleDetails?.clientDescription,
-                  }}
-                />
+                {/* Employee Description */}
+                <div className="   px-6 py-5  ">
+                  <div className="my-10 pb-4 border-b border-gray-200 w-ful">
+                    <span>Uwagi:</span>
+                    <div
+                      className="my-2"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          selectedItem?.articleDetails?.employeeDescription,
+                      }}
+                    />
+                  </div>
+
+                  {/* Client Description */}
+                  <div className="pb-4">
+                    <span className="">Odpowiedź dla klienta:</span>
+                    <div
+                      className="my-2"
+                      dangerouslySetInnerHTML={{
+                        __html: selectedItem?.articleDetails?.clientDescription,
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-6  h-auto pr-2 pl-1">
-            <div className="max-h-[88vh] flex flex-col gap-2 ">
-              <h2 className="px-1.5 py-1.5 font-inter text-slate-700">
-                Poprzednia wersja
-              </h2>
-              {selectedItem?.changes?.map((change) => {
-                const { leftText } = highlightChanges(
-                  change.oldValue,
-                  change.newValue
-                );
-                return (
-                  <div className="">
-                    <div className="bg-slate-400 text-neutral-50 text-base font-inter border px-3.5 py-2 shadow  rounded-t-lg  ">
-                      {" "}
-                      {
-                        ARTICLE_HISTORY_FIELD_TRANSLATIONS[
-                          change?.field || change?.field
-                        ]
-                      }
-                    </div>
-                    <div
-                      className="text-slate-600  leading-6 text-sm p-4 h-auto border p-3 shadow bg-white rounded-b-lg  "
-                      dangerouslySetInnerHTML={{ __html: leftText }}
-                    />
+        )}
+        {selectedItem?.eventType === "updated" && (
+          <div className="max-h-[88vh]">
+            <div className="h-full min-h-[88vh] flex flex-col gap-6 p-6 bg-white rounded-lg shadow-md border border-indigo-200 ">
+              <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
+                <div>
+                  <div className="w-12 h-12 bg-sky-700 text-white flex items-center justify-center rounded-full">
+                    <LiaExchangeAltSolid size={24} />
                   </div>
-                );
-              })}
+                </div>
+                <div className="flex justify-between items-center w-full">
+                  <h2 className="text-2xl font-semibold text-sky-700">
+                    Artykuł został zaktualizowany
+                  </h2>
+                  <span className="text-slate-600 text-base font-semibold ">
+                    {formatDate(selectedItem?.createdAt, true)}
+                  </span>
+                </div>
+              </div>
+              <div className="text-center mt-10 mb-14">
+                <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
+                  Artykuł został zaktualizowany przez:
+                  <p className="text-indigo-700">
+                    {selectedItem?.updatedBy?.name}{" "}
+                    {selectedItem?.updatedBy?.surname}
+                  </p>
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6  h-auto pr-2 pl-1 ">
+                <div className="max-h-[88vh] flex flex-col gap-2 ">
+                  <h2 className="px-1.5 py-1.5 font-inter text-slate-700">
+                    Poprzednia wersja
+                  </h2>
+                  {selectedItem?.changes?.map((change) => {
+                    const { leftText } = highlightChanges(
+                      change.oldValue,
+                      change.newValue
+                    );
+                    return (
+                      <div className="">
+                        <div className="bg-slate-400 text-neutral-50 text-base font-inter border px-3.5 py-2 shadow  rounded-t-lg  ">
+                          {" "}
+                          {
+                            ARTICLE_HISTORY_FIELD_TRANSLATIONS[
+                              change?.field || change?.field
+                            ]
+                          }
+                        </div>
+                        <div
+                          className="text-slate-600  leading-6 text-sm p-4 h-auto border p-3 shadow bg-white rounded-b-lg  "
+                          dangerouslySetInnerHTML={{ __html: leftText }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="min-h-[88vh] flex flex-col gap-2 ">
+                  <h2 className="px-1.5 py-1.5 font-inter text-emerald-700/90">
+                    Wersja po zmianach
+                  </h2>
+                  {selectedItem?.changes?.map((change) => {
+                    const { rightText } = highlightChanges(
+                      change.oldValue,
+                      change.newValue
+                    );
+                    return (
+                      <div>
+                        <div className="bg-emerald-500/90 text-neutral-50 text-base font-inter border px-3.5 py-2 shadow  rounded-t-lg">
+                          {" "}
+                          {
+                            ARTICLE_HISTORY_FIELD_TRANSLATIONS[
+                              change?.field || change?.field
+                            ]
+                          }
+                        </div>
+                        <div
+                          className="text-slate-600 leading-6 text-sm p-4 h-auto border p-3 shadow bg-white rounded-b-lg  "
+                          dangerouslySetInnerHTML={{ __html: rightText }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-            <div className="max-h-[88vh] flex flex-col gap-2 ">
-              <h2 className="px-1.5 py-1.5 font-inter text-emerald-700/90">
-                Wersja po zmianach
+          </div>
+        )}
+        {selectedItem?.eventType === "verified" && (
+          <div className="min-h-[88vh] h-full flex flex-col gap-7 p-6 bg-gray-50 rounded-lg shadow-md border border-gray-300">
+            {/* Header */}
+            <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
+              <div>
+                <div className="w-12 h-12 bg-emerald-600 text-white flex items-center justify-center rounded-full">
+                  <MdDone size={24} />
+                </div>
+              </div>
+              <div className="flex justify-between items-center w-full">
+                <h2 className="text-2xl font-semibold text-emerald-700">
+                  Artykuł został zweryfikowany
+                </h2>
+                <span className="text-slate-600 text-base font-semibold ">
+                  {formatDate(selectedItem?.createdAt, true)}
+                </span>
+              </div>
+            </div>
+            <div className="text-center mt-16">
+              <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
+                Artykuł został pomyślnie zweryfikowany i zatwierdzony przez
+                <p className="text-green-500">
+                  {selectedItem?.updatedBy?.name}{" "}
+                  {selectedItem?.updatedBy?.surname}
+                </p>
+              </p>
+            </div>
+            {/* Placeholder Image */}
+            <div className="flex justify-center items-center  rounded-lg p-6  ">
+              <img
+                src={IMAGES.verifiedImage}
+                alt="Artykuł zweryfikowany"
+                className="w-full max-w-xs sm:max-w-sm md:max-w-md"
+              />
+            </div>
+
+            {/* Informacja o weryfikacji */}
+          </div>
+        )}
+        {selectedItem?.eventType === "trashed" && (
+          <div className="max-h-[88vh] h-full flex flex-col gap-6 p-6 bg-white rounded-lg shadow-md border border-red-200">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-red-600 text-white flex items-center justify-center rounded-full">
+                <FaTrashCan size={20} />
+              </div>
+              <h2 className="text-xl font-semibold text-red-700">
+                Artykuł został przeniesiony do kosza
               </h2>
-              {selectedItem?.changes?.map((change) => {
-                const { rightText } = highlightChanges(
-                  change.oldValue,
-                  change.newValue
-                );
-                return (
-                  <div>
-                    <div className="bg-emerald-500/90 text-neutral-50 text-base font-inter border px-3.5 py-2 shadow  rounded-t-lg">
-                      {" "}
-                      {
-                        ARTICLE_HISTORY_FIELD_TRANSLATIONS[
-                          change?.field || change?.field
-                        ]
-                      }
-                    </div>
-                    <div
-                      className="text-slate-600 leading-6 text-sm p-4 h-auto border p-3 shadow bg-white rounded-b-lg  "
-                      dangerouslySetInnerHTML={{ __html: rightText }}
-                    />
-                  </div>
-                );
-              })}
+            </div>
+            <div className="text-sm text-gray-700">
+              <p className="flex items-center gap-2">
+                <span className="font-medium">Przez:</span>
+                {selectedItem?.updatedBy?.name}{" "}
+                {selectedItem?.updatedBy?.surname}
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="font-medium">Data:</span>
+                {formatDate(selectedItem?.createdAt, true)}
+              </p>
             </div>
           </div>
         )}
