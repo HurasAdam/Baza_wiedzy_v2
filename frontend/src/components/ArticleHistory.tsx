@@ -18,9 +18,16 @@ import { FaPlus } from "react-icons/fa";
 import { diff_match_patch } from "diff-match-patch";
 import ARTICLE_HISTORY_FIELD_TRANSLATIONS from "@/enums/articleHistoryFieldTranslations";
 import { IMAGES } from "@/constants/images";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./ui/accordion";
 
 const ArticleHistory = ({ articleId }) => {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [showArticleDetails, setShowArticleDetails] = useState(false);
   const { data: history } = useQuery({
     queryKey: ["articleHistory", articleId],
     queryFn: () => {
@@ -69,7 +76,7 @@ const ArticleHistory = ({ articleId }) => {
       </div>
     ),
     created: (
-      <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white">
+      <div className="w-8 h-8 rounded-full bg-teal-800 flex items-center justify-center text-white">
         <FaFileSignature size={16} />
       </div>
     ),
@@ -109,7 +116,7 @@ const ArticleHistory = ({ articleId }) => {
       {/* Prawa kolumna - może być pusta */}
       <div className=" overflow-y-auto h-full  break-words w-full box-border scrollbar-custom ">
         {!selectedItem && (
-          <div className="pt-5 h-full">
+          <div className="pt-5 h-full max-h-[88vh]">
             <div className=" shadow bg-neutral-100 h-full rounded-lg p-6  ">
               <span className="text-xl font-base text-blue-950">
                 {" "}
@@ -123,12 +130,12 @@ const ArticleHistory = ({ articleId }) => {
             <div className="h-full min-h-[88vh] flex flex-col gap-6 p-6 bg-white rounded-lg shadow-md border border-indigo-200 ">
               <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
                 <div>
-                  <div className="w-12 h-12 bg-indigo-500 text-white flex items-center justify-center rounded-full">
+                  <div className="w-12 h-12 bg-teal-800 text-white flex items-center justify-center rounded-full">
                     <FaFileSignature size={24} />
                   </div>
                 </div>
                 <div className="flex justify-between items-center w-full">
-                  <h2 className="text-2xl font-semibold text-sky-700">
+                  <h2 className="text-2xl font-semibold text-teal-700">
                     Artykuł został dodany
                   </h2>
                   <span className="text-slate-600 text-base font-semibold ">
@@ -136,49 +143,79 @@ const ArticleHistory = ({ articleId }) => {
                   </span>
                 </div>
               </div>
-              <div className="text-center mt-10 mb-14">
+              <div className="text-center mt-16 ">
                 <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
                   Artykuł został dodany przez:
-                  <p className="text-indigo-700">
+                  <p className="text-teal-700">
                     {selectedItem?.updatedBy?.name}{" "}
                     {selectedItem?.updatedBy?.surname}
                   </p>
                 </p>
               </div>
-              <div className="border py-3 rounded shadow text-slate-600  leading-6 text-sm ">
-                {/* Title */}
-                <div className="rounded    px-6 py-2 pb-4 border-b border-gray-200 w-ful ">
-                  <span className="">Tytuł:</span>
-                  <div className=" font-inter text-lg ">
-                    {selectedItem?.articleDetails?.title}
-                  </div>
-                </div>
+              <Accordion
+                type="multiple"
+                collapsible
+                defaultValue={() => showArticleDetails.toString()}
+                className="rounded-xl  bg-transparent    "
+              >
+                <AccordionItem value="item-1" className="border-none ">
+                  <AccordionTrigger
+                    className="text-base border-0 shadow-none max-w-fit mx-auto "
+                    onClick={() => setShowArticleDetails(!showArticleDetails)}
+                  >
+                    Pokaż szczegóły
+                  </AccordionTrigger>
+                  <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base border-0 px-8 py-1   ">
+                    <div className=" py-3  text-slate-600  leading-6 text-sm ">
+                      {/* Title */}
+                      <div className="rounded    px-6 py-2 pb-4 border-b border-gray-200 w-ful ">
+                        <span className="">Tytuł:</span>
+                        <div className=" font-inter text-lg ">
+                          {selectedItem?.articleDetails?.title}
+                        </div>
+                      </div>
 
-                {/* Employee Description */}
-                <div className="   px-6 py-5  ">
-                  <div className="my-10 pb-4 border-b border-gray-200 w-ful">
-                    <span>Uwagi:</span>
-                    <div
-                      className="my-2"
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          selectedItem?.articleDetails?.employeeDescription,
-                      }}
-                    />
-                  </div>
+                      {/* Employee Description */}
+                      <div className="   px-6 py-5  ">
+                        <div className="my-10 pb-4 border-b border-gray-200 w-ful">
+                          <span>Uwagi:</span>
+                          <div
+                            className="my-2"
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                selectedItem?.articleDetails
+                                  ?.employeeDescription,
+                            }}
+                          />
+                        </div>
 
-                  {/* Client Description */}
-                  <div className="pb-4">
-                    <span className="">Odpowiedź dla klienta:</span>
-                    <div
-                      className="my-2"
-                      dangerouslySetInnerHTML={{
-                        __html: selectedItem?.articleDetails?.clientDescription,
-                      }}
-                    />
-                  </div>
+                        {/* Client Description */}
+                        <div className="pb-4">
+                          <span className="">Odpowiedź dla klienta:</span>
+                          <div
+                            className="my-2"
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                selectedItem?.articleDetails?.clientDescription,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+              {!showArticleDetails && (
+                <div className="flex justify-center items-center  rounded-lg p-6  ">
+                  <img
+                    src={IMAGES.createdImage}
+                    alt="Artykuł zweryfikowany"
+                    className="w-full max-w-xs sm:max-w-sm md:max-w-md"
+                  />
                 </div>
-              </div>
+              )}
+
+              {/* HERE */}
             </div>
           </div>
         )}
@@ -309,26 +346,42 @@ const ArticleHistory = ({ articleId }) => {
           </div>
         )}
         {selectedItem?.eventType === "trashed" && (
-          <div className="max-h-[88vh] h-full flex flex-col gap-6 p-6 bg-white rounded-lg shadow-md border border-red-200">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-red-600 text-white flex items-center justify-center rounded-full">
-                <FaTrashCan size={20} />
+          <div className="min-h-[88vh] h-full flex flex-col gap-7 p-6 bg-gray-50 rounded-lg shadow-md border border-gray-300">
+            {/* Header */}
+            <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
+              <div>
+                <div className="w-12 h-12 bg-rose-600/90 text-white flex items-center justify-center rounded-full">
+                  <FaTrashCan size={24} />
+                </div>
               </div>
-              <h2 className="text-xl font-semibold text-red-700">
-                Artykuł został przeniesiony do kosza
-              </h2>
+              <div className="flex justify-between items-center w-full">
+                <h2 className="text-2xl font-semibold text-red-700">
+                  Artykuł został przeniesiony do kosza
+                </h2>
+                <span className="text-slate-600 text-base font-semibold ">
+                  {formatDate(selectedItem?.createdAt, true)}
+                </span>
+              </div>
             </div>
-            <div className="text-sm text-gray-700">
-              <p className="flex items-center gap-2">
-                <span className="font-medium">Przez:</span>
-                {selectedItem?.updatedBy?.name}{" "}
-                {selectedItem?.updatedBy?.surname}
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="font-medium">Data:</span>
-                {formatDate(selectedItem?.createdAt, true)}
+            <div className="text-center mt-16 mb-14">
+              <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
+                Artykuł został przeniesiony do kosza przez:
+                <p className="text-red-500">
+                  {selectedItem?.updatedBy?.name}{" "}
+                  {selectedItem?.updatedBy?.surname}
+                </p>
               </p>
             </div>
+            {/* Placeholder Image */}
+            <div className="flex justify-center items-center  rounded-lg p-6  ">
+              <img
+                src={IMAGES.trashedImage}
+                alt="Artykuł zweryfikowany"
+                className="w-full h-full max-w-xs sm:max-w-sm md:max-w-md scale-125"
+              />
+            </div>
+
+            {/* Informacja o weryfikacji */}
           </div>
         )}
       </div>
