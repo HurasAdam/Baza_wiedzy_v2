@@ -36,10 +36,6 @@ const ArticleHistoryActivityCard = ({
         <p className="text-sm text-slate-600 font-base ">
           {formatDate(item?.createdAt, true)}
         </p>
-        <div className="text-gray-500  flex items-center gap-1">
-          <span className="text-xs">{item?.updatedBy.name}</span>
-          <span className="text-xs">{item?.updatedBy.surname}</span>
-        </div>
       </div>
     </div>
   );
