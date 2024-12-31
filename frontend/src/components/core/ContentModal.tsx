@@ -67,15 +67,7 @@ export function ContentModal({
          `}
       >
         <DialogHeader>
-          <DialogTitle className=" ">
-            <div
-              className={`h-full       ${modalHeightHandler(height)} ${
-                !scrollable && "overflow-y-auto "
-              }`}
-            >
-              {children}
-            </div>
-          </DialogTitle>
+          <DialogTitle className=" "></DialogTitle>
           {/* <DialogDescription>
        {description}
         </DialogDescription> */}
@@ -84,6 +76,13 @@ export function ContentModal({
         {/* <DialogFooter>
         <Button type="submit">Save changes</Button>
       </DialogFooter> */}
+        <div
+          className={`h-full       ${modalHeightHandler(height)} ${
+            !scrollable && "overflow-y-auto "
+          }`}
+        >
+          {children}
+        </div>
       </DialogContent>
       <DialogOverlay closeOnOutsideClick={true} />
     </Dialog>
