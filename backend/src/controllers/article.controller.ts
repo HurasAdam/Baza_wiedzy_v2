@@ -160,6 +160,8 @@ export const verifyArticleHandler = catchErrors(async (req, res) => {
   const article = await ArticleModel.findById({ _id: id });
 
   appAssert(article, CONFLICT, "Article not found");
+  console.log("isVerified");
+  console.log(isVerified);
   const isVerifiedChanged = article.isVerified !== isVerified;
   article.isVerified = isVerified;
   const updatedAritlce = await article.save();
@@ -171,7 +173,7 @@ export const verifyArticleHandler = catchErrors(async (req, res) => {
       articleBeforeChanges: article, // Artykuł przed zmianą
       updatedArticle: updatedAritlceObj, // Artykuł po zmianie
       updatedBy: req.userId, // Id użytkownika, który dokonał zmiany
-      eventType: EventType.verified, // Typ zdarzenia: 'updated'
+      eventType: isVerified ? EventType.verified : EventType.Unverified,
     });
   }
 
@@ -281,6 +283,29 @@ export const trashArticleHandler = catchErrors(async (req, res) => {
   }
 
   return res.status(OK).json({ message: "Artykuł został usunięty" });
+});
+
+export const restoreArticleHandler = catchErrors(async (req, res) => {
+  const { id } = req.params;
+  const article = await ArticleModel.findById({ _id: id });
+  appAssert(article, NOT_FOUND, "Article not found");
+
+  article.isTrashed = false;
+  const restoredArticle = await article.save();
+
+  const updatedAritlceObj = restoredArticle.toObject();
+
+  if (!updatedAritlceObj?.isTrashed) {
+    await saveArticleChanges({
+      articleId: id,
+      articleBeforeChanges: article, // Artykuł przed zmianą
+      updatedArticle: updatedAritlceObj, // Artykuł po zmianie
+      updatedBy: req.userId, // Id użytkownika, który dokonał zmiany
+      eventType: EventType.Restored, // Typ zdarzenia: 'updated'
+    });
+  }
+
+  return res.status(OK).json({ message: "Artykuł został przywrócony z kosza" });
 });
 
 export const deleteArticleHandler = catchErrors(async (req, res) => {
