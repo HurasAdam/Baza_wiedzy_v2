@@ -4,6 +4,7 @@ const enum EventType {
   Trashed = "trashed",
   Restored = "restored",
   verified = "verified",
+  Unverified = "unverified",
 }
 
 export default EventType;
