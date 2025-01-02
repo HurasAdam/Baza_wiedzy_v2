@@ -28,7 +28,7 @@ export function ContentModal({
       case "sm":
         return " md:max-w-[38vw] min-w-[38vw]  "; // Mały modal na md i większych ekranach
       case "md":
-        return "md:max-w-[66vw] md:min-w-[66vw]"; // Średni modal na md i większych ekranach
+        return "max-w-[80vw] min-w-[80vw] sm:max-w-[70vw] sm:min-w-[70vw]  md:max-w-[80vw] md:min-w-[80vw] lg:max-w-[60vw] lg:min-w-[60vw]  xl:max-w-[38vw] xl:min-w-[38vw]"; // Średni modal na md i większych ekranach
       case "lg":
         return "xl:max-w-[70vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]"; // Duży modal na lg i większych ekranach, a na md większy
       case "xl":
@@ -77,7 +77,7 @@ export function ContentModal({
         <Button type="submit">Save changes</Button>
       </DialogFooter> */}
         <div
-          className={`h-full       ${modalHeightHandler(height)} ${
+          className={`h-full   mt-1    ${modalHeightHandler(height)} ${
             !scrollable && "overflow-y-auto "
           }`}
         >
