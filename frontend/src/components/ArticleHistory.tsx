@@ -9,14 +9,17 @@ import { MdBookmarkAdded } from "react-icons/md";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import { IoIosAdd } from "react-icons/io";
+import { MdOutlineKeyboardBackspace } from "react-icons/md";
 import { MdArticle } from "react-icons/md";
 import { FaFileSignature } from "react-icons/fa6";
+import { MdOutlineQuestionMark } from "react-icons/md";
 import { MdDone } from "react-icons/md";
 import { IoIosCheckmark } from "react-icons/io";
 import { FaTrashCan } from "react-icons/fa6";
-import { FaPlus } from "react-icons/fa";
+import { MdOutlineSettingsBackupRestore } from "react-icons/md";
 import { diff_match_patch } from "diff-match-patch";
 import ARTICLE_HISTORY_FIELD_TRANSLATIONS from "@/enums/articleHistoryFieldTranslations";
+import { FaExclamationCircle } from "react-icons/fa";
 import { IMAGES } from "@/constants/images";
 import {
   Accordion,
@@ -24,8 +27,16 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
+import ArticleDetailsInModal from "@/pages/ArticleDetailsInModal";
+import { useModalContext } from "@/contexts/ModalContext";
+import { Button } from "./ui/button";
 
-const ArticleHistory = ({ articleId }) => {
+const ArticleHistory = ({
+  articleId,
+  showBackwardArrow = false,
+  closeArticleHistory,
+}) => {
+  const { openContentModal } = useModalContext();
   const [selectedItem, setSelectedItem] = useState(null);
   const [showArticleDetails, setShowArticleDetails] = useState(false);
   const { data: history } = useQuery({
@@ -70,9 +81,9 @@ const ArticleHistory = ({ articleId }) => {
   };
 
   const TASKTYPEICON = {
-    commented: (
-      <div className="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center text-white">
-        <MdOutlineMessage />,
+    restored: (
+      <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white">
+        <MdOutlineSettingsBackupRestore size={20} />
       </div>
     ),
     created: (
@@ -85,6 +96,11 @@ const ArticleHistory = ({ articleId }) => {
         <IoIosCheckmark size={28} />
       </div>
     ),
+    unverified: (
+      <div className="w-8 h-8  flex items-center justify-center rounded-full bg-slate-500 text-white">
+        <MdOutlineQuestionMark size={21} />
+      </div>
+    ),
     trashed: (
       <div className="w-8 h-8  flex items-center justify-center rounded-full bg-rose-500 text-white">
         <FaTrashCan size={16} />
@@ -92,17 +108,35 @@ const ArticleHistory = ({ articleId }) => {
     ),
     updated: (
       <div className="w-8 h-8  rounded-full bg-sky-700 flex items-center justify-center text-white">
-        <LiaExchangeAltSolid size={20} />
+        <LiaExchangeAltSolid size={18} />
       </div>
     ),
   };
   const showHistoryDetails = (selected) => {
     setSelectedItem(selected);
   };
+
+  const closeArticleHistoryView = (articleId) => {
+    openContentModal({
+      description: "",
+      content: <ArticleDetailsInModal type="modal" articleId={articleId} />,
+      enableOutsideClickClose: true,
+      size: "lg",
+    });
+  };
+
   return (
-    <div className="grid grid-cols-[4fr_14fr] h-full gap-1.5 ">
+    <div className="grid grid-cols-[4fr_14fr] h-full gap-1.5 max-h-[88vh] ">
       {/* Lewa kolumna - lista zmian */}
-      <div className="border-r overflow-y-auto max-h-[88vh] scrollbar-custom  ">
+      <div className="border-r overflow-y-auto max-h-[88vh] scrollbar-custom   ">
+        {showBackwardArrow && (
+          <Button
+            className="flex items-center gap-1.5 border  mx-auto w-3/4 rounded-lg mb-6 bg-sky-600 hover:bg-sky-500 "
+            onClick={() => closeArticleHistoryView(articleId)}
+          >
+            <MdOutlineKeyboardBackspace /> Powrót do artykułu
+          </Button>
+        )}
         {history?.map((historyItem, index) => (
           <ArticleHistoryActivityCard
             onClick={showHistoryDetails}
@@ -116,12 +150,19 @@ const ArticleHistory = ({ articleId }) => {
       {/* Prawa kolumna - może być pusta */}
       <div className=" overflow-y-auto h-full  break-words w-full box-border scrollbar-custom ">
         {!selectedItem && (
-          <div className="pt-5 h-full max-h-[88vh]">
-            <div className=" shadow bg-neutral-100 h-full rounded-lg p-6  ">
-              <span className="text-xl font-base text-blue-950">
+          <div className="pt-5 h-full max-h-[88vh] min-h-[88vh] h-full">
+            <div className=" shadow bg-neutral-100 h-full rounded-lg p-6 text-center py-14  ">
+              <span className="text-xl font-semibold  text-slate-600 ">
                 {" "}
                 Wybierz element historii, aby zobaczyć szczegóły.
               </span>
+              <div className="flex justify-center items-center  rounded-lg p-6 mt-20 ">
+                <img
+                  src={IMAGES.historyLogImage}
+                  alt="Artykuł zweryfikowany"
+                  className="w-full max-w-xs sm:max-w-sm md:max-w-md scale-125"
+                />
+              </div>
             </div>
           </div>
         )}{" "}
@@ -345,6 +386,45 @@ const ArticleHistory = ({ articleId }) => {
             {/* Informacja o weryfikacji */}
           </div>
         )}
+        {selectedItem?.eventType === "unverified" && (
+          <div className="min-h-[88vh] h-full flex flex-col gap-7 p-6 bg-gray-50 rounded-lg shadow-md border border-gray-300">
+            {/* Header */}
+            <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
+              <div>
+                <div className="w-12 h-12 bg-slate-600 text-white flex items-center justify-center rounded-full">
+                  <MdOutlineQuestionMark size={24} />
+                </div>
+              </div>
+              <div className="flex justify-between items-center w-full">
+                <h2 className="text-2xl font-semibold text-slate-700">
+                  Weryfikacja artykułu została cofnięta
+                </h2>
+                <span className="text-slate-600 text-base font-semibold ">
+                  {formatDate(selectedItem?.createdAt, true)}
+                </span>
+              </div>
+            </div>
+            <div className="text-center mt-16">
+              <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
+                Status artykułu został ustawiony jako 'Do zweryfikowania'
+                <p className="text-slate-800">
+                  {selectedItem?.updatedBy?.name}{" "}
+                  {selectedItem?.updatedBy?.surname}
+                </p>
+              </p>
+            </div>
+            {/* Placeholder Image */}
+            <div className="flex justify-center items-center  rounded-lg p-6  ">
+              <img
+                src={IMAGES.unverifiedImage}
+                alt="Artykuł zweryfikowany"
+                className="w-full max-w-xs sm:max-w-sm md:max-w-md"
+              />
+            </div>
+
+            {/* Informacja o weryfikacji */}
+          </div>
+        )}
         {selectedItem?.eventType === "trashed" && (
           <div className="min-h-[88vh] h-full flex flex-col gap-7 p-6 bg-gray-50 rounded-lg shadow-md border border-gray-300">
             {/* Header */}
@@ -373,11 +453,51 @@ const ArticleHistory = ({ articleId }) => {
               </p>
             </div>
             {/* Placeholder Image */}
-            <div className="flex justify-center items-center  rounded-lg p-6  ">
+            <div className="flex justify-center items-center mt-8 rounded-lg  ">
+              <div className="border  bg-rose-200/60 w-[60%] rounded-2xl flex justify-center pt-20 ">
+                <img
+                  src={IMAGES.trashedImage}
+                  alt="Artykuł zweryfikowany"
+                  className="w-full h-full max-w-xs sm:max-w-sm md:max-w-md scale-150"
+                />
+              </div>
+            </div>
+            {/* Informacja o weryfikacji */}
+          </div>
+        )}
+        {selectedItem?.eventType === "restored" && (
+          <div className="min-h-[88vh] h-full flex flex-col gap-7 p-6 bg-gray-50 rounded-lg shadow-md border border-gray-300">
+            {/* Header */}
+            <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
+              <div>
+                <div className="w-12 h-12 bg-amber-600 text-white flex items-center justify-center rounded-full">
+                  <MdOutlineSettingsBackupRestore size={24} />
+                </div>
+              </div>
+              <div className="flex justify-between items-center w-full">
+                <h2 className="text-2xl font-semibold text-amber-700">
+                  Artykuł został przywrócony
+                </h2>
+                <span className="text-slate-600 text-base font-semibold ">
+                  {formatDate(selectedItem?.createdAt, true)}
+                </span>
+              </div>
+            </div>
+            <div className="text-center mt-16">
+              <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
+                Artykuł został przywrócony z usuniętych przez:
+                <p className="text-amber-500">
+                  {selectedItem?.updatedBy?.name}{" "}
+                  {selectedItem?.updatedBy?.surname}
+                </p>
+              </p>
+            </div>
+            {/* Placeholder Image */}
+            <div className="flex justify-center items-center  rounded-lg p-6 mt-12 ">
               <img
-                src={IMAGES.trashedImage}
+                src={IMAGES.restoredImage}
                 alt="Artykuł zweryfikowany"
-                className="w-full h-full max-w-xs sm:max-w-sm md:max-w-md scale-125"
+                className="w-full max-w-xs sm:max-w-sm md:max-w-md scale-125"
               />
             </div>
 
