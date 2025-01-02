@@ -12,7 +12,7 @@ import React, { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { BsFillQuestionCircleFill } from "react-icons/bs";
-import { IoMdArrowDropright, IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaHistory } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
@@ -22,14 +22,15 @@ import { toast } from "@/hooks/use-toast";
 import { useAlertModal } from "@/hooks/useAlertModal";
 import { useModalContext } from "@/contexts/ModalContext";
 import ArticleDetailsSkeleton from "@/components/ArticleDetailsSkeleton";
-import { ArticleForm } from "@/components/ArticleForm";
+import { IoCheckmarkSharp } from "react-icons/io5";
 import { BiSolidCopy } from "react-icons/bi";
 import EditArticle from "@/pages/EditArticle";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import useCopyToClipboard from "@/hooks/useCopyToClipboard";
 import ArticleHistory from "./ArticleHistory";
+import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
 
-const QuickArticleDetails = ({ articleId, type }) => {
+const QuickArticleDetails: React.FC = ({ articleId, type }) => {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -64,42 +65,11 @@ const QuickArticleDetails = ({ articleId, type }) => {
     },
   });
 
-  const { mutate: markAsFavouriteHandler } = useMutation({
-    mutationFn: ({ id }) => {
-      return articlesApi.markArticleAsFavourite({ id: id || articleId });
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries(["article", id]);
-      toast({
-        title: "Sukces",
-        description: data?.message,
-        variant: "success",
-        duration: 3400,
-      });
-    },
-    onError: (error) => {
-      if (error?.status === 404) {
-        toast({
-          title: "Błąd",
-          description: "Wystąpił błąd. Nie znaleziono artykułu",
-          variant: "destructive",
-          duration: 3400,
-        });
-      } else {
-        // Obsługa innych błędów
-        toast({
-          title: "Błąd",
-          description: "Wystąpił błąd. Spróbuj ponownie.",
-          variant: "destructive",
-          duration: 3400,
-        });
-      }
-    },
-  });
+  const { mutate: markAsFavouriteHandler } = useMarkArticleAsFavourite();
 
   const { mutate: deleteArticleMutation } = useMutation({
     mutationFn: ({ id }) => {
-      return articlesApi.deleteArticle({ id });
+      return articlesApi.trashArticle({ id });
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries("articles");
@@ -164,7 +134,7 @@ const QuickArticleDetails = ({ articleId, type }) => {
         article?.isFavourite ? "Usuń z ulubionych" : "Dodaj do ulubionych"
       }`,
       icon: <FaStar />,
-      actionHandler: () => markAsFavouriteHandler({ id }),
+      actionHandler: () => markAsFavouriteHandler({ id: id || articleId }),
       tooltip: "Dodaj do ulubionych / Usuń z ulubionych",
     },
     {
@@ -214,8 +184,8 @@ const QuickArticleDetails = ({ articleId, type }) => {
   const callbackFn = () => {
     setClipBoardCopyMessage("Skopiowano!");
     setTimeout(() => {
-      setClipBoardCopyMessage("Kopiuj"); // Resetowanie wiadomości po pewnym czasie
-    }, 750);
+      setClipBoardCopyMessage(""); // Resetowanie wiadomości po pewnym czasie
+    }, 760);
   };
 
   if (isLoading) {
@@ -229,18 +199,9 @@ const QuickArticleDetails = ({ articleId, type }) => {
       <div className=" flex flex-col space-y-1.5 ">
         <div className="  px-5 mb-2 flex flex-col justify-between rounded-xl  ">
           <div className="flex gap-1  justify-between  pr-1 mt-1.5 ">
-            {/* <div className="">
-              {" "}
-              {article?.isFavourite ? (
-                <FaStar className="w-5 h-5 text-amber-600/70" />
-              ) : (
-                <FaStar className="w-5 h-5 text-slate-200" />
-              )}
-            </div> */}
-
             <div
               className="flex justify-center  h-fit group cursor-pointer "
-              onClick={() => markAsFavouriteHandler({ articleId })}
+              onClick={() => markAsFavouriteHandler({ id: id || articleId })}
             >
               {" "}
               {article?.isFavourite ? (
@@ -306,11 +267,24 @@ const QuickArticleDetails = ({ articleId, type }) => {
             )}
             <button
               onClick={() => copyToClipboard(articleRef, callbackFn)}
-              className="flex items-center gap-1  font-semibold text-sm bg-blue-500/90 text-sky-50  px-3 py-2  rounded-md hover:bg-blue-500 hover:border-blue-400 hover:text-white transition-all   "
+              className={`flex items-center gap-1 font-semibold text-sm w-28  justify-center py-2 rounded-md transition-all 
+    ${
+      clipBoardCopyMessage === "Skopiowano!"
+        ? "bg-teal-600/90 text-white "
+        : "bg-blue-500/90 text-sky-50 hover:bg-blue-600"
+    }`}
             >
-              {" "}
-              <BiSolidCopy />
-              {clipBoardCopyMessage}
+              {clipBoardCopyMessage === "Skopiowano!" ? (
+                <div className="flex items-center gap-1">
+                  <IoCheckmarkSharp className="w-4 h-4 text-green-100" />
+                  {clipBoardCopyMessage}
+                </div>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <BiSolidCopy className="w-4 h-4" />
+                  Kopiuj
+                </div>
+              )}
             </button>
           </div>
         </div>

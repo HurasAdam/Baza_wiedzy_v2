@@ -80,6 +80,10 @@ export const trashArticle = async ({ id }) => {
   return API.put(`/articles/article/${id}/trash`);
 };
 
+export const restoreArticle = async ({ id }) => {
+  return API.put(`/articles/article/${id}/restore`);
+};
+
 export const articlesApi = {
   getAllArticles,
   createArticle,
@@ -91,4 +95,5 @@ export const articlesApi = {
   trashArticle,
   getAllTrashedArticles,
   getArticleHistory,
+  restoreArticle,
 };

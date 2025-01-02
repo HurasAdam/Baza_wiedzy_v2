@@ -20,7 +20,7 @@ import { FaCalendarCheck } from "react-icons/fa6";
 import { Dropdown } from "@/components/core/Dropdown";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { FaStar } from "react-icons/fa6";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaHistory } from "react-icons/fa";
 import { TiArrowBack } from "react-icons/ti";
 import { MdDelete } from "react-icons/md";
 import { IoArrowBackCircleSharp } from "react-icons/io5";
@@ -31,6 +31,7 @@ import ArticleDetailsSkeleton from "@/components/ArticleDetailsSkeleton";
 import { ArticleForm } from "@/components/ArticleForm";
 import EditArticle from "./EditArticle";
 import { FaRegStar } from "react-icons/fa";
+import ArticleHistory from "@/components/ArticleHistory";
 
 const ArticleDetailsInModal = ({ articleId, type }) => {
   const { id } = useParams();
@@ -129,7 +130,21 @@ const ArticleDetailsInModal = ({ articleId, type }) => {
       description:
         "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
       content: <EditArticle type={id ? "view" : "modal"} article={article} />,
-      size: "xl",
+      size: "lg",
+    });
+  };
+
+  const showArticleHistory = (article) => {
+    openContentModal({
+      title: "Edytuj Artykuł",
+      description:
+        "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
+      content: (
+        <ArticleHistory articleId={article?._id} showBackwardArrow={true} />
+      ),
+      size: "lg",
+      height: "82",
+      scrollable: false,
     });
   };
 
@@ -169,6 +184,12 @@ const ArticleDetailsInModal = ({ articleId, type }) => {
             icon: <IoMdCheckmarkCircleOutline />,
           },
         ]),
+    {
+      label: "Historia modyfikacji",
+      icon: <FaHistory />,
+      actionHandler: () => showArticleHistory(article),
+      tooltip: "Zobacz historię modyfikacji",
+    },
 
     // {label:"Zweryfikuj", icon: article?.isVerified ?<IoArrowBackCircleSharp/>:<FaCheckCircle/> , actionHandler:()=>mutate({id, isVerified: true }) },
     {

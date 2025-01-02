@@ -5,7 +5,12 @@ import { Button } from "./ui/button";
 import { IMAGES } from "@/constants/images";
 import { X } from "lucide-react";
 
-const QuickViewSection: React.FC = ({ articleId, onClose }) => {
+interface IProps {
+  articleId: string;
+  onClose: () => void;
+}
+
+const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
   if (!articleId) {
     return (
       <div className="  rounded-xl  min-h-[82vh] max-h-[82vh] sticky top-16 right-0 overflow-hidden ">
