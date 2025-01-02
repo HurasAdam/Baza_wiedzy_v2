@@ -7,7 +7,14 @@ const articleHistorySchema = new Schema(
     eventType: {
       type: String,
       required: true,
-      enum: ["created", "updated", "trashed", "restored", "verified"],
+      enum: [
+        "created",
+        "updated",
+        "trashed",
+        "restored",
+        "verified",
+        "unverified",
+      ],
     },
     changes: [
       {
