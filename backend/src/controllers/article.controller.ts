@@ -64,6 +64,7 @@ export const getArticlesHandler = catchErrors(async (req, res) => {
     .populate([
       { path: "tags", select: ["name", "shortname"] },
       { path: "createdBy", select: ["name", "surname"] },
+      { path: "product", select: ["name", "labelColor"] },
     ])
     .skip(skipp)
     .limit(pageSize)
