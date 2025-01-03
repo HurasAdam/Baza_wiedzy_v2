@@ -8,6 +8,7 @@ interface CreateArticleRequest {
   employeeDescription: string;
   tags: string[];
   clientDescription: string;
+  product: string;
 }
 
 interface CreateArticleParams {
@@ -19,7 +20,8 @@ export const createArticle = async ({
   request,
   userId,
 }: CreateArticleParams) => {
-  const { title, employeeDescription, tags, clientDescription } = request;
+  const { title, employeeDescription, tags, clientDescription, product } =
+    request;
 
   const article = await ArticleModel.exists({ title });
   appAssert(!article, CONFLICT, "Article already exists");
@@ -29,6 +31,7 @@ export const createArticle = async ({
     employeeDescription,
     clientDescription,
     tags,
+    product,
     createdBy: userId,
     verifiedBy: userId,
   });
@@ -47,6 +50,7 @@ export const getArticle = async ({ userId, articleId }: getArticleParams) => {
     { path: "tags", select: ["name"] },
     { path: "createdBy", select: ["name", "surname"] },
     { path: "verifiedBy", select: ["name", "surname"] },
+    { path: "product", select: ["name", "labelColor", "banner"] },
   ]);
 
   appAssert(article, CONFLICT, "Article not found");
