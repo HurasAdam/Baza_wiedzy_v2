@@ -27,12 +27,9 @@ const MAX_EMPLOYEE_DESCRIPTION_LENGTH = 9000;
 const MAX_CLIENT_DESCRIPTION_LENGTH = 9000;
 
 const formSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .min(2, {
-      message: "Tytuł jest wymagany i musi mieć co najmniej 2 znaki.",
-    }),
+  title: z.string().trim().min(2, {
+    message: "Tytuł jest wymagany i musi mieć co najmniej 2 znaki.",
+  }),
   employeeDescription: z.string().refine(
     (val) =>
       val
@@ -62,10 +59,18 @@ const formSchema = z.object({
       })
     )
     .nonempty({ message: "Musisz dodać co najmniej jeden tag." }),
+  product: z.string().nullable().optional(),
   isVerified: z.boolean().optional(),
 });
 
-export function ArticleForm({ onSave, tags, article, type, className }) {
+export function ArticleForm({
+  onSave,
+  tags,
+  article,
+  type,
+  className,
+  products,
+}) {
   const { openModal, closeContentModal, openContentModal } = useModalContext();
   const navigate = useNavigate();
   // ...
@@ -88,6 +93,9 @@ export function ArticleForm({ onSave, tags, article, type, className }) {
             return { label: tag?.name, value: tag?._id };
           })
         : [],
+      product: article?.product
+        ? { label: article.product.name, value: article.product._id }
+        : null, // Ustawiamy produkt, jeśli jest dostępny
       isVerified: article ? article.isVerified : false,
     },
   });
@@ -118,7 +126,7 @@ export function ArticleForm({ onSave, tags, article, type, className }) {
         .trim(),
       tags: values.tags.map((tag) => tag.value), // pozostała logika dla tagów
     };
-
+    console.log(transformedValues);
     // Sprawdzamy, czy artykuł istnieje, jeśli tak to zapisujemy z jego id
     if (article) {
       return onSave({ id: article._id, formData: transformedValues });
@@ -269,6 +277,30 @@ export function ArticleForm({ onSave, tags, article, type, className }) {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="product"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Produkt</FormLabel>
+              <FormControl>
+                <select
+                  {...field}
+                  className="bg-white border-slate-400/90 p-2"
+                  defaultValue={field.value?.value || ""} // Ustaw domyślną wartość, jeśli jest dostępna
+                >
+                  <option value="">Wybierz produkt...</option>
+                  {products?.map((product) => (
+                    <option key={product?._id} value={product._id}>
+                      {product?.name}
+                    </option>
+                  ))}
+                </select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="flex justify-end space-x-4 ">
           <Button
             type="button"
