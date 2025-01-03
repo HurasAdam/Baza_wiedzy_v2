@@ -212,19 +212,33 @@ const ArticleDetailsInModal = ({ articleId, type }) => {
 
         {/* CONTENT */}
         <div className=" flex flex-col  ">
-          <div className="flex gap-2 justify-end px-8 my-3.5">
-            {articleDropdownOptions?.map((option) => {
-              return (
-                <button
-                  onClick={() => option.actionHandler()}
-                  className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
-                >
-                  {option.icon}
-                </button>
-              );
-            })}
+          <div className="flex justify-between px-">
+            <div
+              className="flex justify-center  h-fit group cursor-pointer "
+              onClick={() => markAsFavouriteHandler({ id: id || articleId })}
+            >
+              {" "}
+              {article?.isFavourite ? (
+                <FaStar className="w-5 h-5 text-amber-600/70 group-hover:text-amber-400/90 transition-all duration-75" />
+              ) : (
+                <FaStar className="w-5 h-5 text-slate-200 group-hover:text-blue-200 transition-all" />
+              )}
+            </div>
+            <div className="flex gap-2 justify-end  my-3.5">
+              {articleDropdownOptions?.map((option) => {
+                return (
+                  <button
+                    onClick={() => option.actionHandler()}
+                    className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
+                  >
+                    {option.icon}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div className="">
+
+          <div className=" ">
             <div className="flex justify-between">
               <div className="py-2.5 px-0.5 space-x-1 space-y-1.5">
                 {article?.tags?.map((tag) => {
@@ -281,7 +295,7 @@ const ArticleDetailsInModal = ({ articleId, type }) => {
             <Accordion
               type="multiple"
               collapsible
-              defaultValue={["item-1"]}
+              defaultValue={["false"]}
               className="rounded-xl  bg-transparent    "
             >
               <AccordionItem value="item-1" className=" ">
@@ -329,19 +343,33 @@ const ArticleDetailsInModal = ({ articleId, type }) => {
 
       {/* CONTENT */}
       <div className=" flex flex-col  ">
-        <div className="flex gap-2 justify-end px-8 my-3.5">
-          {articleDropdownOptions?.map((option) => {
-            return (
-              <button
-                onClick={() => option.actionHandler()}
-                className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
-              >
-                {option.icon}
-              </button>
-            );
-          })}
+        <div className="flex justify-between px-">
+          <div
+            className="flex justify-center  h-fit group cursor-pointer "
+            onClick={() => markAsFavouriteHandler({ id: id || articleId })}
+          >
+            {" "}
+            {article?.isFavourite ? (
+              <FaStar className="w-5 h-5 text-amber-600/70 group-hover:text-amber-400/90 transition-all duration-75" />
+            ) : (
+              <FaStar className="w-5 h-5 text-slate-200 group-hover:text-blue-200 transition-all" />
+            )}
+          </div>
+          <div className="flex gap-2 justify-end  my-3.5">
+            {articleDropdownOptions?.map((option) => {
+              return (
+                <button
+                  onClick={() => option.actionHandler()}
+                  className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
+                >
+                  {option.icon}
+                </button>
+              );
+            })}
+          </div>
         </div>
-        <div className="">
+
+        <div className=" ">
           <div className="flex justify-between">
             <div className="py-2.5 px-0.5 space-x-1 space-y-1.5">
               {article?.tags?.map((tag) => {

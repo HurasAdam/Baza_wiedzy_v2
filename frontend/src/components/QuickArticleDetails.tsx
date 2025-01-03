@@ -213,14 +213,12 @@ const QuickArticleDetails: React.FC = ({ articleId, type }) => {
             <div className="flex gap-2 justify-end px-0 my-3.5">
               {articleDropdownOptions?.map((option) => {
                 return (
-                  <Tooltip key={option.label} content={option.tooltip}>
-                    <button
-                      onClick={() => option.actionHandler()}
-                      className="shadow-sm border border-neutral-400 bg-slate-500 transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300 text-slate-100"
-                    >
-                      {option.icon}
-                    </button>
-                  </Tooltip>
+                  <button
+                    onClick={() => option.actionHandler()}
+                    className="shadow-sm border border-neutral-400 bg-slate-500 transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300 text-slate-100"
+                  >
+                    {option.icon}
+                  </button>
                 );
               })}
             </div>

@@ -9,6 +9,12 @@ import createdImage from "../../public/created.png";
 import trashedImage from "../../public/trashed.png";
 import historyLogImage from "../../public/historyLog.png";
 import restoredImage from "../../public/restored.png";
+import aprovedImage from "../../public/aproved.png";
+import approvedImage from "../../public/approved.png";
+import synergiaImage from "../../public/synergia.png";
+import blobImage from "../../public/blob.png";
+import stepsImage from "../../public/steps.png";
+import circleImage from "../../public/circle.png";
 
 export const IMAGES = {
   Logo,
@@ -22,4 +28,10 @@ export const IMAGES = {
   historyLogImage,
   restoredImage,
   unverifiedImage,
+  aprovedImage,
+  synergiaImage,
+  blobImage,
+  stepsImage,
+  circleImage,
+  approvedImage,
 };

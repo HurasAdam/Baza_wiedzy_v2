@@ -12,13 +12,14 @@ const ArticlesTableView: React.FC = ({
   articles,
   selectedView,
   isLoading,
-  toggleArticleAsFavouriteHandler,
+  toggleAsFavourite,
 }) => {
   const { getActiveFiltersCount } = useArticleFilters();
   const { openContentModal } = useModalContext();
 
   const activeFiltersCount = getActiveFiltersCount();
   const [selectedArticle, setSelectedArticle] = useState("");
+
   return (
     <div className=" grid grid-cols-1 xl:grid-cols-[13fr_5fr]  2xl:grid-cols-[13fr_4fr] gap-3.5 px-2.5 py-6 max-w-[1740px] mx-auto  ">
       <div className="flex justify-end px-3  xl:hidden ">
@@ -74,9 +75,7 @@ data={articles?.data}
               <ArticleCard
                 onClick={() => alert("XD")}
                 isLoading={isLoading}
-                toggleArticleAsFavouriteHandler={
-                  toggleArticleAsFavouriteHandler
-                }
+                toggleArticleAsFavouriteHandler={toggleAsFavourite}
                 data={article}
                 className=""
                 isSelected={selectedArticle === article._id}

@@ -37,7 +37,7 @@ const ArticleCard = ({
       description: "",
       content: <ArticleDetailsInModal type="modal" articleId={article._id} />,
       enableOutsideClickClose: true,
-      size: "lg",
+      size: "xl",
     });
   };
 
