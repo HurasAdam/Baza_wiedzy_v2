@@ -11,6 +11,7 @@ const articleSchema = new Schema(
     verifiedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
     viewsCounter: { type: Number, default: 0 },
     isTrashed: { type: Boolean, default: false },
+    product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
   },
 
   { timestamps: true }
