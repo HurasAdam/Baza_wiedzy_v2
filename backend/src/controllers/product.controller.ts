@@ -37,7 +37,7 @@ export const getSingleProductHandler = catchErrors(async (req, res) => {
 
 export const updateProductHandler = catchErrors(async (req, res) => {
   const { id } = req.params;
-  const { name, labelColor } = req.body;
+  const { name, labelColor, banner } = req.body;
 
   // Znajdź istniejący produkt po ID
   const product = await ProductModel.findById({ _id: id });
@@ -56,8 +56,9 @@ export const updateProductHandler = catchErrors(async (req, res) => {
   // Zaktualizuj nazwę i kolor etykiety
   product.name = name || product.name;
   product.labelColor = labelColor || product.labelColor;
+  product.banner = banner || product.banner;
 
   const updatedProduct = await product.save();
 
-  res.status(OK).json({ message: "Product został zaktualizowany" });
+  res.status(OK).json({ message: "Produkt został zaktualizowany" });
 });
