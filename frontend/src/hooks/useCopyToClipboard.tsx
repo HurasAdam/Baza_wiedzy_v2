@@ -1,28 +1,28 @@
-import { useState } from "react";
-
-// Hook do kopiowania tekstu do schowka
 export default function useCopyToClipboard() {
-  // Funkcja do kopiowania tekstu
   const copyToClipboard = async (element, callback) => {
     try {
-      const html = element.current; // Zakładam, że `div` to ref przypisany do elementu, który chcesz skopiować
+      const html = element.current;
+      if (!html) {
+        console.error("Nie znaleziono elementu do kopiowania.");
+        return;
+      }
 
-      // Używamy Clipboard API do skopiowania zawartości HTML
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          "text/html": new Blob([html.innerHTML], {
-            type: "text/html",
-          }),
-        }),
-      ]);
+      console.log("html.innerHTML:", html.innerHTML);
 
-      // Zmieniamy edytowalność tylko po pomyślnym skopiowaniu
-      callback();
-      // Ustawienie flagi, że kopiowanie się udało
-    } catch (e) {
-      console.log("Błąd kopiowania", e);
+      const blob = new Blob([html.innerHTML], { type: "text/html" });
+
+      const clipboardItem = new ClipboardItem({
+        "text/html": blob,
+        "text/plain": new Blob([html.textContent], { type: "text/plain" }),
+      });
+
+      await navigator.clipboard.write([clipboardItem]);
+
+      callback(); // Sukces
+    } catch (error) {
+      console.error("Wystąpił błąd podczas kopiowania:", error);
     }
   };
 
-  return { copyToClipboard }; // Zwrócenie funkcji kopiowania i stanu
+  return { copyToClipboard };
 }
