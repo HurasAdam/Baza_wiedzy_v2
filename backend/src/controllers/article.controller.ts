@@ -320,7 +320,8 @@ export const deleteArticleHandler = catchErrors(async (req, res) => {
 
 export const updateArticleHandler = catchErrors(async (req, res) => {
   const { id } = req.params;
-  const { title, clientDescription, employeeDescription, tags } = req.body;
+  const { title, clientDescription, employeeDescription, tags, product } =
+    req.body;
 
   const article = await ArticleModel.findById({ _id: id });
 
@@ -333,6 +334,7 @@ export const updateArticleHandler = catchErrors(async (req, res) => {
   article.employeeDescription =
     employeeDescription || article.employeeDescription;
   article.tags = tags || article.tags;
+  article.product = product || article.product;
 
   const updatedArticle = await article.save();
   const updatedArticleObject = updatedArticle.toObject();

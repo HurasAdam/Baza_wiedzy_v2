@@ -137,6 +137,7 @@ function compareObjects(oldObj: any, newObj: any): Change[] {
     "tags",
     "isVerified",
     "isTrashed",
+    "product",
   ];
 
   // Przechodzimy po wszystkich kluczach w obiekcie
