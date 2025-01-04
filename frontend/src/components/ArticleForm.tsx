@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import ArticleDetails from "@/pages/ArticleDetails";
 import Editor from "./editor/Editor";
 import ArticleDetailsInModal from "@/pages/ArticleDetailsInModal";
+import { SelectBox } from "./core/SelectBox";
 
 const MAX_TITLE_LENGTH = 90;
 const MAX_EMPLOYEE_DESCRIPTION_LENGTH = 9000;
@@ -89,16 +90,19 @@ export function ArticleForm({
       employeeDescription: article ? article.employeeDescription : "",
       clientDescription: article ? article.clientDescription : "",
       tags: article
-        ? article?.tags?.map((tag) => {
-            return { label: tag?.name, value: tag?._id };
-          })
+        ? article?.tags?.map((tag) => ({
+            label: tag?.name,
+            value: tag?._id,
+          }))
         : [],
-      product: article?.product
-        ? { label: article.product.name, value: article.product._id }
-        : null, // Ustawiamy produkt, jeśli jest dostępny
+      product: article ? article?.product?._id : "",
       isVerified: article ? article.isVerified : false,
     },
   });
+
+  const xd = form.getValues();
+
+  console.log(xd);
 
   const employeeDescriptionValue = form.watch("employeeDescription", "");
   const clientDescriptionValue = form.watch("clientDescription", "");
@@ -113,6 +117,17 @@ export function ArticleForm({
   const handleClientDescriptionChange = (content) => {
     form.setValue("clientDescription", content); // Przechowujemy pełną treść w formularzu (z HTML)
   };
+
+  const handleProductSelect = (selected) => {
+    form.setValue("product", selected, { shouldValidate: true }); // Ustaw wartość
+    if (selected) {
+      form.clearErrors("product"); // Wyczyść błąd, jeśli wartość została wybrana
+    }
+  };
+
+  const formatedProducts = products?.map((product) => {
+    return { label: product.name, value: product?._id };
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Usuwamy puste paragrafy (<p><br></p>) oraz ewentualne białe znaki z początku i końca
@@ -145,7 +160,7 @@ export function ArticleForm({
           "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
         content: <ArticleDetailsInModal articleId={article._id} />,
         enableOutsideClickClose: true,
-        size: "lg",
+        size: "xl",
       });
     }
   };
@@ -154,14 +169,14 @@ export function ArticleForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={`${className} space-y-2    px-10 `}
+        className={`${className} space-y-3    px-10 `}
       >
         <FormField
           control={form.control}
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tytuł</FormLabel>
+              <FormLabel className="text-nautral-800">Tytuł</FormLabel>
               <FormControl>
                 <Input
                   className=" border-slate-400/90"
@@ -174,11 +189,25 @@ export function ArticleForm({
                   titleValue.length > 0 ? "text-slate-600" : "text-transparent"
                 }`}
               >
-                {titleValue.length}/{MAX_TITLE_LENGTH} znaków
+                {titleValue.length > 0 && (
+                  <span>
+                    {" "}
+                    {titleValue.length}/{MAX_TITLE_LENGTH} znaków
+                  </span>
+                )}
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
+        />
+
+        <SelectBox
+          className="bg-white border-slate-400/90 placeholder:text-slate-600"
+          data={formatedProducts}
+          onChange={handleProductSelect}
+          value={form.watch("product")}
+          placeholder="Wybierz produkt"
+          label="Produkt"
         />
 
         <FormField
@@ -186,7 +215,7 @@ export function ArticleForm({
           name="tags"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tagi</FormLabel>
+              <FormLabel className="text-nautral-800">Tagi</FormLabel>
               <FormControl>
                 <MultipleSelector
                   defaultOptions={tags && tags}
@@ -208,99 +237,77 @@ export function ArticleForm({
             </FormItem>
           )}
         />
-
-        <FormField
-          control={form.control}
-          name="employeeDescription"
-          render={({ field }) => (
-            <FormItem className="bg-white">
-              <FormLabel>Opis dla pracownika</FormLabel>
-              <FormControl>
-                <Editor
-                  onChange={handleEmployeeDescriptionChange}
-                  className="h-[260px] bg-white "
-                  {...field}
-                />
-                {/* <Textarea
+        <div className=" flex flex-col gap-6 py-3">
+          <FormField
+            control={form.control}
+            name="clientDescription"
+            render={({ field }) => (
+              <FormItem className="w-full bg-white ">
+                <FormLabel className="text-nautral-800">
+                  Odpowiedź dla klienta
+                </FormLabel>
+                <FormControl>
+                  {/* <Textarea
                   placeholder="Tell us a little bit about yourself"
                     className="resize-none h-60 scrollbar-custom border-slate-400/90"
                   {...field}
                 /> */}
-              </FormControl>
-              <FormDescription
-                className={`${
-                  employeeDescriptionValue.length > 0
-                    ? "text-slate-600  text-xs font-inter font-semibold px-2.5"
-                    : "text-transparent"
-                }`}
-              >
-                {employeeDescriptionValue.replace(/<[^>]+>/g, "").length}/
-                {MAX_EMPLOYEE_DESCRIPTION_LENGTH} znaków
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  <div className="max-w-full">
+                    <Editor
+                      onChange={handleClientDescriptionChange}
+                      className="h-[320px]"
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormDescription
+                  className={`${
+                    clientDescriptionValue.length > 0
+                      ? "text-slate-600  text-xs font-inter font-semibold px-2.5 "
+                      : "text-transparent"
+                  }`}
+                >
+                  {clientDescriptionValue.replace(/<[^>]+>/g, "").length}/
+                  {MAX_CLIENT_DESCRIPTION_LENGTH} znaków
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="clientDescription"
-          render={({ field }) => (
-            <FormItem className="w-full bg-white ">
-              <FormLabel>Odpowiedź dla klienta</FormLabel>
-              <FormControl>
-                {/* <Textarea
-                  placeholder="Tell us a little bit about yourself"
-                    className="resize-none h-60 scrollbar-custom border-slate-400/90"
-                  {...field}
-                /> */}
-                <div className="max-w-full">
+          <FormField
+            control={form.control}
+            name="employeeDescription"
+            render={({ field }) => (
+              <FormItem className="bg-white">
+                <FormLabel className="text-nautral-800">Uwagi</FormLabel>
+                <FormControl>
                   <Editor
-                    onChange={handleClientDescriptionChange}
-                    className="h-[320px]"
+                    onChange={handleEmployeeDescriptionChange}
+                    className="h-[200px] bg-white "
                     {...field}
                   />
-                </div>
-              </FormControl>
-              <FormDescription
-                className={`${
-                  clientDescriptionValue.length > 0
-                    ? "text-slate-600  text-xs font-inter font-semibold px-2.5 "
-                    : "text-transparent"
-                }`}
-              >
-                {clientDescriptionValue.replace(/<[^>]+>/g, "").length}/
-                {MAX_CLIENT_DESCRIPTION_LENGTH} znaków
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="product"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Produkt</FormLabel>
-              <FormControl>
-                <select
+                  {/* <Textarea
+                  placeholder="Tell us a little bit about yourself"
+                    className="resize-none h-60 scrollbar-custom border-slate-400/90"
                   {...field}
-                  className="bg-white border-slate-400/90 p-2"
-                  defaultValue={field.value?.value || ""} // Ustaw domyślną wartość, jeśli jest dostępna
+                /> */}
+                </FormControl>
+                <FormDescription
+                  className={`${
+                    employeeDescriptionValue.length > 0
+                      ? "text-slate-600  text-xs font-inter font-semibold px-2.5"
+                      : "text-transparent"
+                  }`}
                 >
-                  <option value="">Wybierz produkt...</option>
-                  {products?.map((product) => (
-                    <option key={product?._id} value={product._id}>
-                      {product?.name}
-                    </option>
-                  ))}
-                </select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                  {employeeDescriptionValue.replace(/<[^>]+>/g, "").length}/
+                  {MAX_EMPLOYEE_DESCRIPTION_LENGTH} znaków
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <div className="flex justify-end space-x-4 ">
           <Button
             type="button"

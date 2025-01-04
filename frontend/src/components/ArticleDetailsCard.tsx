@@ -112,7 +112,7 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
                 }`}
               />
             </div>
-            <h1 className="text-2xl font-bold  py-4 px-6 shadow-2xl text-slate-200 bg-gray-800/50 backdrop-blur-lg">
+            <h1 className="text-2xl font-bold  py-4 px-6 shadow-2xl text-slate-200 bg-gray-800/50 backdrop-blur-lg overflow-hidden text-ellipsis whitespace-normal break-words">
               {article?.title}
             </h1>
           </div>
@@ -235,10 +235,7 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
 
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span
-                  ref={articlePathRef}
-                  className="text-neural-600 font-semibold  px-3 py-0.5 bg-gray-200 rounded-lg "
-                >
+                <span className="text-neural-600 font-semibold  px-3 py-0.5 bg-gray-200 rounded-lg ">
                   {article?._id}
                   <span ref={articlePathRef} className="hidden" id="full-url">
                     {`http://localhost:3000/articles/${article?._id}`}

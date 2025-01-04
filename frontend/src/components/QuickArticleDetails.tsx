@@ -197,7 +197,7 @@ const QuickArticleDetails: React.FC = ({ articleId, type }) => {
       {/* LEFT SIDE */}
 
       <div className=" flex flex-col space-y-1.5 ">
-        <div className="  px-5 mb-2 flex flex-col justify-between rounded-xl  ">
+        <div className="  px-5 mb-2 flex flex-col justify-between rounded-xl word-break: break-all ">
           <div className="flex gap-1  justify-between  pr-1 mt-1.5 ">
             <div
               className="flex justify-center  h-fit group cursor-pointer "
@@ -224,12 +224,12 @@ const QuickArticleDetails: React.FC = ({ articleId, type }) => {
             </div>
           </div>
 
-          <div className="flex items-start gap-x-1 mt-2">
-            {/* star */}
-            <span className="text-xl font-semibold text-gray-800">
+          <div className="flex items-start gap-x-1 mt-2 w-full ">
+            <span className="text-xl font-semibold text-gray-800  ">
               {article?.title}
             </span>
           </div>
+
           <div className="py-3 px-0.5 space-x-1 space-y-1.5">
             {article?.tags?.map((tag) => {
               return (

@@ -131,7 +131,7 @@ const ArticleDetailsInModal = ({ articleId, type }) => {
       description:
         "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
       content: <EditArticle type={id ? "view" : "modal"} article={article} />,
-      size: "lg",
+      size: "xl",
     });
   };
 
@@ -143,7 +143,7 @@ const ArticleDetailsInModal = ({ articleId, type }) => {
       content: (
         <ArticleHistory articleId={article?._id} showBackwardArrow={true} />
       ),
-      size: "lg",
+      size: "xl",
       height: "82",
       scrollable: false,
     });

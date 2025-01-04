@@ -10,6 +10,7 @@ import ArticleDetails from "./ArticleDetails";
 import Spinner from "@/components/core/Spinner";
 import ArticleDetailsInModal from "./ArticleDetailsInModal";
 import { MdEditDocument } from "react-icons/md";
+import { productsApi } from "@/lib/productsApi";
 
 const EditArticle = ({ article, type }) => {
   console.log(type);
@@ -24,6 +25,13 @@ const EditArticle = ({ article, type }) => {
     },
   });
 
+  const { data: products = [] } = useQuery({
+    queryFn: () => {
+      return productsApi.getAllProducts();
+    },
+    queryKey: ["products"],
+  });
+
   const onSuccesEffectHandler = (type) => {
     if (type === "view") {
       return closeContentModal();
@@ -33,7 +41,7 @@ const EditArticle = ({ article, type }) => {
         description: "Zobacz szczegóły artykułu.",
         content: <ArticleDetailsInModal articleId={article?._id} />, // Zmiana na ArticleDetails
 
-        size: "lg",
+        size: "xl",
       });
     }
   };
@@ -91,6 +99,7 @@ const EditArticle = ({ article, type }) => {
           onSave={onSave}
           article={article}
           type={type}
+          products={products}
         />
       </div>
     </div>

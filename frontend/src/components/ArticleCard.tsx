@@ -69,7 +69,7 @@ const ArticleCard = ({
                   }
                 />
               </span>
-              <span>{data.title}</span>
+              <span className="word-break: break-all mr-2.5">{data.title}</span>
             </div>
 
             <Link to={`/articles/${data._id}`}>
@@ -100,7 +100,7 @@ const ArticleCard = ({
       }`}
     >
       <CardHeader className=" py-1">
-        <CardTitle className="text-sm flex justify-between  ">
+        <CardTitle className="text-sm flex justify-between   ">
           <div className="flex items-center gap-x-1">
             <span
               onClick={(e) => {
@@ -111,14 +111,14 @@ const ArticleCard = ({
             >
               <FaStar className={data?.isFavourite ? "" : "text-gray-200/60"} />
             </span>
-            <span>{data.title}</span>
+            <span className="word-break: break-all ">{data.title}</span>
           </div>
 
           <Link
             onClick={(e) => e.stopPropagation()}
             to={`/articles/${data._id}`}
           >
-            <FaFolderOpen className="w-5 h-5 text-blue-950/90 hover:text-slate-500" />
+            <FaFolderOpen className="w-5 h-5 text-blue-950/90 hover:text-slate-500 " />
           </Link>
         </CardTitle>
 
