@@ -12,6 +12,9 @@ const productSchema = new Schema({
       "circle",
       "biblioteka",
       "abstract",
+      "abstract2",
+      "abstract3",
+      "abstract4",
       "default-banner",
     ], // Lista dostępnych obrazków
     required: false,

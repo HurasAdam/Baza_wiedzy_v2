@@ -20,6 +20,9 @@ export const newProductSchema = z.object({
           "circle",
           "biblioteka",
           "abstract",
+          "abstract2",
+          "abstract3",
+          "abstract4",
           "default-banner",
         ].includes(value),
       { message: "Invalid banner value" }
