@@ -4,47 +4,58 @@ import { Accordion, AccordionContent, AccordionTrigger } from "./ui/accordion";
 import { AccordionItem } from "@radix-ui/react-accordion";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { Button } from "./ui/button";
-import { IoEyeSharp } from "react-icons/io5";
+import { IoCheckmarkSharp, IoEyeSharp } from "react-icons/io5";
 import { formatDate } from "@/lib/utils";
+import { FaCheck } from "react-icons/fa6";
 import { FaBookmark, FaStar } from "react-icons/fa";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import { PiCalendarPlusFill } from "react-icons/pi";
+import { AiFillProduct } from "react-icons/ai";
 
-import { BiSolidCalendarEdit } from "react-icons/bi";
+import { BiSolidCalendarEdit, BiSolidCopy } from "react-icons/bi";
 import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { BANNER_IMAGES } from "@/constants/productBanners";
+import { useNavigate } from "react-router-dom";
+import useCopyToClipboard from "@/hooks/useCopyToClipboard";
 
 const ArticleDetailsCard = ({ article, actionOptions }) => {
+  const articleReff = useRef(null);
+  const articlePathRef = useRef(null);
   const { mutate: markAsFavouriteHandler, isLoading } =
     useMarkArticleAsFavourite();
+  const navigate = useNavigate();
+  const { copyToClipboard } = useCopyToClipboard();
+  const [clipBoardCopiedId, setClipBoardCopiedId] = useState(false);
+  const [clipBoardCopyMessage, setClipBoardCopyMessage] =
+    useState<string>("Kopiuj");
+
+  const callbackFn = () => {
+    setClipBoardCopyMessage("Skopiowano!");
+    setTimeout(() => {
+      setClipBoardCopyMessage(""); // Resetowanie wiadomości po pewnym czasie
+    }, 760);
+  };
+
+  const handleCopyId = () => {
+    setClipBoardCopiedId(true);
+    setTimeout(() => {
+      setClipBoardCopiedId(false); // Resetowanie wiadomości po pewnym czasie
+    }, 1000); // Zmieniono czas na 1 sekundę (np. 1000 ms)
+  };
 
   return (
     <div className="min-h-screen  px-6 pb-6 flex flex-col">
       {/* Top Bar */}
-      <div className="flex justify-between items-center mb-6">
-        <Button
-          variant="ghost"
-          className="  px-4 py-2 rounded-lg shadow hover:bg-blue-700 flex items-center"
+      <div className="flex  items-center mb-1 px-6 ">
+        <span
+          onClick={() => navigate(-1)}
+          className="cursor-pointer border px-2.5 bg-blue-500 text-white rounded-full hover:bg-blue-500/90"
         >
-          <IoIosArrowRoundBack className="w-5 h-5" />
-          Wróć
-        </Button>
-        <div>
           {" "}
-          {/* <div className="flex gap-1.5 justify-end  my-3.5  ">
-            {actionOptions?.map((option) => {
-              return (
-                <button
-                  onClick={() => option.actionHandler()}
-                  className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[6px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
-                >
-                  {option.icon}
-                </button>
-              );
-            })}
-          </div> */}
-        </div>
+          <IoIosArrowRoundBack className="w-7 h-7" />
+        </span>
+        {/* <span className="text-slate-700 font-title">Wróć</span> */}
       </div>
 
       {/* Main Content */}
@@ -55,8 +66,8 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
             className="  py-4 flex flex-col  bg-cover bg-center  rounded-md"
             style={{
               backgroundImage: `url(${
-                // BANNER_IMAGES[article?.product?.banner]
-                BANNER_IMAGES?.abstract4
+                BANNER_IMAGES[article?.product?.banner] || BANNER_IMAGES.circle
+                // BANNER_IMAGES?.abstract4
               })`,
             }}
           >
@@ -84,7 +95,7 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
                   <FaStar className="w-6 h-6 text-slate-300/70 group-hover:text-blue-200 transition-all" />
                 )}
               </div>
-              <span className="px-4 py-1.5 bg-blue-600 rounded-md text-neutral-50 font-semibold">
+              <span className="px-4 py-1.5 bg-blue-600 rounded-md text-neutral-50 font-semibold shadow">
                 {article?.product?.name}
               </span>
             </div>
@@ -101,7 +112,7 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
                 }`}
               />
             </div>
-            <h1 className="text-2xl font-bold  p-4 shadow-2xl text-slate-200 bg-gray-800/50 backdrop-blur-lg">
+            <h1 className="text-2xl font-bold  py-4 px-6 shadow-2xl text-slate-200 bg-gray-800/50 backdrop-blur-lg">
               {article?.title}
             </h1>
           </div>
@@ -121,7 +132,7 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
               })}
             </div>
 
-            <div className="text-gray-500 text-sm mb-6">
+            <div className="text-gray-500 text-sm mb-6 flex items-center justify-between">
               {article?.isVerified ? (
                 <span>
                   <span className="font-bold">Zweryfikowany przez:</span>{" "}
@@ -130,6 +141,27 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
               ) : (
                 <span className="font-bold">Wymaga weryfikacji</span>
               )}
+              <button
+                onClick={() => copyToClipboard(articleReff, callbackFn)}
+                className={`flex items-center gap-1 font-semibold text-sm w-28  justify-center py-2 rounded-md transition-all 
+                  ${
+                    clipBoardCopyMessage === "Skopiowano!"
+                      ? "bg-teal-600/90 text-white "
+                      : "bg-blue-500/90 text-sky-50 hover:bg-blue-600"
+                  }`}
+              >
+                {clipBoardCopyMessage === "Skopiowano!" ? (
+                  <div className="flex items-center gap-1">
+                    <IoCheckmarkSharp className="w-4 h-4 text-green-100" />
+                    {clipBoardCopyMessage}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <BiSolidCopy className="w-4 h-4" />
+                    Kopiuj
+                  </div>
+                )}
+              </button>
             </div>
             <div className="rounded-lg border border-slate-200 bg-slate-100 ">
               <Accordion
@@ -144,6 +176,7 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
                   </AccordionTrigger>
                   <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-6 text-base border-0   px-4   ">
                     <div
+                      className="articleDetails-quickView"
                       dangerouslySetInnerHTML={{
                         __html: article?.employeeDescription,
                       }}
@@ -166,6 +199,8 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
 
                   <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px] px-1.5 py-1 ">
                     <div
+                      className="articleDetails-quickView"
+                      ref={articleReff}
                       dangerouslySetInnerHTML={{
                         __html: article?.clientDescription,
                       }}
@@ -200,14 +235,48 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
 
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-gray-700">{article?._id}</span>
-                <Button className="font-semibold bg-slate-600">Kopiuj</Button>
+                <span
+                  ref={articlePathRef}
+                  className="text-neural-600 font-semibold  px-3 py-0.5 bg-gray-200 rounded-lg "
+                >
+                  {article?._id}
+                  <span ref={articlePathRef} className="hidden" id="full-url">
+                    {`http://localhost:3000/articles/${article?._id}`}
+                  </span>
+                </span>
+                {!clipBoardCopiedId ? (
+                  <BiSolidCopy
+                    onClick={() =>
+                      copyToClipboard(articlePathRef, handleCopyId)
+                    }
+                    className=" text-slate-500 w-6 h-6 hover:text-blue-400 transition-all cursor-pointer duration-100"
+                  />
+                ) : (
+                  <FaCheck className="w-6 h-6 text-green-700" />
+                )}
               </div>
 
               <div className="border-t border-gray-200 pt-4">
                 <h3 className="font-semibold text-md mb-2 flex items-center gap-2">
+                  <AiFillProduct className="text-slate-600 w-5 h-5" />
+                  Produkt
+                </h3>
+                <div className="flex justify-between items-center">
+                  <span
+                    className="font-semibold"
+                    style={{
+                      color: article?.product?.labelColor || "slategray", // Slate-700 jako fallback
+                    }}
+                  >
+                    {article?.product?.name}
+                  </span>
+                  <Button className="font-semibold bg-slate-600">Zobacz</Button>
+                </div>
+              </div>
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="font-semibold text-md mb-2 flex items-center gap-2">
                   <BsFillPersonPlusFill className="text-slate-600 w-5 h-5" />
-                  Autor artykułu
+                  Autor
                 </h3>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-700">
@@ -239,17 +308,26 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
                   </span>
                 </div>
               </div>
+
               <div className="border-t border-gray-200 pt-4">
                 <h3 className="font-semibold text-md mb-2 flex items-center gap-2">
                   <IoEyeSharp className="text-slate-600 w-5 h-5" />
-                  Status artykułu
+                  Status
                 </h3>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-700 bg-blue-100 px-5 py-1 rounded-lg">
+                  <span className="text-gray-700">Czy zweryfikowany ?</span>
+                  <span
+                    className={`text-gray-700  px-5 py-1 rounded-lg ${
+                      article?.isVerified
+                        ? "bg-emerald-500 text-white"
+                        : "bg-rose-400/90 text-rose-800"
+                    }`}
+                  >
                     {article?.isVerified ? "Tak" : "Nie"}
                   </span>
                 </div>
               </div>
+
               <div className="border-t border-gray-200 pt-4">
                 <h3 className="font-semibold text-md mb-2 flex items-center gap-2">
                   <IoEyeSharp className="text-slate-600 w-5 h-5" />

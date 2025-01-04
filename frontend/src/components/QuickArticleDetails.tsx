@@ -193,7 +193,7 @@ const QuickArticleDetails: React.FC = ({ articleId, type }) => {
   }
 
   return (
-    <div className=" px-6 pb-3 py-5 articleDetails-quickView ">
+    <div className=" px-6 pb-3 py-5  ">
       {/* LEFT SIDE */}
 
       <div className=" flex flex-col space-y-1.5 ">
@@ -299,6 +299,7 @@ const QuickArticleDetails: React.FC = ({ articleId, type }) => {
             </AccordionTrigger>
             <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-sm text-gray-900  ">
               <div
+                className="articleDetails-quickView"
                 dangerouslySetInnerHTML={{
                   __html: article?.employeeDescription,
                 }}
@@ -319,6 +320,7 @@ const QuickArticleDetails: React.FC = ({ articleId, type }) => {
             </AccordionTrigger>
             <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px] text-sm text-gray-900 ">
               <div
+                className="articleDetails-quickView"
                 ref={articleRef}
                 dangerouslySetInnerHTML={{ __html: article?.clientDescription }}
               />

@@ -32,6 +32,7 @@ import { ArticleForm } from "@/components/ArticleForm";
 import EditArticle from "./EditArticle";
 import { FaRegStar } from "react-icons/fa";
 import ArticleHistory from "@/components/ArticleHistory";
+import ArticleDetailsCard from "@/components/ArticleDetailsCard";
 
 const ArticleDetailsInModal = ({ articleId, type }) => {
   const { id } = useParams();
@@ -205,266 +206,270 @@ const ArticleDetailsInModal = ({ articleId, type }) => {
     return <ArticleDetailsSkeleton />;
   }
 
-  if (isFetching && !isLoading) {
-    return (
-      <div className=" px-9 max-w-[96%] mx-auto flex flex-col-reverse  2xl:grid  2xl:grid-cols-[1fr] gap-5 article-details-in-modal ">
-        {/* UPPER SECTION */}
+  // if (isFetching && !isLoading) {
+  //   return (
+  //     <div className=" px-9 max-w-[96%] mx-auto flex flex-col-reverse  2xl:grid  2xl:grid-cols-[1fr] gap-5 article-details-in-modal ">
+  //       {/* UPPER SECTION */}
 
-        {/* CONTENT */}
-        <div className=" flex flex-col  ">
-          <div className="flex justify-between px-">
-            <div
-              className="flex justify-center  h-fit group cursor-pointer "
-              onClick={() => markAsFavouriteHandler({ id: id || articleId })}
-            >
-              {" "}
-              {article?.isFavourite ? (
-                <FaStar className="w-5 h-5 text-amber-600/70 group-hover:text-amber-400/90 transition-all duration-75" />
-              ) : (
-                <FaStar className="w-5 h-5 text-slate-200 group-hover:text-blue-200 transition-all" />
-              )}
-            </div>
-            <div className="flex gap-2 justify-end  my-3.5">
-              {articleDropdownOptions?.map((option) => {
-                return (
-                  <button
-                    onClick={() => option.actionHandler()}
-                    className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
-                  >
-                    {option.icon}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+  //       {/* CONTENT */}
+  //       <div className=" flex flex-col  ">
+  //         <div className="flex justify-between px-">
+  //           <div
+  //             className="flex justify-center  h-fit group cursor-pointer "
+  //             onClick={() => markAsFavouriteHandler({ id: id || articleId })}
+  //           >
+  //             {" "}
+  //             {article?.isFavourite ? (
+  //               <FaStar className="w-5 h-5 text-amber-600/70 group-hover:text-amber-400/90 transition-all duration-75" />
+  //             ) : (
+  //               <FaStar className="w-5 h-5 text-slate-200 group-hover:text-blue-200 transition-all" />
+  //             )}
+  //           </div>
+  //           <div className="flex gap-2 justify-end  my-3.5">
+  //             {articleDropdownOptions?.map((option) => {
+  //               return (
+  //                 <button
+  //                   onClick={() => option.actionHandler()}
+  //                   className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
+  //                 >
+  //                   {option.icon}
+  //                 </button>
+  //               );
+  //             })}
+  //           </div>
+  //         </div>
 
-          <div className=" ">
-            <div className="flex justify-between">
-              <div className="py-2.5 px-0.5 space-x-1 space-y-1.5">
-                {article?.tags?.map((tag) => {
-                  return (
-                    <BadgeLabel
-                      className="bg-badge_primary rounded-md"
-                      label={tag?.name}
-                    />
-                  );
-                })}
-              </div>
+  //         <div className=" ">
+  //           <div className="flex justify-between">
+  //             <div className="py-2.5 px-0.5 space-x-1 space-y-1.5">
+  //               {article?.tags?.map((tag) => {
+  //                 return (
+  //                   <BadgeLabel
+  //                     className="bg-badge_primary rounded-md"
+  //                     label={tag?.name}
+  //                   />
+  //                 );
+  //               })}
+  //             </div>
 
-              <span className="font-semibold flex items-center gap-x-1.5 text-sm text-slate-600">
-                <FaCalendarCheck className="h-5 w-5 text-slate-500" />
-                <span className="text-sm">Dodano</span>
-                {formatDate(article?.createdAt)}
-              </span>
-            </div>
+  //             <span className="font-semibold flex items-center gap-x-1.5 text-sm text-slate-600">
+  //               <FaCalendarCheck className="h-5 w-5 text-slate-500" />
+  //               <span className="text-sm">Dodano</span>
+  //               {formatDate(article?.createdAt)}
+  //             </span>
+  //           </div>
 
-            <div className=" py-3.5 px-5  flex items-center justify-between    bg-blue-500 text-white  font-serif font-semibold rounded-lg border border-blue-100 ">
-              <div className="flex gap-2">
-                <span className="text-2xl font-semibold  font-inter ">
-                  {article?.title}
-                </span>
+  //           <div className=" py-3.5 px-5  flex items-center justify-between    bg-blue-500 text-white  font-serif font-semibold rounded-lg border border-blue-100 ">
+  //             <div className="flex gap-2">
+  //               <span className="text-2xl font-semibold  font-inter ">
+  //                 {article?.title}
+  //               </span>
 
-                {article?.isVerified ? (
-                  <span className="font-semibold flex items-center gap-x-6">
-                    <IoCheckmarkCircle className="h-6 w-6 text-green-400" />{" "}
-                  </span>
-                ) : (
-                  <span className="font-semibold flex items-center gap-x-3">
-                    <BsFillQuestionCircleFill className="h-6 w-6 text-secondary text-neutral-300" />
-                  </span>
-                )}
-              </div>
-              {article?.isFavourite && (
-                <FaStar className="w-5 h-5 text-amber-400/90" />
-              )}
-            </div>
+  //               {article?.isVerified ? (
+  //                 <span className="font-semibold flex items-center gap-x-6">
+  //                   <IoCheckmarkCircle className="h-6 w-6 text-green-400" />{" "}
+  //                 </span>
+  //               ) : (
+  //                 <span className="font-semibold flex items-center gap-x-3">
+  //                   <BsFillQuestionCircleFill className="h-6 w-6 text-secondary text-neutral-300" />
+  //                 </span>
+  //               )}
+  //             </div>
+  //             {article?.isFavourite && (
+  //               <FaStar className="w-5 h-5 text-amber-400/90" />
+  //             )}
+  //           </div>
 
-            <span className="py-3.5 px-5 text-sm text-slate-600 font-semibold flex items-center gap-1.5">
-              <div className="border rounded-full w-7 h-7 p-2 flex items-center justify-center bg-violet-500 text-white">
-                AH
-              </div>
-              {`${article?.createdBy?.name} ${article?.createdBy?.name}`}
+  //           <span className="py-3.5 px-5 text-sm text-slate-600 font-semibold flex items-center gap-1.5">
+  //             <div className="border rounded-full w-7 h-7 p-2 flex items-center justify-center bg-violet-500 text-white">
+  //               AH
+  //             </div>
+  //             {`${article?.createdBy?.name} ${article?.createdBy?.name}`}
 
-              <span className="font-semibold flex items-center">
-                <MdOutlineUpdate />
-                {formatDate(article?.updatedAt)}
-              </span>
-            </span>
-          </div>
-          <div className=" ">
-            <Accordion
-              type="multiple"
-              collapsible
-              defaultValue={["false"]}
-              className="rounded-xl  bg-transparent    "
-            >
-              <AccordionItem value="item-1" className=" ">
-                <AccordionTrigger className="text-base  bg-slate-200 px-8 ">
-                  Uwagi
-                </AccordionTrigger>
-                <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base border-0 px-8 py-1   ">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: article?.employeeDescription,
-                    }}
-                  />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+  //             <span className="font-semibold flex items-center">
+  //               <MdOutlineUpdate />
+  //               {formatDate(article?.updatedAt)}
+  //             </span>
+  //           </span>
+  //         </div>
+  //         <div className=" ">
+  //           <Accordion
+  //             type="multiple"
+  //             collapsible
+  //             defaultValue={["false"]}
+  //             className="rounded-xl  bg-transparent    "
+  //           >
+  //             <AccordionItem value="item-1" className=" ">
+  //               <AccordionTrigger className="text-base  bg-slate-200 px-8 ">
+  //                 Uwagi
+  //               </AccordionTrigger>
+  //               <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base border-0 px-8 py-1   ">
+  //                 <div
+  //                   dangerouslySetInnerHTML={{
+  //                     __html: article?.employeeDescription,
+  //                   }}
+  //                 />
+  //               </AccordionContent>
+  //             </AccordionItem>
+  //           </Accordion>
 
-            <Accordion
-              type="multiple"
-              collapsible
-              defaultValue={["item-1"]}
-              className="rounded-xl   "
-            >
-              <AccordionItem value="item-1" className="border-0 ">
-                <AccordionTrigger className="text-base  bg-slate-200 px-8 rounded">
-                  Odpowiedź dla klienta
-                </AccordionTrigger>
-                <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]  px-8 py-1 ">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: article?.clientDescription,
-                    }}
-                  />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  //           <Accordion
+  //             type="multiple"
+  //             collapsible
+  //             defaultValue={["item-1"]}
+  //             className="rounded-xl   "
+  //           >
+  //             <AccordionItem value="item-1" className="border-0 ">
+  //               <AccordionTrigger className="text-base  bg-slate-200 px-8 rounded">
+  //                 Odpowiedź dla klienta
+  //               </AccordionTrigger>
+  //               <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]  px-8 py-1 ">
+  //                 <div
+  //                   dangerouslySetInnerHTML={{
+  //                     __html: article?.clientDescription,
+  //                   }}
+  //                 />
+  //               </AccordionContent>
+  //             </AccordionItem>
+  //           </Accordion>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
-    <div className=" px-9 max-w-[96%] mx-auto flex flex-col-reverse  2xl:grid  2xl:grid-cols-[1fr] gap-5 article-details-in-modal ">
-      {/* UPPER SECTION */}
+    <ArticleDetailsCard
+      article={article}
+      actionOptions={articleDropdownOptions}
+    />
+    // <div className=" px-9 max-w-[96%] mx-auto flex flex-col-reverse  2xl:grid  2xl:grid-cols-[1fr] gap-5 article-details-in-modal ">
+    //   {/* UPPER SECTION */}
 
-      {/* CONTENT */}
-      <div className=" flex flex-col  ">
-        <div className="flex justify-between px-">
-          <div
-            className="flex justify-center  h-fit group cursor-pointer "
-            onClick={() => markAsFavouriteHandler({ id: id || articleId })}
-          >
-            {" "}
-            {article?.isFavourite ? (
-              <FaStar className="w-5 h-5 text-amber-600/70 group-hover:text-amber-400/90 transition-all duration-75" />
-            ) : (
-              <FaStar className="w-5 h-5 text-slate-200 group-hover:text-blue-200 transition-all" />
-            )}
-          </div>
-          <div className="flex gap-2 justify-end  my-3.5">
-            {articleDropdownOptions?.map((option) => {
-              return (
-                <button
-                  onClick={() => option.actionHandler()}
-                  className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
-                >
-                  {option.icon}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+    //   {/* CONTENT */}
+    //   <div className=" flex flex-col  ">
+    //     <div className="flex justify-between px-">
+    //       <div
+    //         className="flex justify-center  h-fit group cursor-pointer "
+    //         onClick={() => markAsFavouriteHandler({ id: id || articleId })}
+    //       >
+    //         {" "}
+    //         {article?.isFavourite ? (
+    //           <FaStar className="w-5 h-5 text-amber-600/70 group-hover:text-amber-400/90 transition-all duration-75" />
+    //         ) : (
+    //           <FaStar className="w-5 h-5 text-slate-200 group-hover:text-blue-200 transition-all" />
+    //         )}
+    //       </div>
+    //       <div className="flex gap-2 justify-end  my-3.5">
+    //         {articleDropdownOptions?.map((option) => {
+    //           return (
+    //             <button
+    //               onClick={() => option.actionHandler()}
+    //               className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[5px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
+    //             >
+    //               {option.icon}
+    //             </button>
+    //           );
+    //         })}
+    //       </div>
+    //     </div>
 
-        <div className=" ">
-          <div className="flex justify-between">
-            <div className="py-2.5 px-0.5 space-x-1 space-y-1.5">
-              {article?.tags?.map((tag) => {
-                return (
-                  <BadgeLabel
-                    className="bg-badge_primary rounded-md"
-                    label={tag?.name}
-                  />
-                );
-              })}
-            </div>
+    //     <div className=" ">
+    //       <div className="flex justify-between">
+    //         <div className="py-2.5 px-0.5 space-x-1 space-y-1.5">
+    //           {article?.tags?.map((tag) => {
+    //             return (
+    //               <BadgeLabel
+    //                 className="bg-badge_primary rounded-md"
+    //                 label={tag?.name}
+    //               />
+    //             );
+    //           })}
+    //         </div>
 
-            <span className="font-semibold flex items-center gap-x-1.5 text-sm text-slate-600">
-              <FaCalendarCheck className="h-5 w-5 text-slate-500" />
-              <span className="text-sm">Dodano</span>
-              {formatDate(article?.createdAt)}
-            </span>
-          </div>
+    //         <span className="font-semibold flex items-center gap-x-1.5 text-sm text-slate-600">
+    //           <FaCalendarCheck className="h-5 w-5 text-slate-500" />
+    //           <span className="text-sm">Dodano</span>
+    //           {formatDate(article?.createdAt)}
+    //         </span>
+    //       </div>
 
-          <div className=" py-3.5 px-5  flex items-center justify-between    bg-blue-500 text-white  font-serif font-semibold rounded-lg border border-blue-100 ">
-            <div className="flex gap-2">
-              <span className="text-2xl font-semibold  font-inter ">
-                {article?.title}
-              </span>
+    //       <div className=" py-3.5 px-5  flex items-center justify-between    bg-blue-500 text-white  font-serif font-semibold rounded-lg border border-blue-100 ">
+    //         <div className="flex gap-2">
+    //           <span className="text-2xl font-semibold  font-inter ">
+    //             {article?.title}
+    //           </span>
 
-              {article?.isVerified ? (
-                <span className="font-semibold flex items-center gap-x-6">
-                  <IoCheckmarkCircle className="h-6 w-6 text-green-400" />{" "}
-                </span>
-              ) : (
-                <span className="font-semibold flex items-center gap-x-3">
-                  <BsFillQuestionCircleFill className="h-6 w-6 text-secondary text-neutral-300" />
-                </span>
-              )}
-            </div>
-            {article?.isFavourite && (
-              <FaStar className="w-5 h-5 text-amber-400/90" />
-            )}
-          </div>
+    //           {article?.isVerified ? (
+    //             <span className="font-semibold flex items-center gap-x-6">
+    //               <IoCheckmarkCircle className="h-6 w-6 text-green-400" />{" "}
+    //             </span>
+    //           ) : (
+    //             <span className="font-semibold flex items-center gap-x-3">
+    //               <BsFillQuestionCircleFill className="h-6 w-6 text-secondary text-neutral-300" />
+    //             </span>
+    //           )}
+    //         </div>
+    //         {article?.isFavourite && (
+    //           <FaStar className="w-5 h-5 text-amber-400/90" />
+    //         )}
+    //       </div>
 
-          <span className="py-3.5 px-5 text-sm text-slate-600 font-semibold flex items-center gap-1.5">
-            <div className="border rounded-full w-7 h-7 p-2 flex items-center justify-center bg-violet-500 text-white">
-              AH
-            </div>
-            {`${article?.createdBy?.name} ${article?.createdBy?.name}`}
+    //       <span className="py-3.5 px-5 text-sm text-slate-600 font-semibold flex items-center gap-1.5">
+    //         <div className="border rounded-full w-7 h-7 p-2 flex items-center justify-center bg-violet-500 text-white">
+    //           AH
+    //         </div>
+    //         {`${article?.createdBy?.name} ${article?.createdBy?.name}`}
 
-            <span className="font-semibold flex items-center">
-              <MdOutlineUpdate />
-              {formatDate(article?.updatedAt)}
-            </span>
-          </span>
-        </div>
-        <div className=" ">
-          <Accordion
-            type="multiple"
-            collapsible
-            defaultValue={["false"]}
-            className="rounded-xl  bg-transparent    "
-          >
-            <AccordionItem value="item-1" className=" ">
-              <AccordionTrigger className="text-base  bg-slate-200 px-8 ">
-                Uwagi
-              </AccordionTrigger>
-              <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base border-0 px-8 py-1   ">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: article?.employeeDescription,
-                  }}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+    //         <span className="font-semibold flex items-center">
+    //           <MdOutlineUpdate />
+    //           {formatDate(article?.updatedAt)}
+    //         </span>
+    //       </span>
+    //     </div>
+    //     <div className=" ">
+    //       <Accordion
+    //         type="multiple"
+    //         collapsible
+    //         defaultValue={["false"]}
+    //         className="rounded-xl  bg-transparent    "
+    //       >
+    //         <AccordionItem value="item-1" className=" ">
+    //           <AccordionTrigger className="text-base  bg-slate-200 px-8 ">
+    //             Uwagi
+    //           </AccordionTrigger>
+    //           <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base border-0 px-8 py-1   ">
+    //             <div
+    //               dangerouslySetInnerHTML={{
+    //                 __html: article?.employeeDescription,
+    //               }}
+    //             />
+    //           </AccordionContent>
+    //         </AccordionItem>
+    //       </Accordion>
 
-          <Accordion
-            type="multiple"
-            collapsible
-            defaultValue={["item-1"]}
-            className="rounded-xl   "
-          >
-            <AccordionItem value="item-1" className="border-0 ">
-              <AccordionTrigger className="text-base  bg-slate-200 px-8 rounded">
-                Odpowiedź dla klienta
-              </AccordionTrigger>
-              <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]  px-8 py-1 ">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: article?.clientDescription,
-                  }}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-      </div>
-    </div>
+    //       <Accordion
+    //         type="multiple"
+    //         collapsible
+    //         defaultValue={["item-1"]}
+    //         className="rounded-xl   "
+    //       >
+    //         <AccordionItem value="item-1" className="border-0 ">
+    //           <AccordionTrigger className="text-base  bg-slate-200 px-8 rounded">
+    //             Odpowiedź dla klienta
+    //           </AccordionTrigger>
+    //           <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]  px-8 py-1 ">
+    //             <div
+    //               dangerouslySetInnerHTML={{
+    //                 __html: article?.clientDescription,
+    //               }}
+    //             />
+    //           </AccordionContent>
+    //         </AccordionItem>
+    //       </Accordion>
+    //     </div>
+    //   </div>
+    // </div>
   );
 };
 
