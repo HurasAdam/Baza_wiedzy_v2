@@ -1,4 +1,4 @@
-import { CONFLICT } from "../constants/http";
+import { CONFLICT, OK } from "../constants/http";
 import ArticleModel from "../models/Article.model";
 import UserModel from "../models/User.model";
 import appAssert from "../utils/appAssert";
@@ -36,6 +36,19 @@ export const createArticle = async ({
     verifiedBy: userId,
   });
   return createdArticle;
+};
+
+export const incrementArticleViews = async ({
+  articleId,
+}: {
+  articleId: string;
+}) => {
+  const article = await ArticleModel.findById(articleId);
+  appAssert(article, CONFLICT, "Article already exists");
+
+  article.viewsCounter = article.viewsCounter + 1;
+  await article.save();
+  return { status: OK };
 };
 
 // Article

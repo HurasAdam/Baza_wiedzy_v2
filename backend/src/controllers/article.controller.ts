@@ -7,7 +7,11 @@ import {
 } from "../constants/http";
 import ArticleModel from "../models/Article.model";
 import UserModel from "../models/User.model";
-import { createArticle, getArticle } from "../services/article.service";
+import {
+  createArticle,
+  getArticle,
+  incrementArticleViews,
+} from "../services/article.service";
 import {
   getArticleHistory,
   saveArticleChanges,
@@ -58,13 +62,12 @@ export const getArticlesHandler = catchErrors(async (req, res) => {
       "-employeeDescription",
       "-verifiedBy",
       "-updatedAt",
-      "-viewsCounter",
       "-__v",
     ])
     .populate([
       { path: "tags", select: ["name", "shortname"] },
       { path: "createdBy", select: ["name", "surname"] },
-      { path: "product", select: ["name", "labelColor"] },
+      { path: "product", select: ["name", "labelColor", "banner"] },
     ])
     .skip(skipp)
     .limit(pageSize)
@@ -142,6 +145,7 @@ export const getArticleHandler = catchErrors(async (req, res) => {
   const { id } = req.params;
 
   const article = await getArticle({ userId, articleId: id });
+  incrementArticleViews({ articleId: article?._id.toString() });
   return res.status(OK).json(article);
 });
 
