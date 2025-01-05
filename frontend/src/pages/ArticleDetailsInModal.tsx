@@ -33,6 +33,7 @@ import EditArticle from "./EditArticle";
 import { FaRegStar } from "react-icons/fa";
 import ArticleHistory from "@/components/ArticleHistory";
 import ArticleDetailsCard from "@/components/ArticleDetailsCard";
+import { EArticleVariant } from "@/enums/ArticleCardVariant";
 
 const ArticleDetailsInModal = ({ articleId, type }) => {
   const { id } = useParams();
@@ -342,6 +343,7 @@ const ArticleDetailsInModal = ({ articleId, type }) => {
     <ArticleDetailsCard
       article={article}
       actionOptions={articleDropdownOptions}
+      variant={EArticleVariant.IN_MODAL}
     />
     // <div className=" px-9 max-w-[96%] mx-auto flex flex-col-reverse  2xl:grid  2xl:grid-cols-[1fr] gap-5 article-details-in-modal ">
     //   {/* UPPER SECTION */}

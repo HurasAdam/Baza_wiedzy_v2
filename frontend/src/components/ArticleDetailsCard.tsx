@@ -18,8 +18,27 @@ import { useRef, useState } from "react";
 import { BANNER_IMAGES } from "@/constants/productBanners";
 import { useNavigate } from "react-router-dom";
 import useCopyToClipboard from "@/hooks/useCopyToClipboard";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { EArticleVariant } from "@/enums/ArticleCardVariant";
 
-const ArticleDetailsCard = ({ article, actionOptions }) => {
+interface ArticleDetailsCardProps {
+  article: {}; // Zdefiniuj odpowiedni typ dla `article`
+  actionOptions: []; // Typ dla `actionOptions`
+  showBackwardArrow?: boolean;
+  variant?: EArticleVariant; // Wariant jako typ z enum
+}
+
+const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
+  article,
+  actionOptions,
+  showBackwardArrow = false,
+  variant = EArticleVariant.FULLSCREEN,
+}) => {
   const articleReff = useRef(null);
   const articlePathRef = useRef(null);
   const { mutate: markAsFavouriteHandler, isLoading } =
@@ -45,16 +64,18 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
   };
 
   return (
-    <div className="min-h-screen  px-6 pb-6 flex flex-col">
+    <div className="min-h-screen  px-6 pb-6 flex flex-col ">
       {/* Top Bar */}
       <div className="flex  items-center mb-1 px-6 ">
-        <span
-          onClick={() => navigate(-1)}
-          className="cursor-pointer border px-2.5 bg-blue-500 text-white rounded-full hover:bg-blue-500/90"
-        >
-          {" "}
-          <IoIosArrowRoundBack className="w-7 h-7" />
-        </span>
+        {showBackwardArrow && (
+          <div
+            onClick={() => navigate(-1)}
+            className="cursor-pointer border px-2.5 bg-blue-500 text-white rounded-full hover:bg-blue-500/90"
+          >
+            {" "}
+            <IoIosArrowRoundBack className="w-7 h-7" />
+          </div>
+        )}
         {/* <span className="text-slate-700 font-title">Wróć</span> */}
       </div>
 
@@ -84,17 +105,45 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
               })}
             </div> */}
             <div className="flex justify-between px-6 ">
-              <div
-                className="flex justify-center  h-fit group cursor-pointer "
-                onClick={() => markAsFavouriteHandler({ id: article?._id })}
-              >
-                {" "}
-                {article?.isFavourite ? (
-                  <FaStar className="w-6 h-6 text-amber-500/85 group-hover:text-amber-400/90 transition-all duration-75" />
-                ) : (
-                  <FaStar className="w-6 h-6 text-slate-300/70 group-hover:text-blue-200 transition-all" />
-                )}
-              </div>
+              {article?.isFavourite ? (
+                <div
+                  className="flex justify-center  h-fit group cursor-pointer "
+                  onClick={() => markAsFavouriteHandler({ id: article?._id })}
+                >
+                  <TooltipProvider delayDuration={490}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span>
+                          {" "}
+                          <FaStar className="w-6 h-6 text-amber-500/85 group-hover:text-amber-400/90 transition-all duration-75" />
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Usuń z ulubionych</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              ) : (
+                <div
+                  className="flex justify-center  h-fit group cursor-pointer "
+                  onClick={() => markAsFavouriteHandler({ id: article?._id })}
+                >
+                  <TooltipProvider delayDuration={490}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span>
+                          {" "}
+                          <FaStar className="w-6 h-6 text-slate-300/70 group-hover:text-blue-200 transition-all" />
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Dodaj do ulubionych</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              )}
               <span className="px-4 py-1.5 bg-blue-600 rounded-md text-neutral-50 font-semibold shadow">
                 {article?.product?.name}
               </span>
@@ -214,19 +263,30 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
 
         {/* Settings Sidebar */}
 
-        <div className="sticky top-16 h-fit">
+        <div
+          className={`sticky  h-fit ${
+            variant === EArticleVariant.FULLSCREEN ? "top-16" : "top-0"
+          }`}
+        >
           <div className="rounded-lg p-6 border shadow h-fit ">
             <div className="flex gap-1.5 justify-end  my-3.5  ">
-              {actionOptions?.map((option) => {
-                return (
-                  <button
-                    onClick={() => option.actionHandler()}
-                    className=" shadow-sm  border border-neutral-400 bg-slate-500   transition-all hover:font-bold p-[6px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
-                  >
-                    {option.icon}
-                  </button>
-                );
-              })}
+              <TooltipProvider delayDuration={490}>
+                {actionOptions.map((option, index) => (
+                  <Tooltip key={index}>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={option.actionHandler}
+                        className="flex items-center justify-center shadow-sm border border-neutral-400 bg-slate-500 transition-all hover:font-bold p-2 rounded-md hover:bg-blue-500 hover:border-blue-300 text-slate-100"
+                      >
+                        {option.icon}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{option.label}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ))}
+              </TooltipProvider>
             </div>
             <h2 className="font-semibold text-xl mb-4 flex items-center gap-2">
               <FaBookmark className="text-slate-600 w-4 h-4" />
@@ -241,16 +301,31 @@ const ArticleDetailsCard = ({ article, actionOptions }) => {
                     {`http://localhost:3000/articles/${article?._id}`}
                   </span>
                 </span>
-                {!clipBoardCopiedId ? (
-                  <BiSolidCopy
-                    onClick={() =>
-                      copyToClipboard(articlePathRef, handleCopyId)
-                    }
-                    className=" text-slate-500 w-6 h-6 hover:text-blue-400 transition-all cursor-pointer duration-100"
-                  />
-                ) : (
-                  <FaCheck className="w-6 h-6 text-green-700" />
-                )}
+
+                <TooltipProvider delayDuration={490}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      {!clipBoardCopiedId ? (
+                        <span>
+                          <BiSolidCopy
+                            onClick={() =>
+                              copyToClipboard(articlePathRef, handleCopyId)
+                            }
+                            className=" text-slate-500 w-6 h-6 hover:text-blue-400 transition-all cursor-pointer duration-100"
+                          />
+                        </span>
+                      ) : (
+                        <span>
+                          {" "}
+                          <FaCheck className="w-6 h-6 text-green-700" />
+                        </span>
+                      )}
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Kopiuj ID</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
 
               <div className="border-t border-gray-200 pt-4">
