@@ -7,6 +7,9 @@ import { BasicSearchBar } from "./BasicSearchBar";
 import ArticleCard from "./ArticleCard";
 import useArticleFilters from "@/hooks/useArticleFilters";
 import { useModalContext } from "@/contexts/ModalContext";
+import ArticleCardRe from "./ArticleCardRe";
+import ArticleDetailsInModal from "@/pages/ArticleDetailsInModal";
+import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
 
 const ArticlesTableView: React.FC = ({
   articles,
@@ -19,6 +22,17 @@ const ArticlesTableView: React.FC = ({
 
   const activeFiltersCount = getActiveFiltersCount();
   const [selectedArticle, setSelectedArticle] = useState("");
+
+  const { mutate: markAsFavuriteHandler } = useMarkArticleAsFavourite();
+
+  const openInModalHandler = (article, isSelected) => {
+    openContentModal({
+      description: "",
+      content: <ArticleDetailsInModal type="modal" articleId={article._id} />,
+      enableOutsideClickClose: true,
+      size: "xl",
+    });
+  };
 
   return (
     <div className=" grid grid-cols-1 xl:grid-cols-[13fr_5fr]  2xl:grid-cols-[13fr_4fr] gap-3.5 px-2.5 py-6 max-w-[1740px] mx-auto  ">
@@ -61,7 +75,7 @@ const ArticlesTableView: React.FC = ({
         />
       </div>
 
-      <div className="py-5 px-5 rounded-xl   space-y-1.5">
+      <div className="py-5 px-5 rounded-xl  min-w-[100%] space-y-1.5">
         {/* <DataTable
 data={articles?.data}
 /> */}
@@ -70,15 +84,20 @@ data={articles?.data}
           return (
             <div
               onClick={() => setSelectedArticle(article._id)}
-              className={`min-w-[100%] mx-auto  cursor-pointer   `}
+              className={` mx-auto  cursor-pointer   `}
             >
-              <ArticleCard
+              {/* <ArticleCard
                 onClick={() => alert("XD")}
                 isLoading={isLoading}
                 toggleArticleAsFavouriteHandler={toggleAsFavourite}
                 data={article}
                 className=""
                 isSelected={selectedArticle === article._id}
+              /> */}
+              <ArticleCardRe
+                markAsFavourite={markAsFavuriteHandler}
+                onClick={openInModalHandler}
+                article={article}
               />
             </div>
           );

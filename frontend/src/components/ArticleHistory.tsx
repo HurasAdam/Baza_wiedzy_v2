@@ -121,7 +121,7 @@ const ArticleHistory = ({
       description: "",
       content: <ArticleDetailsInModal type="modal" articleId={articleId} />,
       enableOutsideClickClose: true,
-      size: "lg",
+      size: "xl",
     });
   };
 

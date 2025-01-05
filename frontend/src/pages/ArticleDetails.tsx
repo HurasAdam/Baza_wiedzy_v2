@@ -141,7 +141,7 @@ const ArticleDetails = ({ articleId, type }) => {
       description:
         "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
       content: (
-        <ArticleHistory articleId={article?._id} showBackwardArrow={true} />
+        <ArticleHistory articleId={article?._id} showBackwardArrow={false} />
       ),
       size: "lg",
       height: "82",

@@ -77,11 +77,9 @@ const ArticleCard = ({
             </Link>
           </CardTitle>
 
-          {/* <CardDescription className='text-xs flex items-center gap-1'>
-                        
-
-    
-            </CardDescription>  */}
+          <CardDescription className="text-xs flex items-center gap-1">
+            as
+          </CardDescription>
         </CardHeader>
       </Card>
     );
