@@ -25,7 +25,9 @@ export const createConversationTopicHandler = catchErrors(async (req, res) => {
 export const getConversationTopicsHandler = catchErrors(async (req, res) => {
   const query = constructSearchQuery(req.query);
   const conversationTopics = await ConversationTopicModel.find(query)
-    .populate([{ path: "product", select: ["name", "labelColor", "-_id"] }]) // Załadowanie produktów
+    .populate([
+      { path: "product", select: ["name", "labelColor", "banner", "-_id"] },
+    ]) // Załadowanie produktów
     .sort("product.name"); // Sortowanie według nazwy produktu
   return res.status(OK).json(conversationTopics);
 });
