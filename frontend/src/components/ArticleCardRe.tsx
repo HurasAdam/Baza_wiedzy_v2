@@ -100,16 +100,26 @@ const ArticleCardRe = ({ article, onClick, markAsFavourite }) => {
                   </span>
                 ))}
               </div>
-              <Link
-                onClick={(e) => e.stopPropagation()}
-                to={`/articles/${article?._id}`}
-              >
-                <div className="w-fit">
-                  <Button variant="outline" className="rounded-xl">
-                    <LuArrowRight className="w-5 h-5 text-slate-600" />
-                  </Button>
-                </div>
-              </Link>
+
+              <TooltipProvider delayDuration={490}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      onClick={(e) => e.stopPropagation()}
+                      to={`/articles/${article?._id}`}
+                    >
+                      <div className="w-fit">
+                        <Button variant="outline" className="rounded-xl">
+                          <LuArrowRight className="w-5 h-5 text-slate-600" />
+                        </Button>
+                      </div>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Przejdź do strony artykułu</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           )}
         </div>
