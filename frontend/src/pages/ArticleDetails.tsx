@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { useOutletContext } from "react-router-dom";
@@ -34,11 +34,13 @@ import { Button } from "@/components/ui/button";
 import QuizCard from "@/components/ArticleDetailsCard";
 import ArticleHistory from "@/components/ArticleHistory";
 import ArticleDetailsCard from "@/components/ArticleDetailsCard";
+import useScrollToTop from "@/hooks/useScrollToTop";
 
 const ArticleDetails = ({ articleId, type }) => {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  useScrollToTop();
   const { openModal, openContentModal, closeContentModal } = useModalContext();
 
   const {
@@ -331,6 +333,7 @@ const ArticleDetails = ({ articleId, type }) => {
     <ArticleDetailsCard
       article={article}
       actionOptions={articleDropdownOptions}
+      showBackwardArrow={true}
     />
   );
 };
