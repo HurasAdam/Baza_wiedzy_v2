@@ -47,7 +47,15 @@ const ConversationReportCard: FC<IConversationReportCardProps> = ({
   return (
     <div className="border rounded-lg px-5 py-3.5 grid grid-cols-2 max-w-6xl gap-4 bg-white shadow-xs">
       <div className="flex-1 flex flex-col gap-4">
-        <span className="text-xs font-semibold px-2 py-1 rounded-md text-neutral-50 bg-slate-500 flex items-center gap-2">
+        <span
+          style={{
+            backgroundImage: `url(${
+              BANNER_IMAGES[topic?.product?.banner] || BANNER_IMAGES.circle
+              // BANNER_IMAGES?.abstract4
+            })`,
+          }}
+          className="text-xs font-semibold px-2 py-1 rounded-md text-neutral-50 bg-slate-500 flex items-center gap-2"
+        >
           <div
             style={{ backgroundColor: topic?.product?.labelColor }}
             className="w-3 h-3 rounded-xs bg-orange-200"
