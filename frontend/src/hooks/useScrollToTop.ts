@@ -1,13 +1,17 @@
 import { useEffect } from "react";
 
 /**
- * Custom hook to scroll the page to the top when a component mounts.
+ * Custom hook to scroll the page to the top when a component mounts
+ * or when the page number (currentPage) changes.
  */
-const useScrollToTop = () => {
+const useScrollToTop = (currentPage: number) => {
   useEffect(() => {
     console.log("SCROLLUJE");
-    window.scrollTo(0, 0); // Scroll to the top of the page
-  }, []); // Run only once when the component mounts
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    }); // Scroll to the top of the page
+  }, [currentPage]); // Run whenever currentPage changes
 };
 
 export default useScrollToTop;
