@@ -15,6 +15,7 @@ import synergiaImage from "../../public/synergia.png";
 import blobImage from "../../public/blob.png";
 import stepsImage from "../../public/steps.png";
 import circleImage from "../../public/circle.png";
+import notFoundImage from "../../public/notFound.png";
 
 export const IMAGES = {
   Logo,
@@ -34,4 +35,5 @@ export const IMAGES = {
   stepsImage,
   circleImage,
   approvedImage,
+  notFoundImage,
 };
