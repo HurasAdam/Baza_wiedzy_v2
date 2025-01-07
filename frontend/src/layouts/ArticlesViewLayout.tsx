@@ -2,6 +2,7 @@ import ArticlesGridView from "@/components/ArticlesGridView";
 import ArticlesTableView from "@/components/ArticlesTableView";
 import ARTICLES_VIEW_TYPE from "@/enums/articlesViewType";
 import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
+import useScrollToTop from "@/hooks/useScrollToTop";
 import React from "react";
 
 const ArticlesViewLayout: React.FC = ({ viewType, articles }) => {

@@ -10,6 +10,8 @@ import { useModalContext } from "@/contexts/ModalContext";
 import { SearchBar } from "./SearchBar";
 import { Link } from "react-router-dom";
 import { HiMiniXMark } from "react-icons/hi2";
+import useScrollToTop from "@/hooks/useScrollToTop";
+import Pagination from "./Pagination";
 
 const ArticlesGridView: React.FC = ({
   articles,
@@ -18,8 +20,9 @@ const ArticlesGridView: React.FC = ({
   isLoading,
   toggleAsFavourite,
 }) => {
-  const { getActiveFiltersCount } = useArticleFilters();
-
+  const { getActiveFiltersCount, changePageHandler, page } =
+    useArticleFilters();
+  useScrollToTop(page);
   const activeFiltersCount = getActiveFiltersCount();
   const { openContentModal } = useModalContext();
   const [selectedArticle, setSelectedArticle] = useState("");
@@ -114,6 +117,13 @@ const ArticlesGridView: React.FC = ({
                   Nie znaleziono pasujących artykułów ...
                 </span>
               </div>
+            )}
+            {articles && (
+              <Pagination
+                onPageChange={changePageHandler}
+                currentPage={parseInt(articles?.pagination?.page)} // Używaj page z paginacji
+                totalPageCount={parseInt(articles?.pagination?.pages)} // Używaj pages z paginacji
+              />
             )}
           </div>
         )}

@@ -10,6 +10,8 @@ import { useModalContext } from "@/contexts/ModalContext";
 import ArticleCardRe from "./ArticleCardRe";
 import ArticleDetailsInModal from "@/pages/ArticleDetailsInModal";
 import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
+import Pagination from "./Pagination";
+import useScrollToTop from "@/hooks/useScrollToTop";
 
 const ArticlesTableView: React.FC = ({
   articles,
@@ -17,12 +19,13 @@ const ArticlesTableView: React.FC = ({
   isLoading,
   toggleAsFavourite,
 }) => {
-  const { getActiveFiltersCount } = useArticleFilters();
+  const { getActiveFiltersCount, changePageHandler, page } =
+    useArticleFilters();
   const { openContentModal } = useModalContext();
 
   const activeFiltersCount = getActiveFiltersCount();
   const [selectedArticle, setSelectedArticle] = useState("");
-
+  useScrollToTop(page);
   const { mutate: markAsFavuriteHandler } = useMarkArticleAsFavourite();
 
   const openInModalHandler = (article, isSelected) => {
@@ -33,6 +36,9 @@ const ArticlesTableView: React.FC = ({
       size: "xl",
     });
   };
+
+  console.log("ART");
+  console.log(articles);
 
   return (
     <div className=" grid grid-cols-1 xl:grid-cols-[13fr_5fr]  2xl:grid-cols-[13fr_4fr] gap-3.5 px-2.5 py-6 max-w-[1740px] mx-auto  ">
@@ -74,7 +80,6 @@ const ArticlesTableView: React.FC = ({
           visibleFields={{ title: true, tags: false, author: false }}
         />
       </div>
-
       <div className="py-5 px-5 rounded-xl  min-w-[100%] space-y-1.5">
         {/* <DataTable
 data={articles?.data}
@@ -102,8 +107,14 @@ data={articles?.data}
             </div>
           );
         })}
+        {articles && (
+          <Pagination
+            onPageChange={changePageHandler}
+            currentPage={parseInt(articles?.pagination?.page)} // Używaj page z paginacji
+            totalPageCount={parseInt(articles?.pagination?.pages)} // Używaj pages z paginacji
+          />
+        )}
       </div>
-
       <div className="shadow border border-neutral-200  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white min-h-[84vh] hidden xl:block">
         <SearchBar
           visibleFields={{ title: true, tags: true, author: true }}

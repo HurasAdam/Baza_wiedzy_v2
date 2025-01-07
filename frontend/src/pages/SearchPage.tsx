@@ -43,7 +43,7 @@ const SearchPage: React.FC = () => {
     tags,
     author,
     verified,
-    limit: 20,
+    limit: 10,
   };
 
   const { data: articles, isLoading: isArticlesLoading } = useQuery({
