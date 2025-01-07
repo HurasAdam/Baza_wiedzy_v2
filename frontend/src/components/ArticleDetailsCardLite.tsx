@@ -209,7 +209,7 @@ const ArticleDetailsCardLite = ({ article, actionOptions }) => {
 
                   <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-fit px-1.5 py-1 ">
                     <div
-                      className="articleDetails-quickView"
+                      className=" prose max-w-none"
                       ref={articleReff}
                       dangerouslySetInnerHTML={{
                         __html: article?.clientDescription,
