@@ -60,12 +60,21 @@ const ArticleCardRe = ({ article, onClick, markAsFavourite }) => {
             {article.product?.name || "No Product Assigned"}
           </span>
         </div>
-        <p className="text-sm text-gray-600 mt-2 flex items-center gap-1.5">
-          <MdRemoveRedEye className="w-4 h-4" />{" "}
-          <span className="font-semibold text-slate-500 text-sm">
-            {article?.viewsCounter}
-          </span>
-        </p>
+        <TooltipProvider delayDuration={490}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p className="text-sm text-gray-600 mt-2 flex items-center gap-1.5">
+                <MdRemoveRedEye className="w-4 h-4" />{" "}
+                <span className="font-semibold text-slate-500 text-sm">
+                  {article?.viewsCounter}
+                </span>
+              </p>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Ilość wyświetleń</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       <div className="p-4 flex flex-col justify-between flex-grow">
         <div>
