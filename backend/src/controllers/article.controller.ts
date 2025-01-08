@@ -117,6 +117,7 @@ export const getTrashedArticlesHandler = catchErrors(async (req, res) => {
     .populate([
       { path: "tags", select: ["name", "shortname"] },
       { path: "createdBy", select: ["name", "surname"] },
+      { path: "product", select: ["name", "labelColor", "banner"] },
     ])
     .skip(skipp)
     .limit(pageSize)
