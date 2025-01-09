@@ -1,4 +1,5 @@
 import { CONFLICT, NOT_FOUND } from "../constants/http";
+import ArticleModel from "../models/Article.model";
 import ConversationTopicModel from "../models/ConversationTopic.model";
 import ProductModel from "../models/Product.model";
 import TagModel from "../models/Tag.model";
@@ -43,10 +44,14 @@ export const deleteProduct = async ({ productId }: { productId: string }) => {
     product: productId,
   });
 
+  const relatedArticlesCount = await ArticleModel.countDocuments({
+    product: productId,
+  });
+
   appAssert(
-    relatedTopicsCount === 0,
+    relatedTopicsCount === 0 && relatedArticlesCount === 0,
     CONFLICT,
-    "Cannot delete product. It is used in one or more conversation topics."
+    "Cannot delete product. It is used in one or more conversation topics or articles."
   );
 
   // Usuń produkt, jeśli brak powiązań
