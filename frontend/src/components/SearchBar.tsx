@@ -43,6 +43,7 @@ export function SearchBar({
   enableSearchNavigation = false,
 }) {
   const { title, setFilters, tags, author, verified } = useArticleFilters();
+  const [localTitle, setLocalTitle] = useState("");
   const { closeContentModal } = useModalContext();
   const navigate = useNavigate();
 

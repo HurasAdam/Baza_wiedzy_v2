@@ -1,7 +1,7 @@
 import React from "react";
 import { FaStar } from "react-icons/fa6";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { LuInspect } from "react-icons/lu";
+import { LuArrowRight, LuInspect } from "react-icons/lu";
 import { FaFolderOpen } from "react-icons/fa6";
 import {
   Card,
@@ -18,9 +18,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import QuickArticleDetails from "./QuickArticleDetails";
 import ArticleDetailsInModal from "@/pages/ArticleDetailsInModal";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 const ArticleCard = ({
-  data,
+  article,
   className,
   toggleArticleAsFavouriteHandler,
   isLoading,
@@ -57,29 +63,45 @@ const ArticleCard = ({
               <span
                 onClick={(e) => {
                   e.stopPropagation(); // Zatrzymaj propagację, aby nie otwierało artykułu
-                  toggleArticleAsFavouriteHandler({ id: data?._id });
+                  toggleArticleAsFavouriteHandler({ id: article?._id });
                 }}
                 className=" pl-3.5 p-2 py-0.5 flex items-center justify-center border border-transparent rounded-lg  group"
               >
                 <FaStar
                   className={
-                    data?.isFavourite
+                    article?.isFavourite
                       ? "text-slate-900 group-hover:text-blue-200"
                       : "text-gray-300 group-hover:text-blue-300"
                   }
                 />
               </span>
-              <span className="word-break: break-all mr-2.5">{data.title}</span>
+              <span className="word-break: break-all mr-2.5">
+                {article?.title}
+              </span>
             </div>
 
-            <Link to={`/articles/${data._id}`}>
-              <FaFolderOpen className="w-5 h-5 text-blue-950/90 hover:text-slate-500" />
-            </Link>
+            <TooltipProvider delayDuration={490}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    onClick={(e) => e.stopPropagation()}
+                    to={`/articles/${article?._id}`}
+                  >
+                    <div className="w-fit">
+                      <Button variant="outline" className="rounded-xl">
+                        <LuArrowRight className="w-5 h-5 text-slate-600" />
+                      </Button>
+                    </div>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Przejdź do strony artykułu</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </CardTitle>
 
-          <CardDescription className="text-xs flex items-center gap-1">
-            as
-          </CardDescription>
+          <CardDescription className="text-xs flex items-center gap-1"></CardDescription>
         </CardHeader>
       </Card>
     );
@@ -89,7 +111,7 @@ const ArticleCard = ({
     <Card
       onClick={(e) => {
         e.stopPropagation();
-        quickViewArticleHandler(data, isSelected);
+        quickViewArticleHandler(article, isSelected);
       }}
       className={`${className} ${
         isSelected
@@ -103,18 +125,20 @@ const ArticleCard = ({
             <span
               onClick={(e) => {
                 e.stopPropagation(); // Zatrzymaj propagację, aby nie otwierało artykułu
-                toggleArticleAsFavouriteHandler({ id: data?._id });
+                toggleArticleAsFavouriteHandler({ id: article?._id });
               }}
               className=" px-1 flex items-center justify-center border border-transparent rounded-lg hover:border hover:broder hover:border-gray-300/90"
             >
-              <FaStar className={data?.isFavourite ? "" : "text-gray-200/60"} />
+              <FaStar
+                className={article?.isFavourite ? "" : "text-gray-200/60"}
+              />
             </span>
-            <span className="word-break: break-all ">{data.title}</span>
+            <span className="word-break: break-all ">{article.title}</span>
           </div>
 
           <Link
             onClick={(e) => e.stopPropagation()}
-            to={`/articles/${data._id}`}
+            to={`/articles/${article._id}`}
           >
             <FaFolderOpen className="w-5 h-5 text-blue-950/90 hover:text-slate-500 " />
           </Link>

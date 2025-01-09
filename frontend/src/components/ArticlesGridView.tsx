@@ -91,7 +91,7 @@ const ArticlesGridView: React.FC = ({
                         viewType={selectedView}
                         isLoading={isLoading}
                         toggleArticleAsFavouriteHandler={toggleAsFavourite}
-                        data={article}
+                        article={article}
                         isSelected={selectedArticle === article._id}
                       />
                     </Link>
@@ -103,7 +103,7 @@ const ArticlesGridView: React.FC = ({
                         viewType={selectedView}
                         isLoading={isLoading}
                         toggleArticleAsFavouriteHandler={toggleAsFavourite}
-                        data={article}
+                        article={article}
                         isSelected={selectedArticle === article._id}
                       />
                     </div>

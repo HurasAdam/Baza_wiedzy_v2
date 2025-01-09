@@ -1,41 +1,29 @@
-import React from "react";
-import { HiMiniXMark } from "react-icons/hi2";
-import QuickArticleDetails from "./QuickArticleDetails";
-import { Button } from "./ui/button";
-import { IMAGES } from "@/constants/images";
-import { X } from "lucide-react";
-import ArticleDetailsCard from "./ArticleDetailsCard";
 import { articlesApi } from "@/lib/articlesApi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FaEdit, FaHistory, FaRegStar, FaStar } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { TiArrowBack } from "react-icons/ti";
-import ArticleHistory from "./ArticleHistory";
-import { useNavigate } from "react-router-dom";
-import { useModalContext } from "@/contexts/ModalContext";
-import { toast } from "@/hooks/use-toast";
+import React from "react";
+import { IoClose } from "react-icons/io5";
 import ArticleDetailsCardLite from "./ArticleDetailsCardLite";
+import { FaRegStar, FaStar } from "react-icons/fa6";
+import { useModalContext } from "@/contexts/ModalContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
+import ArticleHistory from "./ArticleHistory";
 import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
+import EditArticle from "@/pages/EditArticle";
+import { FaEdit, FaHistory } from "react-icons/fa";
+import { TiArrowBack } from "react-icons/ti";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
 
-interface IProps {
-  articleId: string;
-  onClose: () => void;
-}
-
-const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
-  const navigate = useNavigate();
+const DetailsContainer: React.FC = ({ id, onClose }) => {
+  const { openModal, openContentModal, closeContentModal } = useModalContext();
   const queryClient = useQueryClient();
-  const { openContentModal, closeContentModal, openModal } = useModalContext();
   const { mutate: markAsFavouriteHandler } = useMarkArticleAsFavourite();
-  const {
-    data: article,
-    isLoading,
-    isFetching,
-  } = useQuery({
-    queryKey: ["article", articleId],
+  const navigate = useNavigate();
+  const { data: article } = useQuery({
+    queryKey: ["article", id],
     queryFn: () => {
-      return articlesApi.getArticle({ id: articleId });
+      return articlesApi.getArticle({ id });
     },
   });
 
@@ -175,35 +163,26 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
     },
   ];
 
-  if (!articleId) {
-    return (
-      <div className="  rounded-xl  min-h-[82vh] max-h-[82vh] sticky top-16 right-0 overflow-hidden ">
-        <img
-          className="object-contain w-full h-[94vh] "
-          src={IMAGES.data_placeholder}
-          alt=""
-        />
-      </div>
-    );
-  }
-
   return (
-    <div className=" bg-white border shadow  rounded-xl overflow-y-auto min-h-[80vh] max-h-[80vh] sticky top-16 right-0 scrollbar-custom">
-      <div className="flex justify-end absolute top-0 right-0">
+    <div className="border-2 p-4 rounded-lg max-h-[94vh] overflow-y-auto bg-white scrollbar-custom ">
+      <div className="flex justify-end">
         <button
+          className="border p-0.5 rounded-md border-transparent hover:bg-gray-800 hover:text-white"
           onClick={onClose}
-          className="hover:bg-slate-700 px-1.5 py-1.5 rounded-lg  group"
         >
-          <X className="w-5 h-5 text-slate-500 group-hover:text-neutral-50" />
+          <IoClose className="w-5 h-5" />
         </button>
       </div>
-      {/* <QuickArticleDetails articleId={articleId} /> */}
-      <ArticleDetailsCardLite
-        actionOptions={articleDropdownOptions}
-        article={article}
-      />
+      {article ? (
+        <ArticleDetailsCardLite
+          article={article}
+          actionOptions={articleDropdownOptions}
+        />
+      ) : (
+        <p>Wybierz komentarz, aby zobaczyć szczegóły.</p>
+      )}
     </div>
   );
 };
 
-export default QuickViewSection;
+export default DetailsContainer;
