@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { OK } from "../constants/http";
 import ConversationReportModel from "../models/ConversationReport.model";
 import { addConversationReport } from "../services/conversationReport.service";
@@ -13,10 +14,25 @@ export const addConversationReportHandler = catchErrors(async (req, res) => {
 });
 
 export const getAllCoversationReportsHandler = catchErrors(async (req, res) => {
-  const { topicId } = req.query; // Przekazujemy topicId przez zapytanie
+  const { topicId, startDate, endDate } = req.query; // Przekazujemy topicId przez zapytanie
 
   // Przygotowanie zapytania do wyszukiwania, jeśli topicId jest podane
-  const match = topicId ? { topic: topicId } : {};
+
+  let dateMatch: Record<string, any> = {};
+  if (startDate || endDate) {
+    const start = startDate ? new Date(String(startDate)) : null;
+    const end = endDate ? new Date(String(endDate)) : null;
+
+    dateMatch.createdAt = {
+      ...(start && { $gte: start }),
+      ...(end && { $lte: end }),
+    };
+  }
+
+  const match = {
+    ...(topicId && { topic: new mongoose.Types.ObjectId(String(topicId)) }), // Jawna konwersja topicId do string
+    ...dateMatch,
+  };
 
   // Użycie agregacji do pobrania raportów i zliczenia zgłoszeń po temacie
   const allConversationReports = await ConversationReportModel.aggregate([
