@@ -19,7 +19,11 @@ import { BANNER_IMAGES } from "@/constants/productBanners";
 import { useNavigate } from "react-router-dom";
 import useCopyToClipboard from "@/hooks/useCopyToClipboard";
 
-const ArticleDetailsCardLite = ({ article, actionOptions }) => {
+const ArticleDetailsCardLite = ({
+  article,
+  actionOptions,
+  showBackwardArrow = false,
+}) => {
   const articleReff = useRef(null);
   const articlePathRef = useRef(null);
   const { mutate: markAsFavouriteHandler, isLoading } =
@@ -48,13 +52,15 @@ const ArticleDetailsCardLite = ({ article, actionOptions }) => {
     <div className="min-h-screen  px-6 pb-6 flex flex-col">
       {/* Top Bar */}
       <div className="flex  items-center mb-1 px-6 ">
-        <span
-          onClick={() => navigate(-1)}
-          className="cursor-pointer border px-2.5 bg-blue-500 text-white rounded-full hover:bg-blue-500/90"
-        >
-          {" "}
-          <IoIosArrowRoundBack className="w-7 h-7" />
-        </span>
+        {showBackwardArrow && (
+          <span
+            onClick={() => navigate(-1)}
+            className="cursor-pointer border px-2.5 bg-blue-500 text-white rounded-full hover:bg-blue-500/90"
+          >
+            {" "}
+            <IoIosArrowRoundBack className="w-7 h-7" />
+          </span>
+        )}
         {/* <span className="text-slate-700 font-title">Wróć</span> */}
       </div>
 
@@ -99,7 +105,7 @@ const ArticleDetailsCardLite = ({ article, actionOptions }) => {
                 {actionOptions?.map((option) => {
                   return (
                     <button
-                      onClick={() => option.actionHandler()}
+                      onClick={() => option.actionHandler(article)}
                       className=" shadow-sm  border border-gray-500/90 bg-gray-600   transition-all hover:font-bold p-[6px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
                     >
                       {option.icon}

@@ -98,7 +98,6 @@ const EditArticle = ({ article, type }) => {
           tags={formatedTags}
           onSave={onSave}
           article={article}
-          type={type}
           products={products}
         />
       </div>

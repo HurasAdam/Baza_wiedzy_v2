@@ -144,23 +144,52 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                   </TooltipProvider>
                 </div>
               )}
-              <span className="px-4 py-1.5 bg-blue-600 rounded-md text-neutral-50 font-semibold shadow">
+              <div className=" gap-1.5 justify-end  my-3.5 flex xl:hidden ">
+                <TooltipProvider delayDuration={490}>
+                  {actionOptions.map((option, index) => (
+                    <Tooltip key={index}>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={() =>
+                            option.actionHandler({ id: article?._id })
+                          }
+                          className="flex items-center justify-center shadow-sm border border-neutral-400 bg-slate-500 transition-all hover:font-bold p-2 rounded-md hover:bg-blue-500 hover:border-blue-300 text-slate-100"
+                        >
+                          {option.icon}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{option.label}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ))}
+                </TooltipProvider>
+              </div>
+              <span className="px-4 py-1.5 bg-blue-600 rounded-md text-neutral-50 font-semibold shadow hidden xl:block">
                 {article?.product?.name}
               </span>
             </div>
-            <div className="w-24 h-24 mb-4 shadow-2xl mx-6">
-              <img
-                src={
-                  article?.isVerified
-                    ? IMAGES.approvedImage
-                    : IMAGES.unverifiedImage
-                }
-                alt="Thumbnail"
-                className={`rounded-lg object-cover ${
-                  article?.isVerified ? "bg-emerald-500" : "bg-red-400"
-                }`}
-              />
+            <div className="flex justify-between">
+              <div className="w-24 h-24 mb-4 shadow-2xl mx-6  ">
+                <img
+                  src={
+                    article?.isVerified
+                      ? IMAGES.approvedImage
+                      : IMAGES.unverifiedImage
+                  }
+                  alt="Thumbnail"
+                  className={`rounded-lg object-cover ${
+                    article?.isVerified ? "bg-emerald-500" : "bg-red-400"
+                  }`}
+                />
+              </div>
+              <div className=" mx-5 py-5 min-h-full flex items-end xl:hidden">
+                <span className="px-4 py-1.5 bg-blue-600 rounded-md text-neutral-50 font-semibold shadow">
+                  {article?.product?.name}
+                </span>
+              </div>
             </div>
+
             <h1 className="text-2xl font-bold  py-4 px-6 shadow-2xl text-slate-200 bg-gray-800/50 backdrop-blur-lg overflow-hidden text-ellipsis whitespace-normal break-words">
               {article?.title}
             </h1>
@@ -246,7 +275,7 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                     Odpowiedź dla klienta
                   </AccordionTrigger>
 
-                  <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px] px-1.5 py-1 ">
+                  <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-fit px-1.5 py-1 ">
                     <div
                       className="prose max-w-none"
                       ref={articleReff}
@@ -269,13 +298,15 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
           }`}
         >
           <div className="rounded-lg p-6 border shadow h-fit ">
-            <div className="flex gap-1.5 justify-end  my-3.5  ">
+            <div className=" gap-1.5 justify-end  my-3.5 hidden xl:flex ">
               <TooltipProvider delayDuration={490}>
                 {actionOptions.map((option, index) => (
                   <Tooltip key={index}>
                     <TooltipTrigger asChild>
                       <button
-                        onClick={option.actionHandler}
+                        onClick={() =>
+                          option.actionHandler({ id: article?._id })
+                        }
                         className="flex items-center justify-center shadow-sm border border-neutral-400 bg-slate-500 transition-all hover:font-bold p-2 rounded-md hover:bg-blue-500 hover:border-blue-300 text-slate-100"
                       >
                         {option.icon}

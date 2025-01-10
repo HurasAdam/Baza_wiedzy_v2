@@ -14,28 +14,12 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import { MdOutlineSettingsBackupRestore } from "react-icons/md";
 
-interface IReview {
-  id: number;
-  content: string;
-  author: {
-    name: string;
-    contactInfo: string;
-  };
-  volunteer: {
-    name: string;
-    volunteerId: number;
-  };
-  date: string;
-  rating: number; // Zakres 1-10
-  status: "pending" | "approved" | "rejected" | "spam";
-}
-
-interface IReviewCardProps {
-  review: IReview;
-}
-
-const ReviewCard: React.FC = ({ article, selectedArticle }) => {
-  const { openModal, openContentModal, closeContentModal } = useModalContext();
+const ReviewCard: React.FC = ({
+  article,
+  selectedArticle,
+  handleCloseCard,
+}) => {
+  const { openModal, openContentModal } = useModalContext();
   const queryClient = useQueryClient();
   const isSelected = article._id === selectedArticle;
   const navigate = useNavigate();
@@ -60,6 +44,7 @@ const ReviewCard: React.FC = ({ article, selectedArticle }) => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries(["articles"]);
+      handleCloseCard();
       toast({
         title: "Sukces",
         description: data?.message,
@@ -71,15 +56,11 @@ const ReviewCard: React.FC = ({ article, selectedArticle }) => {
 
   const { mutate: deleteArticleMutation } = useMutation({
     mutationFn: ({ id }) => {
-      return articlesApi.trashArticle({ id });
+      return articlesApi.deleteArticle({ id });
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries("articles");
-      navigate("/articles");
-      if (type === "modal") {
-        closeContentModal();
-      }
-
+      handleCloseCard();
       toast({
         title: "Sukces",
         description: data?.message,
@@ -89,51 +70,30 @@ const ReviewCard: React.FC = ({ article, selectedArticle }) => {
     },
   });
 
-  const deleteArticleHandler = ({ id }) => {
+  const deleteArticleHandler = ({ id, isUsed }) => {
     openModal(
       "Czy jestes pewien?",
       "Czy jesteś pewien, że chcesz usunąć ten artykuł? Potwierdź, aby kontynuować.",
       () => {
-        deleteArticleMutation({ id: id || articleId });
-      }
+        deleteArticleMutation({ id });
+      },
+      isUsed
     );
   };
 
-  const restoreArticleHandler = ({ id }) => {
+  const restoreArticleHandler = ({ id, isUsed }) => {
     openModal(
       "Czy jestes pewien?",
       "Czy jesteś pewien, że chcesz przwrócić ten artykuł? Potwierdź, aby kontynuować.",
       () => {
         restoreDeletedArticleHandler({ id });
-      }
+      },
+      isUsed
     );
+    console.log(isUsed);
   };
 
-  const verifyArticleHandler = ({ id, isVerified }) => {
-    const modalTitle = !isVerified
-      ? "Cofnięcie weryfikacji artykułu"
-      : "Potwierdzenie weryfikacji artykułu";
-
-    const modalDescription = !isVerified
-      ? "Czy na pewno chcesz cofnąć weryfikację tego artykułu? To może wpłynąć na jego wiarygodność."
-      : "Czy na pewno chcesz zweryfikować ten artykuł? Zweryfikowany artykuł będzie oznaczony jako wiarygodny.";
-    openModal(modalTitle, modalDescription, () => {
-      mutate({ id: id || articleId, isVerified });
-    });
-  };
-
-  const EditArticleHandler = (article) => {
-    openContentModal({
-      closeOnOutsideClick: false,
-      title: "Edytuj Artykuł",
-      description:
-        "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
-      content: <EditArticle type={id ? "view" : "modal"} article={article} />,
-      size: "xl",
-    });
-  };
-
-  const showArticleHistory = (article) => {
+  const showArticleHistory = (article, isUsed) => {
     openContentModal({
       title: "Edytuj Artykuł",
       description:
@@ -151,7 +111,8 @@ const ReviewCard: React.FC = ({ article, selectedArticle }) => {
     {
       label: "Przywróć",
       icon: <MdOutlineSettingsBackupRestore />,
-      actionHandler: () => restoreArticleHandler({ id: article?._id }),
+      actionHandler: ({ article, isUsed }) =>
+        restoreArticleHandler({ id: article?._id, isUsed }),
     },
 
     {
@@ -165,52 +126,67 @@ const ReviewCard: React.FC = ({ article, selectedArticle }) => {
     {
       label: "Usuń",
       icon: <MdDelete />,
-      actionHandler: () => {
-        deleteArticleHandler({ id });
+      actionHandler: ({ id, isUsed }) => {
+        deleteArticleHandler({ id, isUsed });
       },
     },
   ];
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-md overflow-hidden transition-all transform cursor-pointer ${
-        isSelected ? "bg-indigo-300 border-2  " : "border-2 border-transparent"
+      className={`rounded-lg shadow-md overflow-hidden cursor-pointer border transition-all transform ${
+        isSelected ? "bg-indigo-200" : "bg-white"
       }`}
     >
-      {/* Card Header */}
-      <div className="flex flex-col md:flex-row items-center justify-between p-4">
-        {/* Product Name (left side) */}
-        <span
-          className="text-sm font-semibold px-3 py-1 rounded-full truncate mb-2 md:mb-0"
-          style={{
-            backgroundColor: article.product.labelColor,
-            color: "#fff",
-          }}
-        >
-          {article.product.name}
-        </span>
-
-        {/* Options (right side) */}
-        <div className="flex space-x-2 ml-0 md:ml-4">
-          {articleDropdownOptions?.map(({ lalbe, icon, actionHandler }) => {
-            return (
-              <button
-                className="p-2 text-gray-600 hover:text-blue-500 hover:bg-gray-100 rounded-full transition duration-200"
-                onClick={() => actionHandler(article.id)}
-                aria-label="Przywróć"
-              >
-                {icon}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Card Title Section */}
-      <div className="p-4">
+      {/* Header: Tytuł artykułu */}
+      <div
+        className={`p-4 border-b ${
+          isSelected ? "border-blue-200" : "border-gray-100"
+        }`}
+      >
         <h3 className="text-lg font-semibold text-gray-800 truncate">
           {article.title}
         </h3>
+      </div>
+
+      {/* Body: Szczegóły */}
+      <div className="p-4 flex justify-between items-center">
+        {/* Produkt */}
+        <div>
+          <span
+            className="text-sm font-medium px-3 py-1 rounded-full text-white transition-colors"
+            style={{
+              backgroundColor: article.product.labelColor || "#9CA3AF", // Domyślny kolor
+            }}
+          >
+            {article.product.name}
+          </span>
+        </div>
+
+        {/* Akcje */}
+        <div className="flex space-x-3">
+          {articleDropdownOptions?.map(({ label, icon, actionHandler }) => (
+            <button
+              key={label}
+              className={`p-2 rounded-md flex items-center justify-center text-gray-600 bg-gray-100 hover:bg-gray-200 transition duration-200 ${
+                label === "Przywróć"
+                  ? "hover:bg-amber-500 hover:text-white"
+                  : label === "Historia modyfikacji"
+                  ? "hover:bg-sky-600 hover:text-white"
+                  : label === "Usuń"
+                  ? "hover:bg-rose-500 hover:text-white"
+                  : "hover:bg-gray-200"
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                actionHandler({ article, isUsed: true });
+              }}
+              aria-label={label}
+            >
+              {icon}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

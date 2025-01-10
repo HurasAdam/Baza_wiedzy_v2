@@ -17,6 +17,7 @@ import { useModalContext } from "@/contexts/ModalContext";
 import { toast } from "@/hooks/use-toast";
 import ArticleDetailsCardLite from "./ArticleDetailsCardLite";
 import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
+import EditArticle from "@/pages/EditArticle";
 
 interface IProps {
   articleId: string;
@@ -44,7 +45,7 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
       return articlesApi.verifyArticle({ id, isVerified });
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries(["article", id]);
+      queryClient.invalidateQueries(["article", articleId]);
       toast({
         title: "Sukces",
         description: data.message,
@@ -74,17 +75,17 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
     },
   });
 
-  const deleteArticleHandler = ({ id }) => {
+  const deleteArticleHandler = ({ article }) => {
     openModal(
       "Czy jestes pewien?",
       "Czy jesteś pewien, że chcesz usunąć ten artykuł? Potwierdź, aby kontynuować.",
       () => {
-        deleteArticleMutation({ id: id || articleId });
+        deleteArticleMutation({ id: article?._id || articleId });
       }
     );
   };
 
-  const verifyArticleHandler = ({ id, isVerified }) => {
+  const verifyArticleHandler = ({ article, isVerified }) => {
     const modalTitle = !isVerified
       ? "Cofnięcie weryfikacji artykułu"
       : "Potwierdzenie weryfikacji artykułu";
@@ -93,7 +94,7 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
       ? "Czy na pewno chcesz cofnąć weryfikację tego artykułu? To może wpłynąć na jego wiarygodność."
       : "Czy na pewno chcesz zweryfikować ten artykuł? Zweryfikowany artykuł będzie oznaczony jako wiarygodny.";
     openModal(modalTitle, modalDescription, () => {
-      mutate({ id: id || articleId, isVerified });
+      mutate({ id: article?._id || articleId, isVerified });
     });
   };
 
@@ -103,7 +104,7 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
       title: "Edytuj Artykuł",
       description:
         "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
-      content: <EditArticle type={id ? "view" : "modal"} article={article} />,
+      content: <EditArticle type="view" article={article} />,
       size: "xl",
     });
   };
@@ -128,12 +129,12 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
         article?.isFavourite ? "Usuń z ulubionych" : "Dodaj do ulubionych"
       }`,
       icon: article?.isFavourite ? <FaStar /> : <FaRegStar />,
-      actionHandler: () => markAsFavouriteHandler({ id }),
+      actionHandler: (article) => markAsFavouriteHandler({ id: article?._id }),
     },
     {
       label: "Edytuj",
       icon: <FaEdit />,
-      actionHandler: () => EditArticleHandler(article),
+      actionHandler: (article) => EditArticleHandler(article),
     },
 
     ...(article?.isVerified
@@ -151,7 +152,7 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
           {
             label: "Zweryfikuj",
 
-            actionHandler: () => {
+            actionHandler: (article) => {
               verifyArticleHandler({ id: article?._id, isVerified: true });
             },
 
@@ -161,7 +162,7 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
     {
       label: "Historia modyfikacji",
       icon: <FaHistory />,
-      actionHandler: () => showArticleHistory(article),
+      actionHandler: (article) => showArticleHistory(article),
       tooltip: "Zobacz historię modyfikacji",
     },
 
@@ -169,8 +170,8 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
     {
       label: "Usuń",
       icon: <MdDelete />,
-      actionHandler: () => {
-        deleteArticleHandler({ id });
+      actionHandler: (article) => {
+        deleteArticleHandler({ id: article?._id });
       },
     },
   ];
