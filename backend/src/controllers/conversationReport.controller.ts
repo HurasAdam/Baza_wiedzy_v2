@@ -72,3 +72,8 @@ export const getAllCoversationReportsHandler = catchErrors(async (req, res) => {
 
   return res.status(OK).json(allConversationReports);
 });
+
+export const getAllReports = catchErrors(async (req, res) => {
+  const allConversationReports = await ConversationReportModel.find({});
+  return res.status(OK).json(allConversationReports);
+});
