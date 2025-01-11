@@ -84,6 +84,18 @@ export const restoreArticle = async ({ id }) => {
   return API.put(`/articles/article/${id}/restore`);
 };
 
+export const getUsersArticleStats = async (searchParams) => {
+  const queryParams = new URLSearchParams();
+  if (searchParams.startDate) {
+    queryParams.append("startDate", searchParams.startDate);
+  }
+  if (searchParams.endDate) {
+    queryParams.append("endDate", searchParams.endDate);
+  }
+
+  return API.get(`/user/article-statistics?${queryParams}`);
+};
+
 export const articlesApi = {
   getAllArticles,
   createArticle,
@@ -96,4 +108,5 @@ export const articlesApi = {
   getAllTrashedArticles,
   getArticleHistory,
   restoreArticle,
+  getUsersArticleStats,
 };
