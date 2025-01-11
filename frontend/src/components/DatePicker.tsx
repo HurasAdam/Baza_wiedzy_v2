@@ -10,8 +10,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { useRef } from "react";
 
 export function DatePicker({ state, setState }) {
+  const popOverRef = useRef<HTMLButtonElement | null>(null);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -27,10 +31,14 @@ export function DatePicker({ state, setState }) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
+        <PopoverClose ref={popOverRef} />
         <Calendar
           mode="single"
           selected={state}
-          onSelect={setState}
+          onSelect={(date) => {
+            setState(date);
+            popOverRef.current?.click();
+          }}
           initialFocus
         />
       </PopoverContent>
