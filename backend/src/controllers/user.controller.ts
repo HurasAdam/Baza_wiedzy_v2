@@ -24,37 +24,35 @@ export const getUsersHandler = catchErrors(async (req, res) => {
 });
 
 export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
-  // Pobierz daty z zapytania jako string
   const { startDate, endDate } = req.query;
 
-  // Przygotuj zakres dat (jeśli podano), konwertując wartości na Date
-  let dateFilter: any = {}; // Typowanie jako "any", ponieważ jest to obiekt z zapytaniem MongoDB
+  let dateFilter: any = {};
 
-  // Sprawdzamy, czy startDate lub endDate są dostępne
   if (startDate || endDate) {
-    dateFilter = { createdAt: {} }; // Filtrujemy po polu createdAt
+    dateFilter = { createdAt: {} };
 
-    // Sprawdzamy, czy startDate jest prawidłowy
     if (startDate) {
-      const start = new Date(startDate as string); // Konwertujemy na Date
+      const start = new Date(startDate.toString());
       if (!isNaN(start.getTime())) {
-        // Sprawdzamy, czy data jest prawidłowa
-        dateFilter.createdAt.$gte = start; // Data początkowa
+        dateFilter.createdAt.$gte = start;
+        console.log("Valid start date:", start);
+      } else {
+        console.error("Invalid start date:", startDate);
       }
     }
 
-    // Sprawdzamy, czy endDate jest prawidłowy
     if (endDate) {
-      const end = new Date(endDate as string); // Konwertujemy na Date
+      const end = new Date(endDate.toString());
       if (!isNaN(end.getTime())) {
-        // Sprawdzamy, czy data jest prawidłowa
-        dateFilter.createdAt.$lte = end; // Data końcowa
+        dateFilter.createdAt.$lte = end;
+        console.log("Valid end date:", end);
+      } else {
+        console.error("Invalid end date:", endDate);
       }
     }
   }
-  console.log("dateFilter");
-  console.log(dateFilter);
-  // 1. Użyj agregacji w MongoDB, aby policzyć liczbę raportów dla każdego użytkownika w danym zakresie dat
+
+  // AGREGACJA DB, aby policzyć liczbę raportów dla każdego użytkownika w danym zakresie dat
   const usersWithReportCount = await ConversationReportModel.aggregate([
     {
       $match: dateFilter, // Filtruj raporty po dacie, jeśli podano
@@ -74,7 +72,7 @@ export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
       },
     },
     {
-      $unwind: "$user", // Rozpakowujemy dane użytkownika
+      $unwind: "$user",
     },
     {
       $project: {
@@ -91,10 +89,9 @@ export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
     },
   ]);
 
-  // 2. Pobierz wszystkich użytkowników z kolekcji `User` (w tym tych bez raportów)
   const allUsers = await UserModel.find();
 
-  // 3. Połącz użytkowników z agregacji z użytkownikami bez raportów
+  //Połącz użytkowników z agregacji z użytkownikami bez raportów
   const usersWithZeroReports = allUsers
     .filter(
       (user) =>
