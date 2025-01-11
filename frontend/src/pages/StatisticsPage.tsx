@@ -9,10 +9,38 @@ import { DatePicker } from "@/components/DatePicker";
 const StatisticsPage: React.FC = () => {
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  const [queryDates, setQueryDates] = useState({
+    startDate: null,
+    endDate: null,
+  });
+
+  const handleSearch = () => {
+    // Sprawdzenie, czy daty są dostępne
+    if (startDate && endDate) {
+      // Tworzymy kopię daty, ustawiamy godzinę na 00:00, aby uniknąć problemów ze strefą czasową
+      const start = new Date(startDate.setHours(0, 0, 0, 0)); // Ustawiamy czas na początek dnia
+      const end = new Date(endDate.setHours(23, 59, 59, 999)); // Ustawiamy koniec dnia
+
+      // Teraz konwertujemy je na ISO
+      const startISO = start.toISOString();
+      const endISO = end.toISOString();
+
+      console.log("Start Date (ISO):", startISO);
+      console.log("End Date (ISO):", endISO);
+
+      setQueryDates({
+        startDate: startISO,
+        endDate: endISO,
+      });
+    }
+  };
+
+  const queryParams = { startDate, endDate };
+
   const { data: usersWithStats } = useQuery({
-    queryKey: ["reportStatistics"],
+    queryKey: ["reportStatistics", queryDates],
     queryFn: () => {
-      return conversationReportApi.getCoversationReportStats();
+      return conversationReportApi.getCoversationReportStats(queryParams);
     },
   });
 
@@ -51,6 +79,12 @@ const StatisticsPage: React.FC = () => {
         })}
         <DatePicker setState={setStartDate} state={startDate} />
         <DatePicker setState={setEndDate} state={endDate} />
+        <button
+          onClick={handleSearch}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Wyszukaj
+        </button>
       </div>
     </div>
   );
