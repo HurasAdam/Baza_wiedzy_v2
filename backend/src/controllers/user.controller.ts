@@ -1,4 +1,5 @@
 import { NOT_FOUND, OK } from "../constants/http";
+import ArticleModel from "../models/Article.model";
 import ConversationReportModel from "../models/ConversationReport.model";
 import UserModel from "../models/User.model";
 import appAssert from "../utils/appAssert";
@@ -114,4 +115,88 @@ export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
 
   // 5. Zwróć posortowaną listę użytkowników
   return res.status(OK).json(allUsersWithReportCounts);
+});
+
+export const getUsersWithArticleCountHandler = catchErrors(async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  let dateFilter: any = {};
+
+  if (startDate || endDate) {
+    dateFilter = { createdAt: {} };
+
+    if (startDate) {
+      const start = new Date(startDate.toString());
+      if (!isNaN(start.getTime())) {
+        dateFilter.createdAt.$gte = start;
+      }
+    }
+
+    if (endDate) {
+      const end = new Date(endDate.toString());
+      if (!isNaN(end.getTime())) {
+        dateFilter.createdAt.$lte = end;
+      }
+    }
+  }
+
+  // Agregacja w kolekcji artykułów, aby policzyć liczbę artykułów dla każdego użytkownika
+  const usersWithArticleCount = await ArticleModel.aggregate([
+    {
+      $match: dateFilter, // Jeśli podano daty, filtruj artykuły po dacie
+    },
+    {
+      $group: {
+        _id: "$createdBy", // Grupowanie po użytkowniku
+        createdArticleCount: { $sum: 1 }, // Zliczanie artykułów
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "_id",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: "$user",
+    },
+    {
+      $project: {
+        _id: "$user._id",
+        name: "$user.name",
+        surname: "$user.surname",
+        createdArticleCount: 1,
+      },
+    },
+    {
+      $sort: {
+        createdArticleCount: -1,
+      },
+    },
+  ]);
+
+  const allUsers = await UserModel.find();
+
+  const usersWithZeroArticles = allUsers
+    .filter(
+      (user) =>
+        !usersWithArticleCount.some(
+          (article) => article._id.toString() === user._id.toString()
+        )
+    )
+    .map((user) => ({
+      _id: user._id,
+      name: user.name,
+      surname: user.surname,
+      createdArticleCount: 0,
+    }));
+
+  const allUsersWithArticleCounts = [
+    ...usersWithArticleCount,
+    ...usersWithZeroArticles,
+  ];
+
+  return res.status(OK).json(allUsersWithArticleCounts);
 });
