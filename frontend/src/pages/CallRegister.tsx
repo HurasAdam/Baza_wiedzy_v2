@@ -76,7 +76,7 @@ const CallRegister = () => {
   const { data: conversationReportValues = [] } = useQuery({
     queryKey: ["conversationReports"],
     queryFn: () => {
-      return conversationReportApi.getConversationReportValues();
+      return conversationReportApi.getConversationReportValues({});
     },
   });
 
@@ -95,7 +95,7 @@ const CallRegister = () => {
   return (
     <div className=" grid grid-cols-[5fr_2fr] p-3 gap-4  ">
       <div>
-        <div className="grid grid-cols-[1fr_2fr] bg-slate-200 border border-slate-200 p-3 rounded ">
+        <div className="grid grid-cols-[1fr_2fr] bg-slate-200 border border-slate-200 py-3 px-4 rounded ">
           <h2 className="flex gap-1 items-center py-4">
             <PiPhoneCallFill className="w-6 h-6 text-slate-700" />
             <span className="text-xl font-semibold text-slate-700">

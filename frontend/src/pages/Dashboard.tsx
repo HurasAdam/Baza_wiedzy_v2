@@ -5,7 +5,25 @@ import { MdArticle } from "react-icons/md";
 import { FaSquarePhone } from "react-icons/fa6";
 
 import { MdEditDocument } from "react-icons/md";
+import { conversationReportApi } from "@/lib/conversationReportsApi";
+import { useQuery } from "@tanstack/react-query";
+import { articlesApi } from "@/lib/articlesApi";
+import { formatDate } from "@/lib/utils";
 const Dashboard: React.FC = () => {
+  const { data: conversationReportValues = [] } = useQuery({
+    queryKey: ["conversationReports"],
+    queryFn: () => {
+      return conversationReportApi.getConversationReportValues({ limit: 6 });
+    },
+  });
+
+  const { data: latestArticles, isLoading: isArticlesLoading } = useQuery({
+    queryKey: ["latestArticles"],
+    queryFn: () => {
+      return articlesApi.getLatestArticles({ limit: 4 });
+    },
+  });
+
   // Zakładki czasowe
   const tabs = ["today", "week", "month"];
   const getTabLabel = (tab: string) => {
@@ -131,17 +149,19 @@ const Dashboard: React.FC = () => {
               Najczęściej odnotowywane tematy rozmów
             </h3>
             <ul className="space-y-4">
-              {frequentTopics.map((topic) => (
+              {conversationReportValues?.map((topic) => (
                 <li
                   key={topic.id}
                   className="flex justify-between items-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all duration-300 ease-in-out"
                 >
                   <div className="flex items-center gap-3">
                     <IoMdCall className="text-green-600" />
-                    <p className="font-medium text-gray-800">{topic.topic}</p>
+                    <p className="font-medium text-gray-800">
+                      {topic.topicTitle}
+                    </p>
                   </div>
                   <span className="text-sm text-gray-600">
-                    {topic.count} razy
+                    {topic.reportCount} razy
                   </span>
                 </li>
               ))}
@@ -213,7 +233,7 @@ const Dashboard: React.FC = () => {
               Ostatnio dodane artykuły
             </h3>
             <ul className="space-y-4">
-              {recentArticles.map((article) => (
+              {latestArticles?.map((article) => (
                 <li
                   key={article.id}
                   className="flex justify-between items-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all duration-300 ease-in-out"
@@ -222,7 +242,9 @@ const Dashboard: React.FC = () => {
                     <FaFileAlt className="text-blue-600" />
                     <p className="font-medium text-gray-800">{article.title}</p>
                   </div>
-                  <span className="text-sm text-gray-600">{article.date}</span>
+                  <span className="text-sm text-gray-600">
+                    {formatDate(article.createdAt, true)}
+                  </span>
                 </li>
               ))}
             </ul>

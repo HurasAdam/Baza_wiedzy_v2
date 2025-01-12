@@ -22,6 +22,16 @@ export const getAllArticles = async (searchParams) => {
   return API.get(`/articles/?${queryParams}`);
 };
 
+export const getLatestArticles = async (searchParams) => {
+  const queryParams = new URLSearchParams();
+
+  if (typeof searchParams.limit === "number") {
+    queryParams.append("limit", searchParams.limit.toString());
+  }
+
+  return API.get(`/articles/latest?${queryParams}`);
+};
+
 export const getAllTrashedArticles = async (searchParams) => {
   const queryParams = new URLSearchParams();
   queryParams.append("page", searchParams.page);
@@ -109,4 +119,5 @@ export const articlesApi = {
   getArticleHistory,
   restoreArticle,
   getUsersArticleStats,
+  getLatestArticles,
 };

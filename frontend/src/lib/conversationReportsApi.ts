@@ -16,8 +16,12 @@ const getCoversationReportStats = async (searchParams) => {
   return API.get(`/user/statistics?${queryParams}`);
 };
 
-const getConversationReportValues = async () => {
-  return API.get("/conversation-report");
+const getConversationReportValues = async (searchParams) => {
+  const queryParams = new URLSearchParams();
+  if (searchParams.limit) {
+    queryParams.append("limit", searchParams.limit);
+  }
+  return API.get(`/conversation-report?${queryParams}`);
 };
 
 export const conversationReportApi = {
