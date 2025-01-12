@@ -14,7 +14,7 @@ export const addConversationReportHandler = catchErrors(async (req, res) => {
 });
 
 export const getAllCoversationReportsHandler = catchErrors(async (req, res) => {
-  const { topicId, startDate, endDate } = req.query; // Przekazujemy topicId przez zapytanie
+  const { topicId, startDate, endDate, limit } = req.query; // Przekazujemy topicId przez zapytanie
 
   // Przygotowanie zapytania do wyszukiwania, jeśli topicId jest podane
 
@@ -68,6 +68,7 @@ export const getAllCoversationReportsHandler = catchErrors(async (req, res) => {
         reportCount: -1, // Sortowanie malejąco według liczby zgłoszeń
       },
     },
+    ...(limit ? [{ $limit: parseInt(String(limit), 10) }] : []),
   ]);
 
   return res.status(OK).json(allConversationReports);
