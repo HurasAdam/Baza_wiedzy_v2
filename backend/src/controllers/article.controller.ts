@@ -42,6 +42,16 @@ export const createArticleHandler = catchErrors(async (req, res) => {
     .json({ message: "Dodano nowy artykuł", data: newArticle });
 });
 
+export const getLatestArticlesForDashboard = catchErrors(async (req, res) => {
+  const limit = parseInt(req.query.limit as string) || 4;
+
+  const latestArticles = await ArticleModel.find({}, { title: 1, createdAt: 1 })
+    .sort({ createdAt: -1 }) // Sortowanie malejąco po dacie
+    .limit(limit); // Ograniczenie liczby wyników
+
+  return res.status(OK).json(latestArticles);
+});
+
 export const getArticlesHandler = catchErrors(async (req, res) => {
   const { userId } = req;
   const query = {

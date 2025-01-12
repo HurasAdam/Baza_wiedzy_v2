@@ -6,6 +6,7 @@ import {
   getArticleHistoryHandler,
   getArticlesHandler,
   getFavouriteArticlesHandler,
+  getLatestArticlesForDashboard,
   getTrashedArticlesHandler,
   markAsFavouriteHandler,
   restoreArticleHandler,
@@ -22,6 +23,7 @@ const articleRoutes = Router();
 // articleRoutes.get("/",getSessionsHandler)
 articleRoutes.post("/create", createArticleHandler);
 articleRoutes.get("/", getArticlesHandler);
+articleRoutes.get("/latest", getLatestArticlesForDashboard);
 articleRoutes.get("/trashed", getTrashedArticlesHandler);
 articleRoutes.get("/:id", getArticleHandler);
 articleRoutes.post("/article/:id/verify", verifyArticleHandler);
