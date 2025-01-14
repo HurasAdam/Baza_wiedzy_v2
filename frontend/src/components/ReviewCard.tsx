@@ -126,8 +126,8 @@ const ReviewCard: React.FC = ({
     {
       label: "Usuń",
       icon: <MdDelete />,
-      actionHandler: ({ id, isUsed }) => {
-        deleteArticleHandler({ id, isUsed });
+      actionHandler: ({ article, isUsed }) => {
+        deleteArticleHandler({ id:article?._id, isUsed });
       },
     },
   ];
