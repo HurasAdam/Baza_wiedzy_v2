@@ -45,6 +45,22 @@ export const deleteSession= async(id)=>{
 }
 
 
+export const getDashboardStats = (searchParams) =>{
+
+    const queryParams = new URLSearchParams();
+    queryParams.append("range",searchParams.range)
+
+    return API.get(`/dashboard/stats?${queryParams}`);
+}
+
+export const getUserDashboardStats = (searchParams) =>{
+    const queryParams = new URLSearchParams();
+    queryParams.append("range",searchParams.range)
+    return API.get(`dashboard/userStats?${queryParams}`)
+}
+
+
+
 
 
 export const api = {
@@ -57,6 +73,8 @@ export const api = {
     logout,
     getSessions,
     deleteSession,
-    getUsers
+    getUsers,
+    getUserDashboardStats,
+    getDashboardStats
 }
 

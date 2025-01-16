@@ -1,19 +1,38 @@
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { api } from '@/lib/api';
 import { articlesApi } from '@/lib/articlesApi';
 import { useQuery } from '@tanstack/react-query';
+import { Loader } from 'lucide-react';
 import React, { useState } from 'react';
 import { FaChartLine, FaRegEdit, FaBook, FaUser, FaRocket, FaSearch, FaChartBar } from 'react-icons/fa';
 
 const Dashboard = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("today");
+  const [selectedPeriodd, setSelectedPeriodd] = useState("today");
 
-
-const {data:latestArticles} = useQuery({
+const {data:latestArticles,isLoading:isLoadingLatestArticles} = useQuery({
   queryKey:["latest_articles"],
   queryFn:()=>{
     return articlesApi.getLatestArticles({limit:4})
   }
 })
  
+
+const {data:userStats,isLoading: isLoadingUserStats} = useQuery({
+  queryKey:["user_stats",selectedPeriodd],
+  queryFn:()=>{
+    return api.getUserDashboardStats({range:selectedPeriodd})
+  }
+})
+
+
+const {data:dashboardStats, isLoading: isLoadingDashboardStats,isFetching} = useQuery({
+  queryKey:["dashboard_stats",selectedPeriodd],
+  queryFn:()=>{
+    return api.getDashboardStats({range:selectedPeriodd})
+  }
+})
+const isLoading = isLoadingLatestArticles || isLoadingUserStats || isLoadingDashboardStats;
 
   const statsData = {
     today: [
@@ -33,11 +52,11 @@ const {data:latestArticles} = useQuery({
     ],
   };
 
-  const userStats = {
-    today: { "Odnotowane rozmowy": "50", "Dodane artykuły": "10", "Edytowane artykuły": "5" },
-    week: { "Odnotowane rozmowy": "200", "Dodane artykuły": "35", "Edytowane artykuły": "10" },
-    month: { "Odnotowane rozmowy": "1 000", "Dodane artykuły": "100", "Edytowane artykuły": "30" },
-  };
+  // const userStats = {
+  //   today: { "Odnotowane rozmowy": "50", "Dodane artykuły": "10", "Edytowane artykuły": "5" },
+  //   week: { "Odnotowane rozmowy": "200", "Dodane artykuły": "35", "Edytowane artykuły": "10" },
+  //   month: { "Odnotowane rozmowy": "1 000", "Dodane artykuły": "100", "Edytowane artykuły": "30" },
+  // };
 
   // const latestArticles = [
   //   { topic: "Jak dodać ucznia", frequency: "30 razy" },
@@ -53,26 +72,17 @@ const {data:latestArticles} = useQuery({
     { topic: "Promocja ucznia - wszystkie kroki", frequency: "15 razy" },
   ];
 
-  const frequentTopics = {
-    today: [
+  const frequentTopics = 
+   [
       { topic: "Sztuczna inteligencja", frequency: "30 razy" },
       { topic: "Blockchain", frequency: "25 razy" },
       { topic: "Edukacja online", frequency: "20 razy" },
-    ],
-    week: [
-      { topic: "Sztuczna inteligencja", frequency: "150 razy" },
-      { topic: "Blockchain", frequency: "130 razy" },
-      { topic: "Edukacja online", frequency: "120 razy" },
-    ],
-    month: [
-      { topic: "Sztuczna inteligencja", frequency: "600 razy" },
-      { topic: "Blockchain", frequency: "500 razy" },
-      { topic: "Edukacja online", frequency: "450 razy" },
-    ],
-  };
+
+    ]
+
 
   const handleTabClick = (period) => {
-    setSelectedPeriod(period);
+    setSelectedPeriodd(period);
   };
 
   return (
@@ -89,35 +99,82 @@ const {data:latestArticles} = useQuery({
               </h3>
               {/* Przycisk wyboru okresu */}
               <div className="flex space-x-4">
-                {["today", "week", "month"].map((period) => (
+                {["today", "last7days", "last30days"].map((period) => (
                   <button
                     key={period}
                     onClick={() => handleTabClick(period)}
                     className={`py-1 px-3.5 text-sm font-semibold ${
-                      selectedPeriod === period ? "bg-blue-500 text-white" : "text-blue-500"
+                      selectedPeriodd === period ? "bg-blue-500 text-white" : "text-blue-500"
                     } rounded-md`}
                   >
-                    {period === "today" ? "Dziś" : period === "week" ? "Tydzień" : "Miesiąc"}
+                    {period === "today" ? "Dziś" : period === "last7days" ? "Tydzień" : "Miesiąc"}
                   </button>
                 ))}
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {statsData[selectedPeriod].map((stat, index) => (
-                <div
-                  key={index}
-                  className={`rounded-lg shadow-sm p-6 flex items-center space-x-4 ${stat.title === "Odnotowane rozmowy" ? "bg-blue-50" : stat.title === "Dodane artykuły" ? "bg-green-50" : "bg-orange-50"}`}
+             
+            <div
+  className={`rounded-lg shadow-sm p-6 flex items-center space-x-4 bg-blue-50 min-h-[120px]`}
+>
+  <div className="flex-shrink-0 text-3xl">
+    <FaChartLine className="text-blue-500 text-2xl" />
+  </div>
+  <div className="h-full flex flex-col justify-between">
+    <h3 className="text-sm font-semibold text-gray-700">Odnotowane rozmowy</h3>
+    {isLoading ? (
+      <div className="h-full flex items-start justify-start">
+        <LoadingSpinner color='red' />
+      </div>
+    ) : (
+      <div className="h-full text-2xl font-bold text-gray-900 mt-1">
+        {dashboardStats?.recordedConversations}
+      </div>
+    )}
+  </div>
+</div>
+                
 
-                >
-                  <div className="flex-shrink-0 text-3xl">
-                    {stat.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-700">{stat.title}</h3>
-                    <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                  </div>
-                </div>
-              ))}
+<div
+  className={`rounded-lg shadow-sm p-6 flex items-center space-x-4 bg-green-50 min-h-[120px]`}
+>
+  <div className="flex-shrink-0 text-3xl">
+    <FaBook className="text-green-500 text-2xl" />
+  </div>
+  <div className="h-full flex flex-col justify-between">
+    <h3 className="text-sm font-semibold text-gray-700">Dodane artykuły</h3>
+    {isLoading ? (
+      <div className="h-full flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    ) : (
+      <div className="h-full text-2xl font-bold text-gray-900 mt-1">
+        {dashboardStats?.addedArticles}
+      </div>
+    )}
+  </div>
+</div>
+
+<div
+  className={`rounded-lg shadow-sm p-6 flex items-center space-x-4 bg-orange-50 min-h-[120px]`}
+>
+  <div className="flex-shrink-0 text-3xl">
+    <FaRegEdit className="text-yellow-500 text-2xl" />
+  </div>
+  <div className="h-full flex flex-col justify-between">
+    <h3 className="text-sm font-semibold text-gray-700">Edytowane artykuły</h3>
+    {isLoading ? (
+      <div className="h-full flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    ) : (
+      <div className="h-full text-2xl font-bold text-gray-900 mt-1">
+        {dashboardStats?.editedArticles}
+      </div>
+    )}
+  </div>
+</div>
+         
             </div>
           </div>
 
@@ -128,25 +185,46 @@ const {data:latestArticles} = useQuery({
               Moje statystyki
             </h3>
             <div className="space-y-4">
-              {Object.entries(userStats[selectedPeriod]).map(([key, value], index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all"
-                >
+            <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+ 
                   <div className="flex items-center space-x-4">
-                    {key === "Odnotowane rozmowy" && <FaUser className="text-blue-600 text-xl" />}
-                    {key === "Dodane artykuły" && <FaBook className="text-green-600 text-xl" />}
-                    {key === "Edytowane artykuły" && <FaRegEdit className="text-yellow-600 text-xl" />}
-                    <span className="text-gray-700 font-semibold">{key}</span>
+                    <FaChartLine className="text-blue-600 text-xl" />
+                    <span className="text-gray-700 font-semibold">Odnotowane rozmowy</span>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <p className="text-lg font-bold text-gray-900">{value}</p>
-                    <span className="text-xs text-gray-500">
-                      {statsData[selectedPeriod].find(stat => stat.title === key)?.percentage}
-                    </span>
-                  </div>
+           {              isLoading ? (
+      <div className="h-full flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    ):     (<div className="flex items-center space-x-2 h-full">
+                    <p className="text-lg font-bold text-gray-900">{userStats?.userConversations}</p>
+                  </div>)}
                 </div>
-              ))}
+                <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+                  <div className="flex items-center space-x-4">
+                    <FaBook className="text-green-600 text-xl" />
+                    <span className="text-gray-700 font-semibold">Dodane artykuły</span>
+                  </div>
+            {            isLoading ? (
+      <div className="h-full flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    )      :(<div className="flex items-center space-x-2 h-full">
+                    <p className="text-lg font-bold text-gray-900">{userStats?.userArticles}</p>
+                  </div>)}
+                </div>
+                <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+                  <div className="flex items-center space-x-4">
+                    <FaRegEdit className="text-yellow-600 text-xl" />
+                    <span className="text-gray-700 font-semibold">Edytowane artykuły</span>
+                  </div>
+             {            isLoading ? (
+      <div className=" flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    ):     (<div className="flex items-center space-x-2 h-full">
+                    <p className="text-lg font-bold text-gray-900">{userStats?.userEditedArticles}</p>
+                  </div>)}
+                </div>
             </div>
           </div>
 
@@ -157,7 +235,7 @@ const {data:latestArticles} = useQuery({
               Najczęściej odnotowywane tematy
             </h3>
             <ul className="space-y-3">
-              {frequentTopics[selectedPeriod].map((topic, index) => (
+              {frequentTopics.map((topic, index) => (
                 <li
                   key={index}
                   className="flex justify-between items-center py-4 px-5 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-all ease-in-out duration-300"
@@ -197,7 +275,7 @@ const {data:latestArticles} = useQuery({
           <div className="bg-white shadow-sm p-6">
             <h3 className="text-sm font-semibold text-gray-700 mb-3"><FaRocket className="inline-block mr-2" />Ostatnio dodane artykuły</h3>
             <ul className="space-y-3">
-              {latestArticles?.map((article, index) => (
+              {latestArticles && latestArticles?.map((article, index) => (
                 <li
                   key={index}
                   className="flex bg-white items-center space-x-3 rounded-lg shadow-sm p-3 hover:shadow-md transition-all"
