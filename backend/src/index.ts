@@ -16,6 +16,7 @@ import tagRoutes from "./routes/tag.route";
 import conversationTopicRoutes from "./routes/conversationTopic.route";
 import conversationReportRoutes from "./routes/conversationReport.route";
 import productRoutes from "./routes/product.route";
+import dashboardRoutes from "./routes/dashboard.route";
 
 
 
@@ -47,6 +48,7 @@ app.use("/tags",authenticate, tagRoutes);
 app.use("/products",authenticate, productRoutes);
 app.use("/conversation-topics",authenticate, conversationTopicRoutes);
 app.use("/conversation-report",authenticate, conversationReportRoutes);
+app.use("/dashboard", authenticate, dashboardRoutes)
 
 app.use(errorHandler);
 

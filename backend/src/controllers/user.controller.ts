@@ -117,6 +117,8 @@ export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(allUsersWithReportCounts);
 });
 
+
+
 export const getUsersWithArticleCountHandler = catchErrors(async (req, res) => {
   const { startDate, endDate } = req.query;
 

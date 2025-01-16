@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getUserDashboardStatsHandler,
   getUserHandler,
   getUsersHandler,
   getUsersWithArticleCountHandler,
@@ -12,6 +13,7 @@ const userRoutes = Router();
 //prefix: /user
 
 userRoutes.get("/", getUserHandler);
+
 userRoutes.get("/users", getUsersHandler);
 userRoutes.get("/statistics", getUsersWithReportCountHandler);
 userRoutes.get("/article-statistics", getUsersWithArticleCountHandler);
