@@ -278,6 +278,25 @@ export const getFavouriteArticlesHandler = catchErrors(async (req, res) => {
   });
 });
 
+export const getPopularArticlesHandler = catchErrors(async (req, res) => {
+  
+    const limit = parseInt(req.query.limit?.toString() || "20");
+
+    const popularArticles = await ArticleModel.find({ isTrashed: false })
+    .sort({ viewsCounter: -1 })
+    .limit(limit)
+    .select("title product") 
+    .populate('product', 'name') 
+    .exec();
+
+    appAssert(popularArticles.length > 0, NOT_FOUND, 'Nie znaleziono popularnych artykułów');
+
+    return res.status(OK).json(popularArticles);
+
+
+});
+
+
 export const trashArticleHandler = catchErrors(async (req, res) => {
   const { id } = req.params;
   const article = await ArticleModel.findById({ _id: id });
