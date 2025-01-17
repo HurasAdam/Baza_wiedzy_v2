@@ -4,6 +4,7 @@ import ConversationReportModel from "../models/ConversationReport.model";
 import { addConversationReport } from "../services/conversationReport.service";
 import catchErrors from "../utils/catchErrors";
 import { newConversationReportSchema } from "./conversationReport.schema";
+import { endOfMonth, startOfDay, startOfMonth, subDays } from "date-fns";
 
 export const addConversationReportHandler = catchErrors(async (req, res) => {
   const request = newConversationReportSchema.parse(req.body);
@@ -14,14 +15,29 @@ export const addConversationReportHandler = catchErrors(async (req, res) => {
 });
 
 export const getAllCoversationReportsHandler = catchErrors(async (req, res) => {
-  const { topicId, startDate, endDate, limit } = req.query; // Przekazujemy topicId przez zapytanie
 
-  // Przygotowanie zapytania do wyszukiwania, jeśli topicId jest podane
+  const { topicId, startDate, endDate, limit, range } = req.query;
+
+  let computedStartDate: Date | null = null;
+  let computedEndDate: Date | null = null;
+
+  if (range === "today") {
+    computedStartDate = startOfDay(new Date());
+    computedEndDate = new Date();
+  } else if (range === "last7days") {
+    computedStartDate = subDays(new Date(), 7);
+    computedEndDate = new Date();
+  } else if (range === "last30days") {
+    const now = new Date();
+    const previousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    computedStartDate = startOfMonth(previousMonth);
+    computedEndDate = endOfMonth(previousMonth);
+  }
 
   let dateMatch: Record<string, any> = {};
-  if (startDate || endDate) {
-    const start = startDate ? new Date(String(startDate)) : null;
-    const end = endDate ? new Date(String(endDate)) : null;
+  if (startDate || endDate || computedStartDate || computedEndDate) {
+    const start = computedStartDate || (startDate ? new Date(String(startDate)) : null);
+    const end = computedEndDate || (endDate ? new Date(String(endDate)) : null);
 
     dateMatch.createdAt = {
       ...(start && { $gte: start }),
@@ -30,48 +46,69 @@ export const getAllCoversationReportsHandler = catchErrors(async (req, res) => {
   }
 
   const match = {
-    ...(topicId && { topic: new mongoose.Types.ObjectId(String(topicId)) }), // Jawna konwersja topicId do string
+    ...(topicId && { topic: new mongoose.Types.ObjectId(String(topicId)) }),
     ...dateMatch,
   };
 
-  // Użycie agregacji do pobrania raportów i zliczenia zgłoszeń po temacie
   const allConversationReports = await ConversationReportModel.aggregate([
     {
-      $match: match, // Filtrowanie raportów po topic (jeśli podano topicId)
+      $match: match,
     },
     {
       $lookup: {
-        from: "conversationtopics", // Nazwa kolekcji ConversationTopic
-        localField: "topic", // Pole w ConversationReport, które odnosi się do "topic"
-        foreignField: "_id", // Pole w ConversationTopic, do którego odnosi się "topic"
-        as: "topicDetails", // Nowe pole, które zawiera szczegóły tematu
+        from: "conversationtopics",
+        localField: "topic",
+        foreignField: "_id",
+        as: "topicDetails",
       },
     },
     {
-      $unwind: "$topicDetails", // Rozpakowujemy dane tematu
+      $unwind: "$topicDetails",
+    },
+    {
+      $lookup: {
+        from: "products", // Kolekcja produktów
+        localField: "topicDetails.product", // Pole `product` w temacie rozmowy
+        foreignField: "_id", // Powiązane pole `_id` w kolekcji produktów
+        as: "productDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$productDetails",
+        preserveNullAndEmptyArrays: true, // Umożliwia brakujący produkt
+      },
     },
     {
       $group: {
-        _id: "$topic", // Grupowanie po ID tematu
-        topicTitle: { $first: "$topicDetails.title" }, // Zwracamy nazwę tematu
-        reportCount: { $sum: 1 }, // Zliczamy zgłoszenia dla każdego tematu
+        _id: "$topic",
+        topicTitle: { $first: "$topicDetails.title" },
+        product: { $first: "$productDetails" }, // Szczegóły produktu
+        reportCount: { $sum: 1 },
       },
     },
     {
       $project: {
-        topicTitle: 1, // Zwracamy nazwę tematu
-        reportCount: 1, // Zwracamy liczbę zgłoszeń
+        topicTitle: 1,
+        product: {
+          _id: 1,
+          name: 1,
+          labelColor: 1,
+          banner: 1,
+        },
+        reportCount: 1,
       },
     },
     {
       $sort: {
-        reportCount: -1, // Sortowanie malejąco według liczby zgłoszeń
+        reportCount: -1,
       },
     },
     ...(limit ? [{ $limit: parseInt(String(limit), 10) }] : []),
   ]);
 
-  return res.status(OK).json(allConversationReports);
+  return res.status(200).json(allConversationReports);
+
 });
 
 export const getAllReports = catchErrors(async (req, res) => {
