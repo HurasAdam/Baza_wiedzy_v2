@@ -18,6 +18,14 @@ const getCoversationReportStats = async (searchParams) => {
 
 const getConversationReportValues = async (searchParams) => {
   const queryParams = new URLSearchParams();
+
+  if (searchParams.startDate) {
+    queryParams.append("startDate", searchParams.startDate);
+  }
+  if (searchParams.endDate) {
+    queryParams.append("endDate", searchParams.endDate);
+  }
+
   if (searchParams.limit) {
     queryParams.append("limit", searchParams.limit);
   }

@@ -1,14 +1,24 @@
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { api } from '@/lib/api';
 import { articlesApi } from '@/lib/articlesApi';
+import { conversationReportApi } from '@/lib/conversationReportsApi';
 import { useQuery } from '@tanstack/react-query';
 import { Loader } from 'lucide-react';
 import React, { useState } from 'react';
 import { FaChartLine, FaRegEdit, FaBook, FaUser, FaRocket, FaSearch, FaChartBar } from 'react-icons/fa';
 
 const Dashboard = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("today");
-  const [selectedPeriodd, setSelectedPeriodd] = useState("today");
+   enum Period {
+    Today = "today",
+    Last7Days = "last7days",
+    Last30Days = "last30days",
+  }
+
+  interface IHandleTabClick {
+    (period: Period): void;
+  }
+
+  const [selectedPeriodd, setSelectedPeriodd] = useState<Period>(Period.Today);
 
 const {data:latestArticles,isLoading:isLoadingLatestArticles} = useQuery({
   queryKey:["latest_articles"],
@@ -32,37 +42,22 @@ const {data:dashboardStats, isLoading: isLoadingDashboardStats,isFetching} = use
     return api.getDashboardStats({range:selectedPeriodd})
   }
 })
+
+
+const {data:mostPopularTopics, isLoading: isLoadingMostPopularTopics} = useQuery({
+  queryKey:["popular_topics",selectedPeriodd],
+  queryFn:()=>{
+    return conversationReportApi.getConversationReportValues({range:selectedPeriodd, limit:5})
+  }
+})
+
+
+
+
 const isLoading = isLoadingLatestArticles || isLoadingUserStats || isLoadingDashboardStats;
 
-  const statsData = {
-    today: [
-      { title: "Odnotowane rozmowy", value: "100", percentage: "+5%", icon: <FaChartLine className="text-blue-500 text-2xl" /> },
-      { title: "Dodane artykuły", value: "25", percentage: "+2%", icon: <FaBook className="text-green-500 text-2xl" /> },
-      { title: "Edytowane artykuły", value: "12", percentage: "+1%", icon: <FaRegEdit className="text-yellow-500 text-2xl" /> },
-    ],
-    week: [
-      { title: "Odnotowane rozmowy", value: "1 245", percentage: "+12%", icon: <FaChartLine className="text-blue-500 text-2xl" /> },
-      { title: "Dodane artykuły", value: "345", percentage: "+8%", icon: <FaBook className="text-green-500 text-2xl" /> },
-      { title: "Edytowane artykuły", value: "98", percentage: "+5%", icon: <FaRegEdit className="text-yellow-500 text-2xl" /> },
-    ],
-    month: [
-      { title: "Odnotowane rozmowy", value: "5 000", percentage: "+20%", icon: <FaChartLine className="text-blue-500 text-2xl" /> },
-      { title: "Dodane artykuły", value: "1 250", percentage: "+10%", icon: <FaBook className="text-green-500 text-2xl" /> },
-      { title: "Edytowane artykuły", value: "500", percentage: "+15%", icon: <FaRegEdit className="text-yellow-500 text-2xl" /> },
-    ],
-  };
 
-  // const userStats = {
-  //   today: { "Odnotowane rozmowy": "50", "Dodane artykuły": "10", "Edytowane artykuły": "5" },
-  //   week: { "Odnotowane rozmowy": "200", "Dodane artykuły": "35", "Edytowane artykuły": "10" },
-  //   month: { "Odnotowane rozmowy": "1 000", "Dodane artykuły": "100", "Edytowane artykuły": "30" },
-  // };
 
-  // const latestArticles = [
-  //   { topic: "Jak dodać ucznia", frequency: "30 razy" },
-  //   { topic: "Dlaczego nie widzę powiadomień", frequency: "25 razy" },
-  //   { topic: "Jak odnotować dzień wolny szkoły", frequency: "20 razy" },
-  // ];
 
   const frequentVisitedArticles = [
     { topic: "Jak dodać ucznia", frequency: "30 razy" },
@@ -81,7 +76,7 @@ const isLoading = isLoadingLatestArticles || isLoadingUserStats || isLoadingDash
     ]
 
 
-  const handleTabClick = (period) => {
+  const handleTabClick:IHandleTabClick = (period) => {
     setSelectedPeriodd(period);
   };
 
@@ -99,7 +94,7 @@ const isLoading = isLoadingLatestArticles || isLoadingUserStats || isLoadingDash
               </h3>
               {/* Przycisk wyboru okresu */}
               <div className="flex space-x-4">
-                {["today", "last7days", "last30days"].map((period) => (
+                {Object.values(Period).map((period) => (
                   <button
                     key={period}
                     onClick={() => handleTabClick(period)}
@@ -230,22 +225,37 @@ const isLoading = isLoadingLatestArticles || isLoadingUserStats || isLoadingDash
 
           {/* Najczęściej odnotowywane tematy */}
           <div className="bg-white rounded-lg shadow-sm p-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">
-              <FaChartLine className="inline-block mr-2 text-blue-500" />
-              Najczęściej odnotowywane tematy
-            </h3>
-            <ul className="space-y-3">
-              {frequentTopics.map((topic, index) => (
-                <li
-                  key={index}
-                  className="flex justify-between items-center py-4 px-5 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-all ease-in-out duration-300"
-                >
-                  <span className="text-gray-700 text-sm font-semibold">{topic.topic}</span>
-                  <span className="text-xs text-gray-500">{topic.frequency}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+  <h3 className="text-sm font-semibold text-gray-700 mb-3">
+    <FaChartLine className="inline-block mr-2 text-blue-500" />
+    Najczęściej odnotowywane tematy
+  </h3>
+  <ul className="space-y-3">
+    {mostPopularTopics?.map((topic, index) => (
+      <li
+        key={index}
+        className="flex justify-between items-center py-4 px-5 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-all ease-in-out duration-300 overflow-hidden"
+      >
+        {/* Topic Title */}
+        <span className="text-gray-700 text-sm font-semibold flex-grow max-w-[600px] truncate overflow-hidden text-ellipsis whitespace-nowrap">
+          {topic?.topicTitle}
+        </span>
+
+        {/* Badge for the product with fixed width */}
+        <span
+          className="hidden xl:block px-1 py-1 text-xs font-semibold rounded-full text-white w-[100px] text-center overflow-hidden text-ellipsis whitespace-nowrap"
+          style={{
+            backgroundColor: topic?.product?.labelColor,
+          }}
+        >
+          {topic?.product?.name}
+        </span>
+
+        {/* Report Count */}
+        <span className="text-xs text-gray-500 ml-4">{topic?.reportCount}</span>
+      </li>
+    ))}
+  </ul>
+</div>
         </div>
 
         {/* Prawa część */}
