@@ -1,4 +1,5 @@
 import ArticleModel from "../models/Article.model";
+import ArticleHistoryModel from "../models/ArticleHistory.model";
 import ConversationReportModel from "../models/ConversationReport.model";
 import catchErrors from "../utils/catchErrors";
 import { startOfDay, subDays } from 'date-fns';
@@ -31,9 +32,9 @@ export const getDashboardStatsHandler  = catchErrors(async (req, res) => {
         createdAt: { $gte: startDate, $lte: endDate }  // Added date filter
       });
     
-      // Filter edited articles based on the date range
-      const editedArticlesCount = await ArticleModel.countDocuments({
-        updatedAt: { $ne: null, $gte: startDate, $lte: endDate }  // Added date filter
+      const editedArticlesCount = await ArticleHistoryModel.countDocuments({
+        eventType: "updated",
+        updatedAt: { $gte: startDate, $lte: endDate },
       });
     
       return res.status(200).json({
@@ -71,10 +72,12 @@ export const getDashboardStatsHandler  = catchErrors(async (req, res) => {
       createdAt: { $gte: startDate, $lte: endDate }  // Filtrowanie po dacie
     });
   
-    const userEditedArticles = await ArticleModel.countDocuments({
-      createdBy: userId,
-      isVerified: true,
-      createdAt: { $gte: startDate, $lte: endDate }  // Filtrowanie po dacie
+    // Liczba edytowanych artykułów przez użytkownika
+    const userEditedArticles = await ArticleHistoryModel.countDocuments({
+      articleId: { $exists: true },
+      updatedBy: userId,
+      eventType: "updated",
+      updatedAt: { $gte: startDate, $lte: endDate },
     });
   
     return res.status(200).json({
