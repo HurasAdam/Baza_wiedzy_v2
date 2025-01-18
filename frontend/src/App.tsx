@@ -30,7 +30,7 @@ function App() {
   setNavigate(navigate);
 
   return (
-    <div className="bg-zinc-100 ">
+    <div className="bg-zinc-100">
       <Routes>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
