@@ -46,6 +46,7 @@ export const getLatestArticlesForDashboard = catchErrors(async (req, res) => {
   const limit = parseInt(req.query.limit as string) || 4;
 
   const latestArticles = await ArticleModel.find({}, { title: 1, createdAt: 1 })
+  .populate([  { path: "product", select: ["name", "labelColor"] },])
     .sort({ createdAt: -1 }) // Sortowanie malejąco po dacie
     .limit(limit); // Ograniczenie liczby wyników
 
