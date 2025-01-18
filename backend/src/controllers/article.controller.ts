@@ -287,7 +287,7 @@ export const getPopularArticlesHandler = catchErrors(async (req, res) => {
     .sort({ viewsCounter: -1 })
     .limit(limit)
     .select("title product") 
-    .populate('product', 'name') 
+    .populate('product', 'name labelColor') 
     .exec();
 
     appAssert(popularArticles.length > 0, NOT_FOUND, 'Nie znaleziono popularnych artykułów');
