@@ -92,18 +92,7 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
               })`,
             }}
           >
-            {/* <div className="flex gap-1.5 justify-end  my-3.5  ">
-              {actionOptions?.map((option) => {
-                return (
-                  <button
-                    onClick={() => option.actionHandler()}
-                    className=" shadow-sm  border border-transparent neutral-400 bg-slate-500   transition-all hover:font-bold p-[6px] rounded-md hover:bg-blue-500 hover:border-blue-300  text-slate-100 "
-                  >
-                    {option.icon}
-                  </button>
-                );
-              })}
-            </div> */}
+
             <div className="flex justify-between px-6 ">
               {article?.isFavourite ? (
                 <div

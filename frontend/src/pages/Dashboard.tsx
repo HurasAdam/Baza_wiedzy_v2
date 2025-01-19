@@ -27,7 +27,7 @@ const Dashboard = () => {
 const {data:latestArticles,isLoading:isLoadingLatestArticles} = useQuery({
   queryKey:["latest_articles"],
   queryFn:()=>{
-    return articlesApi.getLatestArticles({limit:4})
+    return articlesApi.getLatestArticles({limit:5})
   }
 })
  
@@ -51,20 +51,20 @@ const {data:dashboardStats, isLoading: isLoadingDashboardStats,isFetching} = use
 const {data:mostPopularTopics, isLoading: isLoadingMostPopularTopics} = useQuery({
   queryKey:["popular_topics",selectedPeriodd],
   queryFn:()=>{
-    return conversationReportApi.getConversationReportValues({range:selectedPeriodd, limit:5})
+    return conversationReportApi.getConversationReportValues({range:selectedPeriodd, limit:6})
   }
 })
 const {data:mostPopularArticles, isLoading: isLoadingMostPopularArticles} = useQuery({
   queryKey:["popular_articles"],
   queryFn:()=>{
-    return articlesApi.getPopularArticles({limit:5})
+    return articlesApi.getPopularArticles({limit:6})
   }
 })
 
 
 
 
-const isLoading = isLoadingLatestArticles || isLoadingUserStats || isLoadingDashboardStats || isLoadingMostPopularTopics;
+const isLoading = isLoadingLatestArticles || isLoadingUserStats || isLoadingDashboardStats || isLoadingMostPopularTopics || isLoadingMostPopularArticles
 
 
 const openInModalHandler = (aritcleId) => {
@@ -194,7 +194,7 @@ const openInModalHandler = (aritcleId) => {
   </h3>
   <div className="space-y-4">
     {/* Odnotowane rozmowy */}
-    <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+    <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm ">
       <div className="flex items-center space-x-4">
         <FaChartLine className="text-blue-600 text-xl" />
         <span className="text-gray-700 font-semibold">Odnotowane rozmowy</span>
@@ -205,13 +205,13 @@ const openInModalHandler = (aritcleId) => {
             <LoadingSpinner />
           </div>
         ) : (
-          <div className="text-lg font-bold text-gray-900 min-h-7">{userStats?.userConversations}</div>
+          <div className="text-lg font-semibold text-gray-600  min-h-7 px-3">{userStats?.userConversations}</div>
         )}
       </div>
     </div>
 
     {/* Dodane artykuły */}
-    <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+    <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm ">
       <div className="flex items-center space-x-4">
         <FaBook className="text-green-600 text-xl" />
         <span className="text-gray-700 font-semibold">Dodane artykuły</span>
@@ -222,13 +222,13 @@ const openInModalHandler = (aritcleId) => {
             <LoadingSpinner />
           </div>
         ) : (
-          <div className="text-lg font-bold text-gray-900 min-h-7">{userStats?.userArticles}</div>
+          <div className="text-lg font-semibold text-gray-600  min-h-7 px-3">{userStats?.userArticles}</div>
         )}
       </div>
     </div>
 
     {/* Edytowane artykuły */}
-    <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+    <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow-sm ">
       <div className="flex items-center space-x-4">
         <FaRegEdit className="text-yellow-600 text-xl" />
         <span className="text-gray-700 font-semibold">Edytowane artykuły</span>
@@ -239,7 +239,7 @@ const openInModalHandler = (aritcleId) => {
             <LoadingSpinner />
           </div>
         ) : (
-          <div className="text-lg font-bold text-gray-900 min-h-7">{userStats?.userEditedArticles}</div>
+          <div className="text-lg font-semibold text-gray-600 min-h-7 px-3">{userStats?.userEditedArticles}</div>
         )}
       </div>
     </div>
@@ -254,58 +254,53 @@ const openInModalHandler = (aritcleId) => {
     Najczęściej odnotowywane tematy
   </h3>
   <ul className="space-y-3">
-    
-    {
-    
-    isLoading ? [1,2,3,4,5].map((item,index)=>{
-      return(
+  {isLoading
+    ? [1, 2, 3, 4, 5].map((_, index) => (
         <li
-        key={index}
-        className="flex justify-cetner items-center py-4 px-5 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-all ease-in-out duration-300 overflow-hidden"
-      >
-        {/* Topic Title */}
-        <span className="text-gray-700 text-sm font-semibold flex-grow max-w-[600px] truncate overflow-hidden text-ellipsis whitespace-nowrap">
-          
-        </span>
-
-        {/* Badge for the product with fixed width */}
-        <span
-          className="hidden xl:block px-1 py-1 text-xs font-semibold rounded-full text-white w-[100px] text-center overflow-hidden text-ellipsis whitespace-nowrap"
-
+          key={index}
+          className="flex justify-center items-center py-4 px-5 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-all ease-in-out duration-300 overflow-hidden relative h-14"
         >
-         <LoadingSpinner/>
-        </span>
+          {/* Pasek po lewej stronie - skeleton */}
+          <div className="absolute left-0 top-0 h-full w-1 bg-gray-300 rounded-l-lg"></div>
 
-        {/* Report Count */}
-        <span className="text-xs text-gray-500 ml-4"></span>
-      </li>
-      )
-    }):
-    mostPopularTopics?.map((topic, index) => (
-      <li
-        key={index}
-        className="flex justify-between items-center py-4 px-5 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-all ease-in-out duration-300 overflow-hidden"
-      >
-        {/* Topic Title */}
-        <span className="text-gray-700 text-sm font-semibold flex-grow max-w-[600px] truncate overflow-hidden text-ellipsis whitespace-nowrap">
-          {topic?.topicTitle}
-        </span>
+          {/* Skeleton dla tytułu */}
+          <span className="bg-gray-200 h-4 w-3/4 rounded  flex-grow max-w-[720px]"></span>
 
-        {/* Badge for the product with fixed width */}
-        <span
-          className="hidden xl:block px-1 py-1 text-xs font-semibold rounded-full text-white w-[100px] text-center overflow-hidden text-ellipsis whitespace-nowrap"
-          style={{
-            backgroundColor: topic?.product?.labelColor,
-          }}
+          {/* Skeleton dla odznaki produktu */}
+       
+
+          {/* Skeleton dla liczby raportów */}
+          <span className="bg-gray-200 h-3 w-12 ml-4 rounded "></span>
+        </li>
+      ))
+    : mostPopularTopics?.map((topic, index) => (
+        <li
+          key={index}
+          className="flex justify-between items-center py-4 px-5 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-all ease-in-out duration-300 overflow-hidden relative h-12"
         >
-          {topic?.product?.name}
-        </span>
+          {/* Pasek po lewej stronie */}
+          <div
+            style={{
+              backgroundColor: topic?.product?.labelColor || "#ddd", // Domyślny kolor
+            }}
+            className="absolute left-0 top-0 h-full w-1 rounded-l-lg"
+          ></div>
 
-        {/* Report Count */}
-        <span className="text-xs text-gray-500 ml-4">{topic?.reportCount}</span>
-      </li>
-    ))}
-  </ul>
+          {/* Tytuł tematu */}
+          <span className="text-gray-700 text-sm font-semibold flex-grow max-w-[720px] truncate overflow-hidden text-ellipsis whitespace-nowrap">
+            {topic?.topicTitle}
+          </span>
+
+          {/* Odznaka produktu */}
+
+
+          {/* Liczba raportów */}
+          <span className="text-xs text-gray-500 ml-4">{topic?.reportCount}</span>
+        </li>
+      ))}
+</ul>
+
+
 </div>
         </div>
 
@@ -314,46 +309,128 @@ const openInModalHandler = (aritcleId) => {
         <div className="bg-white shadow-sm p-6">
             <h3 className="text-sm font-semibold text-gray-700 mb-3"><FaRocket className="inline-block mr-2" />Ostatnio dodane artykuły</h3>
             <ul className="space-y-3">
-              {latestArticles && latestArticles?.map((article, index) => (
-                <li
-                onClick={()=>openInModalHandler(article?._id)}
-                  key={index}
-                  className="flex bg-white items-center space-x-3 rounded-lg shadow-sm p-3 hover:shadow-md transition-all cursor-pointer hover:bg-slate-50/80"
-                >
-                  <div className="flex items-center justify-center bg-blue-100 text-blue-600 rounded-full h-8 w-8">
-                    <FaBook className="text-base" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-gray-700">{article?.title}</h4>
-                 <div className='text-xs max-w-[110px] truncate overflow-hidden text-ellipsis whitespace-nowrap '           style={{
-            color: article?.product?.labelColor,
-          }}> {article?.product?.name}</div>
-                  </div>
-                 <span className='text-xs font-semibold text-gray-500  '> {formatDate(article?.createdAt)}</span>
-                </li>
-              ))}
-            </ul>
+  {isLoading ? (
+    [1, 2, 3, 4].map((_, index) => (
+      <li
+        key={index}
+        className="flex bg-white items-center space-x-3 rounded-lg shadow-sm p-3   relative min-h-14"
+      >
+        {/* Pasek po lewej stronie */}
+        <div
+          style={{
+            backgroundColor: "#ddd", // Kolor zaślepki dla skeletonu
+          }}
+          className="absolute left-0 top-0 h-full w-1 rounded-l-lg"
+        ></div>
+
+        <div className="flex items-center justify-center bg-gray-200 text-gray-200 rounded-full h-8 w-8 animate-spin">
+          {/* Zaślepka dla ikony */}
+        </div>
+
+        <div className="flex-1">
+          {/* Skeleton dla tytułu */}
+          <div className="bg-gray-200 h-4 w-3/4 rounded "></div>
+          {/* Skeleton dla podtytułu */}
+          <div className="bg-gray-200 h-3 w-1/2 mt-2 rounded "></div>
+        </div>
+        {/* Skeleton dla daty */}
+        <div className="bg-gray-200 h-3 w-16 rounded "></div>
+      </li>
+    ))
+  ) : (
+    latestArticles?.map((article, index) => (
+      <li
+        onClick={() => openInModalHandler(article?._id)}
+        key={index}
+        className="flex bg-white items-center space-x-3 rounded-lg shadow-sm p-3 hover:shadow-md transition-all cursor-pointer hover:bg-slate-50/80 relative min-h-14"
+      >
+        {/* Pasek po lewej stronie */}
+        <div
+          style={{
+            backgroundColor: article?.product?.labelColor || "#ddd", // Domyślny kolor, jeśli brak labelColor
+          }}
+          className="absolute left-0 top-0 h-full w-1 rounded-l-lg"
+        ></div>
+
+        <div className="flex items-center justify-center bg-blue-100 text-blue-600 rounded-full h-8 w-8">
+          <FaBook className="text-base" />
+        </div>
+
+        <div className="flex-1">
+          <h4 className="text-sm font-semibold text-gray-700">{article?.title}</h4>
+          <div className="text-xs max-w-[110px] truncate overflow-hidden text-ellipsis whitespace-nowrap text-slate-500">
+            {article?.product?.name}
+          </div>
+        </div>
+        <span className="text-xs font-semibold text-gray-500">
+          {formatDate(article?.createdAt)}
+        </span>
+      </li>
+    ))
+  )}
+</ul>
+
+
           </div>
           {/* Najpopularniejsze artykuły */}
-          <div className="bg-white shadow-sm p-6">
+          <div className="bg-white shadow-sm p-6  ">
             <h3 className="text-sm font-semibold text-gray-700 mb-3"><FaSearch className="inline-block mr-2" />Najpopularniejsze artykuły</h3>
             <ul className="space-y-3">
-              {mostPopularArticles?.map((article, index) => (
-                <li
-                onClick={()=>openInModalHandler(article?._id)}
-                  key={index}
-                  className="flex bg-white items-center space-x-3 rounded-lg shadow-sm p-3 hover:shadow-md hover:bg-slate-50/80 transition-all cursor-pointer"
-                >
-                  <div className="flex items-center justify-center bg-green-100 text-green-600 rounded-full h-8 w-8">
-                    <FaChartLine className="text-base" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-gray-700">{article?.title}</h4>
-                    <span className="text-xs text-gray-500">{article?.product?.name}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
+  {isLoading ? (
+    [1, 2, 3, 4, 5,6].map((_, index) => (
+      <li
+        key={index}
+        className="flex bg-white items-center space-x-3 rounded-lg shadow-sm p-3  relative h-16"
+      >
+        {/* Pasek po lewej stronie */}
+        <div
+          style={{
+            backgroundColor: "#ddd", // Kolor zaślepki dla skeletonu
+          }}
+          className="absolute left-0 top-0 h-full w-1 rounded-l-lg"
+        ></div>
+
+        <div className="flex items-center justify-center bg-gray-200 text-gray-200 rounded-full h-8 w-8 ">
+          {/* Zaślepka dla ikony */}
+        </div>
+
+        <div className="flex-1">
+          {/* Skeleton dla tytułu */}
+          <div className="bg-gray-200 h-4 w-3/4 rounded "></div>
+          {/* Skeleton dla nazwy produktu */}
+          <div className="bg-gray-200 h-3 w-1/2 mt-2 rounded "></div>
+        </div>
+      </li>
+    ))
+  ) : (
+    mostPopularArticles?.map((article, index) => (
+      <li
+        onClick={() => openInModalHandler(article?._id)}
+        key={index}
+        className="flex bg-white items-center space-x-3 rounded-lg shadow-sm p-3 hover:shadow-md transition-all cursor-pointer relative h-16"
+      >
+        {/* Pasek po lewej stronie */}
+        <div
+          style={{
+            backgroundColor: article?.product?.labelColor || "#ddd", // Domyślny kolor, jeśli brak labelColor
+          }}
+          className="absolute left-0 top-0 h-full w-1 rounded-l-lg"
+        ></div>
+
+        <div className="flex items-center justify-center bg-green-100 text-green-600 rounded-full h-8 w-8">
+          <FaChartLine className="text-base" />
+        </div>
+        <div className="flex-1">
+          <h4 className="text-sm font-semibold text-gray-700">{article?.title}</h4>
+          <span className="text-xs text-gray-500">{article?.product?.name}</span>
+        </div>
+      </li>
+    ))
+  )}
+</ul>
+
+
+
           </div>
 
           {/* Ostatnio dodane artykuły */}

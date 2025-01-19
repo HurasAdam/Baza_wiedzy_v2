@@ -162,43 +162,70 @@ const articleDropdownOptions= [
 
   return (
    
-<div className='p-9 grid grid-cols-[1fr_407px] gap-4'>
-  {/* LEFT SIDE */}
-  <div className='flex flex-col space-y-3.5'>
-    <Skeleton>
-      <div className='border py-6 px-5 rounded-md flex items-center justify-between'/>
-    </Skeleton>
-
-    <Skeleton>
-      <Accordion type="multiple" collapsible defaultValue={['item-1']} className='border rounded-md px-7 py-1 '>
-        <AccordionItem value="item-1" className='border-0 '>
-          <AccordionTrigger className='text-lg text-transparent'></AccordionTrigger>
-          <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base '></AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </Skeleton>
-
-    <Skeleton>
-      <Accordion type="multiple" collapsible defaultValue={['item-1']} className='border rounded-md px-7 py-1 '>
-        <AccordionItem value="item-1" className='border-0 '>
-          <AccordionTrigger className='text-lg text-transparent'></AccordionTrigger>
-          <AccordionContent className='break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base min-h-[560px]'>
-    
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </Skeleton>
+<div className="min-h-screen px-6 pb-6 flex flex-col space-y-6">
+  {/* Top Bar Skeleton */}
+  <div className="flex items-center px-6 space-x-3">
+    <Skeleton 
+     animation='none'
+    className="w-10 h-10 rounded-full" />
+    <Skeleton 
+     animation='none'
+    className="w-32 h-6 rounded-md animate-nonne" />
   </div>
 
-  {/* RIGHT SIDE */}
-  <div className=' overflow-hidden'>
-    <Skeleton>
-      <div className='min-h-[300px] flex items-center justify-center'>
-       
+  {/* Main Content Skeleton */}
+  <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    {/* Left Column (Details Section) */}
+    <div className="md:col-span-2 flex flex-col space-y-6">
+      {/* Banner Section */}
+      <Skeleton 
+       animation='none'
+      className="w-full h-40 rounded-md " />
+      <div className="flex space-x-4 px-6">
+        <Skeleton 
+         animation='none'
+        className="w-24 h-24 rounded-lg " />
+        <Skeleton 
+         animation='none'
+        className="w-32 h-8 rounded-md " />
       </div>
-    </Skeleton>
+      <Skeleton 
+       animation='none'
+      className="w-full h-10 rounded-md px-6 " />
+      {/* Tags Section */}
+      <div className="flex flex-wrap gap-2">
+        {[...Array(4)].map((_, index) => (
+          <Skeleton 
+           animation='none'
+          key={index} className="w-20 h-6 rounded-lg " />
+        ))}
+      </div>
+      {/* Accordions */}
+      <Skeleton 
+      animation='none'
+      className="w-full h-28 rounded-lg " />
+      <Skeleton 
+       animation='none'
+      className="w-full h-56 rounded-lg " />
+    </div>
+
+    {/* Right Sidebar */}
+    <div className="sticky top-16 space-y-6">
+      <Skeleton
+       animation='none'
+      className="w-full h-96 rounded-lg " />
+      <Skeleton 
+       animation='none'
+      className="w-full h-20 rounded-lg " />
+      {[...Array(4)].map((_, index) => (
+        <Skeleton 
+         animation='none'
+        key={index} className="w-full h-10 rounded-md " />
+      ))}
+    </div>
   </div>
 </div>
+
 
  
   )
