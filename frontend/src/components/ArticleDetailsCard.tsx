@@ -362,7 +362,7 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                   >
                     {article?.product?.name}
                   </span>
-                  <Button className="font-semibold bg-slate-600">Zobacz</Button>
+               
                 </div>
               </div>
               <div className="border-t border-gray-200 pt-4">
@@ -374,7 +374,7 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                   <span className="text-gray-700">
                     {article?.createdBy?.name} {article?.createdBy?.surname}
                   </span>
-                  <Button className="font-semibold bg-slate-600">Zobacz</Button>
+                 
                 </div>
               </div>
 
@@ -409,7 +409,7 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                 <div className="flex justify-between items-center">
                   <span className="text-gray-700">Czy zweryfikowany ?</span>
                   <span
-                    className={`text-gray-700  px-5 py-1 rounded-lg ${
+                    className={`text-gray-700 text-sm px-5 py-1.5 min-w-14 rounded-lg ${
                       article?.isVerified
                         ? "bg-emerald-500 text-white"
                         : "bg-rose-400/90 text-rose-800"
@@ -420,16 +420,16 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-4">
+              <div className="border-t border-gray-200 pt-4 flex justify-between items-center ">
                 <h3 className="font-semibold text-md mb-2 flex items-center gap-2">
                   <IoEyeSharp className="text-slate-600 w-5 h-5" />
                   Ilość wyświetleń
                 </h3>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-700 bg-blue-100 px-5 py-1 rounded-lg">
+           
+                  <span className="text-gray-700 font-semibold text-sm text-center min-w-15 px-5 py-1.5 rounded-lg">
                     {article?.viewsCounter}
                   </span>
-                </div>
+             
               </div>
             </div>
           </div>
