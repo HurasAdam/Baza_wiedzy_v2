@@ -1,15 +1,23 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-function Skeleton({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn("animate-pulse rounded-md bg-muted", className)}
-      {...props}
-    />
-  )
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  animation?: "pulse" | "spin" | "bounce" | "none"; // Dodajemy różne typy animacji
 }
 
-export { Skeleton }
+function Skeleton({ className, animation = "pulse", ...props }: SkeletonProps) {
+  return (
+    <div
+      className={cn(
+        "rounded-md bg-gray-300",
+        animation === "pulse" && "animate-pulse",
+        animation === "spin" && "animate-spin",
+        animation === "bounce" && "animate-bounce",
+        animation === "none" && "", // Brak animacji
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+export { Skeleton };
