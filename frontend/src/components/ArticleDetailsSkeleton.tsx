@@ -26,6 +26,7 @@ import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from "@/components/ui/skeleton"
 import { useModalContext } from '@/contexts/ModalContext';
+import Spinner from './core/Spinner';
 
 const ArticleDetailsSkeleton = () => {
     const { id } = useParams();
@@ -162,7 +163,8 @@ const articleDropdownOptions= [
 
   return (
    
-<div className="min-h-screen px-6 pb-6 flex flex-col space-y-6">
+<div className="min-h-screen px-6 pb-6 flex flex-col space-y-6 relative">
+<Spinner position='center' animation="spin" size='md' color="bg-blue-500"/>
   {/* Top Bar Skeleton */}
   <div className="flex items-center px-6 space-x-3">
     <Skeleton 
@@ -223,7 +225,9 @@ const articleDropdownOptions= [
         key={index} className="w-full h-10 rounded-md " />
       ))}
     </div>
+    
   </div>
+  
 </div>
 
 
