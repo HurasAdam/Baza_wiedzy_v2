@@ -12,6 +12,8 @@ import ArticleDetailsInModal from "@/pages/ArticleDetailsInModal";
 import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
 import Pagination from "./Pagination";
 import useScrollToTop from "@/hooks/useScrollToTop";
+import { Skeleton } from "./ui/skeleton";
+import Spinner from "./core/Spinner";
 
 const ArticlesTableView: React.FC = ({
   articles,
@@ -37,8 +39,6 @@ const ArticlesTableView: React.FC = ({
     });
   };
 
-  console.log("ART");
-  console.log(articles);
 
   return (
     <div className=" grid grid-cols-1 xl:grid-cols-[13fr_5fr]  2xl:grid-cols-[13fr_4fr] gap-3.5 px-2.5 py-6 max-w-[1740px] mx-auto  ">
@@ -85,20 +85,36 @@ const ArticlesTableView: React.FC = ({
 data={articles?.data}
 /> */}
 
-        {articles?.data?.map((article) => {
+        {
+        
+        isLoading ? ([1,2,3,4,5].map((item)=>{
+          return (
+            <div className="relative flex border border-gray-200 rounded-lg shadow overflow-hidden mb-4 hover:shadow-md transition-shadow duration-300">
+            {/* Gwiazdka w prawym górnym rogu */}
+            <Spinner animation="spin" position="center" color="bg-blue-500" />
+            <Skeleton
+              animation="none"
+              className="absolute top-2 right-2 w-10 h-10 rounded-full"
+            />
+            <div className="min-w-36 max-w-36 min-h-36 max-h-36 flex items-center justify-center px-2.5 pt-3 pb-1 text-center flex-col">
+              <Skeleton animation="none" className="w-[86%] h-[86%] rounded-xl shadow-lg" />
+              <Skeleton animation="none" className="w-16 h-4 mt-2" />
+            </div>
+            <div className="p-4 flex flex-col justify-between flex-grow">
+   
+            </div>
+          </div>
+          )
+        })
+   
+        ):
+        articles?.data?.map((article) => {
           return (
             <div
               onClick={() => setSelectedArticle(article._id)}
               className={` mx-auto  cursor-pointer   `}
             >
-              {/* <ArticleCard
-                onClick={() => alert("XD")}
-                isLoading={isLoading}
-                toggleArticleAsFavouriteHandler={toggleAsFavourite}
-                data={article}
-                className=""
-                isSelected={selectedArticle === article._id}
-              /> */}
+      
               <ArticleCardRe
                 markAsFavourite={markAsFavuriteHandler}
                 onClick={openInModalHandler}

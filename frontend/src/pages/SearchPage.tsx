@@ -94,7 +94,7 @@ const SearchPage: React.FC = () => {
         </div>
       </div>
 
-      <ArticlesViewLayout viewType={viewType} articles={articles} />
+      <ArticlesViewLayout viewType={viewType} articles={articles} isLoading={isArticlesLoading} />
 
       <SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer} />
     </div>

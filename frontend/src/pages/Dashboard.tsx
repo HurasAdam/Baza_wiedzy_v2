@@ -255,7 +255,7 @@ const openInModalHandler = (aritcleId) => {
   </h3>
   <ul className="space-y-3">
   {isLoading
-    ? [1, 2, 3, 4, 5].map((_, index) => (
+    ? [1, 2, 3, 4, 5,6].map((_, index) => (
         <li
           key={index}
           className="flex justify-center items-center py-4 px-5 bg-gray-50 rounded-lg shadow-sm hover:bg-gray-100 transition-all ease-in-out duration-300 overflow-hidden relative h-14"
@@ -310,7 +310,7 @@ const openInModalHandler = (aritcleId) => {
             <h3 className="text-sm font-semibold text-gray-700 mb-3"><FaRocket className="inline-block mr-2" />Ostatnio dodane artykuły</h3>
             <ul className="space-y-3">
   {isLoading ? (
-    [1, 2, 3, 4].map((_, index) => (
+    [1, 2, 3, 4,5].map((_, index) => (
       <li
         key={index}
         className="flex bg-white items-center space-x-3 rounded-lg shadow-sm p-3   relative min-h-14"

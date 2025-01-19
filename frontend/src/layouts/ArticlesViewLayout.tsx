@@ -5,8 +5,8 @@ import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
 import useScrollToTop from "@/hooks/useScrollToTop";
 import React from "react";
 
-const ArticlesViewLayout: React.FC = ({ viewType, articles }) => {
-  const { mutate: markAsFavouriteHandler, isLoading } =
+const ArticlesViewLayout: React.FC = ({ viewType, articles,isLoading }) => {
+  const { mutate: markAsFavouriteHandler } =
     useMarkArticleAsFavourite();
 
   const toggleAsFavourite = ({ id }) => {
