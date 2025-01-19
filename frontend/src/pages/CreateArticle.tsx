@@ -1,6 +1,7 @@
 import { ArticleForm } from "@/components/ArticleForm";
 import { ToastBox } from "@/components/core/ToastBox";
 import { toast } from "@/hooks/use-toast";
+import useScrollToTop from "@/hooks/useScrollToTop";
 import { articlesApi } from "@/lib/articlesApi";
 import { productsApi } from "@/lib/productsApi";
 import { tagsApi } from "@/lib/tagsApi";
@@ -10,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const CreateArticle = () => {
   const navigate = useNavigate();
-
+  useScrollToTop();
   const { data } = useQuery({
     queryKey: ["tags"],
     queryFn: () => {

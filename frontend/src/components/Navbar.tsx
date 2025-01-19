@@ -10,6 +10,7 @@ import { useAppContext } from "../../contexts/AppContext";
 import ConversationSummaryForm from "../forms/ConversationSummaryForm";
 import { IoIosSettings } from "react-icons/io";
 import { MdNoteAdd, MdOutlineSearch, MdPhoneInTalk } from "react-icons/md";
+import { MdAssignmentAdd } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
 import { api } from "../lib/api";
@@ -218,7 +219,7 @@ const Navbar: React.FC = ({ notifications }) => {
                 className="shadow-xl hover:bg-slate-600/95 group border  bg-slate-600 group   transition-all hover:font-bold px-2 py-2 rounded-lg  font-semibold  text-slate-100 "
                 to="new-article"
               >
-                <MdNoteAdd className="text-secondary  w-4 h-4  " />
+                <MdAssignmentAdd className="text-secondary  w-4 h-4  " />
               </NavLink>
             </TooltipTrigger>
             <TooltipContent>
