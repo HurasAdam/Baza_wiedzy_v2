@@ -27,8 +27,8 @@ export const getConversationTopicsHandler = catchErrors(async (req, res) => {
   const conversationTopics = await ConversationTopicModel.find(query)
     .populate([
       { path: "product", select: ["name", "labelColor", "banner", "-_id"] },
-    ]) // Załadowanie produktów
-    .sort("product.name"); // Sortowanie według nazwy produktu
+    ])
+    .sort("product.name"); 
   return res.status(OK).json(conversationTopics);
 });
 
@@ -56,22 +56,22 @@ export const updateConversationTopicleHandler = catchErrors(
     const { id } = req.params;
     const { title, product } = req.body;
 
-    // Sprawdzamy, czy temat rozmowy istnieje
+
     const conversationTopic = await ConversationTopicModel.findById(id);
     appAssert(conversationTopic, NOT_FOUND, "Conversation topic not found");
 
-    // Jeśli produkt jest podany, sprawdzamy, czy istnieje
+  
     if (product) {
-      const assignedProduct = await ProductModel.findById(product); // użyj findById, nie find
+      const assignedProduct = await ProductModel.findById(product);
       appAssert(assignedProduct, NOT_FOUND, "Product not found");
     }
 
     if (title && product) {
-      // Sprawdzenie unikalności kombinacji tytuł + produkt
+   
       const existingTopic = await ConversationTopicModel.findOne({
         title,
         product,
-        _id: { $ne: id }, // Wykluczamy aktualny temat (który chcemy zaktualizować)
+        _id: { $ne: id }, 
       });
 
       appAssert(
@@ -81,14 +81,11 @@ export const updateConversationTopicleHandler = catchErrors(
       );
     }
 
-    // Aktualizacja tematu rozmowy
     conversationTopic.title = title || conversationTopic.title;
     conversationTopic.product = product || conversationTopic.product;
 
-    // Zapisz zmiany w bazie danych
     const updatedConversationTopic = await conversationTopic.save();
 
-    // Zwróć odpowiedź po udanej aktualizacji
     res.status(OK).json({ message: "Temat rozmowy został zaktualizowany" });
   }
 );

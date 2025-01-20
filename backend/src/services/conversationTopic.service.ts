@@ -1,4 +1,5 @@
 import { CONFLICT, NOT_FOUND } from "../constants/http";
+import ConversationReportModel from "../models/ConversationReport.model";
 import ConversationTopicModel from "../models/ConversationTopic.model";
 import TagModel from "../models/Tag.model";
 import appAssert from "../utils/appAssert";
@@ -50,5 +51,12 @@ export const deleteConversationTopic = async({topicId}:{topicId:string})=>{
   appAssert(conversationTopic, NOT_FOUND, "Conversation topic not found");
 
   const deleteConversationTopic = await ConversationTopicModel.findByIdAndDelete({_id:topicId})
+
+  await ConversationReportModel.updateMany(
+    { topic: topicId }, 
+    { $set: { topic: null } }
+  );
+
+
   return {message:"Conversataion topic deleted sucessfully"}
 }
