@@ -111,6 +111,31 @@ export const getAllCoversationReportsHandler = catchErrors(async (req, res) => {
 
 });
 
+
+export const getUserConversationReports = catchErrors(async (req, res) => {
+  const { id: userId } = req.params;
+
+  console.log(userId);
+
+  const userReports = await ConversationReportModel.find({
+    createdBy: userId,
+    topic: { $ne: null },
+  })
+    .populate({
+      path: "topic", // Populacja tematu
+      select: "title description product", // Pobranie pól z tematu
+      populate: {
+        path: "product", // Zagnieżdżona populacja produktu
+        select: ["name","labelColor"], // Pobranie tylko nazwy produktu
+      },
+    })
+    .populate("createdBy", "username email"); // Populacja twórcy raportu
+
+  return res.status(200).json(userReports);
+});
+
+
+
 export const getAllReports = catchErrors(async (req, res) => {
   const allConversationReports = await ConversationReportModel.find({});
   return res.status(OK).json(allConversationReports);
