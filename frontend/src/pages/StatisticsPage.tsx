@@ -13,7 +13,10 @@ import { HiMiniPresentationChartBar } from "react-icons/hi2";
 import { DatePicker } from "@/components/DatePicker";
 import { articlesApi } from "@/lib/articlesApi";
 import { MdArticle } from "react-icons/md";
+import { useModalContext } from "@/contexts/ModalContext";
+import UserReportDetails from "@/components/UserReportDetails";
 const StatisticsPage: React.FC = () => {
+  const {openContentModal} =useModalContext();
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [queryDates, setQueryDates] = useState({
@@ -41,6 +44,17 @@ const StatisticsPage: React.FC = () => {
       });
     }
   };
+
+
+  const openInModalHandler = (userId) => {
+    openContentModal({
+      description: "",
+      content: (<UserReportDetails userId={userId}/>),
+      enableOutsideClickClose: true,
+      size: "lg",
+    });
+  };
+  
 
   const handleClearFilters = () => {
     setStartDate(undefined);
@@ -105,7 +119,8 @@ const StatisticsPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Lista tematów rozmów */}
         <Card className="shadow-md border border-gray-200">
-          <CardHeader className="bg-gray-100 border-b border-gray-300 py-4 flex  gap-3">
+          <CardHeader 
+          className="bg-gray-100 border-b border-gray-300 py-4 flex  gap-3">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 flex justify-center items-center bg-teal-500 rounded-md">
                 <IoMdCall className="w-6 h-6 text-green-200" />
@@ -123,8 +138,9 @@ const StatisticsPage: React.FC = () => {
           <div className="p-4 space-y-3">
             {usersWithStats?.map((user, index) => (
               <div
+              onClick={()=>openInModalHandler(user?._id)}
                 key={user._id}
-                className="flex justify-between items-center p-3 border border-gray-200 rounded-md hover:shadow-md"
+                className="flex justify-between items-center p-3 border border-gray-200 rounded-md hover:shadow-md cursor-pointer"
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-700">

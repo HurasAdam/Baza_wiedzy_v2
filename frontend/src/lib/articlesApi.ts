@@ -118,6 +118,7 @@ export const getUsersArticleStats = async (searchParams) => {
   return API.get(`/user/article-statistics?${queryParams}`);
 };
 
+
 export const articlesApi = {
   getAllArticles,
   createArticle,
