@@ -17,8 +17,17 @@ const getCoversationReportStats = async (searchParams) => {
 };
 
 
-const getUserConversationReportStats = async({userId}) =>{
-  return API.get(`/user/statistics/${userId}`);
+const getUserConversationReportStats = async({userId,searchParams}) =>{
+
+const queryParams = new URLSearchParams();
+if (searchParams.startDate) {
+  queryParams.append("startDate", searchParams.startDate);
+}
+if (searchParams.endDate) {
+  queryParams.append("endDate", searchParams.endDate);
+}
+
+  return API.get(`/user/statistics/${userId}?${queryParams}`);
 }
 
 

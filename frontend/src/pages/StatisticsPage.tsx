@@ -17,7 +17,7 @@ import { useModalContext } from "@/contexts/ModalContext";
 import UserReportDetails from "@/components/UserReportDetails";
 const StatisticsPage: React.FC = () => {
   const {openContentModal} =useModalContext();
-  const [startDate, setStartDate] = useState<Date>();
+  const [startDate, setStartDate] = useState<Date |null>();
   const [endDate, setEndDate] = useState<Date>();
   const [queryDates, setQueryDates] = useState({
     startDate: null,
@@ -49,7 +49,7 @@ const StatisticsPage: React.FC = () => {
   const openInModalHandler = (userId) => {
     openContentModal({
       description: "",
-      content: (<UserReportDetails userId={userId}/>),
+      content: (<UserReportDetails userId={userId} queryParams={queryParams}/>),
       enableOutsideClickClose: true,
       size: "lg",
     });
@@ -63,7 +63,8 @@ const StatisticsPage: React.FC = () => {
   };
 
   const queryParams = { startDate, endDate };
-
+console.log("paramatry")
+console.log(typeof(queryParams.endDate))
   const { data: usersWithStats } = useQuery({
     queryKey: ["reportStatistics", queryDates],
     queryFn: () => {
