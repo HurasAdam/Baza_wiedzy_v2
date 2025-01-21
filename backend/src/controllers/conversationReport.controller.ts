@@ -114,22 +114,34 @@ export const getAllCoversationReportsHandler = catchErrors(async (req, res) => {
 
 export const getUserConversationReports = catchErrors(async (req, res) => {
   const { id: userId } = req.params;
+  const { startDate, endDate } = req.query; 
 
-  console.log(userId);
+  console.log(userId, startDate, endDate);
+
+
+  const dateFilter: { $gte?: Date; $lte?: Date } = {};
+  if (startDate) {
+    dateFilter.$gte = new Date(startDate.toString()); 
+  }
+  if (endDate) {
+    dateFilter.$lte = new Date(endDate.toString()); 
+  }
 
   const userReports = await ConversationReportModel.find({
     createdBy: userId,
     topic: { $ne: null },
+    ...(Object.keys(dateFilter).length > 0 && { createdAt: dateFilter }), 
   })
     .populate({
-      path: "topic", // Populacja tematu
-      select: "title description product", // Pobranie pól z tematu
+      path: "topic", 
+      select: "title description product", 
       populate: {
-        path: "product", // Zagnieżdżona populacja produktu
-        select: ["name","labelColor"], // Pobranie tylko nazwy produktu
+        path: "product", 
+        select: ["name", "labelColor"], 
       },
     })
-    .populate("createdBy", "username email"); // Populacja twórcy raportu
+    .populate("createdBy", "username email")
+    .sort({ createdAt: -1 });
 
   return res.status(200).json(userReports);
 });
