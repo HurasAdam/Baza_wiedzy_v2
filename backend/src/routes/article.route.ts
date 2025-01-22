@@ -4,6 +4,7 @@ import {
   deleteArticleHandler,
   getArticleHandler,
   getArticleHistoryHandler,
+  getArticlesCreatedBySelectedUser,
   getArticlesHandler,
   getFavouriteArticlesHandler,
   getLatestArticlesForDashboard,
@@ -36,5 +37,6 @@ articleRoutes.delete("/article/:id/delete", deleteArticleHandler);
 articleRoutes.put("/article/:id/trash", trashArticleHandler);
 articleRoutes.put("/article/:id/restore", restoreArticleHandler);
 articleRoutes.get("/article/:id/history", getArticleHistoryHandler);
+articleRoutes.get("/userArticles/:id", getArticlesCreatedBySelectedUser);
 
 export default articleRoutes;

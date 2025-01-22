@@ -384,3 +384,37 @@ export const updateArticleHandler = catchErrors(async (req, res) => {
 
   res.status(OK).json({ message: "Artykuł został zaktualizowany" });
 });
+
+
+export const getArticlesCreatedBySelectedUser = catchErrors(async (req, res) => {
+  const { id: userId } = req.params;
+  const { startDate, endDate } = req.query;
+
+  // Typ obiektu filter
+  const filter: {
+    createdBy: string;
+    isTrashed: boolean;
+    createdAt?: {
+      $gte?: Date;
+      $lte?: Date;
+    };
+  } = {
+    createdBy: userId,
+    isTrashed: false,
+  };
+
+  if (startDate || endDate) {
+    filter.createdAt = {};
+    if (startDate) {
+      filter.createdAt.$gte = new Date(startDate.toString()); // Data większa lub równa
+    }
+    if (endDate) {
+      filter.createdAt.$lte = new Date(endDate.toString()); // Data mniejsza lub równa
+    }
+  }
+
+  // Wykonujemy zapytanie do bazy danych
+  const userArticles = await ArticleModel.find(filter).select(["title", "createdAt", "isVerified"]);
+
+  return res.status(200).json(userArticles);
+});
