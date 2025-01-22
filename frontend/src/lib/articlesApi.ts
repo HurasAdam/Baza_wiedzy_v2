@@ -119,6 +119,21 @@ export const getUsersArticleStats = async (searchParams) => {
 };
 
 
+
+const getArticlesCreatedByUser = async({userId,searchParams}) =>{
+
+  const queryParams = new URLSearchParams();
+  if (searchParams.startDate) {
+    queryParams.append("startDate", searchParams.startDate);
+  }
+  if (searchParams.endDate) {
+    queryParams.append("endDate", searchParams.endDate);
+  }
+  
+    return API.get(`/articles/userArticles/${userId}?${queryParams}`);
+  }
+  
+
 export const articlesApi = {
   getAllArticles,
   createArticle,
@@ -133,5 +148,6 @@ export const articlesApi = {
   restoreArticle,
   getUsersArticleStats,
   getLatestArticles,
-  getPopularArticles
+  getPopularArticles,
+  getArticlesCreatedByUser
 };

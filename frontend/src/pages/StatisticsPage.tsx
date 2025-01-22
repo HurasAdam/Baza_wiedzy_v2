@@ -15,6 +15,7 @@ import { articlesApi } from "@/lib/articlesApi";
 import { MdArticle } from "react-icons/md";
 import { useModalContext } from "@/contexts/ModalContext";
 import UserReportDetails from "@/components/UserReportDetails";
+import UserArticlesDetails from "@/components/UserArticlesDetails";
 const StatisticsPage: React.FC = () => {
   const {openContentModal} =useModalContext();
   const [startDate, setStartDate] = useState<Date |null>();
@@ -55,6 +56,16 @@ const StatisticsPage: React.FC = () => {
     });
   };
   
+
+const openUserArticlesDetails = (userId) =>{
+  openContentModal({
+    description: "",
+    content: (<UserArticlesDetails userId={userId} queryParams={queryParams}/>),
+    enableOutsideClickClose: true,
+    size: "lg",
+  });
+}
+
 
   const handleClearFilters = () => {
     setStartDate(undefined);
@@ -179,6 +190,7 @@ console.log(typeof(queryParams.endDate))
           <div className="p-4 space-y-3">
             {usersWithArticleStats?.map((user, index) => (
               <div
+              onClick={()=>openUserArticlesDetails(user._id)}
                 key={user._id}
                 className="flex justify-between items-center p-3 border border-gray-200 rounded-md hover:shadow-md"
               >
