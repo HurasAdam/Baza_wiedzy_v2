@@ -1,5 +1,6 @@
 import { NOT_FOUND, OK } from "../constants/http";
 import ArticleModel from "../models/Article.model";
+import ArticleHistoryModel from "../models/ArticleHistory.model";
 import ConversationReportModel from "../models/ConversationReport.model";
 import UserModel from "../models/User.model";
 import appAssert from "../utils/appAssert";
@@ -201,4 +202,95 @@ export const getUsersWithArticleCountHandler = catchErrors(async (req, res) => {
   ];
 
   return res.status(OK).json(allUsersWithArticleCounts);
+});
+
+
+export const getUsersWithChangeCountHandler = catchErrors(async (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  let dateFilter: any = {};
+
+  if (startDate || endDate) {
+    dateFilter = { updatedAt: {} };
+
+    if (startDate) {
+      const start = new Date(startDate.toString());
+      if (!isNaN(start.getTime())) {
+        dateFilter.updatedAt.$gte = start;
+      }
+    }
+
+    if (endDate) {
+      const end = new Date(endDate.toString());
+      if (!isNaN(end.getTime())) {
+        dateFilter.updatedAt.$lte = end;
+      }
+    }
+  }
+
+  // Agregacja w kolekcji historii zmian artykułów
+  const usersWithChangeCount = await ArticleHistoryModel.aggregate([
+    {
+      $match: {
+        ...dateFilter, // Jeśli podano daty, filtruj zmiany po dacie
+        eventType: "updated", // Dodajemy filtr, który uwzględnia tylko zmiany typu 'updated'
+      },
+    },
+    {
+      $group: {
+        _id: "$updatedBy", // Grupowanie po użytkowniku
+        updatedArticleCount: { $sum: 1 }, // Zliczanie tylko tych zmian, które mają eventType 'updated'
+      },
+    },
+    {
+      $lookup: {
+        from: "users", // Łączenie z kolekcją użytkowników
+        localField: "_id",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: "$user", // Rozpakowywanie wyników z tablicy user
+    },
+    {
+      $project: {
+        _id: "$user._id",
+        name: "$user.name",
+        surname: "$user.surname",
+        updatedArticleCount: 1,
+      },
+    },
+    {
+      $sort: {
+        updatedArticleCount: -1, // Sortowanie po liczbie zmian malejąco
+      },
+    },
+  ]);
+
+  // Pobieramy wszystkich użytkowników
+  const allUsers = await UserModel.find();
+
+  // Użytkownicy, którzy nie wprowadzili żadnych zmian
+  const usersWithZeroChanges = allUsers
+    .filter(
+      (user) =>
+        !usersWithChangeCount.some(
+          (change) => change._id.toString() === user._id.toString()
+        )
+    )
+    .map((user) => ({
+      _id: user._id,
+      name: user.name,
+      surname: user.surname,
+      updatedArticleCount: 0,
+    }));
+
+  // Łączenie wyników z użytkownikami, którzy mają zero zmian
+  const allUsersWithChangeCounts = [
+    ...usersWithChangeCount,
+    ...usersWithZeroChanges,
+  ];
+
+  return res.status(200).json(allUsersWithChangeCounts);
 });
