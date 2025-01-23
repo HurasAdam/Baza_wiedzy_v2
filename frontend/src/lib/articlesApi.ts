@@ -118,6 +118,20 @@ export const getUsersArticleStats = async (searchParams) => {
   return API.get(`/user/article-statistics?${queryParams}`);
 };
 
+export const getUsersChangedArticleStats = async (searchParams) => {
+  const queryParams = new URLSearchParams();
+  if (searchParams.startDate) {
+    queryParams.append("startDate", searchParams.startDate);
+  }
+  if (searchParams.endDate) {
+    queryParams.append("endDate", searchParams.endDate);
+  }
+
+  return API.get(`/user/change-statistics?${queryParams}`);
+};
+
+
+
 
 
 const getArticlesCreatedByUser = async({userId,searchParams}) =>{
@@ -132,6 +146,21 @@ const getArticlesCreatedByUser = async({userId,searchParams}) =>{
   
     return API.get(`/articles/userArticles/${userId}?${queryParams}`);
   }
+
+  const getArticlesHistoryByUser = async({userId,searchParams}) =>{
+
+    const queryParams = new URLSearchParams();
+    if (searchParams.startDate) {
+      queryParams.append("startDate", searchParams.startDate);
+    }
+    if (searchParams.endDate) {
+      queryParams.append("endDate", searchParams.endDate);
+    }
+    
+      return API.get(`/articles/userHistory/${userId}?${queryParams}`);
+    }
+
+  
   
 
 export const articlesApi = {
@@ -149,5 +178,7 @@ export const articlesApi = {
   getUsersArticleStats,
   getLatestArticles,
   getPopularArticles,
-  getArticlesCreatedByUser
+  getArticlesCreatedByUser,
+  getArticlesHistoryByUser
+  ,getUsersChangedArticleStats
 };

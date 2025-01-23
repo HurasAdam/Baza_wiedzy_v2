@@ -8,6 +8,7 @@ import { conversationReportApi } from "@/lib/conversationReportsApi";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { TbArrowBadgeRightFilled } from "react-icons/tb";
+import { RiFileEditFill } from "react-icons/ri";
 import { IoMdCall } from "react-icons/io";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
 import { DatePicker } from "@/components/DatePicker";
@@ -16,6 +17,7 @@ import { MdArticle } from "react-icons/md";
 import { useModalContext } from "@/contexts/ModalContext";
 import UserReportDetails from "@/components/UserReportDetails";
 import UserArticlesDetails from "@/components/UserArticlesDetails";
+import UserArticleChangesDetails from "@/components/UserArticleChangesDetails";
 const StatisticsPage: React.FC = () => {
   const {openContentModal} =useModalContext();
   const [startDate, setStartDate] = useState<Date |null>();
@@ -66,6 +68,15 @@ const openUserArticlesDetails = (userId) =>{
   });
 }
 
+const openUserChangedArticlesDetails = (userId) =>{
+  openContentModal({
+    description: "",
+    content: (<UserArticleChangesDetails userId={userId} queryParams={queryParams}/>),
+    enableOutsideClickClose: true,
+    size: "lg",
+  });
+}
+
 
   const handleClearFilters = () => {
     setStartDate(undefined);
@@ -87,6 +98,14 @@ console.log(typeof(queryParams.endDate))
     queryKey: ["articleStats", queryDates],
     queryFn: () => {
       return articlesApi.getUsersArticleStats(queryParams);
+    },
+  });
+
+
+  const { data: usersWithChangedArticleStats } = useQuery({
+    queryKey: ["changedArticleStats", queryDates],
+    queryFn: () => {
+      return articlesApi.getUsersChangedArticleStats(queryParams);
     },
   });
 
@@ -128,7 +147,7 @@ console.log(typeof(queryParams.endDate))
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Lista tematów rozmów */}
         <Card className="shadow-md border border-gray-200">
           <CardHeader 
@@ -204,6 +223,47 @@ console.log(typeof(queryParams.endDate))
                 </div>
                 <span className="text-gray-600 font-semibold">
                   {user.createdArticleCount}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+
+                {/* Lista edytowanych artykułów */}
+                <Card className="shadow-md border border-gray-200">
+          <CardHeader className="bg-gray-100 border-b border-gray-300 py-4  flex gap-3">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 flex justify-center items-center  rounded-md bg-blue-600/70">
+                <RiFileEditFill className="w-6 h-6  text-blue-50" />
+              </div>
+              <div>
+                <CardTitle className="text-lg font-semibold text-gray-800">
+                  Edytowane artykuły
+                </CardTitle>
+                <CardDescription className="text-sm text-gray-600">
+                  Lista użytkowników z liczbą edytowanych artykułów
+                </CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <div className="p-4 space-y-3">
+            {usersWithChangedArticleStats?.map((user, index) => (
+              <div
+              onClick={()=>openUserChangedArticlesDetails(user?._id)}
+                key={user?._id}
+                className="flex justify-between items-center p-3 border border-gray-200 rounded-md hover:shadow-md"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    {index + 1}.
+                  </span>
+                  <span className="text-gray-900 font-medium">
+                    {user?.name} {user?.surname}
+                  </span>
+                </div>
+                <span className="text-gray-600 font-semibold">
+                  {user?.updatedArticleCount}
                 </span>
               </div>
             ))}
