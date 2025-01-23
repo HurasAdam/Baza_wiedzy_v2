@@ -6,6 +6,7 @@ import {
   OK,
 } from "../constants/http";
 import ArticleModel from "../models/Article.model";
+import ArticleHistoryModel from "../models/ArticleHistory.model";
 import UserModel from "../models/User.model";
 import {
   createArticle,
@@ -417,4 +418,36 @@ export const getArticlesCreatedBySelectedUser = catchErrors(async (req, res) => 
   const userArticles = await ArticleModel.find(filter).select(["title", "createdAt", "isVerified"]);
 
   return res.status(200).json(userArticles);
+});
+
+
+export const getArticlesHistoryByUser = catchErrors(async (req, res) => {
+  const { id: userId } = req.params;
+  const { startDate, endDate } = req.query;
+
+  // Typ obiektu filter
+  const filter: {
+    updatedBy: string;
+    updatedAt?: {
+      $gte?: Date;
+      $lte?: Date;
+    };
+  } = {
+    updatedBy: userId,
+  };
+
+  if (startDate || endDate) {
+    filter.updatedAt = {};
+    if (startDate) {
+      filter.updatedAt.$gte = new Date(startDate.toString()); // Data większa lub równa
+    }
+    if (endDate) {
+      filter.updatedAt.$lte = new Date(endDate.toString()); // Data mniejsza lub równa
+    }
+  }
+
+  // Wykonujemy zapytanie do bazy danych
+  const userHistory = await ArticleHistoryModel.find(filter).populate("articleId", "title createdAt");
+
+  return res.status(200).json(userHistory);
 });
