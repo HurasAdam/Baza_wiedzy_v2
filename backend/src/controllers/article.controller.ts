@@ -414,7 +414,7 @@ export const getArticlesCreatedBySelectedUser = catchErrors(async (req, res) => 
     }
   }
 
-  // Wykonujemy zapytanie do bazy danych
+  
   const userArticles = await ArticleModel.find(filter).select(["title", "createdAt", "isVerified"]);
 
   return res.status(200).json(userArticles);
@@ -425,29 +425,33 @@ export const getArticlesHistoryByUser = catchErrors(async (req, res) => {
   const { id: userId } = req.params;
   const { startDate, endDate } = req.query;
 
-  // Typ obiektu filter
   const filter: {
     updatedBy: string;
     updatedAt?: {
       $gte?: Date;
       $lte?: Date;
     };
+    eventType?: { $ne: string }; 
   } = {
     updatedBy: userId,
+    eventType: { $ne: "created" } 
   };
 
   if (startDate || endDate) {
     filter.updatedAt = {};
     if (startDate) {
-      filter.updatedAt.$gte = new Date(startDate.toString()); // Data większa lub równa
+      filter.updatedAt.$gte = new Date(startDate.toString()); 
     }
     if (endDate) {
-      filter.updatedAt.$lte = new Date(endDate.toString()); // Data mniejsza lub równa
+      filter.updatedAt.$lte = new Date(endDate.toString()); 
     }
   }
 
-  // Wykonujemy zapytanie do bazy danych
-  const userHistory = await ArticleHistoryModel.find(filter).populate("articleId", "title createdAt");
+  // Wykonujemy zapytanie
+  const userHistory = await ArticleHistoryModel.find(filter)
+    .populate("articleId", "title")  
+    .exec();
 
   return res.status(200).json(userHistory);
 });
+
