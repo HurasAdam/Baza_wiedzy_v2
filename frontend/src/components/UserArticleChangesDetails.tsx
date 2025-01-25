@@ -5,11 +5,15 @@ import React, { useState } from 'react'
 import { FaFileSignature, FaTrashCan } from 'react-icons/fa6'
 import { IoIosCheckmark } from 'react-icons/io'
 import { LiaExchangeAltSolid } from 'react-icons/lia'
+import { MdEditDocument } from "react-icons/md";
+import { MdArticle } from "react-icons/md";
 import { MdDone, MdOutlineQuestionMark, MdOutlineSettingsBackupRestore } from 'react-icons/md'
 import ArticleHistoryActivityCard from './ArticleHistoryActivityCard'
 import { IMAGES } from '@/constants/images'
 import { formatDate } from '@/lib/utils'
+import { diff_match_patch } from "diff-match-patch";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
+import UserHistoryActivityCard from './UserHistoryActivityCard'
 
 
 
@@ -34,7 +38,33 @@ const showHistoryDetails = (selected) => {
 const closeArticleHistoryView = (articleId) => {
 
 };
+  const highlightChanges = (oldText, newText) => {
+    const dmp = new diff_match_patch();
 
+    // Obliczanie różnic między starym i nowym tekstem
+    const diffs = dmp.diff_main(oldText, newText);
+    dmp.diff_cleanupSemantic(diffs); // Opcjonalnie - poprawia spójność zmian
+
+    // Zmienna do przechowywania HTML dla dwóch kolumn
+    let leftText = "";
+    let rightText = "";
+
+    diffs.forEach(([op, text]) => {
+      if (op === 0) {
+        // Brak zmian - zwykły tekst (wyświetlamy w obu kolumnach)
+        leftText += text;
+        rightText += text;
+      } else if (op === 1) {
+        // Dodany tekst - kolor zielony (tylko po prawej)
+        rightText += `<span style="background-color: #e6f7e6; color: green;">${text}</span>`;
+      } else if (op === -1) {
+        // Usunięty tekst - przekreślony, kolor czerwony (tylko po lewej)
+        leftText += `<span style="background-color: #f8d7da; color: red; text-decoration: line-through;">${text}</span>`;
+      }
+    });
+
+    return { leftText, rightText };
+  };
 const TASKTYPEICON = {
     restored: (
       <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white">
@@ -62,18 +92,18 @@ const TASKTYPEICON = {
       </div>
     ),
     updated: (
-      <div className="w-8 h-8  rounded-full bg-sky-700 flex items-center justify-center text-white">
-        <LiaExchangeAltSolid size={18} />
+      <div className="w-8 h-8  rounded-full bg-sky-700/90 flex items-center justify-center text-white">
+        <MdEditDocument size={18} />
       </div>
     ),
   };
   return (
-    <div className="grid grid-cols-[4fr_14fr] h-full gap-1.5 max-h-[88vh] ">
+    <div className="grid grid-cols-[5fr_15fr] h-full gap-1.5 max-h-[88vh] ">
     {/* Lewa kolumna - lista zmian */}
-    <div className="border-r overflow-y-auto max-h-[88vh] scrollbar-custom   ">
+    <div className="border-r overflow-y-auto max-h-[88vh] scrollbar-custom  space-y-1.5 ">
 
       {userUpdatedArticles?.map((historyItem, index) => (
-        <ArticleHistoryActivityCard
+        <UserHistoryActivityCard
           onClick={showHistoryDetails}
           item={historyItem}
           taskTypeIcons={TASKTYPEICON}
@@ -102,250 +132,100 @@ const TASKTYPEICON = {
         </div>
       )}{" "}
 
-      {selectedItem?.eventType === "updated" && (
-        <div className="max-h-[88vh]">
-          <div className="h-full min-h-[88vh] flex flex-col gap-6 p-6 bg-white rounded-lg shadow-md border border-indigo-200 ">
-            <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
-              <div>
-                <div className="w-12 h-12 bg-sky-700 text-white flex items-center justify-center rounded-full">
-                  <LiaExchangeAltSolid size={24} />
-                </div>
-              </div>
-              <div className="flex justify-between items-center w-full">
-                <h2 className="text-2xl font-semibold text-sky-700">
-                  Artykuł został zaktualizowany
-                </h2>
-                <span className="text-slate-600 text-base font-semibold ">
-                  {formatDate(selectedItem?.createdAt, true)}
-                </span>
-              </div>
-            </div>
-            <div className="text-center mt-10 mb-14">
-              <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
-                Artykuł został zaktualizowany przez:
-                <p className="text-indigo-700">
-                  {selectedItem?.updatedBy?.name}{" "}
-                  {selectedItem?.updatedBy?.surname}
-                </p>
-              </p>
-            </div>
+{selectedItem?.eventType === "updated" && (
+  <div className="max-h-[88vh]">
+  <div className="h-full min-h-[88vh] flex flex-col gap-6 p-6 bg-white rounded-lg shadow-md border border-indigo-200">
 
-            <div className="grid grid-cols-2 gap-6  h-auto pr-2 pl-1 ">
-              <div className="max-h-[88vh] flex flex-col gap-2 ">
-                <h2 className="px-1.5 py-1.5 font-inter text-slate-700">
-                  Poprzednia wersja
-                </h2>
-                {selectedItem?.changes?.map((change) => {
-                  const { leftText } = highlightChanges(
-                    change.oldValue,
-                    change.newValue
-                  );
-                  return (
-                    <div className="">
-                      <div className="bg-slate-400 text-neutral-50 text-base font-inter border px-3.5 py-2 shadow  rounded-t-lg  ">
-                        {" "}
-                        {
-                          ARTICLE_HISTORY_FIELD_TRANSLATIONS[
-                            change?.field || change?.field
-                          ]
-                        }
-                      </div>
-                      <div
-                        className="text-slate-600  leading-6 text-sm p-4 h-auto border p-3 shadow bg-white rounded-b-lg  "
-                        dangerouslySetInnerHTML={{ __html: leftText }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="min-h-[88vh] flex flex-col gap-2 ">
-                <h2 className="px-1.5 py-1.5 font-inter text-emerald-700/90">
-                  Wersja po zmianach
-                </h2>
-                {selectedItem?.changes?.map((change) => {
-                  const { rightText } = highlightChanges(
-                    change.oldValue,
-                    change.newValue
-                  );
-                  return (
-                    <div>
-                      <div className="bg-emerald-500/90 text-neutral-50 text-base font-inter border px-3.5 py-2 shadow  rounded-t-lg">
-                        {" "}
-                        {
-                          ARTICLE_HISTORY_FIELD_TRANSLATIONS[
-                            change?.field || change?.field
-                          ]
-                        }
-                      </div>
-                      <div
-                        className="text-slate-600 leading-6 text-sm p-4 h-auto border p-3 shadow bg-white rounded-b-lg  "
-                        dangerouslySetInnerHTML={{ __html: rightText }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+    {/* Sekcja o aktualizacji artykułu na samej górze */}
+    <div className="text-center  mb-14">
+      
+      <div className="flex  items-center gap-3 bg-sky-700/10 py-4 px-6 rounded-lg shadow-lg">
+        {/* Ikona aktualizacji */}
+        
+        <div className="min-w-12 h-12 bg-sky-600 text-white rounded-full flex items-center justify-center">
+          <MdEditDocument size={24} />
         </div>
-      )}
-      {selectedItem?.eventType === "verified" && (
-        <div className="min-h-[88vh] h-full flex flex-col gap-7 p-6 bg-gray-50 rounded-lg shadow-md border border-gray-300">
-          {/* Header */}
-          <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
-            <div>
-              <div className="w-12 h-12 bg-emerald-600 text-white flex items-center justify-center rounded-full">
-                <MdDone size={24} />
-              </div>
-            </div>
-            <div className="flex justify-between items-center w-full">
-              <h2 className="text-2xl font-semibold text-emerald-700">
-                Artykuł został zweryfikowany
-              </h2>
-              <span className="text-slate-600 text-base font-semibold ">
-                {formatDate(selectedItem?.createdAt, true)}
-              </span>
-            </div>
-          </div>
-          <div className="text-center mt-16">
-            <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
-              Artykuł został pomyślnie zweryfikowany i zatwierdzony przez
-              <p className="text-green-500">
-                {selectedItem?.updatedBy?.name}{" "}
-                {selectedItem?.updatedBy?.surname}
-              </p>
-            </p>
-          </div>
-          {/* Placeholder Image */}
-          <div className="flex justify-center items-center  rounded-lg p-6  ">
-            <img
-              src={IMAGES.verifiedImage}
-              alt="Artykuł zweryfikowany"
-              className="w-full max-w-xs sm:max-w-sm md:max-w-md"
-            />
-          </div>
+        {/* Tekst z aktualizacją */}
+        
+        <div className="flex justify-between w-full items-center">
+ <div className='flex flex-col items-start gap-0.5'>
 
-          {/* Informacja o weryfikacji */}
+ <p className="text-xl font-semibold text-gray-800">Artykuł został zaktualizowany</p>
+ <p className="text-xs text-gray-600 font-semibold ">przez: <span className='text-blue-700 font-semibold text-sm'>{selectedItem?.updatedBy?.name} {selectedItem?.updatedBy?.surname}</span></p>
+ </div>
+          <span className="text-sm font-semibold text-indigo-900">{formatDate(selectedItem?.createdAt, true)}</span>
+          
         </div>
-      )}
-      {selectedItem?.eventType === "unverified" && (
-        <div className="min-h-[88vh] h-full flex flex-col gap-7 p-6 bg-gray-50 rounded-lg shadow-md border border-gray-300">
-          {/* Header */}
-          <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
-            <div>
-              <div className="w-12 h-12 bg-slate-600 text-white flex items-center justify-center rounded-full">
-                <MdOutlineQuestionMark size={24} />
-              </div>
-            </div>
-            <div className="flex justify-between items-center w-full">
-              <h2 className="text-2xl font-semibold text-slate-700">
-                Weryfikacja artykułu została cofnięta
-              </h2>
-              <span className="text-slate-600 text-base font-semibold ">
-                {formatDate(selectedItem?.createdAt, true)}
-              </span>
-            </div>
-          </div>
-          <div className="text-center mt-16">
-            <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
-              Status artykułu został ustawiony jako 'Do zweryfikowania'
-              <p className="text-slate-800">
-                {selectedItem?.updatedBy?.name}{" "}
-                {selectedItem?.updatedBy?.surname}
-              </p>
-            </p>
-          </div>
-          {/* Placeholder Image */}
-          <div className="flex justify-center items-center  rounded-lg p-6  ">
-            <img
-              src={IMAGES.unverifiedImage}
-              alt="Artykuł zweryfikowany"
-              className="w-full max-w-xs sm:max-w-sm md:max-w-md"
-            />
-          </div>
+      </div>
+    </div>
 
-          {/* Informacja o weryfikacji */}
-        </div>
-      )}
-      {selectedItem?.eventType === "trashed" && (
-        <div className="min-h-[88vh] h-full flex flex-col gap-7 p-6 bg-gray-50 rounded-lg shadow-md border border-gray-300">
-          {/* Header */}
-          <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
-            <div>
-              <div className="w-12 h-12 bg-rose-600/90 text-white flex items-center justify-center rounded-full">
-                <FaTrashCan size={24} />
+    {/* Tytuł artykułu i data */}
+    <div className="flex items-center gap-4 pb-4 border-b border-gray-200 w-full">
+      {/* Ikona artykułu */}
+      <div className="min-w-12 h-12 flex items-center justify-center bg-sky-600 text-white rounded-full shadow-lg">
+        <MdArticle size={24} />
+      </div>
+
+      {/* Tytuł artykułu */}
+      <div className="flex flex-col justify-between w-full">
+        <h2 className="text-3xl font-semibold text-gray-800 ">{selectedItem?.articleId?.title || "Brak tytułu"}</h2>
+  
+      </div>
+    </div>
+
+
+    
+    <h3 className="text-lg font-semibold text-gray-700 mb-4">Porównanie zmian:</h3>
+    {/* Sekcja porównania zmian */}
+    <div className="grid grid-cols-2 gap-6 h-auto pr-2 pl-1">
+      {/* Poprzednia wersja */}
+      <div className="flex flex-col gap-4 bg-gray-50 p-4 rounded-lg shadow-md border border-gray-200">
+        <h3 className="text-xl font-medium text-gray-700 mb-4">Poprzednia wersja</h3>
+        {selectedItem?.changes?.map((change) => {
+          const { leftText } = highlightChanges(change.oldValue, change.newValue);
+          return (
+            <div key={change.field}>
+              <div className="bg-slate-200 text-gray-800 text-base font-medium px-3 py-2 rounded-t-lg">
+                {ARTICLE_HISTORY_FIELD_TRANSLATIONS[change?.field]}
               </div>
-            </div>
-            <div className="flex justify-between items-center w-full">
-              <h2 className="text-2xl font-semibold text-red-700">
-                Artykuł został przeniesiony do kosza
-              </h2>
-              <span className="text-slate-600 text-base font-semibold ">
-                {formatDate(selectedItem?.createdAt, true)}
-              </span>
-            </div>
-          </div>
-          <div className="text-center mt-16 mb-14">
-            <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
-              Artykuł został przeniesiony do kosza przez:
-              <p className="text-red-500">
-                {selectedItem?.updatedBy?.name}{" "}
-                {selectedItem?.updatedBy?.surname}
-              </p>
-            </p>
-          </div>
-          {/* Placeholder Image */}
-          <div className="flex justify-center items-center mt-8 rounded-lg  ">
-            <div className="border  bg-rose-200/60 w-[60%] rounded-2xl flex justify-center pt-20 ">
-              <img
-                src={IMAGES.trashedImage}
-                alt="Artykuł zweryfikowany"
-                className="w-full h-full max-w-xs sm:max-w-sm md:max-w-md scale-150"
+              <div
+                className="bg-white text-gray-600 p-4 border-b border-gray-200 text-sm shadow rounded-b-lg"
+                dangerouslySetInnerHTML={{ __html: leftText }}
               />
             </div>
-          </div>
-          {/* Informacja o weryfikacji */}
-        </div>
-      )}
-      {selectedItem?.eventType === "restored" && (
-        <div className="min-h-[88vh] h-full flex flex-col gap-7 p-6 bg-gray-50 rounded-lg shadow-md border border-gray-300">
-          {/* Header */}
-          <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
-            <div>
-              <div className="w-12 h-12 bg-amber-600 text-white flex items-center justify-center rounded-full">
-                <MdOutlineSettingsBackupRestore size={24} />
-              </div>
-            </div>
-            <div className="flex justify-between items-center w-full">
-              <h2 className="text-2xl font-semibold text-amber-700">
-                Artykuł został przywrócony
-              </h2>
-              <span className="text-slate-600 text-base font-semibold ">
-                {formatDate(selectedItem?.createdAt, true)}
-              </span>
-            </div>
-          </div>
-          <div className="text-center mt-16">
-            <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
-              Artykuł został przywrócony z usuniętych przez:
-              <p className="text-amber-500">
-                {selectedItem?.updatedBy?.name}{" "}
-                {selectedItem?.updatedBy?.surname}
-              </p>
-            </p>
-          </div>
-          {/* Placeholder Image */}
-          <div className="flex justify-center items-center  rounded-lg p-6 mt-12 ">
-            <img
-              src={IMAGES.restoredImage}
-              alt="Artykuł zweryfikowany"
-              className="w-full max-w-xs sm:max-w-sm md:max-w-md scale-125"
-            />
-          </div>
+          );
+        })}
+      </div>
 
-          {/* Informacja o weryfikacji */}
-        </div>
-      )}
+      {/* Nowa wersja */}
+      <div className="flex flex-col gap-4 bg-emerald-50 p-4 rounded-lg shadow-md border border-emerald-200">
+        <h3 className="text-xl font-medium text-emerald-700 mb-4">Wersja po zmianach</h3>
+        {selectedItem?.changes?.map((change) => {
+          const { rightText } = highlightChanges(change.oldValue, change.newValue);
+          return (
+            <div key={change.field}>
+              <div className="bg-emerald-200 text-emerald-800 text-base font-medium px-3 py-2 rounded-t-lg">
+                {ARTICLE_HISTORY_FIELD_TRANSLATIONS[change?.field]}
+              </div>
+              <div
+                className="bg-white text-gray-600 p-4 border-b border-gray-200 text-sm shadow rounded-b-lg"
+                dangerouslySetInnerHTML={{ __html: rightText }}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+</div>
+)}
+
+
+
+
+
+
+
     </div>
   </div>
   )
