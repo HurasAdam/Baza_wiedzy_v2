@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const formatDate = (date: string | Date) => {
+export const formatDate = (date: string | Date, showTime: boolean = false) => {
   const dateObject = new Date(date);
   const now = new Date();
 
@@ -23,7 +23,6 @@ export const formatDate = (date: string | Date) => {
 
   // Jeśli różnica jest mniejsza niż 1 minuta (np. poniżej 60 sekund), wyświetlamy "Kilka sekund temu"
   if (diffInMs < 60000) {
-    // 60000 ms = 1 minuta
     return "Kilka sekund temu";
   }
 
@@ -37,10 +36,17 @@ export const formatDate = (date: string | Date) => {
     return `${diffInHours} godz. temu`;
   }
 
-  // Jeśli różnica przekracza 24 godziny, wyświetlamy pełną datę
+  // Jeśli różnica przekracza 1 godzinę i showTime jest true, dodaj godzinę i minutę
   const month = dateObject.toLocaleString("pl-PL", { month: "short" });
   const day = dateObject.getDate();
   const year = dateObject.getFullYear();
+
+  // Jeśli przekroczono godzinę, dodaj godzinę i minutę, jeśli showTime jest true
+  if (diffInHours >= 1 && showTime) {
+    const hours = dateObject.getHours().toString().padStart(2, '0');
+    const minutes = dateObject.getMinutes().toString().padStart(2, '0');
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+  }
 
   return `${day}-${month}-${year}`;
 };
