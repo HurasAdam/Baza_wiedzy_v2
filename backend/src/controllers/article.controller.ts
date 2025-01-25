@@ -425,33 +425,42 @@ export const getArticlesHistoryByUser = catchErrors(async (req, res) => {
   const { id: userId } = req.params;
   const { startDate, endDate } = req.query;
 
-  const filter: {
-    updatedBy: string;
+  const filter: {updatedBy: string;
     updatedAt?: {
       $gte?: Date;
       $lte?: Date;
     };
-    eventType?: { $ne: string }; 
+    eventType: string;
+    articleId?: { $ne: null };
   } = {
     updatedBy: userId,
-    eventType: { $ne: "created" } 
+    eventType: "updated", // Filtruj tylko rekordy z eventType === "updated"
+    articleId: { $ne: null }, // Wyklucz rekordy bez powiązanego artykułu
   };
 
   if (startDate || endDate) {
     filter.updatedAt = {};
     if (startDate) {
-      filter.updatedAt.$gte = new Date(startDate.toString()); 
+      filter.updatedAt.$gte = new Date(startDate.toString());
     }
     if (endDate) {
-      filter.updatedAt.$lte = new Date(endDate.toString()); 
+      filter.updatedAt.$lte = new Date(endDate.toString());
     }
   }
 
-  // Wykonujemy zapytanie
   const userHistory = await ArticleHistoryModel.find(filter)
-    .populate("articleId", "title")  
+    .populate({
+      path: "articleId", // Powiązanie z artykułem
+      select: ["title",'isTrashed'], // Tylko tytuł artykułu
+      match: {  isTrashed: { $ne: false } }
+    })
+    .populate({
+      path: "updatedBy", // Powiązanie z użytkownikiem
+      select: "name surname", // Pobierz imię i nazwisko
+    })
     .exec();
 
   return res.status(200).json(userHistory);
 });
+
 
