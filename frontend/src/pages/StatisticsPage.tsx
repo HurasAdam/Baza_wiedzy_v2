@@ -65,6 +65,7 @@ const openUserArticlesDetails = (userId) =>{
     content: (<UserArticlesDetails userId={userId} queryParams={queryParams}/>),
     enableOutsideClickClose: true,
     size: "lg",
+    
   });
 }
 
@@ -74,6 +75,8 @@ const openUserChangedArticlesDetails = (userId) =>{
     content: (<UserArticleChangesDetails userId={userId} queryParams={queryParams}/>),
     enableOutsideClickClose: true,
     size: "lg",
+   
+    scrollable: false,
   });
 }
 
@@ -87,14 +90,14 @@ const openUserChangedArticlesDetails = (userId) =>{
   const queryParams = { startDate, endDate };
 console.log("paramatry")
 console.log(typeof(queryParams.endDate))
-  const { data: usersWithStats } = useQuery({
+  const { data: usersWithStats,isLoading:isReportStatsLoading } = useQuery({
     queryKey: ["reportStatistics", queryDates],
     queryFn: () => {
       return conversationReportApi.getCoversationReportStats(queryParams);
     },
   });
 
-  const { data: usersWithArticleStats } = useQuery({
+  const { data: usersWithArticleStats, isLoading:isCreatedArticleStatsLoading } = useQuery({
     queryKey: ["articleStats", queryDates],
     queryFn: () => {
       return articlesApi.getUsersArticleStats(queryParams);
@@ -102,12 +105,15 @@ console.log(typeof(queryParams.endDate))
   });
 
 
-  const { data: usersWithChangedArticleStats } = useQuery({
+  const { data: usersWithChangedArticleStats,isLoading:isChangedArticleStatsLoading } = useQuery({
     queryKey: ["changedArticleStats", queryDates],
     queryFn: () => {
       return articlesApi.getUsersChangedArticleStats(queryParams);
     },
   });
+
+
+const isLoading = isReportStatsLoading || isCreatedArticleStatsLoading || isChangedArticleStatsLoading
 
   return (
     <div className="py-6 px-9">
@@ -147,6 +153,9 @@ console.log(typeof(queryParams.endDate))
         </div>
       </div>
 
+{isLoading ? (
+  <div>Ładowanie danych...</div>
+):
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Lista tematów rozmów */}
         <Card className="shadow-md border border-gray-200">
@@ -269,7 +278,7 @@ console.log(typeof(queryParams.endDate))
             ))}
           </div>
         </Card>
-      </div>
+      </div>}
     </div>
   );
 };

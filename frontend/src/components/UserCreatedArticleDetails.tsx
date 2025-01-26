@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { articlesApi } from '@/lib/articlesApi';
 import ArticleDetailsCardLite from './ArticleDetailsCardLite';
 import { IMAGES } from '@/constants/images';
+import Spinner from './core/Spinner';
 
 const UserCreatedArticleDetails = ({ articleId }) => {
   const { data: article, isLoading, isError } = useQuery({
@@ -11,8 +12,18 @@ const UserCreatedArticleDetails = ({ articleId }) => {
     enabled: !!articleId, // Zapytanie wysyłane tylko, gdy przekazano articleId
   });
 
+
+  
   if (isLoading) {
-    return <div>Ładowanie szczegółów artykułu...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-full space-y-4 p-6">
+      {/* Subtelny spinner z komunikatem */}
+      <div className="flex flex-col items-center space-y-2">
+        <Spinner animation="spin" size="lg" color="bg-blue-500" />
+        <p className="text-lg font-semibold text-gray-600">Pobieranie danych...</p>
+      </div>
+    </div>
+    )
   }
 
   if (isError || !article) {
@@ -32,25 +43,6 @@ const UserCreatedArticleDetails = ({ articleId }) => {
   }
 
   return (
-    // <div className="p-4 space-y-4 ">
-    //   <h1 className="text-xl font-bold">{article.title}</h1>
-    //   <div className="text-gray-600">
-    //     <p><strong>Opis pracownika:</strong> {article.employeeDescription}</p>
-    //     <p><strong>Opis klienta:</strong> {article.clientDescription}</p>
-    //   </div>
-    //   <div>
-    //     <p><strong>Zweryfikowany:</strong> {article.isVerified ? 'Tak' : 'Nie'}</p>
-    //     <p><strong>Zweryfikował:</strong> {article.verifiedBy?.name || 'Nieznany użytkownik'}</p>
-    //   </div>
-    //   <div>
-    //     <p><strong>Produkt:</strong> {article.product?.name || 'Nieznany produkt'}</p>
-    //     <p><strong>Tagi:</strong> {article.tags.map(tag => tag.name).join(', ') || 'Brak'}</p>
-    //     <p><strong>Wyświetlenia:</strong> {article.viewsCounter}</p>
-    //   </div>
-    //   <p className="text-gray-400 text-sm">
-    //     Utworzono: {new Date(article.createdAt).toLocaleString()}
-    //   </p>
-    // </div>
     <ArticleDetailsCardLite article={article}/>
   );
 };
