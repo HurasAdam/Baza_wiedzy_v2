@@ -45,8 +45,8 @@ const ConversationReportCard: FC<IConversationReportCardProps> = ({
   };
   console.log(topic);
   return (
-    <div className="border rounded-lg px-5 py-3.5 grid grid-cols-2 max-w-6xl gap-4 bg-white shadow-xs">
-      <div className="flex-1 flex flex-col gap-4">
+    <div className="border rounded-lg px-5 pt-3 pb-1 grid grid-cols-2 max-w-6xl gap-4 bg-white shadow-xs">
+      <div className="flex-1 flex flex-col gap-2.5">
         <span
           style={{
             backgroundImage: `url(${
@@ -63,7 +63,7 @@ const ConversationReportCard: FC<IConversationReportCardProps> = ({
           {topic?.product?.name}
         </span>
 
-        <h3 className="text-lg font-semibold px-2 py-0.5">{topic?.title}</h3>
+        <h3 className="text-md text-neutral-800 font-semibold px-2 py-0.5">{topic?.title}</h3>
       </div>
       <ConversationReportForm
         isFormDisabled={isFormDisabled}

@@ -14,11 +14,11 @@ import {
 import { Textarea } from "./ui/textarea";
 import { ImSpinner8 } from "react-icons/im";
 
-const MAX_EMPLOYEE_DESCRIPTION_LENGTH = 200;
+const MAX_EMPLOYEE_DESCRIPTION_LENGTH = 190;
 
 const formSchema = z.object({
-  description: z.string().max(200, {
-    message: "Opis rozmowy nie może zawierać wiecej niz 200 znaków.",
+  description: z.string().max(190, {
+    message: "Opis rozmowy nie może zawierać wiecej niz 190 znaków.",
   }),
   topic: z.string(),
 });
@@ -51,7 +51,7 @@ export function ConversationReportForm({ onSave, topic, className, isLoading, is
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={`${className} px-1 grid grid-cols-[3fr_1fr] gap-5`}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className={`${className} px-1 grid grid-cols-[3fr_1fr]  gap-5`}>
         <FormField
           disabled={isLoading}
           control={form.control}
@@ -62,11 +62,11 @@ export function ConversationReportForm({ onSave, topic, className, isLoading, is
               <FormControl>
                 <Textarea
                   placeholder="Skrócony opis rozmowy"
-                  className="resize-none min-h-[65px] scrollbar-custom"
+                  className="resize-none text-xs min-h-[50px] scrollbar-custom"
                   {...field}
                 />
               </FormControl>
-              <FormDescription className={`${employeeDescriptionValue.length > 0 ? "text-gray-500  text-xs" : "text-transparent"}`}>
+              <FormDescription className={`${employeeDescriptionValue.length > 0 ? "text-gray-500   text-xs" : "text-transparent text-xs"}`}>
                 {employeeDescriptionValue.length}/{MAX_EMPLOYEE_DESCRIPTION_LENGTH} znaków
               </FormDescription>
               <FormMessage className="text-sm" />
