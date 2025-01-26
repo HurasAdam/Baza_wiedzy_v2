@@ -312,10 +312,10 @@ export const trashArticleHandler = catchErrors(async (req, res) => {
   if (updatedAritlceObj?.isTrashed) {
     await saveArticleChanges({
       articleId: id,
-      articleBeforeChanges: article, // Artykuł przed zmianą
-      updatedArticle: updatedAritlceObj, // Artykuł po zmianie
-      updatedBy: req.userId, // Id użytkownika, który dokonał zmiany
-      eventType: EventType.Trashed, // Typ zdarzenia: 'updated'
+      articleBeforeChanges: article,
+      updatedArticle: updatedAritlceObj, 
+      updatedBy: req.userId, 
+      eventType: EventType.Trashed,
     });
   }
 
@@ -347,11 +347,20 @@ export const restoreArticleHandler = catchErrors(async (req, res) => {
 
 export const deleteArticleHandler = catchErrors(async (req, res) => {
   const { id } = req.params;
+
+  // Znalezienie artykułu
   const article = await ArticleModel.findById({ _id: id });
   appAssert(article, NOT_FOUND, "Article not found");
+
+  // Usunięcie artykułu
   const deletedArticle = await ArticleModel.findByIdAndDelete({ _id: id });
   appAssert(deletedArticle, INTERNAL_SERVER_ERROR, "Something went wrong");
-  return res.status(OK).json({ message: "Artykuł został usunięty." });
+
+  // Usunięcie powiązanej historii
+  await ArticleHistoryModel.deleteMany({ articleId: id });
+
+  // Odpowiedź
+  return res.status(OK).json({ message: "Artykuł i powiązana historia zostały usunięte." });
 });
 
 export const updateArticleHandler = catchErrors(async (req, res) => {
@@ -425,7 +434,9 @@ export const getArticlesHistoryByUser = catchErrors(async (req, res) => {
   const { id: userId } = req.params;
   const { startDate, endDate } = req.query;
 
-  const filter: {updatedBy: string;
+  // Tworzymy podstawowy filtr
+  const filter: {
+    updatedBy: string;
     updatedAt?: {
       $gte?: Date;
       $lte?: Date;
@@ -434,10 +445,11 @@ export const getArticlesHistoryByUser = catchErrors(async (req, res) => {
     articleId?: { $ne: null };
   } = {
     updatedBy: userId,
-    eventType: "updated", // Filtruj tylko rekordy z eventType === "updated"
-    articleId: { $ne: null }, // Wyklucz rekordy bez powiązanego artykułu
+    eventType: "updated",
+    articleId: { $ne: null }, // Wyklucz historię bez powiązanego artykułu
   };
 
+  // Dodajemy filtr dat, jeśli są podane
   if (startDate || endDate) {
     filter.updatedAt = {};
     if (startDate) {
@@ -448,19 +460,21 @@ export const getArticlesHistoryByUser = catchErrors(async (req, res) => {
     }
   }
 
+  // Zapytanie do bazy danych
   const userHistory = await ArticleHistoryModel.find(filter)
     .populate({
       path: "articleId", // Powiązanie z artykułem
-      select: ["title",'isTrashed'], // Tylko tytuł artykułu
-      match: {  isTrashed: { $ne: false } }
+      select: ["title", "isTrashed"], // Pobierz tylko potrzebne pola
+      match: { isTrashed: false }, // Wyklucz artykuły, które są w koszu
     })
     .populate({
       path: "updatedBy", // Powiązanie z użytkownikiem
-      select: "name surname", // Pobierz imię i nazwisko
+      select: "name surname", // Pobierz imię i nazwisko użytkownika
     })
     .exec();
 
-  return res.status(200).json(userHistory);
+  // Zwracamy tylko rekordy, w których `articleId` nie jest nullem
+  return res.status(200).json(userHistory.filter((entry) => entry.articleId));
 });
 
 
