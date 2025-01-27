@@ -153,8 +153,24 @@ const isLoading = isReportStatsLoading || isCreatedArticleStatsLoading || isChan
         </div>
       </div>
 
-{isLoading ? (
-  <div>Ładowanie danych...</div>
+{!isLoading ? (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
+    {[...Array(3)].map((_, idx) => (
+      <Card key={idx} className="shadow-md border border-gray-200">
+        <CardHeader className="bg-gray-100 border-b border-gray-300 py-4 flex gap-3">
+          <div className="w-full h-10" />
+        </CardHeader>
+        <div className="p-4 space-y-3">
+          {[...Array(5)].map((_, index) => (
+            <div
+              key={index}
+              className="h-8 w-full border border-gray-200 rounded-md"
+            />
+          ))}
+        </div>
+      </Card>
+    ))}
+  </div>
 ):
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Lista tematów rozmów */}
