@@ -1,14 +1,12 @@
 export const constructSearchQuery = (queryParams: any) => {
-  let constructedQuery: any = {};
+  const constructedQuery: any = {};
 
   if (queryParams.title) {
-    constructedQuery.$or = [{ title: new RegExp(queryParams.title, "i") }];
+    constructedQuery.$or = [{ title: new RegExp(queryParams.title, 'i') }];
   }
   if (queryParams.tags) {
     constructedQuery.tags = {
-      $all: Array.isArray(queryParams.tags)
-        ? queryParams.tags
-        : [queryParams.tags],
+      $all: Array.isArray(queryParams.tags) ? queryParams.tags : [queryParams.tags],
     };
   }
 

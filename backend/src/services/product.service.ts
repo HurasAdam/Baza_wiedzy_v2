@@ -1,9 +1,9 @@
-import { CONFLICT, NOT_FOUND } from "../constants/http";
-import ArticleModel from "../models/Article.model";
-import ConversationTopicModel from "../models/ConversationTopic.model";
-import ProductModel from "../models/Product.model";
-import TagModel from "../models/Tag.model";
-import appAssert from "../utils/appAssert";
+import { CONFLICT, NOT_FOUND } from '../constants/http';
+import ArticleModel from '../models/Article.model';
+import ConversationTopicModel from '../models/ConversationTopic.model';
+import ProductModel from '../models/Product.model';
+import TagModel from '../models/Tag.model';
+import appAssert from '../utils/appAssert';
 
 interface CreateProductRequest {
   name: string;
@@ -16,14 +16,11 @@ interface CreateProductParams {
   userId: string; // userId to string
 }
 
-export const createProduct = async ({
-  request,
-  userId,
-}: CreateProductParams) => {
+export const createProduct = async ({ request, userId }: CreateProductParams) => {
   const { name, labelColor, banner } = request;
 
   const product = await ProductModel.exists({ name });
-  appAssert(!product, CONFLICT, "Product already exists");
+  appAssert(!product, CONFLICT, 'Product already exists');
 
   const createdProduct = await ProductModel.create({
     name,
@@ -37,7 +34,7 @@ export const createProduct = async ({
 export const deleteProduct = async ({ productId }: { productId: string }) => {
   // Znajdź produkt w bazie
   const product = await ProductModel.findById({ _id: productId });
-  appAssert(product, NOT_FOUND, "Product not found");
+  appAssert(product, NOT_FOUND, 'Product not found');
 
   // Sprawdź, czy istnieją powiązane tematy rozmów
   const relatedTopicsCount = await ConversationTopicModel.countDocuments({
@@ -51,21 +48,17 @@ export const deleteProduct = async ({ productId }: { productId: string }) => {
   appAssert(
     relatedTopicsCount === 0 && relatedArticlesCount === 0,
     CONFLICT,
-    "Cannot delete product. It is used in one or more conversation topics or articles."
+    'Cannot delete product. It is used in one or more conversation topics or articles.',
   );
 
   // Usuń produkt, jeśli brak powiązań
   await ProductModel.findByIdAndDelete({ _id: productId });
 
-  return { message: "Product deleted successfully" };
+  return { message: 'Product deleted successfully' };
 };
 
-export const getSingleProduct = async ({
-  productId,
-}: {
-  productId: string;
-}) => {
+export const getSingleProduct = async ({ productId }: { productId: string }) => {
   const product = await ProductModel.findById({ _id: productId });
-  appAssert(product, NOT_FOUND, "Product not found");
+  appAssert(product, NOT_FOUND, 'Product not found');
   return product;
 };

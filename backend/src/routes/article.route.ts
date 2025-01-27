@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   createArticleHandler,
   deleteArticleHandler,
@@ -16,29 +16,29 @@ import {
   trashArticleHandler,
   updateArticleHandler,
   verifyArticleHandler,
-} from "../controllers/article.controller";
-import roleGuard from "../middleware/roleGuard";
+} from '../controllers/article.controller';
+import roleGuard from '../middleware/roleGuard';
 
 const articleRoutes = Router();
 
 // prefix /articles
 
 // articleRoutes.get("/",getSessionsHandler)
-articleRoutes.post("/create", createArticleHandler);
-articleRoutes.get("/", getArticlesHandler);
-articleRoutes.get("/popular", getPopularArticlesHandler);
-articleRoutes.get("/latest", getLatestArticlesForDashboard);
-articleRoutes.get("/trashed", getTrashedArticlesHandler);
-articleRoutes.get("/:id", getArticleHandler);
-articleRoutes.post("/article/:id/verify", verifyArticleHandler);
-articleRoutes.post("/article/:id/markAsFavourite", markAsFavouriteHandler);
-articleRoutes.put("/article/:id/update", updateArticleHandler);
-articleRoutes.get("/articles/favourites", getFavouriteArticlesHandler);
-articleRoutes.delete("/article/:id/delete", deleteArticleHandler);
-articleRoutes.put("/article/:id/trash", trashArticleHandler);
-articleRoutes.put("/article/:id/restore", restoreArticleHandler);
-articleRoutes.get("/article/:id/history", getArticleHistoryHandler);
-articleRoutes.get("/userArticles/:id", getArticlesCreatedBySelectedUser);
-articleRoutes.get("/userHistory/:id", getArticlesHistoryByUser);
+articleRoutes.post('/create', createArticleHandler);
+articleRoutes.get('/', getArticlesHandler);
+articleRoutes.get('/popular', getPopularArticlesHandler);
+articleRoutes.get('/latest', getLatestArticlesForDashboard);
+articleRoutes.get('/trashed', getTrashedArticlesHandler);
+articleRoutes.get('/:id', getArticleHandler);
+articleRoutes.post('/article/:id/verify', verifyArticleHandler);
+articleRoutes.post('/article/:id/markAsFavourite', markAsFavouriteHandler);
+articleRoutes.put('/article/:id/update', updateArticleHandler);
+articleRoutes.get('/articles/favourites', getFavouriteArticlesHandler);
+articleRoutes.delete('/article/:id/delete', deleteArticleHandler);
+articleRoutes.put('/article/:id/trash', trashArticleHandler);
+articleRoutes.put('/article/:id/restore', restoreArticleHandler);
+articleRoutes.get('/article/:id/history', getArticleHistoryHandler);
+articleRoutes.get('/userArticles/:id', getArticlesCreatedBySelectedUser);
+articleRoutes.get('/userHistory/:id', getArticlesHistoryByUser);
 
 export default articleRoutes;

@@ -1,13 +1,9 @@
-import { CONFLICT, NOT_FOUND, OK } from "../constants/http";
-import ProductModel from "../models/Product.model";
-import {
-  createProduct,
-  deleteProduct,
-  getSingleProduct,
-} from "../services/product.service";
-import appAssert from "../utils/appAssert";
-import catchErrors from "../utils/catchErrors";
-import { newProductSchema } from "./product.schema";
+import { newProductSchema } from './product.schema';
+import { CONFLICT, NOT_FOUND, OK } from '../constants/http';
+import ProductModel from '../models/Product.model';
+import { createProduct, deleteProduct, getSingleProduct } from '../services/product.service';
+import appAssert from '../utils/appAssert';
+import catchErrors from '../utils/catchErrors';
 
 export const createProductHandler = catchErrors(async (req, res) => {
   const request = newProductSchema.parse(req.body);
@@ -25,7 +21,7 @@ export const deleteProductHandler = catchErrors(async (req, res) => {
 });
 
 export const getProductsHandler = catchErrors(async (req, res) => {
-  const tags = await ProductModel.find({}).select(["-createdBy"]);
+  const tags = await ProductModel.find({}).select(['-createdBy']);
   return res.status(OK).json(tags);
 });
 
@@ -41,16 +37,12 @@ export const updateProductHandler = catchErrors(async (req, res) => {
 
   // Znajdź istniejący produkt po ID
   const product = await ProductModel.findById({ _id: id });
-  appAssert(product, NOT_FOUND, "Product not found");
+  appAssert(product, NOT_FOUND, 'Product not found');
 
   // Jeśli nazwa jest zmieniana, sprawdź, czy produkt z tą nazwą już istnieje
   if (name && name !== product.name) {
     const existingProduct = await ProductModel.exists({ name });
-    appAssert(
-      !existingProduct,
-      CONFLICT,
-      "Product with this name already exists"
-    );
+    appAssert(!existingProduct, CONFLICT, 'Product with this name already exists');
   }
 
   // Zaktualizuj nazwę i kolor etykiety
@@ -60,5 +52,5 @@ export const updateProductHandler = catchErrors(async (req, res) => {
 
   const updatedProduct = await product.save();
 
-  res.status(OK).json({ message: "Produkt został zaktualizowany" });
+  res.status(OK).json({ message: 'Produkt został zaktualizowany' });
 });

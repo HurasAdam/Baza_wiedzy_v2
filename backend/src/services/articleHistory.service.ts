@@ -1,10 +1,11 @@
-import mongoose, { Types } from "mongoose";
-import ArticleHistoryModel from "../models/ArticleHistory.model";
-import ArticleModel from "../models/Article.model";
-import appAssert from "../utils/appAssert";
-import { NOT_FOUND } from "../constants/http";
-import EventType from "../constants/articleEventTypes";
-import TagModel from "../models/Tag.model";
+import mongoose from 'mongoose';
+import EventType from '../constants/articleEventTypes';
+import { NOT_FOUND } from '../constants/http';
+import ArticleModel from '../models/Article.model';
+import ArticleHistoryModel from '../models/ArticleHistory.model';
+import TagModel from '../models/Tag.model';
+import appAssert from '../utils/appAssert';
+import type { Types } from 'mongoose';
 
 interface Article {
   _id: Types.ObjectId;
@@ -32,14 +33,10 @@ interface ISaveArticleChangesProps {
   eventType: EventType;
 }
 
-export const getArticleHistory = async ({
-  articleId,
-}: {
-  articleId: string;
-}) => {
+export const getArticleHistory = async ({ articleId }: { articleId: string }) => {
   // Sprawdzenie, czy artykuł o danym ID istnieje
   const article = await ArticleModel.findById({ _id: articleId });
-  appAssert(article, NOT_FOUND, "Article not found");
+  appAssert(article, NOT_FOUND, 'Article not found');
 
   // Pobranie historii zmian artykułu z kolekcji ArticleHistory
   const articleHistory = await ArticleHistoryModel.aggregate([
@@ -48,29 +45,29 @@ export const getArticleHistory = async ({
     },
     {
       $lookup: {
-        from: "users", // Kolekcja Users, zakładając, że "updatedBy" jest referencją do Usera
-        localField: "updatedBy",
-        foreignField: "_id",
-        as: "updatedBy",
+        from: 'users', // Kolekcja Users, zakładając, że "updatedBy" jest referencją do Usera
+        localField: 'updatedBy',
+        foreignField: '_id',
+        as: 'updatedBy',
       },
     },
     {
-      $unwind: "$updatedBy", // Rozwijanie tablicy "updatedBy"
+      $unwind: '$updatedBy', // Rozwijanie tablicy "updatedBy"
     },
     {
       $lookup: {
-        from: "articles", // Kolekcja Articles
-        localField: "articleId",
-        foreignField: "_id",
-        as: "articleDetails",
+        from: 'articles', // Kolekcja Articles
+        localField: 'articleId',
+        foreignField: '_id',
+        as: 'articleDetails',
       },
     },
     {
       $addFields: {
         articleDetails: {
           $cond: {
-            if: { $eq: ["$eventType", "created"] }, // Warunek, jeśli eventType to "created"
-            then: { $arrayElemAt: ["$articleDetails", 0] }, // Pobierz pierwszy element z tablicy
+            if: { $eq: ['$eventType', 'created'] }, // Warunek, jeśli eventType to "created"
+            then: { $arrayElemAt: ['$articleDetails', 0] }, // Pobierz pierwszy element z tablicy
             else: null, // Dla innych eventType, nie dodawaj danych artykułu
           },
         },
@@ -112,32 +109,36 @@ export const saveArticleChanges = async ({
     if (changes.length === 0) return;
   }
 
-  console.log("articleBeforeChanges");
+  console.log('articleBeforeChanges');
   console.log(articleBeforeChanges);
-  console.log("updatedArticle");
+  console.log('updatedArticle');
   console.log(updatedArticle);
   // Zapisujemy historię zmian
   const historyEntry = new ArticleHistoryModel({
-    articleId: articleId,
+    articleId,
     changes,
-    updatedBy: updatedBy,
+    updatedBy,
     eventType,
   });
   await historyEntry.save();
 };
 
+/**
+ * @param oldObj
+ * @param newObj
+ */
 function compareObjects(oldObj: any, newObj: any): Change[] {
   const changes: Change[] = [];
 
   // Lista kluczowych pól, które chcemy porównywać
   const fieldsToCompare = [
-    "title",
-    "clientDescription",
-    "employeeDescription",
-    "tags",
-    "isVerified",
-    "isTrashed",
-    "product",
+    'title',
+    'clientDescription',
+    'employeeDescription',
+    'tags',
+    'isVerified',
+    'isTrashed',
+    'product',
   ];
 
   // Przechodzimy po wszystkich kluczach w obiekcie

@@ -1,9 +1,9 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const productNameSchema = z
   .string()
-  .min(2, { message: "Product name must be at least 2 characters long" })
-  .max(50, { message: "Product name must be at most 20 characters long" });
+  .min(2, { message: 'Product name must be at least 2 characters long' })
+  .max(50, { message: 'Product name must be at most 20 characters long' });
 
 export const newProductSchema = z.object({
   name: productNameSchema,
@@ -11,20 +11,20 @@ export const newProductSchema = z.object({
   banner: z
     .string()
     .optional() // Ustaw jako opcjonalne, jeśli to wymagane
-    .default("default-banner") // Domyślna wartość, jeśli nic nie podano
+    .default('default-banner') // Domyślna wartość, jeśli nic nie podano
     .refine(
       (value) =>
         [
-          "blob",
-          "steps",
-          "circle",
-          "biblioteka",
-          "abstract",
-          "abstract2",
-          "abstract3",
-          "abstract4",
-          "default-banner",
+          'blob',
+          'steps',
+          'circle',
+          'biblioteka',
+          'abstract',
+          'abstract2',
+          'abstract3',
+          'abstract4',
+          'default-banner',
         ].includes(value),
-      { message: "Invalid banner value" }
+      { message: 'Invalid banner value' },
     ),
 });

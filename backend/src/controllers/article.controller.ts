@@ -1,26 +1,14 @@
-import EventType from "../constants/articleEventTypes";
-import {
-  CONFLICT,
-  INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
-  OK,
-} from "../constants/http";
-import ArticleModel from "../models/Article.model";
-import ArticleHistoryModel from "../models/ArticleHistory.model";
-import UserModel from "../models/User.model";
-import {
-  createArticle,
-  getArticle,
-  incrementArticleViews,
-} from "../services/article.service";
-import {
-  getArticleHistory,
-  saveArticleChanges,
-} from "../services/articleHistory.service";
-import appAssert from "../utils/appAssert";
-import catchErrors from "../utils/catchErrors";
-import { constructSearchQuery } from "../utils/constructSearchQuery";
-import { newArticleSchema } from "./article.schemas";
+import { newArticleSchema } from './article.schemas';
+import EventType from '../constants/articleEventTypes';
+import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from '../constants/http';
+import ArticleModel from '../models/Article.model';
+import ArticleHistoryModel from '../models/ArticleHistory.model';
+import UserModel from '../models/User.model';
+import { createArticle, getArticle, incrementArticleViews } from '../services/article.service';
+import { getArticleHistory, saveArticleChanges } from '../services/articleHistory.service';
+import appAssert from '../utils/appAssert';
+import catchErrors from '../utils/catchErrors';
+import { constructSearchQuery } from '../utils/constructSearchQuery';
 
 export const createArticleHandler = catchErrors(async (req, res) => {
   const request = newArticleSchema.parse(req.body);
@@ -28,7 +16,7 @@ export const createArticleHandler = catchErrors(async (req, res) => {
   const newArticle = await createArticle({ request, userId });
 
   console.log(newArticle);
-  console.log("newArticle");
+  console.log('newArticle');
 
   await saveArticleChanges({
     articleId: newArticle?._id.toString(),
@@ -38,16 +26,14 @@ export const createArticleHandler = catchErrors(async (req, res) => {
     eventType: EventType.Created,
   });
 
-  return res
-    .status(OK)
-    .json({ message: "Dodano nowy artykuł", data: newArticle });
+  return res.status(OK).json({ message: 'Dodano nowy artykuł', data: newArticle });
 });
 
 export const getLatestArticlesForDashboard = catchErrors(async (req, res) => {
   const limit = parseInt(req.query.limit as string) || 4;
 
   const latestArticles = await ArticleModel.find({}, { title: 1, createdAt: 1 })
-  .populate([  { path: "product", select: ["name", "labelColor"] },])
+    .populate([{ path: 'product', select: ['name', 'labelColor'] }])
     .sort({ createdAt: -1 }) // Sortowanie malejąco po dacie
     .limit(limit); // Ograniczenie liczby wyników
 
@@ -60,26 +46,20 @@ export const getArticlesHandler = catchErrors(async (req, res) => {
     ...constructSearchQuery(req.query),
     isTrashed: { $ne: true },
   };
-  const user = await UserModel.findById(userId).select("favourites");
+  const user = await UserModel.findById(userId).select('favourites');
   const favouritesList = user?.favourites;
 
-  const limit = parseInt(req.query.limit?.toString() || "20");
+  const limit = parseInt(req.query.limit?.toString() || '20');
   const pageSize = limit;
-  const pageNumber = parseInt(req.query.page ? req.query.page.toString() : "1");
+  const pageNumber = parseInt(req.query.page ? req.query.page.toString() : '1');
   const skipp = (pageNumber - 1) * pageSize;
-  const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "-createdAt";
+  const sortBy = req.query.sortBy ? req.query.sortBy.toString() : '-createdAt';
   const articles = await ArticleModel.find(query)
-    .select([
-      "-clientDescription",
-      "-employeeDescription",
-      "-verifiedBy",
-      "-updatedAt",
-      "-__v",
-    ])
+    .select(['-clientDescription', '-employeeDescription', '-verifiedBy', '-updatedAt', '-__v'])
     .populate([
-      { path: "tags", select: ["name", "shortname"] },
-      { path: "createdBy", select: ["name", "surname"] },
-      { path: "product", select: ["name", "labelColor", "banner"] },
+      { path: 'tags', select: ['name', 'shortname'] },
+      { path: 'createdBy', select: ['name', 'surname'] },
+      { path: 'product', select: ['name', 'labelColor', 'banner'] },
     ])
     .skip(skipp)
     .limit(pageSize)
@@ -109,27 +89,20 @@ export const getTrashedArticlesHandler = catchErrors(async (req, res) => {
     ...constructSearchQuery(req.query),
     isTrashed: { $ne: false },
   };
-  const user = await UserModel.findById(userId).select("favourites");
+  const user = await UserModel.findById(userId).select('favourites');
   const favouritesList = user?.favourites;
 
-  const limit = parseInt(req.query.limit?.toString() || "20");
+  const limit = parseInt(req.query.limit?.toString() || '20');
   const pageSize = limit;
-  const pageNumber = parseInt(req.query.page ? req.query.page.toString() : "1");
+  const pageNumber = parseInt(req.query.page ? req.query.page.toString() : '1');
   const skipp = (pageNumber - 1) * pageSize;
-  const sortBy = req.query.sortBy ? req.query.sortBy.toString() : "-createdAt";
+  const sortBy = req.query.sortBy ? req.query.sortBy.toString() : '-createdAt';
   const articles = await ArticleModel.find(query)
-    .select([
-      "-clientDescription",
-      "-employeeDescription",
-      "-verifiedBy",
-      "-updatedAt",
-      "-viewsCounter",
-      "-__v",
-    ])
+    .select(['-clientDescription', '-employeeDescription', '-verifiedBy', '-updatedAt', '-viewsCounter', '-__v'])
     .populate([
-      { path: "tags", select: ["name", "shortname"] },
-      { path: "createdBy", select: ["name", "surname"] },
-      { path: "product", select: ["name", "labelColor", "banner"] },
+      { path: 'tags', select: ['name', 'shortname'] },
+      { path: 'createdBy', select: ['name', 'surname'] },
+      { path: 'product', select: ['name', 'labelColor', 'banner'] },
     ])
     .skip(skipp)
     .limit(pageSize)
@@ -177,8 +150,8 @@ export const verifyArticleHandler = catchErrors(async (req, res) => {
 
   const article = await ArticleModel.findById({ _id: id });
 
-  appAssert(article, CONFLICT, "Article not found");
-  console.log("isVerified");
+  appAssert(article, CONFLICT, 'Article not found');
+  console.log('isVerified');
   console.log(isVerified);
   const isVerifiedChanged = article.isVerified !== isVerified;
   article.isVerified = isVerified;
@@ -196,11 +169,7 @@ export const verifyArticleHandler = catchErrors(async (req, res) => {
   }
 
   res.status(OK).json({
-    message: `${
-      isVerified
-        ? "Artykuł został zweryfikowany"
-        : "Artykuł został oznaczony jako do weryfikacji"
-    }`,
+    message: `${isVerified ? 'Artykuł został zweryfikowany' : 'Artykuł został oznaczony jako do weryfikacji'}`,
   });
 });
 
@@ -209,17 +178,15 @@ export const markAsFavouriteHandler = catchErrors(async (req, res) => {
   const { userId }: { userId: string } = req;
 
   const user = await UserModel.findById({ _id: userId });
-  appAssert(user, NOT_FOUND, "User not found");
+  appAssert(user, NOT_FOUND, 'User not found');
 
   const article = await ArticleModel.findById({ _id: id });
-  appAssert(article, NOT_FOUND, "Article not found");
+  appAssert(article, NOT_FOUND, 'Article not found');
 
   const isFavorite = user?.favourites.includes(article._id);
 
   if (isFavorite) {
-    user.favourites = user?.favourites.filter(
-      (favoriteId) => favoriteId.toString() !== article._id.toString()
-    );
+    user.favourites = user?.favourites.filter((favoriteId) => favoriteId.toString() !== article._id.toString());
   } else {
     user.favourites.push(article._id);
   }
@@ -227,44 +194,40 @@ export const markAsFavouriteHandler = catchErrors(async (req, res) => {
   await UserModel.findByIdAndUpdate(userId, { favourites: user.favourites });
 
   res.status(OK).json({
-    message: `${
-      isFavorite
-        ? "Usunięto artykuł z listy ulubionych"
-        : " Dodano artkuł do listy ulubionych"
-    }`,
+    message: `${isFavorite ? 'Usunięto artykuł z listy ulubionych' : ' Dodano artkuł do listy ulubionych'}`,
   });
 });
 
 export const getFavouriteArticlesHandler = catchErrors(async (req, res) => {
   const { userId }: { userId: string } = req;
   const pageSize = 15; // Liczba wyników na stronę
-  const pageNumber = parseInt(req.query.page ? req.query.page.toString() : "1");
+  const pageNumber = parseInt(req.query.page ? req.query.page.toString() : '1');
   const skip = (pageNumber - 1) * pageSize;
 
   // Znalezienie użytkownika na podstawie ID i pobranie ulubionych artykułów
-  const user = await UserModel.findById(userId).select("favourites");
+  const user = await UserModel.findById(userId).select('favourites');
 
   if (!user) {
-    return res.status(403).json({ message: "User not found" });
+    return res.status(403).json({ message: 'User not found' });
   }
 
   // Wyciągnięcie tablicy ID artykułów z ulubionych
-  const favourites = user.favourites;
+  const { favourites } = user;
 
   // Pobranie artykułów na podstawie ID w ulubionych z paginacją
   const favouriteArticles = await ArticleModel.find({
     _id: { $in: favourites },
   })
     .select([
-      "-clientDescription",
-      "-employeeDescription",
-      "-createdBy",
-      "-verifiedBy",
-      "-createdAt",
-      "-viewsCounter",
-      "-__v",
+      '-clientDescription',
+      '-employeeDescription',
+      '-createdBy',
+      '-verifiedBy',
+      '-createdAt',
+      '-viewsCounter',
+      '-__v',
     ])
-    .populate([{ path: "tags", select: ["name"] }])
+    .populate([{ path: 'tags', select: ['name'] }])
     .skip(skip)
     .limit(pageSize);
 
@@ -281,28 +244,24 @@ export const getFavouriteArticlesHandler = catchErrors(async (req, res) => {
 });
 
 export const getPopularArticlesHandler = catchErrors(async (req, res) => {
-  
-    const limit = parseInt(req.query.limit?.toString() || "20");
+  const limit = parseInt(req.query.limit?.toString() || '20');
 
-    const popularArticles = await ArticleModel.find({ isTrashed: false })
+  const popularArticles = await ArticleModel.find({ isTrashed: false })
     .sort({ viewsCounter: -1 })
     .limit(limit)
-    .select("title product") 
-    .populate('product', 'name labelColor') 
+    .select('title product')
+    .populate('product', 'name labelColor')
     .exec();
 
-    appAssert(popularArticles.length > 0, NOT_FOUND, 'Nie znaleziono popularnych artykułów');
+  appAssert(popularArticles.length > 0, NOT_FOUND, 'Nie znaleziono popularnych artykułów');
 
-    return res.status(OK).json(popularArticles);
-
-
+  return res.status(OK).json(popularArticles);
 });
-
 
 export const trashArticleHandler = catchErrors(async (req, res) => {
   const { id } = req.params;
   const article = await ArticleModel.findById({ _id: id });
-  appAssert(article, NOT_FOUND, "Article not found");
+  appAssert(article, NOT_FOUND, 'Article not found');
 
   article.isTrashed = true;
   const trashedArticle = await article.save();
@@ -313,19 +272,19 @@ export const trashArticleHandler = catchErrors(async (req, res) => {
     await saveArticleChanges({
       articleId: id,
       articleBeforeChanges: article,
-      updatedArticle: updatedAritlceObj, 
-      updatedBy: req.userId, 
+      updatedArticle: updatedAritlceObj,
+      updatedBy: req.userId,
       eventType: EventType.Trashed,
     });
   }
 
-  return res.status(OK).json({ message: "Artykuł został usunięty" });
+  return res.status(OK).json({ message: 'Artykuł został usunięty' });
 });
 
 export const restoreArticleHandler = catchErrors(async (req, res) => {
   const { id } = req.params;
   const article = await ArticleModel.findById({ _id: id });
-  appAssert(article, NOT_FOUND, "Article not found");
+  appAssert(article, NOT_FOUND, 'Article not found');
 
   article.isTrashed = false;
   const restoredArticle = await article.save();
@@ -342,7 +301,7 @@ export const restoreArticleHandler = catchErrors(async (req, res) => {
     });
   }
 
-  return res.status(OK).json({ message: "Artykuł został przywrócony z kosza" });
+  return res.status(OK).json({ message: 'Artykuł został przywrócony z kosza' });
 });
 
 export const deleteArticleHandler = catchErrors(async (req, res) => {
@@ -350,34 +309,32 @@ export const deleteArticleHandler = catchErrors(async (req, res) => {
 
   // Znalezienie artykułu
   const article = await ArticleModel.findById({ _id: id });
-  appAssert(article, NOT_FOUND, "Article not found");
+  appAssert(article, NOT_FOUND, 'Article not found');
 
   // Usunięcie artykułu
   const deletedArticle = await ArticleModel.findByIdAndDelete({ _id: id });
-  appAssert(deletedArticle, INTERNAL_SERVER_ERROR, "Something went wrong");
+  appAssert(deletedArticle, INTERNAL_SERVER_ERROR, 'Something went wrong');
 
   // Usunięcie powiązanej historii
   await ArticleHistoryModel.deleteMany({ articleId: id });
 
   // Odpowiedź
-  return res.status(OK).json({ message: "Artykuł i powiązana historia zostały usunięte." });
+  return res.status(OK).json({ message: 'Artykuł i powiązana historia zostały usunięte.' });
 });
 
 export const updateArticleHandler = catchErrors(async (req, res) => {
   const { id } = req.params;
-  const { title, clientDescription, employeeDescription, tags, product } =
-    req.body;
+  const { title, clientDescription, employeeDescription, tags, product } = req.body;
 
   const article = await ArticleModel.findById({ _id: id });
 
-  appAssert(article, NOT_FOUND, "Article not found");
+  appAssert(article, NOT_FOUND, 'Article not found');
 
   const articleBeforeChanges = article.toObject();
 
   article.title = title || article.title;
   article.clientDescription = clientDescription || article.clientDescription;
-  article.employeeDescription =
-    employeeDescription || article.employeeDescription;
+  article.employeeDescription = employeeDescription || article.employeeDescription;
   article.tags = tags || article.tags;
   article.product = product || article.product;
 
@@ -392,9 +349,8 @@ export const updateArticleHandler = catchErrors(async (req, res) => {
     eventType: EventType.Updated,
   });
 
-  res.status(OK).json({ message: "Artykuł został zaktualizowany" });
+  res.status(OK).json({ message: 'Artykuł został zaktualizowany' });
 });
-
 
 export const getArticlesCreatedBySelectedUser = catchErrors(async (req, res) => {
   const { id: userId } = req.params;
@@ -423,12 +379,10 @@ export const getArticlesCreatedBySelectedUser = catchErrors(async (req, res) => 
     }
   }
 
-  
-  const userArticles = await ArticleModel.find(filter).select(["title", "createdAt", "isVerified"]);
+  const userArticles = await ArticleModel.find(filter).select(['title', 'createdAt', 'isVerified']);
 
   return res.status(200).json(userArticles);
 });
-
 
 export const getArticlesHistoryByUser = catchErrors(async (req, res) => {
   const { id: userId } = req.params;
@@ -445,7 +399,7 @@ export const getArticlesHistoryByUser = catchErrors(async (req, res) => {
     articleId?: { $ne: null };
   } = {
     updatedBy: userId,
-    eventType: "updated",
+    eventType: 'updated',
     articleId: { $ne: null }, // Wyklucz historię bez powiązanego artykułu
   };
 
@@ -463,18 +417,16 @@ export const getArticlesHistoryByUser = catchErrors(async (req, res) => {
   // Zapytanie do bazy danych
   const userHistory = await ArticleHistoryModel.find(filter)
     .populate({
-      path: "articleId", // Powiązanie z artykułem
-      select: ["title", "isTrashed"], // Pobierz tylko potrzebne pola
+      path: 'articleId', // Powiązanie z artykułem
+      select: ['title', 'isTrashed'], // Pobierz tylko potrzebne pola
       match: { isTrashed: false }, // Wyklucz artykuły, które są w koszu
     })
     .populate({
-      path: "updatedBy", // Powiązanie z użytkownikiem
-      select: "name surname", // Pobierz imię i nazwisko użytkownika
+      path: 'updatedBy', // Powiązanie z użytkownikiem
+      select: 'name surname', // Pobierz imię i nazwisko użytkownika
     })
     .exec();
 
   // Zwracamy tylko rekordy, w których `articleId` nie jest nullem
   return res.status(200).json(userHistory.filter((entry) => entry.articleId));
 });
-
-
