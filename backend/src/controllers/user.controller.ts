@@ -119,6 +119,32 @@ export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
 });
 
 
+export const getUserFavouritesArticlesHandler = catchErrors(async (req, res) => {
+  const { userId } = req;
+
+  const user = await UserModel.findById(userId).populate([
+    {
+      path: "favourites", // Ładujemy ulubione artykuły
+      model: "Article",
+      select: ["title", "product", "author"], // Wybierz pola z Article
+      populate: [
+        {
+          path: "product", // Ładujemy powiązane produkty
+          model: "Product",
+          select: ["name", "labelColor"], // Wybierz tylko pola, które są potrzebne z Product
+        },
+      ],
+    },
+  ]);
+
+  console.log("ULUBIONE ARTYKUŁY Z PRODUKTAMI");
+  appAssert(user, NOT_FOUND, "User not found");
+
+  // Zwróć tylko ulubione artykuły z ich produktami
+  return res.status(OK).json({ data: user.favourites });
+});
+
+
 
 export const getUsersWithArticleCountHandler = catchErrors(async (req, res) => {
   const { startDate, endDate } = req.query;
