@@ -41,7 +41,7 @@ const ArticlesTableView: React.FC = ({
 
 
   return (
-    <div className=" grid grid-cols-1 xl:grid-cols-[13fr_5fr]  2xl:grid-cols-[13fr_4fr] gap-3.5 px-2.5 py-6 max-w-[1740px] mx-auto  ">
+    <div className=" grid grid-cols-1  xl:grid-cols-[13fr_5fr]  2xl:grid-cols-[13fr_4fr] gap-3.5 px-2.5 py-6 max-w-[1640px] mx-auto  ">
       <div className="flex justify-end px-3  xl:hidden ">
         <Button
           variant="outline"

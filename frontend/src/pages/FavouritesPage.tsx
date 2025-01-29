@@ -19,8 +19,8 @@ const FavouritesPage: React.FC = () => {
   )
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-8xl mx-auto grid grid-cols-[9fr_3fr] gap-8">
+    <div className="min-h-screen  p-6">
+      <div className="max-w-[1640px] px-2.5 mx-auto grid grid-cols-[9fr_3fr] gap-8">
         {/* Lista artykułów (lewa kolumna) */}
         <div>
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Ulubione Artykuły</h1>
@@ -28,8 +28,9 @@ const FavouritesPage: React.FC = () => {
             {filteredArticles?.map((article: any) => (
               <div
                 key={article._id}
-                className="p-5 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
+                className="p-5 bg-white  shadow-sm hover:shadow-lg transition-shadow-md duration-200           border border-gray-200    rounded-lg  overflow-hidden mb-4  "
               >
+               
                 {/* Tytuł artykułu */}
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">{article.title}</h2>
 
@@ -45,12 +46,13 @@ const FavouritesPage: React.FC = () => {
                 </div>
 
                 {/* Link do szczegółów */}
-                <a
+                <span
+                
                   href={`/products/${article.product._id}`}
                   className="inline-block mt-4 text-blue-500 hover:underline text-sm font-medium"
                 >
                   Zobacz szczegóły produktu
-                </a>
+                </span>
               </div>
             ))}
 

@@ -153,7 +153,7 @@ const isLoading = isReportStatsLoading || isCreatedArticleStatsLoading || isChan
         </div>
       </div>
 
-{!isLoading ? (
+{isLoading ? (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full">
     {[...Array(3)].map((_, idx) => (
       <Card key={idx} className="shadow-md border border-gray-200">
