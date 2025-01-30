@@ -1,6 +1,7 @@
 import { articlesApi } from '@/lib/articlesApi'
 import { useQuery } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { FaStar } from "react-icons/fa";
 
 const FavouritesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('') // Kontrola pola wyszukiwania
@@ -23,14 +24,19 @@ const FavouritesPage: React.FC = () => {
       <div className="max-w-[1640px] px-2.5 mx-auto grid grid-cols-[9fr_3fr] gap-8">
         {/* Lista artykułów (lewa kolumna) */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">Ulubione Artykuły</h1>
-          <div className="space-y-6">
+          <div className='flex items-center mb-6 gap-2'>
+          <FaStar className='w-5 h-5'/>
+          <h1 className="text-2xl font-bold text-gray-800  ">
+           
+            Ulubione Artykuły</h1>
+           
+            </div>
+          <div className="space-y-2">
             {filteredArticles?.map((article: any) => (
               <div
                 key={article._id}
-                className="p-5 bg-white  shadow-sm hover:shadow-lg transition-shadow-md duration-200           border border-gray-200    rounded-lg  overflow-hidden mb-4  "
+                className="pt-4 pb-3.5 px-5 bg-white cursor-pointer  shadow-sm hover:shadow-lg transition-shadow-md duration-200 border border-gray-200 rounded-lg overflow-hidden"
               >
-               
                 {/* Tytuł artykułu */}
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">{article.title}</h2>
 
@@ -45,14 +51,30 @@ const FavouritesPage: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Link do szczegółów */}
-                <span
-                
-                  href={`/products/${article.product._id}`}
-                  className="inline-block mt-4 text-blue-500 hover:underline text-sm font-medium"
-                >
-                  Zobacz szczegóły produktu
-                </span>
+                {/* Wyświetlanie tagów */}
+                <div className="flex flex-wrap mt-2">
+                  {article.tags?.map((tag: any) => (
+                    <span
+                      key={tag._id}
+                      className="bg-gray-200 text-gray-600 text-xs font-medium py-1 px-2 rounded-lg mr-2 mb-2"
+                    >
+                      {tag.name}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Status weryfikacji */}
+                <div className="mt-2">
+                  <span
+                    className={`text-sm font-medium ${
+                      article.isVerified ? 'text-green-500' : 'text-amber-600'
+                    }`}
+                  >
+                    {article.isVerified ? 'Zweryfikowane' : 'Wymaga weryfikacji'}
+                  </span>
+                </div>
+
+         
               </div>
             ))}
 
@@ -68,29 +90,15 @@ const FavouritesPage: React.FC = () => {
         {/* Search Bar (prawa kolumna) */}
         <aside className="bg-white p-4 rounded-lg shadow-md h-auto max-h-[300px] overflow-auto sticky top-[60px]">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Filtruj</h2>
-  <div className='space-y-3.5'>
-  <input
-            type="text"
-            placeholder="Szukaj artykułów..."
-            className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-               <input
-            type="text"
-            placeholder="Szukaj artykułów..."
-            className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-                      <input
-            type="text"
-            placeholder="Szukaj artykułów..."
-            className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-  </div>
+          <div className="space-y-3.5">
+            <input
+              type="text"
+              placeholder="Szukaj artykułów..."
+              className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
         </aside>
       </div>
     </div>
