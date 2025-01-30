@@ -7,7 +7,6 @@ import {
   getArticlesCreatedBySelectedUser,
   getArticlesHandler,
   getArticlesHistoryByUser,
-  getFavouriteArticlesHandler,
   getLatestArticlesForDashboard,
   getPopularArticlesHandler,
   getTrashedArticlesHandler,
@@ -33,7 +32,6 @@ articleRoutes.get("/:id", getArticleHandler);
 articleRoutes.post("/article/:id/verify", verifyArticleHandler);
 articleRoutes.post("/article/:id/markAsFavourite", markAsFavouriteHandler);
 articleRoutes.put("/article/:id/update", updateArticleHandler);
-articleRoutes.get("/articles/favourites", getFavouriteArticlesHandler);
 articleRoutes.delete("/article/:id/delete", deleteArticleHandler);
 articleRoutes.put("/article/:id/trash", trashArticleHandler);
 articleRoutes.put("/article/:id/restore", restoreArticleHandler);
