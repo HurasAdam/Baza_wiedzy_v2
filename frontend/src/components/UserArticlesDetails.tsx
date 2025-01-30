@@ -6,11 +6,12 @@ import { FaFileSignature } from 'react-icons/fa6';
 import { useQuery } from '@tanstack/react-query';
 import { articlesApi } from '@/lib/articlesApi';
 import UserCreatedArticleDetails from './UserCreatedArticleDetails';
+import Spinner from './core/Spinner';
 
 const UserArticlesDetails = ({userId,queryParams}) => {
  const [selectedItem, setSelectedItem] = useState(null);
 
-const {data:userArticles} = useQuery({
+const {data:userArticles,isLoading, isError} = useQuery({
     queryKey:["articlesCreatedByUser",userId],
     queryFn:()=>{
         return articlesApi.getArticlesCreatedByUser({userId,searchParams:queryParams})
@@ -21,8 +22,16 @@ const handleSelectItem = (itemId) => {
     setSelectedItem(itemId);
   };
 
-console.log("selectedItem")
-console.log(selectedItem)
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full space-y-4 p-6">
+        <Spinner animation="spin" size="lg" color="bg-blue-500" />
+        <p className="text-lg font-semibold text-gray-600">Ładowanie danych...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-[6fr_14fr] h-full gap-1.5 max-h-full">
       {/* Lewa kolumna - lista zmian */}
