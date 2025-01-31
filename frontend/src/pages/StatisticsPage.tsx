@@ -66,8 +66,8 @@ const openUserArticlesDetails = (userId) =>{
     content: (<UserArticlesDetails userId={userId} queryParams={queryParams}/>),
     enableOutsideClickClose: true,
     size: "lg",
-    height:"90"
-    
+    height:"90",
+    scrollable: false,
   });
 }
 
@@ -147,10 +147,16 @@ const isLoading = isReportStatsLoading || isCreatedArticleStatsLoading || isChan
             Wyszukaj
           </button>
           <button
+          disabled={!startDate && !endDate }
             onClick={handleClearFilters}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
-          >
-            Wyczyść filtry
+            className="px-4 py-2 rounded-lg font-medium transition-all duration-200 
+            bg-gray-200 text-gray-700 shadow-sm 
+            hover:bg-gray-300 hover:text-gray-900 hover:shadow-md 
+            active:bg-gray-400 active:scale-95 
+            disabled:bg-gray-100 disabled:text-gray-400 disabled:shadow-none 
+            "
+>
+  🧹 Wyczyść filtry
           </button>
         </div>
       </div>
