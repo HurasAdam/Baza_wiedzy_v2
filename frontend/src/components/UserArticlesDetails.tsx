@@ -57,7 +57,7 @@ const handleSelectItem = (itemId) => {
       </div>
 
       {/* Prawa kolumna - może być pusta */}
-      <div className=" overflow-y-auto h-full min-h-[88vh]  break-words w-full box-border scrollbar-custom ">
+      <div className=" overflow-y-auto max-h-[88vh]   min-h-[88vh]  break-words w-full box-border scrollbar-custom ">
  
   
    <UserCreatedArticleDetails articleId={selectedItem}/>
