@@ -5,8 +5,6 @@ import connectDB from "./config/db";
 import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/errorHandlers";
-import catchErrors from "./utils/catchErrors";
-import { OK } from "./constants/http";
 import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
 import authenticate from "./middleware/authenticate";
@@ -19,7 +17,6 @@ import productRoutes from "./routes/product.route";
 import dashboardRoutes from "./routes/dashboard.route";
 
 
-
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -30,17 +27,9 @@ app.use(cors({
 app.use(cookieParser());
 
 
-app.get(
-    "/",
-    catchErrors( async(req,res,next)=>{
- 
-        return res.status(OK).json("Test")
-    })
-)
-
 app.use("/auth", authRoutes);
 
-//protected routes
+//#protected routes
 app.use("/user", authenticate,userRoutes);
 app.use("/sessions", authenticate,sessionRoutes);
 app.use("/articles",authenticate, articleRoutes);

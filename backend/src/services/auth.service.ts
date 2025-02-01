@@ -69,7 +69,7 @@ export const createAccount = async (data: CreateAccountParams) => {
     to: user.email,
     ...getVerifyEmailTemplate(url),
   });
-  // ignore email errors for now
+  // ignore email errors -- for now
   if (error) console.error(error);
 
   // create session
