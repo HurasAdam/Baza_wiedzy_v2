@@ -1,33 +1,26 @@
-import { CONFLICT } from "../constants/http";
-import TagModel from "../models/Tag.model";
-import appAssert from "../utils/appAssert";
+import { EHttpCodes } from '../enums/http.js';
+import TagModel from '../models/tag.model.js';
+import appAssert from '../utils/appAssert.js';
+import type { ITag } from '../models/tag.model.js';
+import type { ICreateTagParams } from '../types/index.js';
 
-interface CreateArticleRequest {
-    name: string;
+export const createTag = async ({ request, userId }: ICreateTagParams): Promise<{ message: string }> => {
+  const { name } = request;
 
-  }
+  const tag = await TagModel.exists({ name });
+  appAssert(!tag, EHttpCodes.CONFLICT, 'Tag already exists');
 
+  await TagModel.create({
+    name,
+    createdBy: userId,
+  });
 
-interface CreateTagParams {
-    request: CreateArticleRequest;
-    userId: string; // Zakładam, że userId to string
-  }
+  // Previous code looked like this, but this should be rewritten into a entity
+  // return { data: createdTag, message: 'Tag został dodany' };
+  return { message: 'Tag został dodany' };
+};
 
-export const createTag = async({request, userId}:CreateTagParams)=>{
-    const {name} = request;
-
-    const tag = await TagModel.exists({name});
-    appAssert(!tag, CONFLICT, "Tag already exists");
-
-    const createdTag = await TagModel.create({
-        name,
-        createdBy:userId
-    })
-    return {data:createdTag, message:"Tag został dodany"};
-}
-
-
-export const getTag = async({tagId}:{tagId:string})=>{
-  const tag = await TagModel.findById({_id:tagId})
-  return tag; 
-  }
+export const getTag = async (data: { tagId: string }): Promise<ITag | null> => {
+  const tag = await TagModel.findById({ _id: data.tagId });
+  return tag;
+};

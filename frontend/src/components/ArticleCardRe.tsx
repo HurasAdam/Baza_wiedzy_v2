@@ -18,7 +18,7 @@ const ArticleCardRe = ({ article, onClick, markAsFavourite }) => {
   return (
     <div
       onClick={() => onClick(article)} // Link do szczegółów artykułu w modalu
-      className="relative flex border border-gray-200 bg-white   rounded-lg shadow-sm overflow-hidden mb-3 hover:shadow transition-shadow duration-300 "
+      className="relative flex border border-gray-200 rounded-lg shadow overflow-hidden mb-4 hover:shadow-md transition-shadow duration-300"
     >
       {/* Gwiazdka w prawym górnym rogu */}
       <TooltipProvider delayDuration={490}>

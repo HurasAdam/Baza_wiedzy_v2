@@ -1,38 +1,34 @@
-import { CONFLICT, NOT_FOUND, OK } from "../constants/http";
-import ProductModel from "../models/Product.model";
-import {
-  createProduct,
-  deleteProduct,
-  getSingleProduct,
-} from "../services/product.service";
-import appAssert from "../utils/appAssert";
-import catchErrors from "../utils/catchErrors";
-import { newProductSchema } from "./product.schema";
+import { newProductSchema } from './product.schema.js';
+import { EHttpCodes } from '../enums/http.js';
+import ProductModel from '../models/product.model.js';
+import { createProduct, deleteProduct, getSingleProduct } from '../services/product.service.js';
+import appAssert from '../utils/appAssert.js';
+import catchErrors from '../utils/catchErrors.js';
 
 export const createProductHandler = catchErrors(async (req, res) => {
   const request = newProductSchema.parse(req.body);
   const { userId } = req;
   const newProduct = await createProduct({ request, userId });
 
-  return res.status(OK).json(newProduct);
+  return res.status(EHttpCodes.OK).json(newProduct);
 });
 
 export const deleteProductHandler = catchErrors(async (req, res) => {
   const { id } = req.params;
 
-  const conversationTproduct = await deleteProduct({ productId: id });
-  return res.status(OK).json(conversationTproduct);
+  const conversationTproduct = await deleteProduct({ productId: id as string });
+  return res.status(EHttpCodes.OK).json(conversationTproduct);
 });
 
-export const getProductsHandler = catchErrors(async (req, res) => {
-  const tags = await ProductModel.find({}).select(["-createdBy"]);
-  return res.status(OK).json(tags);
+export const getProductsHandler = catchErrors(async (_req, res) => {
+  const tags = await ProductModel.find({}).select(['-createdBy']);
+  return res.status(EHttpCodes.OK).json(tags);
 });
 
 export const getSingleProductHandler = catchErrors(async (req, res) => {
   const { id } = req.params;
-  const product = await getSingleProduct({ productId: id });
-  return res.status(OK).json(product);
+  const product = await getSingleProduct({ productId: id as string });
+  return res.status(EHttpCodes.OK).json(product);
 });
 
 export const updateProductHandler = catchErrors(async (req, res) => {
@@ -41,16 +37,12 @@ export const updateProductHandler = catchErrors(async (req, res) => {
 
   // Znajdź istniejący produkt po ID
   const product = await ProductModel.findById({ _id: id });
-  appAssert(product, NOT_FOUND, "Product not found");
+  appAssert(product, EHttpCodes.NOT_FOUND, 'Product not found');
 
   // Jeśli nazwa jest zmieniana, sprawdź, czy produkt z tą nazwą już istnieje
   if (name && name !== product.name) {
     const existingProduct = await ProductModel.exists({ name });
-    appAssert(
-      !existingProduct,
-      CONFLICT,
-      "Product with this name already exists"
-    );
+    appAssert(!existingProduct, EHttpCodes.CONFLICT, 'Product with this name already exists');
   }
 
   // Zaktualizuj nazwę i kolor etykiety
@@ -58,7 +50,7 @@ export const updateProductHandler = catchErrors(async (req, res) => {
   product.labelColor = labelColor || product.labelColor;
   product.banner = banner || product.banner;
 
-  const updatedProduct = await product.save();
+  await product.save();
 
-  res.status(OK).json({ message: "Produkt został zaktualizowany" });
+  res.status(EHttpCodes.OK).json({ message: 'Produkt został zaktualizowany' });
 });

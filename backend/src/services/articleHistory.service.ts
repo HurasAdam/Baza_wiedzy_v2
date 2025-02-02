@@ -1,45 +1,54 @@
-import mongoose, { Types } from "mongoose";
-import ArticleHistoryModel from "../models/ArticleHistory.model";
-import ArticleModel from "../models/Article.model";
-import appAssert from "../utils/appAssert";
-import { NOT_FOUND } from "../constants/http";
-import EventType from "../constants/articleEventTypes";
-import TagModel from "../models/Tag.model";
+import mongoose from 'mongoose';
+import Log from 'simpl-loggar';
+import { EEventType } from '../enums/events.js';
+import { EHttpCodes } from '../enums/http.js';
+import ArticleModel from '../models/article.model.js';
+import ArticleHistoryModel from '../models/articleHistory.model.js';
+import appAssert from '../utils/appAssert.js';
+import type { IChange, ISaveArticleChangesProps } from '../types/article.js';
 
-interface Article {
-  _id: Types.ObjectId;
-  title: string;
-  employeeDescription: string;
-  clientDescription: string;
-  tags: Types.ObjectId[];
-  createdBy: Types.ObjectId;
-  verifiedBy: Types.ObjectId;
-  viewsCounter: number;
-  isTrashed: boolean;
-  isVerified: boolean;
-}
-interface Change {
-  field: string;
-  oldValue: string;
-  newValue: string;
+/**
+ * @param oldObj
+ * @param newObj
+ */
+function compareObjects(oldObj: Record<string, unknown>, newObj: Record<string, unknown>): IChange[] {
+  const changes: IChange[] = [];
+
+  // Lista kluczowych pól, które chcemy porównywać
+  const fieldsToCompare = [
+    'title',
+    'clientDescription',
+    'employeeDescription',
+    'tags',
+    'isVerified',
+    'isTrashed',
+    'product',
+  ];
+
+  // Przechodzimy po wszystkich kluczach w obiekcie
+  for (const key of fieldsToCompare) {
+    if (Object.keys(oldObj).includes(key)) {
+      const oldValue = oldObj[key];
+      const newValue = newObj[key];
+
+      // Jeśli wartość się zmieniła, generujemy zmianę
+      if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
+        changes.push({
+          field: key, // Pole zmienione
+          oldValue: JSON.stringify(oldValue), // Stara wartość
+          newValue: JSON.stringify(newValue), // Nowa wartość
+        });
+      }
+    }
+  }
+
+  return changes;
 }
 
-interface ISaveArticleChangesProps {
-  articleId: string;
-  articleBeforeChanges: Article | null;
-  updatedArticle: Article;
-  updatedBy: string;
-  eventType: EventType;
-}
-
-export const getArticleHistory = async ({
-  articleId,
-}: {
-  articleId: string;
-}) => {
+export const getArticleHistory = async ({ articleId }: { articleId: string }) => {
   // Sprawdzenie, czy artykuł o danym ID istnieje
   const article = await ArticleModel.findById({ _id: articleId });
-  appAssert(article, NOT_FOUND, "Article not found");
+  appAssert(article, EHttpCodes.NOT_FOUND, 'Article not found');
 
   // Pobranie historii zmian artykułu z kolekcji ArticleHistory
   const articleHistory = await ArticleHistoryModel.aggregate([
@@ -48,29 +57,29 @@ export const getArticleHistory = async ({
     },
     {
       $lookup: {
-        from: "users", // Kolekcja Users, zakładając, że "updatedBy" jest referencją do Usera
-        localField: "updatedBy",
-        foreignField: "_id",
-        as: "updatedBy",
+        from: 'users', // Kolekcja Users, zakładając, że "updatedBy" jest referencją do Usera
+        localField: 'updatedBy',
+        foreignField: '_id',
+        as: 'updatedBy',
       },
     },
     {
-      $unwind: "$updatedBy", // Rozwijanie tablicy "updatedBy"
+      $unwind: '$updatedBy', // Rozwijanie tablicy "updatedBy"
     },
     {
       $lookup: {
-        from: "articles", // Kolekcja Articles
-        localField: "articleId",
-        foreignField: "_id",
-        as: "articleDetails",
+        from: 'articles', // Kolekcja Articles
+        localField: 'articleId',
+        foreignField: '_id',
+        as: 'articleDetails',
       },
     },
     {
       $addFields: {
         articleDetails: {
           $cond: {
-            if: { $eq: ["$eventType", "created"] }, // Warunek, jeśli eventType to "created"
-            then: { $arrayElemAt: ["$articleDetails", 0] }, // Pobierz pierwszy element z tablicy
+            if: { $eq: ['$eventType', 'created'] }, // Warunek, jeśli eventType to "created"
+            then: { $arrayElemAt: ['$articleDetails', 0] }, // Pobierz pierwszy element z tablicy
             else: null, // Dla innych eventType, nie dodawaj danych artykułu
           },
         },
@@ -100,10 +109,10 @@ export const saveArticleChanges = async ({
   updatedBy,
   eventType,
 }: ISaveArticleChangesProps): Promise<void> => {
-  let changes: Change[] = [];
+  let changes: IChange[] = [];
 
   // Porównaj artykuły, jeżeli zmiany zachodzą (np. zaktualizowany artykuł)
-  if (eventType === EventType.Updated && articleBeforeChanges) {
+  if (eventType === EEventType.Updated && articleBeforeChanges) {
     changes = compareObjects(articleBeforeChanges, updatedArticle);
 
     // Jeśli zmiany obejmują tagi, sprawdź, czy wszystkie tagi istnieją
@@ -112,53 +121,16 @@ export const saveArticleChanges = async ({
     if (changes.length === 0) return;
   }
 
-  console.log("articleBeforeChanges");
-  console.log(articleBeforeChanges);
-  console.log("updatedArticle");
-  console.log(updatedArticle);
+  Log.debug('Article history', 'Before changes', articleBeforeChanges, 'Updated', updatedArticle);
   // Zapisujemy historię zmian
   const historyEntry = new ArticleHistoryModel({
-    articleId: articleId,
+    articleId,
     changes,
-    updatedBy: updatedBy,
+    updatedBy,
     eventType,
   });
   await historyEntry.save();
 };
-
-function compareObjects(oldObj: any, newObj: any): Change[] {
-  const changes: Change[] = [];
-
-  // Lista kluczowych pól, które chcemy porównywać
-  const fieldsToCompare = [
-    "title",
-    "clientDescription",
-    "employeeDescription",
-    "tags",
-    "isVerified",
-    "isTrashed",
-    "product",
-  ];
-
-  // Przechodzimy po wszystkich kluczach w obiekcie
-  for (const key of fieldsToCompare) {
-    if (oldObj.hasOwnProperty(key)) {
-      const oldValue = oldObj[key];
-      const newValue = newObj[key];
-
-      // Jeśli wartość się zmieniła, generujemy zmianę
-      if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
-        changes.push({
-          field: key, // Pole zmienione
-          oldValue: JSON.stringify(oldValue), // Stara wartość
-          newValue: JSON.stringify(newValue), // Nowa wartość
-        });
-      }
-    }
-  }
-
-  return changes;
-}
 
 // const compareArticles = (
 //   articleBeforeChanges: Article,

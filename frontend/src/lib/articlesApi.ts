@@ -22,12 +22,6 @@ export const getAllArticles = async (searchParams) => {
   return API.get(`/articles/?${queryParams}`);
 };
 
-
-export const getUserFavouritesArticles = async ()=>{
-  return API.get("user/favourites-articles");
-}
-
-
 export const getLatestArticles = async (searchParams) => {
   const queryParams = new URLSearchParams();
 
@@ -166,8 +160,6 @@ const getArticlesCreatedByUser = async({userId,searchParams}) =>{
       return API.get(`/articles/userHistory/${userId}?${queryParams}`);
     }
 
-
-
   
   
 
@@ -188,6 +180,5 @@ export const articlesApi = {
   getPopularArticles,
   getArticlesCreatedByUser,
   getArticlesHistoryByUser
-  ,getUsersChangedArticleStats,
-  getUserFavouritesArticles
+  ,getUsersChangedArticleStats
 };

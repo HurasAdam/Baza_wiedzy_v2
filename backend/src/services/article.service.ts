@@ -1,9 +1,10 @@
-import { CONFLICT, OK } from "../constants/http";
-import ArticleModel from "../models/Article.model";
-import UserModel from "../models/User.model";
-import appAssert from "../utils/appAssert";
+import { EHttpCodes } from '../enums/http.js';
+import ArticleModel from '../models/article.model.js';
+import UserModel from '../models/user.model.js';
+import appAssert from '../utils/appAssert.js';
+import type { IArticle } from '../types/article.js';
 
-interface CreateArticleRequest {
+interface ICreateArticleRequest {
   title: string;
   employeeDescription: string;
   tags: string[];
@@ -11,20 +12,21 @@ interface CreateArticleRequest {
   product: string;
 }
 
-interface CreateArticleParams {
-  request: CreateArticleRequest;
+interface IGetArticleParams {
+  userId: string;
+  articleId: string;
+}
+
+interface ICreateArticleParams {
+  request: ICreateArticleRequest;
   userId: string; // Zakładam, że userId to string
 }
 
-export const createArticle = async ({
-  request,
-  userId,
-}: CreateArticleParams) => {
-  const { title, employeeDescription, tags, clientDescription, product } =
-    request;
+export const createArticle = async ({ request, userId }: ICreateArticleParams): Promise<IArticle> => {
+  const { title, employeeDescription, tags, clientDescription, product } = request;
 
   const article = await ArticleModel.exists({ title });
-  appAssert(!article, CONFLICT, "Article already exists");
+  appAssert(!article, EHttpCodes.CONFLICT, 'Article already exists');
 
   const createdArticle = await ArticleModel.create({
     title,
@@ -38,36 +40,26 @@ export const createArticle = async ({
   return createdArticle;
 };
 
-export const incrementArticleViews = async ({
-  articleId,
-}: {
-  articleId: string;
-}) => {
+export const incrementArticleViews = async ({ articleId }: { articleId: string }): Promise<{ status: EHttpCodes }> => {
   const article = await ArticleModel.findById(articleId);
-  appAssert(article, CONFLICT, "Article already exists");
+  appAssert(article, EHttpCodes.CONFLICT, 'Article already exists');
 
   article.viewsCounter = article.viewsCounter + 1;
   await article.save();
-  return { status: OK };
+  return { status: EHttpCodes.OK };
 };
 
-// Article
-interface getArticleParams {
-  userId: string;
-  articleId: string;
-}
-
-export const getArticle = async ({ userId, articleId }: getArticleParams) => {
+export const getArticle = async ({ userId, articleId }: IGetArticleParams) => {
   const user = await UserModel.findById(userId);
   const article = await ArticleModel.findById({ _id: articleId }).populate([
-    { path: "tags", select: ["name"] },
-    { path: "createdBy", select: ["name", "surname"] },
-    { path: "verifiedBy", select: ["name", "surname"] },
-    { path: "product", select: ["name", "labelColor", "banner"] },
+    { path: 'tags', select: ['name'] },
+    { path: 'createdBy', select: ['name', 'surname'] },
+    { path: 'verifiedBy', select: ['name', 'surname'] },
+    { path: 'product', select: ['name', 'labelColor', 'banner'] },
   ]);
 
-  appAssert(article, CONFLICT, "Article not found");
-  appAssert(user, CONFLICT, "User not found");
+  appAssert(article, EHttpCodes.CONFLICT, 'Article not found');
+  appAssert(user, EHttpCodes.CONFLICT, 'User not found');
 
   const isFavorite = user?.favourites.includes(article._id);
 

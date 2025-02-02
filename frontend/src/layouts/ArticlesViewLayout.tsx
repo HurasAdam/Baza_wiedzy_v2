@@ -14,7 +14,7 @@ const ArticlesViewLayout: React.FC = ({ viewType, articles,isLoading }) => {
   };
 
   return (
-    <div className="w-full">
+    <div>
       {viewType === ARTICLES_VIEW_TYPE.GRID && (
         <ArticlesGridView
           articles={articles}

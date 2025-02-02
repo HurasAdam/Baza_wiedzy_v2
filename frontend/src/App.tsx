@@ -22,6 +22,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import TagsPage from "./pages/TagsPage";
 import ProductsPage from "./pages/ProductsPage";
 import ConversationTopicsPage from "./pages/CoversationTopicsPage";
+import RemovedArticlesPage from "./pages/RemovedArticlesPage";
 import TrashedArticlesPage from "./pages/TrashedArticlesPage";
 
 function App() {

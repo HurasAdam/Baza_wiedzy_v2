@@ -1,14 +1,16 @@
-export const constructSearchQuery = (queryParams: any) => {
-  let constructedQuery: any = {};
+/**
+ * Construct search query.
+ * @param queryParams
+ */
+export default (queryParams: Record<string, unknown>): Record<string, unknown> => {
+  const constructedQuery: Record<string, unknown> = {};
 
   if (queryParams.title) {
-    constructedQuery.$or = [{ title: new RegExp(queryParams.title, "i") }];
+    constructedQuery.$or = [{ title: new RegExp(queryParams.title as string, 'iu') }];
   }
   if (queryParams.tags) {
     constructedQuery.tags = {
-      $all: Array.isArray(queryParams.tags)
-        ? queryParams.tags
-        : [queryParams.tags],
+      $all: Array.isArray(queryParams.tags) ? queryParams.tags : [queryParams.tags],
     };
   }
 

@@ -100,7 +100,7 @@ const TASKTYPEICON = {
   return (
     <div className="grid grid-cols-[5fr_15fr] h-full gap-1.5 max-h-[88vh] ">
     {/* Lewa kolumna - lista zmian */}
-    <div className="border-r overflow-y-auto max-h-[88vh] scrollbar-custom  space-y-1.5 pr-2 pl-0.5">
+    <div className="border-r overflow-y-auto max-h-[88vh] scrollbar-custom  space-y-1.5 ">
 
       {userUpdatedArticles?.map((historyItem, index) => (
         <UserHistoryActivityCard
@@ -115,7 +115,7 @@ const TASKTYPEICON = {
     {/* Prawa kolumna - może być pusta */}
     <div className=" overflow-y-auto h-full  break-words w-full box-border scrollbar-custom ">
       {!selectedItem && (
-        <div className="pt-5  max-h-[88vh] min-h-[88vh] h-full">
+        <div className="pt-5 h-full max-h-[88vh] min-h-[88vh] h-full">
           <div className=" shadow bg-neutral-100 h-full rounded-lg p-6 text-center py-14  ">
             <span className="text-xl font-semibold  text-slate-600 ">
               {" "}

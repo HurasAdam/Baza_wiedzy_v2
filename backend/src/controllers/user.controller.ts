@@ -1,34 +1,34 @@
-import { NOT_FOUND, OK } from "../constants/http";
-import ArticleModel from "../models/Article.model";
-import ArticleHistoryModel from "../models/ArticleHistory.model";
-import ConversationReportModel from "../models/ConversationReport.model";
-import UserModel from "../models/User.model";
-import appAssert from "../utils/appAssert";
-import catchErrors from "../utils/catchErrors";
+import Log from 'simpl-loggar';
+import { EHttpCodes } from '../enums/http.js';
+import ArticleModel from '../models/article.model.js';
+import ConversationReportModel from '../models/conversationReport.model.js';
+import UserModel from '../models/user.model.js';
+import appAssert from '../utils/appAssert.js';
+import catchErrors from '../utils/catchErrors.js';
 
 export const getUserHandler = catchErrors(async (req, res) => {
   const user = await UserModel.findById(req.userId);
-  appAssert(user, NOT_FOUND, "User not found");
-  return res.status(OK).json(user.omitPassword());
+  appAssert(user, EHttpCodes.NOT_FOUND, 'User not found');
+  return res.status(EHttpCodes.OK).json(user.omitPassword());
 });
 
 export const getUsersHandler = catchErrors(async (req, res) => {
   const users = await UserModel.find({}).select([
-    "-password",
-    "-email",
-    "-verified",
-    "-createdAt",
-    "-updatedAt",
-    "-favourites",
+    '-password',
+    '-email',
+    '-verified',
+    '-createdAt',
+    '-updatedAt',
+    '-favourites',
   ]);
 
-  return res.status(OK).json(users);
+  return res.status(EHttpCodes.OK).json(users);
 });
 
 export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
   const { startDate, endDate } = req.query;
 
-  let dateFilter: any = {};
+  let dateFilter: Record<string, unknown> = {};
 
   if (startDate || endDate) {
     dateFilter = { createdAt: {} };
@@ -37,9 +37,9 @@ export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
       const start = new Date(startDate.toString());
       if (!isNaN(start.getTime())) {
         dateFilter.createdAt.$gte = start;
-        console.log("Valid start date:", start);
+        Log.log('User controller', 'Valid start date:', start);
       } else {
-        console.error("Invalid start date:", startDate);
+        Log.error('User controller', 'Invalid start date:', startDate);
       }
     }
 
@@ -47,9 +47,9 @@ export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
       const end = new Date(endDate.toString());
       if (!isNaN(end.getTime())) {
         dateFilter.createdAt.$lte = end;
-        console.log("Valid end date:", end);
+        Log.log('User controller', 'Valid end date:', end);
       } else {
-        console.error("Invalid end date:", endDate);
+        Log.error('User controller', 'Invalid end date:', endDate);
       }
     }
   }
@@ -57,31 +57,31 @@ export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
   // AGREGACJA DB, aby policzyć liczbę raportów dla każdego użytkownika w danym zakresie dat
   const usersWithReportCount = await ConversationReportModel.aggregate([
     {
-      $match: dateFilter, 
+      $match: dateFilter, // Filtruj raporty po dacie, jeśli podano
     },
     {
       $group: {
-        _id: "$createdBy", 
-        reportCount: { $sum: 1 }, 
+        _id: '$createdBy', // Grupujemy po użytkowniku
+        reportCount: { $sum: 1 }, // Zliczamy raporty
       },
     },
     {
       $lookup: {
-        from: "users",
-        localField: "_id", 
-        foreignField: "_id", 
-        as: "user", 
+        from: 'users',
+        localField: '_id', // Pole, które łączy (ID użytkownika)
+        foreignField: '_id', // Pole w kolekcji użytkowników
+        as: 'user', // Zapisz połączone dane użytkownika w polu "user"
       },
     },
     {
-      $unwind: "$user",
+      $unwind: '$user',
     },
     {
       $project: {
-        _id: { $toObjectId: "$user._id" }, 
-        name: "$user.name",
-        surname: "$user.surname",
-        reportCount: 1, 
+        _id: { $toObjectId: '$user._id' }, // Rzutowanie na ObjectId
+        name: '$user.name',
+        surname: '$user.surname',
+        reportCount: 1, // Liczba raportów
       },
     },
     {
@@ -93,83 +93,27 @@ export const getUsersWithReportCountHandler = catchErrors(async (req, res) => {
 
   const allUsers = await UserModel.find();
 
-  
+  // Połącz użytkowników z agregacji z użytkownikami bez raportów
   const usersWithZeroReports = allUsers
-    .filter(
-      (user) =>
-        !usersWithReportCount.some(
-          (report) => report._id.toString() === user._id.toString()
-        )
-    )
+    .filter((user) => !usersWithReportCount.some((report) => report._id.toString() === user._id.toString()))
     .map((user) => ({
       _id: user._id,
       name: user.name,
       surname: user.surname,
-      reportCount: 0, 
+      reportCount: 0, // Użytkownicy bez raportów mają liczbę raportów 0
     }));
 
+  // 4. Połącz wyniki i posortuj
+  const allUsersWithReportCounts = [...usersWithReportCount, ...usersWithZeroReports];
 
-  const allUsersWithReportCounts = [
-    ...usersWithReportCount,
-    ...usersWithZeroReports,
-  ];
-
-
-  return res.status(OK).json(allUsersWithReportCounts);
+  // 5. Zwróć posortowaną listę użytkowników
+  return res.status(EHttpCodes.OK).json(allUsersWithReportCounts);
 });
-
-
-export const getUserFavouriteArticlesHandler = catchErrors(async (req, res) => {
-  const { userId }: { userId: string } = req;
-  const pageSize = 15; // Liczba wyników na stronę
-  const pageNumber = parseInt(req.query.page ? req.query.page.toString() : "1");
-  const skip = (pageNumber - 1) * pageSize;
-
-
-  const user = await UserModel.findById(userId).select("favourites");
-
-  if (!user) {
-    return res.status(403).json({ message: "User not found" });
-  }
-
-
-  const favourites = user.favourites;
-
-
-  const favouriteArticles = await ArticleModel.find({
-    _id: { $in: favourites },
-  })
-    .select([
-      "-clientDescription",
-      "-employeeDescription",
-      "-createdBy",
-      "-verifiedBy",
-      "-createdAt",
-      "-viewsCounter",
-      "-__v",
-    ])
-    .populate([{ path: "tags", select: ["name"] },{ path: "product", select: ["name","labelColor"] }])
-    .skip(skip)
-    .limit(pageSize);
-
-  
-  const totalFavouriteArticles = await ArticleModel.countDocuments({
-    _id: { $in: favourites },
-  });
-
-  res.status(200).json({
-    data: favouriteArticles,
-    currentPage: pageNumber,
-    totalPages: Math.ceil(totalFavouriteArticles / pageSize),
-  });
-});
-
-
 
 export const getUsersWithArticleCountHandler = catchErrors(async (req, res) => {
   const { startDate, endDate } = req.query;
 
-  let dateFilter: any = {};
+  let dateFilter: Record<string, unknown> = {};
 
   if (startDate || endDate) {
     dateFilter = { createdAt: {} };
@@ -192,30 +136,30 @@ export const getUsersWithArticleCountHandler = catchErrors(async (req, res) => {
   // Agregacja w kolekcji artykułów, aby policzyć liczbę artykułów dla każdego użytkownika
   const usersWithArticleCount = await ArticleModel.aggregate([
     {
-      $match: dateFilter, 
+      $match: dateFilter, // Jeśli podano daty, filtruj artykuły po dacie
     },
     {
       $group: {
-        _id: "$createdBy", // Grupowanie po użytkowniku
-        createdArticleCount: { $sum: 1 }, 
+        _id: '$createdBy', // Grupowanie po użytkowniku
+        createdArticleCount: { $sum: 1 }, // Zliczanie artykułów
       },
     },
     {
       $lookup: {
-        from: "users",
-        localField: "_id",
-        foreignField: "_id",
-        as: "user",
+        from: 'users',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'user',
       },
     },
     {
-      $unwind: "$user",
+      $unwind: '$user',
     },
     {
       $project: {
-        _id: "$user._id",
-        name: "$user.name",
-        surname: "$user.surname",
+        _id: '$user._id',
+        name: '$user.name',
+        surname: '$user.surname',
         createdArticleCount: 1,
       },
     },
@@ -229,12 +173,7 @@ export const getUsersWithArticleCountHandler = catchErrors(async (req, res) => {
   const allUsers = await UserModel.find();
 
   const usersWithZeroArticles = allUsers
-    .filter(
-      (user) =>
-        !usersWithArticleCount.some(
-          (article) => article._id.toString() === user._id.toString()
-        )
-    )
+    .filter((user) => !usersWithArticleCount.some((article) => article._id.toString() === user._id.toString()))
     .map((user) => ({
       _id: user._id,
       name: user.name,
@@ -242,19 +181,15 @@ export const getUsersWithArticleCountHandler = catchErrors(async (req, res) => {
       createdArticleCount: 0,
     }));
 
-  const allUsersWithArticleCounts = [
-    ...usersWithArticleCount,
-    ...usersWithZeroArticles,
-  ];
+  const allUsersWithArticleCounts = [...usersWithArticleCount, ...usersWithZeroArticles];
 
-  return res.status(OK).json(allUsersWithArticleCounts);
+  return res.status(EHttpCodes.OK).json(allUsersWithArticleCounts);
 });
-
 
 export const getUsersWithChangeCountHandler = catchErrors(async (req, res) => {
   const { startDate, endDate } = req.query;
 
-  let dateFilter: any = {};
+  let dateFilter: Record<string, unknown> = {};
 
   if (startDate || endDate) {
     dateFilter = { updatedAt: {} };
@@ -278,53 +213,48 @@ export const getUsersWithChangeCountHandler = catchErrors(async (req, res) => {
   const usersWithChangeCount = await ArticleHistoryModel.aggregate([
     {
       $match: {
-        ...dateFilter, 
-        eventType: "updated", 
+        ...dateFilter, // Jeśli podano daty, filtruj zmiany po dacie
+        eventType: 'updated', // Dodajemy filtr, który uwzględnia tylko zmiany typu 'updated'
       },
     },
     {
       $group: {
-        _id: "$updatedBy", 
-        updatedArticleCount: { $sum: 1 }, 
+        _id: '$updatedBy', // Grupowanie po użytkowniku
+        updatedArticleCount: { $sum: 1 }, // Zliczanie tylko tych zmian, które mają eventType 'updated'
       },
     },
     {
       $lookup: {
-        from: "users", 
-        localField: "_id",
-        foreignField: "_id",
-        as: "user",
+        from: 'users', // Łączenie z kolekcją użytkowników
+        localField: '_id',
+        foreignField: '_id',
+        as: 'user',
       },
     },
     {
-      $unwind: "$user", 
+      $unwind: '$user', // Rozpakowywanie wyników z tablicy user
     },
     {
       $project: {
-        _id: "$user._id",
-        name: "$user.name",
-        surname: "$user.surname",
+        _id: '$user._id',
+        name: '$user.name',
+        surname: '$user.surname',
         updatedArticleCount: 1,
       },
     },
     {
       $sort: {
-        updatedArticleCount: -1, 
+        updatedArticleCount: -1, // Sortowanie po liczbie zmian malejąco
       },
     },
   ]);
 
-  
+  // Pobieramy wszystkich użytkowników
   const allUsers = await UserModel.find();
 
-
+  // Użytkownicy, którzy nie wprowadzili żadnych zmian
   const usersWithZeroChanges = allUsers
-    .filter(
-      (user) =>
-        !usersWithChangeCount.some(
-          (change) => change._id.toString() === user._id.toString()
-        )
-    )
+    .filter((user) => !usersWithChangeCount.some((change) => change._id.toString() === user._id.toString()))
     .map((user) => ({
       _id: user._id,
       name: user.name,
@@ -332,11 +262,8 @@ export const getUsersWithChangeCountHandler = catchErrors(async (req, res) => {
       updatedArticleCount: 0,
     }));
 
- 
-  const allUsersWithChangeCounts = [
-    ...usersWithChangeCount,
-    ...usersWithZeroChanges,
-  ];
+  // Łączenie wyników z użytkownikami, którzy mają zero zmian
+  const allUsersWithChangeCounts = [...usersWithChangeCount, ...usersWithZeroChanges];
 
-  return res.status(200).json(allUsersWithChangeCounts);
+  return res.status(EHttpCodes.OK).json(allUsersWithChangeCounts);
 });

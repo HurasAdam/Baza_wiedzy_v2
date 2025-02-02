@@ -6,12 +6,11 @@ import { FaFileSignature } from 'react-icons/fa6';
 import { useQuery } from '@tanstack/react-query';
 import { articlesApi } from '@/lib/articlesApi';
 import UserCreatedArticleDetails from './UserCreatedArticleDetails';
-import Spinner from './core/Spinner';
 
 const UserArticlesDetails = ({userId,queryParams}) => {
  const [selectedItem, setSelectedItem] = useState(null);
 
-const {data:userArticles,isLoading, isError} = useQuery({
+const {data:userArticles} = useQuery({
     queryKey:["articlesCreatedByUser",userId],
     queryFn:()=>{
         return articlesApi.getArticlesCreatedByUser({userId,searchParams:queryParams})
@@ -22,16 +21,8 @@ const handleSelectItem = (itemId) => {
     setSelectedItem(itemId);
   };
 
-
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full space-y-4 p-6">
-        <Spinner animation="spin" size="lg" color="bg-blue-500" />
-        <p className="text-lg font-semibold text-gray-600">Ładowanie danych...</p>
-      </div>
-    );
-  }
-
+console.log("selectedItem")
+console.log(selectedItem)
   return (
     <div className="grid grid-cols-[6fr_14fr] h-full gap-1.5 max-h-full">
       {/* Lewa kolumna - lista zmian */}
@@ -57,7 +48,7 @@ const handleSelectItem = (itemId) => {
       </div>
 
       {/* Prawa kolumna - może być pusta */}
-      <div className=" overflow-y-auto max-h-[88vh]   min-h-[88vh]  break-words w-full box-border scrollbar-custom ">
+      <div className=" overflow-y-auto h-full min-h-[88vh]  break-words w-full box-border scrollbar-custom ">
  
   
    <UserCreatedArticleDetails articleId={selectedItem}/>
