@@ -6,18 +6,12 @@ import { FaFolderOpen } from "react-icons/fa6";
 import { TbArrowBackUp } from "react-icons/tb";
 import {
     Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-import BadgeLabel from './core/BadgeLabel'
 import { useModalContext } from '@/contexts/ModalContext';
 import ArticleDetails from '@/pages/ArticleDetails';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from './ui/button';
-import QuickArticleDetails from './QuickArticleDetails';
 
 const TrashedArticleCard = ({data,className,toggleArticleAsFavouriteHandler,isLoading,isSelected,viewType}) => {
   const  navigate = useNavigate();
@@ -26,8 +20,6 @@ const articleViewPreference = localStorage.getItem('articleView');
 
 const quickViewArticleHandler = (article,isSelected) => {
 
-
-    
       openContentModal({
         title: article?.title,
         description: "",
@@ -37,8 +29,6 @@ const quickViewArticleHandler = (article,isSelected) => {
       });
 
   };
-
-
 
 
 if(viewType ==="grid"){
@@ -68,23 +58,16 @@ if(viewType ==="grid"){
 <FaFolderOpen className='w-5 h-5 text-blue-950/90 hover:text-slate-500'/>
 </Link>
  
-  
             </CardTitle>
         
           {/* <CardDescription className='text-xs flex items-center gap-1'>
                         
-
-    
             </CardDescription>  */}
         </CardHeader>
 
-   
-       
     </Card>
   )
 }
-
-
 
   return (
     <Card 
@@ -117,19 +100,11 @@ if(viewType ==="grid"){
 to={`/articles/${data._id}`}>
 <FaFolderOpen className='w-5 h-5 text-blue-950/90 hover:text-slate-500'/>
 </Link>
- 
-  
             </CardTitle>
-        
           {/* <CardDescription className='text-xs flex items-center gap-1'>
                         
-
-    
             </CardDescription>  */}
         </CardHeader>
-
-   
-       
     </Card>
 );
 }

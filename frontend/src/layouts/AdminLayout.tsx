@@ -1,14 +1,7 @@
 import React, { useEffect } from "react";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+
+
 import { Toaster } from "@/components/ui/toaster";
 import {
   SidebarInset,
@@ -17,7 +10,6 @@ import {
 } from "@/components/ui/sidebar";
 import useAuth from "@/hooks/useAuth";
 import {
-  Link,
   Navigate,
   Outlet,
   useLocation,
@@ -31,7 +23,7 @@ import { IMAGES } from "@/constants/images";
 import { AdminSidebar } from "@/components/AdminSidebar";
 import useRoleGuard from "@/hooks/useRoleGuard";
 import { toast } from "@/hooks/use-toast";
-const AdminLayout = () => {
+const AdminLayout:React.FC = () => {
   const { user, isLoading } = useAuth();
 
   const navigate = useNavigate();

@@ -6,7 +6,8 @@ import {
   getTagsHandler,
   updateTagHandler,
 } from '../../controllers/tag.controller.js';
-import preventDeleteDefaultTag from '../server/middleware/preventDeleteDefaultTag.js';
+import preventDeleteDefaultTag from 'server/middleware/preventDeleteDefaultTag.js';
+
 
 const tagRoutes = Router();
 

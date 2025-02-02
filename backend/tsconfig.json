@@ -55,7 +55,7 @@
     "skipLibCheck": false,
     "suppressExcessPropertyErrors": false,
     "suppressImplicitAnyIndexErrors": false,
-    "strict": true,
+    "strict": false,
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictNullChecks": true,

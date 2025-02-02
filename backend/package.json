@@ -7,16 +7,16 @@
   "license": "Apache-2.0",
   "private": false,
   "type": "module",
-  "main": "build/src/main.js",
-  "scripts": {
-    "start": "node build/src/main.js",
-    "start:dev": "concurrently 'npm run build:watch' 'cross-env NODE_ENV=development nodemon build/src/main.js'",
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "tsc -w -p tsconfig.json",
-    "lint": "cross-env NODE_ENV=development eslint -c eslint.config.mjs . --fix --cache",
-    "listErrors": "node_modules/.bin/tsc --skipLibCheck",
-    "lintStaged": "npx lint-staged"
-  },
+  "main": "build/src/index.js",
+"scripts": {
+  "start": "node build/src/index.js",
+  "start:dev": "concurrently 'npm run build:watch' 'cross-env NODE_ENV=development nodemon build/src/index.js'",
+  "build": "tsc -p tsconfig.json",
+  "build:watch": "tsc -w -p tsconfig.json",
+  "lint": "cross-env NODE_ENV=development eslint -c eslint.config.mjs . --fix --cache",
+  "listErrors": "node_modules/.bin/tsc --skipLibCheck",
+  "lintStaged": "npx lint-staged"
+},
   "lint-staged": {
     "*.ts": [
       "cross-env NODE_ENV=development eslint --cache"

@@ -21,8 +21,6 @@ const handleSelectItem = (itemId) => {
     setSelectedItem(itemId);
   };
 
-console.log("selectedItem")
-console.log(selectedItem)
   return (
     <div className="grid grid-cols-[6fr_14fr] h-full gap-1.5 max-h-full">
       {/* Lewa kolumna - lista zmian */}
@@ -50,13 +48,8 @@ console.log(selectedItem)
       {/* Prawa kolumna - może być pusta */}
       <div className=" overflow-y-auto h-full min-h-[88vh]  break-words w-full box-border scrollbar-custom ">
  
-  
    <UserCreatedArticleDetails articleId={selectedItem}/>
   
-      
-      
-       
-      
       </div>
     </div>
   )

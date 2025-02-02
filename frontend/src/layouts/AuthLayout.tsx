@@ -1,14 +1,10 @@
-import Spinner from '@/components/core/Spinner';
 import { IMAGES } from '@/constants/images';
 import useAuth from '@/hooks/useAuth';
 import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 
-const AuthLayout = () => {
-
+const AuthLayout:React.FC = () => {
   const { user } = useAuth();
-
-
 
 if(user){
   return <Navigate to="/dashboard"/>
@@ -25,17 +21,11 @@ if(user){
         <img src={IMAGES.loginImage} alt="" />
 </div>
           <div className='flex-1 md:w-2/5 h-screen bg-white flex justify-center max-w-8xl mx-auto '>
-    
     <Outlet/>
     </div>
-
-
     </section>
   )
 }
-
-
-
 
 }
 
