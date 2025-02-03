@@ -1,5 +1,5 @@
 import { EHttpCodes } from '../../enums/http.js';
-import TagModel from '../../models/tag.model.js';
+import TagModel from '../../modules/tag/model.js';
 import type { Request, Response, NextFunction } from 'express';
 
 // Middleware sprawdzający, czy tag jest domyślny

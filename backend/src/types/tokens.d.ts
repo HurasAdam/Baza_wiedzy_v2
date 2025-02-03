@@ -1,5 +1,5 @@
-import type { ISessionDocument } from '../models/session.model.js';
-import type { IUserDocument } from '../models/user.model.js';
+import type { ISessionDocument } from '../modules/session/model.ts';
+import type { IUserDocument } from '../modules/user/model.ts';
 import type { SignOptions } from 'jsonwebtoken';
 
 export interface IRefreshTokenPayload {

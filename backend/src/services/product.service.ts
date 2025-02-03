@@ -1,9 +1,9 @@
 import { EHttpCodes } from '../enums/http.js';
-import ArticleModel from '../models/article.model.js';
-import ConversationTopicModel from '../models/conversationTopic.model.js';
-import ProductModel from '../models/product.model.js';
+import ArticleModel from '../modules/article/schema.model.js';
+import ConversationTopicModel from '../modules/conversationTopic/model.js';
+import ProductModel from '../modules/product/model.js';
 import appAssert from '../utils/appAssert.js';
-import type { IProduct } from '../models/product.model.js';
+import type { IProduct } from '../modules/product/model.js';
 import type { ICreateProductParams } from '../types/products.js';
 
 export const createProduct = async ({ request, userId }: ICreateProductParams): Promise<IProduct> => {

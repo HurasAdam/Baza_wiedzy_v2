@@ -1,6 +1,6 @@
 import { EAppErrorCode } from '../../enums/errors.js';
 import { EHttpCodes } from '../../enums/http.js';
-import UserModel from '../../models/user.model.js';
+import UserModel from '../../modules/user/model.js';
 import appAssert from '../../utils/appAssert.js';
 import type { RequestHandler } from 'express';
 

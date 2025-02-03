@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 import Log from 'simpl-loggar';
 import { EEventType } from '../enums/events.js';
 import { EHttpCodes } from '../enums/http.js';
-import ArticleModel from '../models/article.model.js';
-import ArticleHistoryModel from '../models/articleHistory.model.js';
+import ArticleHistoryModel from '../modules/article/history.model.js';
+import ArticleModel from '../modules/article/schema.model.js';
 import appAssert from '../utils/appAssert.js';
 import type { IChange, ISaveArticleChangesProps } from '../types/article.js';
 
