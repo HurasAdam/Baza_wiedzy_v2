@@ -1,8 +1,8 @@
 import { EHttpCodes } from '../enums/http.js';
-import ConversationReportModel from '../models/conversationReport.model.js';
-import ConversationTopicModel from '../models/conversationTopic.model.js';
+import ConversationReportModel from '../modules/conversationReport/model.js';
+import ConversationTopicModel from '../modules/conversationTopic/model.js';
 import appAssert from '../utils/appAssert.js';
-import type { IConversationTopic } from '../models/conversationTopic.model.js';
+import type { IConversationTopic } from '../modules/conversationTopic/model.js';
 import type { ICreateConversationTopicParams, IGetConversationTopicParams } from '../types/conversations.js';
 
 export const createConversationTopic = async ({
