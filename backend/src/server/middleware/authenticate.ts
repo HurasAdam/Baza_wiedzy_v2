@@ -1,6 +1,6 @@
 import { EAppErrorCode, EHttpCodes } from '../../enums/index.js';
+import { verifyToken } from '../../tools/passwords.js';
 import appAssert from '../../utils/appAssert.js';
-import { verifyToken } from '../../utils/jwt.js';
 import type { IAccessTokenPayload } from '../../types/tokens.js';
 import type { RequestHandler } from 'express';
 
@@ -14,7 +14,7 @@ const authenticate: RequestHandler = (req, _res, next) => {
 
   try {
     const callback = verifyToken(accessToken);
-    payload = callback?.payload;
+    payload = (callback as { payload: IAccessTokenPayload })?.payload;
 
     if (payload && typeof payload.userId === 'string' && typeof payload.sessionId === 'string') {
       req.userId = payload.userId; // Teraz TypeScript wie, że to jest string

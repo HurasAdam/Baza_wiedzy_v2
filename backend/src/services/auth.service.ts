@@ -1,21 +1,21 @@
 import Log from 'simpl-loggar';
 import { APP_ORIGIN } from '../constants/index.js';
 import { EHttpCodes, EVerificationCodeType } from '../enums/index.js';
-import SessionModel from '../models/session.model.js';
-import UserModel from '../models/user.model.js';
-import verificationCodeModel from '../models/verificationCode.model.js';
-import { hashValue } from '../tools/passwords.js';
+import verificationCodeModel from '../modules/auth/verificationCode.model.js';
+import SessionModel from '../modules/session/model.js';
+import UserModel from '../modules/user/model.js';
+import { hashValue, refreshTokenSignOptions, signToken, verifyToken } from '../tools/passwords.js';
 import appAssert from '../utils/appAssert.js';
-import { ONE_DAY_IN_MS, fiveMinutesAgo, oneHourFromNow, oneYearFromNow, thirtyDaysFromNow } from '../utils/date.js';
+import { fiveMinutesAgo, oneDay, oneHourFromNow, oneYearFromNow, thirtyDaysFromNow } from '../utils/date.js';
 import { getPasswordResetTemplate, getVerifyEmailTemplate } from '../utils/emailTemplates.js';
-import { refreshTokenSignOptions, signToken, verifyToken } from '../utils/jwt.js';
 import sendMail from '../utils/sendMail.js';
+import type { ICleanUser } from '../modules/user/model.js';
 import type { ICreateAccountParams, ILoginParams, IResetPasswordParams } from '../types/account.js';
 import type { IAccessTokenPayload, IRefreshTokenPayload } from '../types/tokens.js';
 
 export const createAccount = async (
   data: ICreateAccountParams,
-): Promise<{ user: string; accessToken: string; refreshToken: string }> => {
+): Promise<{ user: ICleanUser; accessToken: string; refreshToken: string }> => {
   // verify email is not taken
   const existingUser = await UserModel.exists({
     email: data.email,
@@ -74,7 +74,7 @@ export const loginUser = async ({
   email,
   password,
   userAgent,
-}: ILoginParams): Promise<{ user: string; accessToken: string; refreshToken: string }> => {
+}: ILoginParams): Promise<{ user: ICleanUser; accessToken: string; refreshToken: string }> => {
   const user = await UserModel.findOne({ email });
   appAssert(user, EHttpCodes.UNAUTHORIZED, 'Invalid email or password');
 
@@ -103,7 +103,7 @@ export const loginUser = async ({
   };
 };
 
-export const verifyEmail = async (code: string): Promise<{ user: string }> => {
+export const verifyEmail = async (code: string): Promise<{ user: ICleanUser }> => {
   const validCode = await verificationCodeModel.findOne({
     _id: code,
     type: EVerificationCodeType.EmailVerification,
@@ -140,7 +140,7 @@ export const refreshUserAccessToken = async (
   appAssert(session && session.expiresAt.getTime() > now, EHttpCodes.UNAUTHORIZED, 'Session expired');
 
   // refresh the session if it expires in the next 24hrs
-  const sessionNeedsRefresh = session.expiresAt.getTime() - now <= ONE_DAY_IN_MS;
+  const sessionNeedsRefresh = session.expiresAt.getTime() - now <= oneDay;
   if (sessionNeedsRefresh) {
     session.expiresAt = thirtyDaysFromNow();
     await session.save();
@@ -218,7 +218,7 @@ export const sendPasswordResetEmail = async (email: string): Promise<{ url: stri
 export const resetPassword = async ({
   verificationCode,
   password,
-}: IResetPasswordParams): Promise<{ user: string }> => {
+}: IResetPasswordParams): Promise<{ user: ICleanUser }> => {
   const validCode = await verificationCodeModel.findOne({
     _id: verificationCode,
     type: EVerificationCodeType.PasswordReset,

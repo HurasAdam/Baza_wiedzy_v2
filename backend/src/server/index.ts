@@ -5,27 +5,18 @@ import Log from 'simpl-loggar';
 import authenticate from './middleware/authenticate.js';
 import errorHandler from './middleware/errorHandlers.js';
 import { PORT, APP_ORIGIN } from '../constants/index.js';
-import { EHttpCodes } from '../enums/index.js';
-import articleRoutes from '../routes/article.route.js';
-import authRoutes from '../routes/auth.route.js';
-import conversationReportRoutes from '../routes/conversationReport.route.js';
-import conversationTopicRoutes from '../routes/conversationTopic.route.js';
-import dashboardRoutes from '../routes/dashboard.route.js';
-import productRoutes from '../routes/product.route.js';
-import sessionRoutes from '../routes/session.route.js';
-import tagRoutes from '../routes/tag.route.js';
-import userRoutes from '../routes/user.route.js';
-import catchErrors from '../utils/catchErrors.js';
+import articleRoutes from './modules/article/index.js';
+import authRoutes from './modules/auth/index.js';
+import conversationReportRoutes from './modules/conversationReport/index.js';
+import conversationTopicRoutes from './modules/conversationTopic/index.js';
+import dashboardRoutes from './modules/dashboard/index.js';
+import productRoutes from './modules/product/index.js';
+import sessionRoutes from './modules/session/index.js';
+import tagRoutes from './modules/tag/index.js';
+import userRoutes from './modules/user/index.js';
 import http from 'http';
 
 const initRoutes = (app: express.Express): void => {
-  app.get(
-    '/',
-    catchErrors((_req: express.Request, res: express.Response, _next: express.NextFunction) => {
-      return res.status(EHttpCodes.OK).json('Test');
-    }),
-  );
-
   app.use('/auth', authRoutes);
 
   // protected routes

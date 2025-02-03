@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../enums/http.js';
-import TagModel from '../models/tag.model.js';
+import TagModel from '../modules/tag/model.js';
 import appAssert from '../utils/appAssert.js';
-import type { ITag } from '../models/tag.model.js';
+import type { ITag } from '../modules/tag/model.js';
 import type { ICreateTagParams } from '../types/index.js';
 
 export const createTag = async ({ request, userId }: ICreateTagParams): Promise<{ message: string }> => {
