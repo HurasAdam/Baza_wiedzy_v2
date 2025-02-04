@@ -9,6 +9,7 @@ import { getArticleHistory, saveArticleChanges } from '../../../services/article
 import appAssert from '../../../utils/appAssert.js';
 import catchErrors from '../../../utils/catchErrors.js';
 import constructSearchQuery from '../../../utils/constructSearchQuery.js';
+import ArticleHistoryModel from 'modules/article/history.model.js';
 
 export const createArticleHandler = catchErrors(async (req, res) => {
   const request = newArticleSchema.parse(req.body);
