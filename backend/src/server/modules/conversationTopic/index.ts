@@ -1,11 +1,6 @@
 import { Router } from 'express';
-import {
-  createConversationTopicHandler,
-  deleteConversationTopicHandler,
-  getConversationTopicsHandler,
-  getSingleConversationTopicHandler,
-  updateConversationTopicleHandler,
-} from '../../controllers/conversationTopic.controller.js';
+import { createConversationTopicHandler, deleteConversationTopicHandler, getConversationTopicsHandler, getSingleConversationTopicHandler, updateConversationTopicleHandler } from './controller.js';
+
 
 const conversationTopicRoutes = Router();
 
