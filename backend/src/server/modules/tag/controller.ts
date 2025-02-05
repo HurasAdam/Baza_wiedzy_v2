@@ -107,7 +107,7 @@ export const deleteTagHandler = catchErrors(async (req, res) => {
 
   // Jeśli artykuł ma tylko jeden tag i jest to tag, który chcemy usunąć
   for (const article of articlesWithTag) {
-    if (article.tags.length === 1 && article.tags[0].toString() === id) {
+    if (article.tags?.length === 1 && article.tags[0]?.toString() === id) {
       // Jeśli artykuł ma tylko jeden tag, przypisz domyślny tag i usuń ten tag
       await ArticleModel.updateOne(
         { _id: article._id },

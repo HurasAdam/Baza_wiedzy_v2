@@ -1,14 +1,12 @@
-import Log from 'simpl-loggar';
-import { APP_ORIGIN } from '../constants/index.js';
 import { EHttpCodes, EVerificationCodeType } from '../enums/index.js';
 import verificationCodeModel from '../modules/auth/verificationCode.model.js';
 import SessionModel from '../modules/session/model.js';
 import UserModel from '../modules/user/model.js';
 import { hashValue, refreshTokenSignOptions, signToken, verifyToken } from '../tools/passwords.js';
 import appAssert from '../utils/appAssert.js';
-import { fiveMinutesAgo, oneDay, oneHourFromNow, oneYearFromNow, thirtyDaysFromNow } from '../utils/date.js';
-import { getPasswordResetTemplate, getVerifyEmailTemplate } from '../utils/emailTemplates.js';
-import sendMail from '../utils/sendMail.js';
+import {  oneDay , thirtyDaysFromNow } from '../utils/date.js';
+
+
 import type { ICleanUser } from '../modules/user/model.js';
 import type { ICreateAccountParams, ILoginParams, IResetPasswordParams } from '../types/account.js';
 import type { IAccessTokenPayload, IRefreshTokenPayload } from '../types/tokens.js';
@@ -29,23 +27,11 @@ export const createAccount = async (
     password: data.password,
   });
   const userId = user._id;
-  const verificationCode = await verificationCodeModel.create({
-    userId,
-    type: EVerificationCodeType.EmailVerification,
-    expiresAt: oneYearFromNow(),
-  });
 
-  const url = `${APP_ORIGIN}/email/verify/${verificationCode._id as string}`;
 
-  // send verification email
-  try {
-    await sendMail({
-      to: user.email,
-      ...getVerifyEmailTemplate(url),
-    });
-  } catch (err) {
-    if (err) Log.error('Send email', (err as Error).message, (err as Error).stack);
-  }
+
+  // TODO --send verification email
+
 
   // create session
   const session = await SessionModel.create({
@@ -166,54 +152,6 @@ export const refreshUserAccessToken = async (
   };
 };
 
-export const sendPasswordResetEmail = async (email: string): Promise<{ url: string; emailId: string } | undefined> => {
-  // Catch any errors that were thrown and log them (but always return a success)
-  // This will prevent leaking sensitive data back to the client (e.g. user not found, email not sent).
-  try {
-    const user = await UserModel.findOne({ email });
-    appAssert(user, EHttpCodes.NOT_FOUND, 'User not found');
-
-    // check for max password reset requests (2 emails in 5min)
-    const fiveMinAgo = fiveMinutesAgo();
-    const count = await verificationCodeModel.countDocuments({
-      userId: user._id,
-      type: EVerificationCodeType.PasswordReset,
-      createdAt: { $gt: fiveMinAgo },
-    });
-    appAssert(count <= 1, EHttpCodes.TOO_MANY_REQUESTS, 'Too many requests, please try again later');
-
-    const expiresAt = oneHourFromNow();
-    const verificationCode = await verificationCodeModel.create({
-      userId: user._id,
-      type: EVerificationCodeType.PasswordReset,
-      expiresAt,
-    });
-
-    const url = `${APP_ORIGIN}/password/reset?code=${verificationCode._id as string}&exp=${expiresAt.getTime()}`;
-
-    try {
-      await sendMail({
-        to: email,
-        ...getPasswordResetTemplate(url),
-      });
-    } catch (_err) {
-      // appAssert(data?.id, EHttpCodes.INTERNAL_SERVER_ERROR, `${(err as Error).name} - ${(err as Error).message}`);
-    }
-
-    // return {
-    //  url,
-    //  emailId: data.id,
-    // };
-
-    return {
-      url,
-      emailId: '',
-    };
-  } catch (err) {
-    Log.error('Save password', (err as Error).message);
-    return undefined;
-  }
-};
 
 export const resetPassword = async ({
   verificationCode,

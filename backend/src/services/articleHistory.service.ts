@@ -113,7 +113,10 @@ export const saveArticleChanges = async ({
 
   // Porównaj artykuły, jeżeli zmiany zachodzą (np. zaktualizowany artykuł)
   if (eventType === EEventType.Updated && articleBeforeChanges) {
-    changes = compareObjects(articleBeforeChanges, updatedArticle);
+    changes = compareObjects(
+      articleBeforeChanges as unknown as Record<string, unknown>,
+      updatedArticle as unknown as Record<string, unknown>
+    );
 
     // Jeśli zmiany obejmują tagi, sprawdź, czy wszystkie tagi istnieją
 
