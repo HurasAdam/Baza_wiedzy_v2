@@ -1,18 +1,15 @@
 import { EHttpCodes } from '../../../enums/http.js';
 import {
-  emailSchema,
   loginSchema,
   registerSchema,
   resetPasswordSchema,
-  verificationCodeSchema,
 } from '../../../modules/auth/schemas.js';
 import SessionModel from '../../../modules/session/model.js';
 import {
   createAccount,
   loginUser,
   refreshUserAccessToken,
-  sendPasswordResetEmail,
-  verifyEmail,
+  resetPassword,
 } from '../../../services/auth.service.js';
 import { verifyToken } from '../../../tools/passwords.js';
 import appAssert from '../../../utils/appAssert.js';
@@ -76,27 +73,15 @@ export const refreshHandler = catchErrors(async (req, res) => {
     .json({ message: 'Access token refreshed' });
 });
 
-export const verifyEmailHandler = catchErrors(async (req, res) => {
-  const { code } = req.params;
 
-  const verificationCode = verificationCodeSchema.parse(code);
-  await verifyEmail(verificationCode);
-  return res.status(EHttpCodes.OK).json({ message: 'Email was successfully verified' });
-});
 
-export const sendPasswordResetHandler = catchErrors(async (req, res) => {
-  const email = emailSchema.parse(req.body.email);
 
-  await sendPasswordResetEmail(email);
-
-  return res.status(EHttpCodes.OK).json({ message: 'Password reset email sent' });
-});
 
 export const resetPasswordHandler = catchErrors(async (req, res) => {
   const request = resetPasswordSchema.parse(req.body);
 
   // call service
-  await resetPasswordSchema(request);
+  await resetPassword(request);
 
   clearAuthCookies(res);
   res.status(EHttpCodes.OK).json({ message: 'Password reset successful' });
