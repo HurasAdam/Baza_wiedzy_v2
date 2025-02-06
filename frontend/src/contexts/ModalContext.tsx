@@ -27,7 +27,7 @@ export const ModalContextProvider = ({
     description: "",
     content: null as React.ReactNode | null,
     size: "md",
-    height: "60",
+    height: "",
     closeOnOutsideClick: true,
     scrollable: true,
   });
