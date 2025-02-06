@@ -55,6 +55,7 @@ const StatisticsPage: React.FC = () => {
       content: (<UserReportDetails userId={userId} queryParams={queryParams}/>),
       enableOutsideClickClose: true,
       size: "lg",
+      
     });
   };
   
@@ -139,14 +140,17 @@ const isLoading = isReportStatsLoading || isCreatedArticleStatsLoading || isChan
             label="Data końcowa"
           />
           <button
+       
             onClick={handleSearch}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
+            
             Wyszukaj
           </button>
           <button
+             disabled={!startDate && !endDate}
             onClick={handleClearFilters}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 disabled:bg-slate-100"
           >
             Wyczyść filtry
           </button>
@@ -178,9 +182,14 @@ const isLoading = isReportStatsLoading || isCreatedArticleStatsLoading || isChan
           <div className="p-4 space-y-3">
             {usersWithStats?.map((user, index) => (
               <div
-              onClick={()=>openInModalHandler(user?._id)}
+              onClick={() => {
+      if (user.reportCount > 0) {
+        openInModalHandler(user?._id);
+      }
+    }}
                 key={user._id}
-                className="flex justify-between items-center p-3 border border-gray-200 rounded-md hover:shadow-md cursor-pointer"
+                className={`flex justify-between items-center p-3 border rounded-md  cursor-pointer 
+                  ${user.reportCount > 0 ? 'hover:bg-emerald-50 hover:border-emerald-300 hover:shadow-md' : ''}`}
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-700">
@@ -213,14 +222,19 @@ const isLoading = isReportStatsLoading || isCreatedArticleStatsLoading || isChan
                   Lista użytkowników z liczbą dodanych artykułów
                 </CardDescription>
               </div>
-            </div>
+            </div> 
           </CardHeader>
           <div className="p-4 space-y-3">
             {usersWithArticleStats?.map((user, index) => (
               <div
-              onClick={()=>openUserArticlesDetails(user._id)}
+              onClick={()=>{
+                if(user?.createdArticleCount>0){
+                  openUserArticlesDetails(user._id)
+                }
+              }}
                 key={user._id}
-                className="flex justify-between items-center p-3 border border-gray-200 rounded-md hover:shadow-md"
+                className={`flex justify-between items-center p-3 border rounded-md  cursor-pointer 
+                  ${user.createdArticleCount > 0 ? 'hover:bg-amber-100 hover:border-amber-400 hover:shadow-md' : ''}`}
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-700">
@@ -259,9 +273,14 @@ const isLoading = isReportStatsLoading || isCreatedArticleStatsLoading || isChan
           <div className="p-4 space-y-3">
             {usersWithChangedArticleStats?.map((user, index) => (
               <div
-              onClick={()=>openUserChangedArticlesDetails(user?._id)}
+              onClick={()=>{
+              if(user?.updatedArticleCount>0){
+                openUserChangedArticlesDetails(user?._id)
+              }
+              }}
                 key={user?._id}
-                className="flex justify-between items-center p-3 border border-gray-200 rounded-md hover:shadow-md"
+                className={`flex justify-between items-center p-3 border rounded-md  cursor-pointer 
+                  ${user.updatedArticleCount > 0 ? 'hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-md' : ''}`}
               >
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-700">
