@@ -55,7 +55,8 @@ const StatisticsPage: React.FC = () => {
       content: (<UserReportDetails userId={userId} queryParams={queryParams}/>),
       enableOutsideClickClose: true,
       size: "lg",
-      
+      height: "82",
+    
     });
   };
   
@@ -66,7 +67,7 @@ const openUserArticlesDetails = (userId) =>{
     content: (<UserArticlesDetails userId={userId} queryParams={queryParams}/>),
     enableOutsideClickClose: true,
     size: "lg",
-    
+    height: "82",
   });
 }
 
@@ -76,7 +77,7 @@ const openUserChangedArticlesDetails = (userId) =>{
     content: (<UserArticleChangesDetails userId={userId} queryParams={queryParams}/>),
     enableOutsideClickClose: true,
     size: "lg",
-   
+    height: "82",
     scrollable: false,
   });
 }
