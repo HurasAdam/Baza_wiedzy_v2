@@ -13,5 +13,6 @@ export const PORT = getEnv('PORT', '4004');
 export const JWT_SECRET = getEnv('JWT_SECRET');
 export const APP_ORIGIN = getEnv('APP_ORIGIN');
 export const JWT_REFRESH_SECRET = getEnv('JWT_REFRESH_SECRET');
+export const SOCKET_PORT = getEnv("SOCKET_PORT");
 // export const RESEND_API_KEY = getEnv('RESEND_API_KEY');
 export const EMAIL_SENDER = getEnv('EMAIL_SENDER');

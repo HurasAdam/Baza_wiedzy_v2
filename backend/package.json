@@ -8,15 +8,15 @@
   "private": false,
   "type": "module",
   "main": "build/src/index.js",
-"scripts": {
-  "start": "node build/src/index.js",
-  "start:dev": "concurrently 'npm run build:watch' 'cross-env NODE_ENV=development nodemon build/src/index.js'",
-  "build": "tsc -p tsconfig.json",
-  "build:watch": "tsc -w -p tsconfig.json",
-  "lint": "cross-env NODE_ENV=development eslint -c eslint.config.mjs . --fix --cache",
-  "listErrors": "node_modules/.bin/tsc --skipLibCheck",
-  "lintStaged": "npx lint-staged"
-},
+  "scripts": {
+    "start": "node build/src/index.js",
+    "start:dev": "concurrently 'npm run build:watch' 'cross-env NODE_ENV=development nodemon build/src/index.js'",
+    "build": "tsc -p tsconfig.json",
+    "build:watch": "tsc -w -p tsconfig.json",
+    "lint": "cross-env NODE_ENV=development eslint -c eslint.config.mjs . --fix --cache",
+    "listErrors": "node_modules/.bin/tsc --skipLibCheck",
+    "lintStaged": "npx lint-staged"
+  },
   "lint-staged": {
     "*.ts": [
       "cross-env NODE_ENV=development eslint --cache"
@@ -26,6 +26,7 @@
     ]
   },
   "dependencies": {
+    "@types/ws": "^8.5.14",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -35,6 +36,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "8.9.5",
     "simpl-loggar": "^0.5.3",
+    "ws": "^8.18.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { AlertTriangle, CheckCircle, Info, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
 import { pl } from "date-fns/locale"; // Import języka polskiego
+import { Link } from "react-router-dom";
 
 const notificationStyles = {
   info: "border-blue-300 bg-blue-50 text-blue-900",
@@ -77,13 +78,13 @@ const NotificationsPanel = () => {
                   )}
 
                   {notification.link && (
-                    <a
-                      href={notification.link}
+                    <Link
+                      to={notification.link}
                       className="mt-2 inline-flex items-center text-blue-600 hover:underline text-sm"
                     >
                       Zobacz artykuł
                       <ArrowRight className="w-4 h-4 ml-1" />
-                    </a>
+                    </Link>
                   )}
                 </div>
               </div>
