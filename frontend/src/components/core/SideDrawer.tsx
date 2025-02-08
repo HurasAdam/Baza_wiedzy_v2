@@ -18,10 +18,11 @@ import { Switch } from "../ui/switch";
 interface SideDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  children:React.ReactNode
+  children:React.ReactNode,
+
 }
 
-export function SideDrawer({ isOpen, onClose, children }: SideDrawerProps) {
+export function SideDrawer({ isOpen, onClose, children,drawerTitle }: SideDrawerProps) {
  
 
 
@@ -34,11 +35,11 @@ export function SideDrawer({ isOpen, onClose, children }: SideDrawerProps) {
     
       <Drawer direction='right' open={isOpen} onOpenChange={onClose}>
 
-        <DrawerContent className='h-screen top-0 right-0 left-auto mt-0 w-[500px] rounded-none'>
+        <DrawerContent className='h-screen top-0 right-0 left-auto mt-0 w-[440px] rounded-none'>
           <ScrollArea className='h-screen'>
-            <div className='mx-auto w-full p-5'>
+            <div className='mx-auto w-full '>
               <DrawerHeader>
-                <DrawerTitle>Theme Color Options</DrawerTitle>
+              
                 <DrawerDescription>
                {children}
                 </DrawerDescription>

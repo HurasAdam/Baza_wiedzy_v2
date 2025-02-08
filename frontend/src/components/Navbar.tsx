@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "../../services/authApi";
 import NotificationPanel from "./NotificationPanel";
 import { IoNotifications } from "react-icons/io5";
@@ -18,7 +18,6 @@ import UserAvatar from "./core/UserAvatar";
 import { Dropdown } from "./core/Dropdown";
 import { LogOut, Settings, User } from "lucide-react";
 import clsx from "clsx";
-import { NavUser } from "./nav-user";
 import useAuth from "@/hooks/useAuth";
 import useScrollY from "@/hooks/useScrollY";
 import { SidebarTrigger } from "./ui/sidebar";
@@ -27,7 +26,7 @@ import { SearchBar } from "./SearchBar";
 import { useModalContext } from "@/contexts/ModalContext";
 import ShortcutCallRegisterForm from "./forms/ShortcutCallRegisterForm";
 import { IoIosSearch } from "react-icons/io";
-import { BasicSearchBar } from "./BasicSearchBar";
+
 import {
   Tooltip,
   TooltipContent,
@@ -35,6 +34,8 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import SettingsContainer from "./SettingsContainer";
+import NotificationsPanel from "./NotificationsPanel";
+
 
 const Navbar: React.FC = ({ notifications }) => {
   //   const {showContentModal} = useAppContext();
@@ -46,6 +47,12 @@ const Navbar: React.FC = ({ notifications }) => {
   const { user, isLoading } = useAuth();
   const { openContentModal } = useModalContext();
   const isScrolled = useScrollY();
+
+
+
+
+
+
   const { mutate: logoutUser } = useMutation({
     mutationFn: () => {
       return api.logout();
@@ -270,14 +277,8 @@ const Navbar: React.FC = ({ notifications }) => {
             </div>
           }
         />
-        <SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer}>
-          <div className="p-4 px-6 pb-0 space-y-4">
-            <SearchBar />
-            <div className="flex justify-between">
-              <span>Zweryfikowane</span>
-              <Switch checked={false} />
-            </div>
-          </div>
+        <SideDrawer  isOpen={isDrawerOpen} onClose={closeDrawer}>
+     <NotificationsPanel/>
         </SideDrawer>
         {/* <NavUser user={user} /> */}
       </div>
