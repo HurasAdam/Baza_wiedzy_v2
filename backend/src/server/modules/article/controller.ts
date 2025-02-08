@@ -10,6 +10,8 @@ import appAssert from '../../../utils/appAssert.js';
 import catchErrors from '../../../utils/catchErrors.js';
 import constructSearchQuery from '../../../utils/constructSearchQuery.js';
 import ArticleHistoryModel from '../../../modules/article/history.model.js';
+import NotificationModel from '../../../modules/notification/model.js';
+
 
 export const createArticleHandler = catchErrors(async (req, res) => {
   const request = newArticleSchema.parse(req.body);
@@ -25,6 +27,20 @@ export const createArticleHandler = catchErrors(async (req, res) => {
     updatedArticle: newArticle,
     eventType: EEventType.Created,
   });
+
+
+  const notification = await NotificationModel.create({
+    userId,
+    type: "info",
+    message: "Dodano nowy artykuł",
+    articleTitle: newArticle.title, // Dodajemy tytuł
+    articleProduct: newArticle.product, // Dodajemy produkt
+    link: `/articles/${newArticle._id}`, // Link do artykułu
+  });
+
+console.log("notification")
+console.log(notification)
+await notification.save();
 
   return res.status(EHttpCodes.OK).json({ message: 'Dodano nowy artykuł', data: newArticle });
 });

@@ -15,6 +15,7 @@ import userRoutes from './modules/user/index.js';
 import http from 'http';
 import tagRoutes from './modules/tag/index.js';
 import conversationReportRoutes from './modules/conversationReport/index.js';
+import notificationRoutes from './modules/notification/index.js';
 
 
 
@@ -30,6 +31,7 @@ const initRoutes = (app: express.Express): void => {
   app.use('/conversation-topics', authenticate, conversationTopicRoutes);
   app.use('/conversation-report', authenticate, conversationReportRoutes);
   app.use('/dashboard', authenticate, dashboardRoutes);
+  app.use("/notifications", authenticate, notificationRoutes)
 };
 
 const initMiddleware = (app: express.Express): void => {
