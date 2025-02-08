@@ -6,6 +6,7 @@ export interface IArticle {
   title: string;
   employeeDescription: string;
   clientDescription: string;
+  product:Types.ObjectId;
   tags: Types.ObjectId[];
   createdBy: Types.ObjectId;
   verifiedBy: Types.ObjectId;
