@@ -10,6 +10,6 @@ export default (): ((req: express.Request, res: express.Response, next: express.
 
     await restoreArticle(id as string, userId);
 
-    return res.status(EHttpCodes.OK).json({ message: 'Artykuł został przywrócony z kosza' });
+    res.status(EHttpCodes.OK).json({ message: 'Artykuł został przywrócony z kosza' });
   });
 };

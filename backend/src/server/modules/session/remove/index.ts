@@ -14,6 +14,6 @@ export default (): ((req: express.Request, res: express.Response, next: express.
     });
     appAssert(deleted, EHttpCodes.NOT_FOUND, 'Session not found');
 
-    return res.status(EHttpCodes.OK).json({ message: 'Session removed' });
+    res.status(EHttpCodes.OK).json({ message: 'Session removed' });
   });
 };

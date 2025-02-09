@@ -1,4 +1,4 @@
-import type { IGetUserWithChangeCountDto } from '../../../modules/user/getUserWithChangeCount/types.js';
+import type { IGetUserWithChangeCountDto } from '../../../../modules/user/getUserWithChangeCount/types.js';
 import type express from 'express';
 import type { ParsedQs } from 'qs';
 

@@ -17,7 +17,7 @@ export const getSingle = (): ((
   return catchErrors(async (req, res) => {
     const user = await UserModel.findById(req.userId);
     appAssert(user, EHttpCodes.NOT_FOUND, 'User not found');
-    return res.status(EHttpCodes.OK).json(user.omitPassword());
+    res.status(EHttpCodes.OK).json(user.omitPassword());
   });
 };
 
@@ -36,7 +36,7 @@ export const getMany = (): ((
       '-favourites',
     ]);
 
-    return res.status(EHttpCodes.OK).json(users);
+    res.status(EHttpCodes.OK).json(users);
   });
 };
 
@@ -127,7 +127,7 @@ export const getUsersWithReportCount = (): ((
     const allUsersWithReportCounts = [...usersWithReportCount, ...usersWithZeroReports];
 
     // 5. Zwróć posortowaną listę użytkowników
-    return res.status(EHttpCodes.OK).json(allUsersWithReportCounts);
+    res.status(EHttpCodes.OK).json(allUsersWithReportCounts);
   });
 };
 
@@ -209,7 +209,7 @@ export const getUsersWithArticleCount = (): ((
 
     const allUsersWithArticleCounts = [...usersWithArticleCount, ...usersWithZeroArticles];
 
-    return res.status(EHttpCodes.OK).json(allUsersWithArticleCounts);
+    res.status(EHttpCodes.OK).json(allUsersWithArticleCounts);
   });
 };
 
@@ -297,6 +297,6 @@ export const getUsersWithChangeCount = (): ((
     // Łączenie wyników z użytkownikami, którzy mają zero zmian
     const allUsersWithChangeCounts = [...usersWithChangeCount, ...usersWithZeroChanges];
 
-    return res.status(EHttpCodes.OK).json(allUsersWithChangeCounts);
+    res.status(EHttpCodes.OK).json(allUsersWithChangeCounts);
   });
 };

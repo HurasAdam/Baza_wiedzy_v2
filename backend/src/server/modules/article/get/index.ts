@@ -23,7 +23,7 @@ export const getOne = (): ((
 
     const article = await getOneArticle({ userId, articleId: id as string });
     await incrementArticleViews({ articleId: article?._id.toString() });
-    return res.status(EHttpCodes.OK).json(article);
+    res.status(EHttpCodes.OK).json(article);
   });
 };
 
@@ -38,7 +38,7 @@ export const getByUser = (): ((
 
     const userArticles = await getArticlesByUser(userId as string, startDate as string, endDate as string);
 
-    return res.status(200).json(userArticles);
+    res.status(200).json(userArticles);
   });
 };
 
@@ -73,7 +73,7 @@ export const getLatest = (): ((
 
     const latestArticles = await getLatestArticles(limit);
 
-    return res.status(EHttpCodes.OK).json(latestArticles);
+    res.status(EHttpCodes.OK).json(latestArticles);
   });
 };
 
@@ -90,7 +90,7 @@ export const getMany = (): ((
 
     const responseObject = await getManyArticles(userId, req);
 
-    return res.status(EHttpCodes.OK).json(responseObject);
+    res.status(EHttpCodes.OK).json(responseObject);
   });
 };
 
@@ -104,7 +104,7 @@ export const getPopular = (): ((
 
     const popularArticles = await getPopularArticles(limit);
 
-    return res.status(EHttpCodes.OK).json(popularArticles);
+    res.status(EHttpCodes.OK).json(popularArticles);
   });
 };
 
@@ -118,6 +118,6 @@ export const getTrashed = (): ((
 
     const responseObject = await getTrashedArticles(userId, req);
 
-    return res.status(EHttpCodes.OK).json(responseObject);
+    res.status(EHttpCodes.OK).json(responseObject);
   });
 };

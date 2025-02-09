@@ -1,6 +1,6 @@
 import { EHttpCodes } from '../../../../enums/http.js';
 import { resetPasswordSchema } from '../../../../modules/auth/schemas.js';
-import { resetPassword } from '../../../../services/auth.service.js';
+import resetPassword from '../../../../modules/auth/subModules/resetPassword/index.js';
 import catchErrors from '../../../../utils/catchErrors.js';
 import { clearAuthCookies } from '../../../../utils/cookies.js';
 import type express from 'express';

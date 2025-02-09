@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import type { EBannerType } from '../../enums/product.js';
 import type mongoose from 'mongoose';
 
 export interface IProductEntity {
@@ -6,7 +7,7 @@ export interface IProductEntity {
   name: string;
   createdBy: string | mongoose.Types.ObjectId;
   labelColor: string;
-  banner?: string | null;
+  banner?: EBannerType | null;
 }
 
 export interface IProduct extends IProductEntity, mongoose.Document {
@@ -35,5 +36,5 @@ const productSchema = new Schema({
   },
 });
 
-const ProductModel = model('Product', productSchema);
+const ProductModel = model<IProduct>('Product', productSchema);
 export default ProductModel;

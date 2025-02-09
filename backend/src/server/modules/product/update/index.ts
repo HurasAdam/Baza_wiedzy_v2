@@ -2,9 +2,10 @@ import { EHttpCodes } from '../../../../enums/http.js';
 import ProductModel from '../../../../modules/product/model.js';
 import appAssert from '../../../../utils/appAssert.js';
 import catchErrors from '../../../../utils/catchErrors.js';
+import type { IUpdateProductReq } from './types.js';
 import type express from 'express';
 
-export default (): ((req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+export default (): ((req: IUpdateProductReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const { id } = req.params;
     const { name, labelColor, banner } = req.body;

@@ -1,6 +1,6 @@
 import { EHttpCodes } from '../../../../enums/http.js';
+import { createTag } from '../../../../modules/tag/repository/index.js';
 import { newTagSchema } from '../../../../modules/tag/schema.js';
-import { createTag } from '../../../../services/tag.service.js';
 import catchErrors from '../../../../utils/catchErrors.js';
 import type express from 'express';
 
@@ -10,6 +10,6 @@ export default (): ((req: express.Request, res: express.Response, next: express.
     const { userId } = req;
     const newTag = await createTag({ request, userId });
 
-    return res.status(EHttpCodes.OK).json(newTag);
+    res.status(EHttpCodes.OK).json(newTag);
   });
 };

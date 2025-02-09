@@ -20,7 +20,7 @@ export default (): ((req: express.Request, res: express.Response, next: express.
       },
     );
 
-    return res.status(EHttpCodes.OK).json(
+    res.status(EHttpCodes.OK).json(
       // mark the current session
       sessions.map((session) => ({
         ...session.toObject(),

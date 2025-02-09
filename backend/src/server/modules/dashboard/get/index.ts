@@ -23,7 +23,8 @@ export const getDashboardStats = (): ((
     } else if (range === 'last30days') {
       startDate = subDays(endDate, 30);
     } else {
-      return res.status(400).json({ message: 'Invalid range parameter' });
+      res.status(400).json({ message: 'Invalid range parameter' });
+      return;
     }
 
     const articleCount = await ArticleModel.countDocuments({
@@ -41,7 +42,7 @@ export const getDashboardStats = (): ((
       updatedAt: { $gte: startDate, $lte: endDate },
     });
 
-    return res.status(200).json({
+    res.status(200).json({
       addedArticles: articleCount,
       recordedConversations: conversationCount,
       editedArticles: editedArticlesCount,
@@ -68,7 +69,8 @@ export const getUserDashboardStats = (): ((
     } else if (range === 'last30days') {
       startDate = subDays(endDate, 30); // Ostatnie 30 dni
     } else {
-      return res.status(400).json({ message: 'Invalid range parameter' });
+      res.status(400).json({ message: 'Invalid range parameter' });
+      return;
     }
 
     // Statystyki dla użytkownika na podstawie daty
@@ -90,7 +92,7 @@ export const getUserDashboardStats = (): ((
       updatedAt: { $gte: startDate, $lte: endDate },
     });
 
-    return res.status(200).json({
+    res.status(200).json({
       userConversations,
       userArticles,
       userEditedArticles,

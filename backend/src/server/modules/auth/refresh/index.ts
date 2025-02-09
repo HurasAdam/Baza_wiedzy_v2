@@ -1,5 +1,5 @@
 import { EHttpCodes } from '../../../../enums/http.js';
-import { refreshUserAccessToken } from '../../../../services/auth.service.js';
+import refreshAccessToken from '../../../../modules/auth/subModules/refresh/index.js';
 import appAssert from '../../../../utils/appAssert.js';
 import catchErrors from '../../../../utils/catchErrors.js';
 import { getAccessTokenCookieOptions, getRefreshTokenCookieOptions } from '../../../../utils/cookies.js';
@@ -10,13 +10,13 @@ export default (): ((req: express.Request, res: express.Response, next: express.
     const refreshToken = req.cookies.refreshToken as string | undefined;
     appAssert(refreshToken, EHttpCodes.UNAUTHORIZED, 'Missing refresh token');
 
-    const { accessToken, newRefreshToken } = await refreshUserAccessToken(refreshToken);
+    const { accessToken, newRefreshToken } = await refreshAccessToken(refreshToken);
 
     if (newRefreshToken) {
       res.cookie('refreshToken', newRefreshToken, getRefreshTokenCookieOptions());
     }
 
-    return res
+    res
       .status(EHttpCodes.OK)
       .cookie('accessToken', accessToken, getAccessTokenCookieOptions())
       .json({ message: 'Access token refreshed' });

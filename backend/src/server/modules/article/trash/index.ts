@@ -10,6 +10,6 @@ export default (): ((req: express.Request, res: express.Response, next: express.
 
     await trashArticle(id as string, userId);
 
-    return res.status(EHttpCodes.OK).json({ message: 'Artykuł został usunięty' });
+    res.status(EHttpCodes.OK).json({ message: 'Artykuł został usunięty' });
   });
 };
