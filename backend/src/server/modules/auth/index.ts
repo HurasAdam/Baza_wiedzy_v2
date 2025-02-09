@@ -5,14 +5,18 @@ import refresh from './refresh/index.js';
 import register from './register/index.js';
 import resetPassword from './resetPassword/index.js';
 
-const authRoutes = Router();
+/**
+ * Initialize auth routes
+ * Prefix: /auth.
+ */
+export default (): Router => {
+  const router = Router();
 
-// prefix /auth
+  router.post('/register', register());
+  router.post('/login', login());
+  router.get('/refresh', refresh());
+  router.get('/logout', logout());
+  router.post('/password/reset', resetPassword());
 
-authRoutes.post('/register', register());
-authRoutes.post('/login', login());
-authRoutes.get('/refresh', refresh());
-authRoutes.get('/logout', logout());
-authRoutes.post('/password/reset', resetPassword());
-
-export default authRoutes;
+  return router;
+};

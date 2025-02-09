@@ -19,20 +19,20 @@ import initWebsocketServer from './websocket/index.js';
 import http from 'http';
 
 const initUnprotectedRoutes = (app: express.Express): void => {
-  app.use('/auth', authRoutes);
+  app.use('/auth', authRoutes());
 };
 
 const initProtectedRoutes = (app: express.Express): void => {
   // protected routes
-  app.use('/user', authenticate, userRoutes);
-  app.use('/sessions', authenticate, sessionRoutes);
+  app.use('/user', authenticate, userRoutes());
+  app.use('/sessions', authenticate, sessionRoutes());
   app.use('/articles', authenticate, articleRoutes());
-  app.use('/tags', authenticate, tagRoutes);
-  app.use('/products', authenticate, productRoutes);
-  app.use('/conversation-topics', authenticate, conversationTopicRoutes);
-  app.use('/conversation-report', authenticate, conversationReportRoutes);
-  app.use('/dashboard', authenticate, dashboardRoutes);
-  app.use('/notifications', authenticate, notificationRoutes);
+  app.use('/tags', authenticate, tagRoutes());
+  app.use('/products', authenticate, productRoutes());
+  app.use('/conversation-topics', authenticate, conversationTopicRoutes());
+  app.use('/conversation-report', authenticate, conversationReportRoutes());
+  app.use('/dashboard', authenticate, dashboardRoutes());
+  app.use('/notifications', authenticate, notificationRoutes());
 };
 
 const initRoutes = (app: express.Express): void => {

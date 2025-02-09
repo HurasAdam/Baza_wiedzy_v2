@@ -2,12 +2,16 @@ import { Router } from 'express';
 import addConversationReport from './add/index.js';
 import { getAllConversationReports, getAllReports } from './get/index.js';
 
-const conversationReportRoutes = Router();
+/**
+ * Initialize conversations report routes
+ * Prefix: /conversation-report.
+ */
+export default (): Router => {
+  const router = Router();
 
-// prefix /conversation-report
+  router.get('/', getAllConversationReports());
+  router.get('/all', getAllReports());
+  router.post('/add', addConversationReport());
 
-conversationReportRoutes.get('/', getAllConversationReports());
-conversationReportRoutes.get('/all', getAllReports());
-conversationReportRoutes.post('/add', addConversationReport());
-
-export default conversationReportRoutes;
+  return router;
+};
