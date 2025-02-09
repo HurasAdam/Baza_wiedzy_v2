@@ -16,7 +16,7 @@ import http from 'http';
 import tagRoutes from './modules/tag/index.js';
 import conversationReportRoutes from './modules/conversationReport/index.js';
 import notificationRoutes from './modules/notification/index.js';
-
+import initWebsocketServer from './websocket/index.js';
 
 
 const initRoutes = (app: express.Express): void => {
@@ -66,6 +66,6 @@ export default (): http.Server => {
   initMiddleware(app);
   initRoutes(app);
   initErrorHandler(app);
-
+initWebsocketServer();
   return initServer(app);
 };
