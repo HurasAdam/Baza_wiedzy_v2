@@ -10,6 +10,6 @@ export default (): ((req: express.Request, res: express.Response, next: express.
     await removeArticle(id as string);
 
     // Odpowiedź
-    return res.status(EHttpCodes.OK).json({ message: 'Artykuł i powiązana historia zostały usunięte.' });
+    res.status(EHttpCodes.OK).json({ message: 'Artykuł i powiązana historia zostały usunięte.' });
   });
 };

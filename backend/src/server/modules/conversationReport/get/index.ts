@@ -103,7 +103,7 @@ export const getAllConversationReports = (): ((
       ...(limit ? [{ $limit: parseInt(limit as string, 10) }] : []),
     ]);
 
-    return res.status(200).json(allConversationReports);
+    res.status(200).json(allConversationReports);
   });
 };
 
@@ -142,7 +142,7 @@ export const getUserConversationReports = (): ((
       .populate('createdBy', 'username email')
       .sort({ createdAt: -1 });
 
-    return res.status(200).json(userReports);
+    res.status(200).json(userReports);
   });
 };
 
@@ -153,6 +153,6 @@ export const getAllReports = (): ((
 ) => Promise<void>) => {
   return catchErrors(async (_req, res) => {
     const allConversationReports = await ConversationReportModel.find({});
-    return res.status(EHttpCodes.OK).json(allConversationReports);
+    res.status(EHttpCodes.OK).json(allConversationReports);
   });
 };

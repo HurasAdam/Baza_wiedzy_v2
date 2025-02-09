@@ -7,6 +7,6 @@ export default (): ((req: express.Request, res: express.Response, next: express.
   return catchErrors(async (req, res) => {
     const { userId } = req;
     const notifications = await NotificationModel.find({ userId }).sort({ isRead: 1, createdAt: -1 }).exec();
-    return res.status(EHttpCodes.OK).json(notifications);
+    res.status(EHttpCodes.OK).json(notifications);
   });
 };

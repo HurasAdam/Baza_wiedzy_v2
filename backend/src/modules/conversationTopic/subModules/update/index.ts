@@ -3,7 +3,7 @@ import appAssert from '../../../../utils/appAssert.js';
 import ProductModel from '../../../product/model.js';
 import ConversationTopicModel from '../../model.js';
 
-export default async (id: string, title: string, product: string): Promise<void> => {
+export default async (id: string, title: string | undefined, product: string | undefined): Promise<void> => {
   const conversationTopic = await ConversationTopicModel.findById(id);
   appAssert(conversationTopic, EHttpCodes.NOT_FOUND, 'Conversation topic not found');
 

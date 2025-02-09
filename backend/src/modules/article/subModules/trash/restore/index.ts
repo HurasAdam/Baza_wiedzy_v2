@@ -1,8 +1,8 @@
 import { EEventType } from '../../../../../enums/events.js';
 import { EHttpCodes } from '../../../../../enums/http.js';
-import { saveArticleChanges } from '../../../../../services/articleHistory.service.js';
 import appAssert from '../../../../../utils/appAssert.js';
 import ArticleModel from '../../../models/schema.js';
+import { saveArticleChanges } from '../../../repository/index.js';
 
 export default async (id: string, userId: string): Promise<void> => {
   const article = await ArticleModel.findById({ _id: id });

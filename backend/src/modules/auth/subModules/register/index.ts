@@ -1,4 +1,4 @@
-import { createAccount } from '../../../../services/auth.service.js';
+import { createAccount } from '../../repository/index.js';
 import { registerSchema } from '../../schemas.js';
 import type { ICleanUser } from '../../../user/model.js';
 import type express from 'express';

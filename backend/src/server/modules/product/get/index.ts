@@ -1,6 +1,6 @@
 import { EHttpCodes } from '../../../../enums/http.js';
 import ProductModel from '../../../../modules/product/model.js';
-import { getSingleProduct } from '../../../../services/product.service.js';
+import { getSingleProduct } from '../../../../modules/product/repository/index.js';
 import catchErrors from '../../../../utils/catchErrors.js';
 import type express from 'express';
 
@@ -11,7 +11,7 @@ export const getMany = (): ((
 ) => Promise<void>) => {
   return catchErrors(async (_req, res) => {
     const tags = await ProductModel.find({}).select(['-createdBy']);
-    return res.status(EHttpCodes.OK).json(tags);
+    res.status(EHttpCodes.OK).json(tags);
   });
 };
 
@@ -23,6 +23,6 @@ export const getSingle = (): ((
   return catchErrors(async (req, res) => {
     const { id } = req.params;
     const product = await getSingleProduct({ productId: id as string });
-    return res.status(EHttpCodes.OK).json(product);
+    res.status(EHttpCodes.OK).json(product);
   });
 };

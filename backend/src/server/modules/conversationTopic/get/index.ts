@@ -1,6 +1,6 @@
 import { EHttpCodes } from '../../../../enums/http.js';
 import ConversationTopicModel from '../../../../modules/conversationTopic/model.js';
-import { getConversationTopic } from '../../../../services/conversationTopic.service.js';
+import { getConversationTopic } from '../../../../modules/conversationTopic/repository/index.js';
 import catchErrors from '../../../../utils/catchErrors.js';
 import constructSearchQuery from '../../../../utils/constructSearchQuery.js';
 import type express from 'express';
@@ -15,7 +15,7 @@ export const getConversationTopics = (): ((
     const conversationTopics = await ConversationTopicModel.find(query)
       .populate([{ path: 'product', select: ['name', 'labelColor', 'banner', '-_id'] }])
       .sort('product.name');
-    return res.status(EHttpCodes.OK).json(conversationTopics);
+    res.status(EHttpCodes.OK).json(conversationTopics);
   });
 };
 
@@ -31,6 +31,6 @@ export const getSingleConversationTopic = (): ((
       userId,
       topicId: id as string,
     });
-    return res.status(EHttpCodes.OK).json(conversationTopic);
+    res.status(EHttpCodes.OK).json(conversationTopic);
   });
 };

@@ -9,6 +9,6 @@ export default (): ((req: express.Request, res: express.Response, next: express.
 
     const articleHistory = await getArticleHistory(id as string);
 
-    return res.status(EHttpCodes.OK).json(articleHistory);
+    res.status(EHttpCodes.OK).json(articleHistory);
   });
 };

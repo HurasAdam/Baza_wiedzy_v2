@@ -1,6 +1,6 @@
 import { EHttpCodes } from '../../../../enums/http.js';
 import TagModel from '../../../../modules/tag/model.js';
-import { getTag } from '../../../../services/tag.service.js';
+import { getTag } from '../../../../modules/tag/repository/index.js';
 import catchErrors from '../../../../utils/catchErrors.js';
 import type express from 'express';
 
@@ -12,7 +12,7 @@ export const getSingle = (): ((
   return catchErrors(async (req, res) => {
     const { id } = req.params;
     const conversationTopic = await getTag({ tagId: id as string });
-    return res.status(EHttpCodes.OK).json(conversationTopic);
+    res.status(EHttpCodes.OK).json(conversationTopic);
   });
 };
 
@@ -53,7 +53,7 @@ export const getMany = (): ((
     const totalCount = await TagModel.countDocuments(filter);
 
     // Zwracamy dane
-    return res.status(200).json({
+    res.status(200).json({
       tags,
       totalCount,
     });

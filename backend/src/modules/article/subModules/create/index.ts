@@ -1,10 +1,10 @@
 import Log from 'simpl-loggar';
 import { EEventType } from '../../../../enums/events.js';
 import { EHttpCodes } from '../../../../enums/http.js';
-import { saveArticleChanges } from '../../../../services/articleHistory.service.js';
 import appAssert from '../../../../utils/appAssert.js';
 import NotificationModel from '../../../notification/model.js';
 import ArticleModel from '../../models/schema.js';
+import { saveArticleChanges } from '../../repository/index.js';
 import type { ICreateArticleParams } from './types.js';
 import type { IArticle } from '../../../../types/article.js';
 

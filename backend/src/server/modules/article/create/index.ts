@@ -10,6 +10,6 @@ export default (): ((req: express.Request, res: express.Response, next: express.
     const { userId } = req;
     const newArticle = await createArticle({ request, userId });
 
-    return res.status(EHttpCodes.OK).json({ message: 'Dodano nowy artykuł', data: newArticle });
+    res.status(EHttpCodes.OK).json({ message: 'Dodano nowy artykuł', data: newArticle });
   });
 };

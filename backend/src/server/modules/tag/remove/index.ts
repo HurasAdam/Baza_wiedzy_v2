@@ -51,6 +51,6 @@ export default (): ((req: express.Request, res: express.Response, next: express.
     // Usuń tag z bazy danych
     await TagModel.findByIdAndDelete(id);
 
-    return res.status(EHttpCodes.OK).json({ message: 'Tag został usunięty pomyślnie.' });
+    res.status(EHttpCodes.OK).json({ message: 'Tag został usunięty pomyślnie.' });
   });
 };
