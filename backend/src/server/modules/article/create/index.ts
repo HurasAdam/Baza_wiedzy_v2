@@ -1,6 +1,6 @@
 import { EHttpCodes } from '../../../../enums/http.js';
-import { createArticle } from '../../../../modules/article/index.js';
 import { newArticleSchema } from '../../../../modules/article/schema.js';
+import createArticle from '../../../../modules/article/subModules/create/index.js';
 import catchErrors from '../../../../utils/catchErrors.js';
 import type express from 'express';
 

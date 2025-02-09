@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import type { IArticle } from '../../types/article.js';
+import type { IArticle } from '../../../types/article.js';
 
 const articleSchema = new Schema(
   {

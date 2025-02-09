@@ -1,6 +1,6 @@
 import { startOfDay, subDays } from 'date-fns';
-import ArticleHistoryModel from '../../../modules/article/history.model.js';
-import ArticleModel from '../../../modules/article/schema.model.js';
+import ArticleHistoryModel from '../../../modules/article/models/history.js';
+import ArticleModel from '../../../modules/article/models/schema.js';
 import ConversationReportModel from '../../../modules/conversationReport/model.js';
 import catchErrors from '../../../utils/catchErrors.js';
 

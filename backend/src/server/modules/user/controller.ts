@@ -1,7 +1,7 @@
 import Log from 'simpl-loggar';
 import { EHttpCodes } from '../../../enums/http.js';
-import ArticleHistoryModel from '../../../modules/article/history.model.js';
-import ArticleModel from '../../../modules/article/schema.model.js';
+import ArticleHistoryModel from '../../../modules/article/models/history.js';
+import ArticleModel from '../../../modules/article/models/schema.js';
 import ConversationReportModel from '../../../modules/conversationReport/model.js';
 import UserModel from '../../../modules/user/model.js';
 import appAssert from '../../../utils/appAssert.js';

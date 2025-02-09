@@ -1,5 +1,5 @@
 import { EHttpCodes } from '../../../../enums/http.js';
-import { markFavorite } from '../../../../modules/article/index.js';
+import markFavorite from '../../../../modules/article/subModules/favorite/mark/index.js';
 import catchErrors from '../../../../utils/catchErrors.js';
 import type express from 'express';
 

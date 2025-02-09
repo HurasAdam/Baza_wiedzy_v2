@@ -1,5 +1,5 @@
 import { EHttpCodes } from '../../../../enums/http.js';
-import { removeArticle } from '../../../../modules/article/index.js';
+import removeArticle from '../../../../modules/article/subModules/remove/index.js';
 import catchErrors from '../../../../utils/catchErrors.js';
 import type express from 'express';
 

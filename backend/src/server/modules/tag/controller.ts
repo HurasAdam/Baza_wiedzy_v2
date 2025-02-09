@@ -1,5 +1,5 @@
 import { EHttpCodes } from '../../../enums/http.js';
-import ArticleModel from '../../../modules/article/schema.model.js';
+import ArticleModel from '../../../modules/article/models/schema.js';
 import TagModel from '../../../modules/tag/model.js';
 import { newTagSchema } from '../../../modules/tag/schema.js';
 import { createTag, getTag } from '../../../services/tag.service.js';

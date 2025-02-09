@@ -1,4 +1,4 @@
-import { getUserHistory } from '../../../../../modules/article/index.js';
+import { getUserHistory } from '../../../../../modules/article/subModules/history/user/index.js';
 import catchErrors from '../../../../../utils/catchErrors.js';
 import type express from 'express';
 

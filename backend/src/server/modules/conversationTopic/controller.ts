@@ -66,8 +66,8 @@ export const updateConversationTopicleHandler = catchErrors(async (req, res) => 
     appAssert(!existingTopic, EHttpCodes.CONFLICT, 'Tytuł tematu rozmowy już istnieje dla tego produktu');
   }
 
-  conversationTopic.title = title || conversationTopic.title;
-  conversationTopic.product = product || conversationTopic.product;
+  conversationTopic.title = title ?? conversationTopic.title;
+  conversationTopic.product = product ?? conversationTopic.product;
 
   await conversationTopic.save();
 

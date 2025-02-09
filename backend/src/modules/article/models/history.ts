@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import type { IArticleHistory } from '../../types/article.js';
+import type { IArticleHistory } from '../../../types/article.js';
 
 // Definicja schematu historii zmian
 const articleHistorySchema = new Schema(
