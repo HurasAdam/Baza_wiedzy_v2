@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import type { IArticle } from '../../types/article.js';
 
 const articleSchema = new Schema(
   {
@@ -17,5 +18,5 @@ const articleSchema = new Schema(
   { timestamps: true },
 );
 
-const ArticleModel = model('Article', articleSchema);
+const ArticleModel = model<IArticle>('Article', articleSchema);
 export default ArticleModel;

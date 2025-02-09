@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose';
+import type { IArticleHistory } from '../../types/article.js';
 
 // Definicja schematu historii zmian
 const articleHistorySchema = new Schema(
@@ -22,5 +23,5 @@ const articleHistorySchema = new Schema(
   { timestamps: true },
 );
 
-const ArticleHistoryModel = model('ArticleHistory', articleHistorySchema);
+const ArticleHistoryModel = model<IArticleHistory>('ArticleHistory', articleHistorySchema);
 export default ArticleHistoryModel;
