@@ -1,21 +1,22 @@
 import { Router } from 'express';
-import {
-  createTagHandler,
-  deleteTagHandler,
-  getSingleTagHandler,
-  getTagsHandler,
-  updateTagHandler,
-} from './controller.js';
+import create from './create/index.js';
+import { getSingle, getMany } from './get/index.js';
+import remove from './remove/index.js';
+import update from './update/index.js';
 import preventDeleteDefaultTag from '../../middleware/preventDeleteDefaultTag.js';
 
-const tagRoutes = Router();
+/**
+ * Initialize tags routes
+ * Prefix: /tags.
+ */
+export default (): Router => {
+  const router = Router();
 
-// prefix /tags
+  router.get('/', getMany());
+  router.get('/tag/:id', getSingle());
+  router.post('/create', create());
+  router.put('/tag/:id/update', update());
+  router.delete('/tag/:id/delete', preventDeleteDefaultTag, remove());
 
-tagRoutes.get('/', getTagsHandler);
-tagRoutes.get('/tag/:id', getSingleTagHandler);
-tagRoutes.post('/create', createTagHandler);
-tagRoutes.put('/tag/:id/update', updateTagHandler);
-tagRoutes.delete('/tag/:id/delete', preventDeleteDefaultTag, deleteTagHandler);
-
-export default tagRoutes;
+  return router;
+};

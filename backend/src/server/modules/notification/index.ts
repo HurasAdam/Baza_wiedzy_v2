@@ -1,13 +1,14 @@
 import { Router } from 'express';
-import {
-getUserNotifications
-} from './controller.js';
+import getUserNotifications from './get/index.js';
 
-const notificationRoutes = Router();
+/**
+ * Initialize notifications routes
+ * Prefix: /notifications.
+ */
+export default (): Router => {
+  const router = Router();
 
-// prefix /notifications
+  router.get('/', getUserNotifications());
 
-notificationRoutes.get('/', getUserNotifications);
-
-
-export default notificationRoutes;
+  return router;
+};

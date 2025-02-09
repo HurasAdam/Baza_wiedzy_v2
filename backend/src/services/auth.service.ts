@@ -4,11 +4,10 @@ import SessionModel from '../modules/session/model.js';
 import UserModel from '../modules/user/model.js';
 import { hashValue, refreshTokenSignOptions, signToken, verifyToken } from '../tools/passwords.js';
 import appAssert from '../utils/appAssert.js';
-import {  oneDay , thirtyDaysFromNow } from '../utils/date.js';
-
+import { oneDay, thirtyDaysFromNow } from '../utils/date.js';
 
 import type { ICleanUser } from '../modules/user/model.js';
-import type { ICreateAccountParams, ILoginParams, IResetPasswordParams } from '../types/account.js';
+import type { ICreateAccountParams, IResetPasswordParams } from '../types/account.js';
 import type { IAccessTokenPayload, IRefreshTokenPayload } from '../types/tokens.js';
 
 export const createAccount = async (
@@ -28,10 +27,7 @@ export const createAccount = async (
   });
   const userId = user._id;
 
-
-
   // TODO --send verification email
-
 
   // create session
   const session = await SessionModel.create({
@@ -48,39 +44,6 @@ export const createAccount = async (
   const accessToken = signToken({
     userId,
     sessionId: session._id,
-  });
-  return {
-    user: user.omitPassword(),
-    accessToken,
-    refreshToken,
-  };
-};
-
-export const loginUser = async ({
-  email,
-  password,
-  userAgent,
-}: ILoginParams): Promise<{ user: ICleanUser; accessToken: string; refreshToken: string }> => {
-  const user = await UserModel.findOne({ email });
-  appAssert(user, EHttpCodes.UNAUTHORIZED, 'Invalid email or password');
-
-  const isValid = await user.comparePassword(password);
-  appAssert(isValid, EHttpCodes.UNAUTHORIZED, 'Invalid email or password');
-
-  const userId = user._id;
-  const session = await SessionModel.create({
-    userId,
-    userAgent,
-  });
-
-  const sessionInfo: IRefreshTokenPayload = {
-    sessionId: session._id,
-  };
-
-  const refreshToken = signToken(sessionInfo, refreshTokenSignOptions);
-  const accessToken = signToken({
-    ...sessionInfo,
-    userId,
   });
   return {
     user: user.omitPassword(),
@@ -151,7 +114,6 @@ export const refreshUserAccessToken = async (
     newRefreshToken,
   };
 };
-
 
 export const resetPassword = async ({
   verificationCode,

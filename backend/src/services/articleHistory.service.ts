@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 import Log from 'simpl-loggar';
 import { EEventType } from '../enums/events.js';
 import { EHttpCodes } from '../enums/http.js';
-import ArticleHistoryModel from '../modules/article/history.model.js';
-import ArticleModel from '../modules/article/schema.model.js';
+import ArticleHistoryModel from '../modules/article/models/history.js';
+import ArticleModel from '../modules/article/models/schema.js';
 import appAssert from '../utils/appAssert.js';
 import type { IChange, ISaveArticleChangesProps } from '../types/article.js';
 
@@ -115,7 +115,7 @@ export const saveArticleChanges = async ({
   if (eventType === EEventType.Updated && articleBeforeChanges) {
     changes = compareObjects(
       articleBeforeChanges as unknown as Record<string, unknown>,
-      updatedArticle as unknown as Record<string, unknown>
+      updatedArticle as unknown as Record<string, unknown>,
     );
 
     // Jeśli zmiany obejmują tagi, sprawdź, czy wszystkie tagi istnieją

@@ -1,15 +1,22 @@
 import { Router } from 'express';
-import { loginHandler, logoutHandler, refreshHandler, registerHandler, resetPasswordHandler } from './controller.js';
+import login from './login/index.js';
+import logout from './logout/index.js';
+import refresh from './refresh/index.js';
+import register from './register/index.js';
+import resetPassword from './resetPassword/index.js';
 
+/**
+ * Initialize auth routes
+ * Prefix: /auth.
+ */
+export default (): Router => {
+  const router = Router();
 
-const authRoutes = Router();
+  router.post('/register', register());
+  router.post('/login', login());
+  router.get('/refresh', refresh());
+  router.get('/logout', logout());
+  router.post('/password/reset', resetPassword());
 
-// prefix /auth
-
-authRoutes.post('/register', registerHandler);
-authRoutes.post('/login', loginHandler);
-authRoutes.get('/refresh', refreshHandler);
-authRoutes.get('/logout', logoutHandler);
-authRoutes.post('/password/reset', resetPasswordHandler);
-
-export default authRoutes;
+  return router;
+};

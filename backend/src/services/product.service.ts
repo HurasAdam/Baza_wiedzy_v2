@@ -1,5 +1,5 @@
 import { EHttpCodes } from '../enums/http.js';
-import ArticleModel from '../modules/article/schema.model.js';
+import ArticleModel from '../modules/article/models/schema.js';
 import ConversationTopicModel from '../modules/conversationTopic/model.js';
 import ProductModel from '../modules/product/model.js';
 import appAssert from '../utils/appAssert.js';
