@@ -10,8 +10,8 @@ export const getSingle = (): ((
 ) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const { id } = req.params;
-    const conversationTopic = await getTag({ tagId: id as string });
-    res.status(EHttpCodes.OK).json(conversationTopic);
+    const tag = await getTag({ tagId: id as string });
+    res.status(EHttpCodes.OK).json(tag);
   });
 };
 
