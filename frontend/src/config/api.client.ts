@@ -24,9 +24,9 @@ API.interceptors.response.use(
     console.log("Interceptor error response:", response);
     console.log("Error status:", status);
     console.log("Error data:", data);
-
     // Sprawdź, czy access token wygasł
-    if (status === UNAUTHORIZED && data?.errorCode === "InvalidAccesToken") {
+    if (status === UNAUTHORIZED && data?.errorCode === "InvalidAccessToken") {
+      
       console.log("Access token expired, trying to refresh the token...");
 
       try {
