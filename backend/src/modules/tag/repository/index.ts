@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../enums/http.js';
 import appAssert from '../../../utils/appAssert.js';
 import TagModel from '../model.js';
-import type { ICreateTagParams } from '../../../types/tag.js';
+import type { ICreateTagParams, IUpdateTagParams } from '../../../types/tag.js';
 import type { ITag } from '../model.js';
 import type express from 'express';
 export const createTag = async ({ request, userId }: ICreateTagParams): Promise<{ message: string }> => {
@@ -60,4 +60,27 @@ export const getTags = async({req}:{req:express.Request<GetTagsQuery>})=>{
     // Liczba wszystkich pasujących tagów
     const totalCount = await TagModel.countDocuments(filter);
     return{tags,totalCount};
+}
+
+
+
+
+export const updateTag = async({request,tagId}:IUpdateTagParams):Promise<{message:string}>=>{
+  const tag = await TagModel.findById({ _id: tagId });
+    appAssert(tag, EHttpCodes.NOT_FOUND, 'Tag not found');
+    const { name } = request;
+    // Sprawdź, czy istnieje inny tag z taką samą nazwą
+    if (name && name !== tag.name) {
+      const existingTag = await TagModel.exists({ name });
+      appAssert(!existingTag, EHttpCodes.CONFLICT, 'Tag already exists');
+    }
+
+    // Zaktualizuj nazwę tagu
+    tag.name = name ?? tag.name;
+
+    await tag.save();
+
+  
+    return { message: 'Tag has been updated' };
+   
 }
