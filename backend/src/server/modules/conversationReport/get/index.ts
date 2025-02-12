@@ -126,11 +126,19 @@ export const getUserConversationReports = (): ((
       dateFilter.$lte = new Date(endDate as string);
     }
 
-    const userReports = await ConversationReportModel.find({
+    const query = {
       createdBy: userId,
       topic: { $ne: null },
-      ...(Object.keys(dateFilter).length > 0 && { createdAt: dateFilter }),
-    })
+      ...(Object.keys(dateFilter).length > 0 && { createdAt: dateFilter })
+    }
+    const total = await ConversationReportModel.countDocuments(query);
+ 
+    const limit = parseInt((req.query.limit as string) ?? '20');
+    const pageSize = limit;
+    const pageNumber = parseInt((req.query.page as string) ?? '1');
+    const skip = (pageNumber - 1) * pageSize;
+
+    const userReports = await ConversationReportModel.find(query)
       .populate({
         path: 'topic',
         select: 'title description product',
@@ -140,9 +148,22 @@ export const getUserConversationReports = (): ((
         },
       })
       .populate('createdBy', 'username email')
+      .skip(skip)
+      .limit(pageSize)
       .sort({ createdAt: -1 });
 
-    res.status(200).json(userReports);
+    
+
+      const responseObject = {
+        data: userReports,
+        pagination: {
+          total,
+          page: pageNumber,
+          pages: Math.ceil(total / pageSize),
+        },
+      }
+
+    res.status(200).json(responseObject);
   });
 };
 
