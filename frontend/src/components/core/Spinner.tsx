@@ -1,7 +1,6 @@
-import React from "react";
-import { cn } from "@/lib/utils"; // Funkcja do łączenia klas (opcjonalna)
+import { cn } from "@/lib/utils";
 
-interface SpinnerProps {
+interface ISpinnerProps {
   size?: "sm" | "md" | "lg";
   color?: string;
   animation?: "spin" | "bounce" | "none";
@@ -9,13 +8,13 @@ interface SpinnerProps {
   className?: string;
 }
 
-const Spinner: React.FC<SpinnerProps> = ({
+const Spinner = ({
   size = "md",
   color = "bg-slate-500",
   animation = "spin",
   position = "static",
   className = "",
-}) => {
+}:ISpinnerProps) => {
   // Rozmiary dla różnych animacji
   const sizeClasses = {
     sm: {
@@ -34,10 +33,11 @@ const Spinner: React.FC<SpinnerProps> = ({
 
   const positionClasses =
     position === "center"
-      ? "fixed top-[48%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      ? "fixed top-[48%] left-[49%] transform -translate-x-1/2 -translate-y-1/2"
       : "static";
 
   return (
+    
     <div
       className={cn(
         "flex justify-center items-center",
@@ -66,7 +66,7 @@ const Spinner: React.FC<SpinnerProps> = ({
                 color
               )}
               style={{
-                animationDelay: `${index * 0.1}s`, // Delikatne opóźnienie między kropkami
+                animationDelay: `${index * 0.1}s`,
               }}
             />
           ))}
