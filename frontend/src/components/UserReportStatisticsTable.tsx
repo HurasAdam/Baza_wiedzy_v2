@@ -28,6 +28,7 @@ const UserReportStatisticsTable = ({data,isDataLoading,queryParams}:IUserReportS
           enableOutsideClickClose: true,
           size: "lg",
           height: "82",
+       
         
         });
       };
@@ -44,7 +45,7 @@ const UserReportStatisticsTable = ({data,isDataLoading,queryParams}:IUserReportS
       </div>
     </CardHeader>
     <div className="p-4 space-y-3 ">
-      {Array.from({ length: 8 }).map((_, index) => (
+      {Array.from({ length: 10 }).map((_, index) => (
         <div key={index} className="flex justify-between items-center p-3 border rounded-md ">
           <div className="flex items-center gap-4 ">
             <div className="w-6 h-6 bg-gray-300 rounded-md animate-pulse" />
