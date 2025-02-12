@@ -13,6 +13,8 @@ const getCoversationReportStats = async (searchParams) => {
     queryParams.append("endDate", searchParams.endDate);
   }
 
+
+
   return API.get(`/user/statistics?${queryParams}`);
 };
 
@@ -26,7 +28,12 @@ if (searchParams.startDate) {
 if (searchParams.endDate) {
   queryParams.append("endDate", searchParams.endDate);
 }
-
+if(searchParams.limit){
+  queryParams.append("limit",searchParams.limit);
+}
+if(searchParams.page){
+  queryParams.append("page",searchParams.page);
+}
   return API.get(`/user/statistics/${userId}?${queryParams}`);
 }
 

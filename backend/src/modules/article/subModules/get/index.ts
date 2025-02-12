@@ -48,9 +48,19 @@ export const getPopular = async (limit: number): Promise<IArticle[]> => {
   return popularArticles;
 };
 
-export const getByUser = async (userId: string, startDate: string, endDate: string): Promise<IArticle[]> => {
+export const getByUser = async (req:express.Request): Promise<{data:IArticle[],pagination:{page:number,pages:number, total:number}}> => {
   // Typ obiektu filter
-  const filter: {
+
+  const { id: userId } = req.params;
+  const { startDate, endDate } = req.query;
+
+
+
+  appAssert(userId, EHttpCodes.CONFLICT, 'User not found');
+
+
+
+  const query: {
     createdBy: string;
     isTrashed: boolean;
     createdAt?: {
@@ -63,16 +73,37 @@ export const getByUser = async (userId: string, startDate: string, endDate: stri
   };
 
   if (startDate || endDate) {
-    filter.createdAt = {};
+    query.createdAt = {};
     if (startDate) {
-      filter.createdAt.$gte = new Date(startDate.toString()); // Data większa lub równa
+      query.createdAt.$gte = new Date(startDate.toString()); // Data większa lub równa
     }
     if (endDate) {
-      filter.createdAt.$lte = new Date(endDate.toString()); // Data mniejsza lub równa
+      query.createdAt.$lte = new Date(endDate.toString()); // Data mniejsza lub równa
     }
   }
 
-  return ArticleModel.find(filter).select(['title', 'createdAt', 'isVerified']);
+  const total = await ArticleModel.countDocuments(query);
+  const limit = parseInt((req.query.limit as string) ?? '20');
+  const pageSize = limit;
+  const pageNumber = parseInt((req.query.page as string) ?? '1');
+  const skip = (pageNumber - 1) * pageSize;
+
+const result = await ArticleModel.find(query).select(['title', 'createdAt', 'isVerified'])
+.skip(skip)
+.limit(pageSize)
+.sort({ createdAt: -1 });
+
+const responseObject = {
+  data: result,
+  pagination: {
+    total,
+    page: pageNumber,
+    pages: Math.ceil(total / pageSize),
+  },
+}
+
+  return responseObject
+
 };
 
 export const getMany = async (

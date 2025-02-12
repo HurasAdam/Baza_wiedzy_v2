@@ -2,8 +2,10 @@ import { IMAGES } from '@/constants/images';
 import { useModalContext } from '@/contexts/ModalContext';
 import { conversationReportApi } from '@/lib/conversationReportsApi';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { FaHistory } from "react-icons/fa";
+import Pagination from './Pagination';
+import useScrollToTop from '@/hooks/useScrollToTop';
 
 
 type UserReportDetailsProps = {
@@ -15,13 +17,22 @@ type UserReportDetailsProps = {
 };
 const UserReportDetails:React.FC<UserReportDetailsProps> = ({userId,queryParams}) => {
 
+  const [page,setPage] = useState(1)
+
+const searchParams = {...queryParams, limit:20,page}
+useScrollToTop(page);
   const { closeContentModal } = useModalContext();
     const { data: userConversationReports,isLoading } = useQuery({
-        queryKey: ["userReportStats", userId],
+        queryKey: ["userReportStats", userId,page],
         queryFn: () => {
-          return conversationReportApi.getUserConversationReportStats({userId,searchParams:queryParams});
+          return conversationReportApi.getUserConversationReportStats({userId,searchParams:searchParams});
         },
       });
+
+      const changePageHandler = (page)=>{
+        setPage(page)
+      }
+   
 
       const SkeletonItem = () => (
         <li className="py-6 px-4 bg-gray-50 border border-gray-200 rounded-lg flex justify-between items-center space-x-4 ">
@@ -39,16 +50,23 @@ const UserReportDetails:React.FC<UserReportDetailsProps> = ({userId,queryParams}
 
       return (
         <div className="px-2 py-2">
-          <div className="mb-4 flex items-center gap-2">
-            <FaHistory className="text-sky-700" />
-            <h2 className="font-semibold text-gray-700">Historia odnotowanych rozmów</h2>
-          </div>
+     <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <FaHistory className="text-sky-700" size={20} />
+          <h2 className="font-semibold text-gray-700 text-lg">Historia odnotowanych rozmów</h2>
+        </div>
+        <div className="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-sm font-medium">
+          Strona <span className="text-indigo-600 font-bold">{userConversationReports?.pagination?.page}</span> z{" "}
+          <span className="font-bold">{userConversationReports?.pagination?.pages}</span>
+        </div>
+      </div>
+
           <ul className="space-y-4">
             {isLoading
               ? Array(7)
                   .fill(0)
                   .map((_, index) => <SkeletonItem key={index} />) // Wyświetlamy 3 szkielety dla przykładu
-              : userConversationReports?.length <= 0
+              : userConversationReports?.data?.length <= 0
               ? (
                 <div className="flex flex-col items-center justify-center p-4 bg-gray-100 border border-gray-200 rounded-lg">
                   <div className="w-60 h-60 mb-4">
@@ -62,7 +80,7 @@ const UserReportDetails:React.FC<UserReportDetailsProps> = ({userId,queryParams}
                   </button>
                 </div>
               )
-              : userConversationReports?.map((report) => (
+              : userConversationReports?.data?.map((report) => (
                 <li key={report._id} className="p-4 bg-gray-50 border border-gray-200 rounded-lg flex justify-between items-center hover:shadow-md transition-shadow">
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">
@@ -97,6 +115,13 @@ const UserReportDetails:React.FC<UserReportDetailsProps> = ({userId,queryParams}
                 </li>
               ))}
           </ul>
+          {userConversationReports?.data && (
+          <Pagination
+            onPageChange={changePageHandler}
+            currentPage={parseInt(userConversationReports?.pagination?.page)} // Używaj page z paginacji
+            totalPageCount={parseInt(userConversationReports?.pagination?.pages)} // Używaj pages z paginacji
+          />
+        )}
         </div>
       );
 }

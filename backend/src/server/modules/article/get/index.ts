@@ -33,11 +33,8 @@ export const getByUser = (): ((
   next: express.NextFunction,
 ) => Promise<void>) => {
   return catchErrors(async (req, res) => {
-    const { id: userId } = req.params;
-    const { startDate, endDate } = req.query;
 
-    const userArticles = await getArticlesByUser(userId as string, startDate as string, endDate as string);
-
+  const userArticles = await getArticlesByUser(req);
     res.status(200).json(userArticles);
   });
 };

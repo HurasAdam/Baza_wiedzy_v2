@@ -184,7 +184,7 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
             </h1>
           </div>
 
-          <div className="p-6">
+          <div className="p-6 min-h-[600px]">
             <div className="flex flex-wrap gap-2 mb-4">
               {article?.tags?.map((tag) => {
                 return (
@@ -282,7 +282,7 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
         {/* Settings Sidebar */}
 
         <div
-          className={`sticky  h-fit ${
+          className={`sticky h-fit ${
             variant === EArticleVariant.FULLSCREEN ? "top-16" : "top-0"
           }`}
         >
