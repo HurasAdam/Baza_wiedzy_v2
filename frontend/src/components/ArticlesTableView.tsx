@@ -80,7 +80,7 @@ const ArticlesTableView: React.FC = ({
           visibleFields={{ title: true, tags: false, author: false }}
         />
       </div>
-      <div className="py-5 px-5 rounded-xl  min-w-[100%] space-y-1.5">
+      <div className="py-3 px-5 rounded-xl  min-w-[100%] space-y-1.5">
         {/* <DataTable
 data={articles?.data}
 /> */}
@@ -131,7 +131,7 @@ data={articles?.data}
           />
         )}
       </div>
-      <div className="shadow border border-neutral-200  px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px] bg-white min-h-[84vh] hidden xl:block">
+      <div className="shadow border bg-neutral-50 border-slate-100 px-6 pt-5 pb-9 rounded-lg max-h-fit sticky top-[5px] lg:top-[70px]  min-h-[84vh] hidden xl:block">
         <SearchBar
           visibleFields={{ title: true, tags: true, author: true }}
           immediate={true}
