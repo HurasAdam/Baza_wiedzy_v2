@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { HiMiniXMark } from "react-icons/hi2";
 import useScrollToTop from "@/hooks/useScrollToTop";
 import Pagination from "./Pagination";
+import Articlecardd from "./ArticleCardd";
 
 const ArticlesGridView: React.FC = ({
   articles,
@@ -31,7 +32,7 @@ const ArticlesGridView: React.FC = ({
   };
 
   return (
-    <div className="grid grid-row  xl:grid-cols-[13fr_16fr] gap-4  h-fit px-3  max-w-[1740px] mx-auto  ">
+    <div className="grid grid-row  xl:grid-cols-[13fr_16fr] gap-4  h-fit px-3  max-w-[1740px] mx-auto   ">
       <div className="flex flex-col gap-1.5 px-2  ">
         <div className="flex justify-end px-3 ">
           <Button
@@ -99,13 +100,10 @@ const ArticlesGridView: React.FC = ({
                       onClick={() => setSelectedArticle(article._id)}
                       className={`min-w-[100%] mx-auto  cursor-pointer hidden xl:block `}
                     >
-                      <ArticleCard
-                        viewType={selectedView}
-                        isLoading={isLoading}
-                        toggleArticleAsFavouriteHandler={toggleAsFavourite}
-                        article={article}
-                        isSelected={selectedArticle === article._id}
-                      />
+             <Articlecardd 
+             article={article}
+             selectedArticle={selectedArticle}
+             />
                     </div>
                   </div>
                 );
