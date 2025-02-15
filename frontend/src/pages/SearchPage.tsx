@@ -68,7 +68,7 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className=" rounded-lg  min-h-[90vh]">
-      <div className="grid grid-row  xl:grid-cols-[13fr_16fr] gap-5  px-4 py-2 relative max-w-[1700px] mx-auto   ">
+      {/* <div className="grid grid-row  xl:grid-cols-[13fr_16fr] gap-5  px-4 py-2 relative max-w-[1700px] mx-auto   ">
         <div className="font-semibold font-title flex items-center gap-x-1.5 text-xl text-sky-950">
           <SiPowerpages />
           Baza artykułów
@@ -92,7 +92,7 @@ const SearchPage: React.FC = () => {
             })}
           </div>
         </div>
-      </div>
+      </div> */}
 
       <ArticlesViewLayout viewType={viewType} articles={articles} isLoading={isArticlesLoading} />
 
