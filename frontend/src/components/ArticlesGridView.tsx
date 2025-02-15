@@ -1,140 +1,76 @@
-import React, { useState } from "react";
-import { Button } from "./ui/button";
-import { BasicSearchBar } from "./BasicSearchBar";
-import { IoFilter } from "react-icons/io5";
-import ArticleCard from "./ArticleCard";
-import { IoIosSearch } from "react-icons/io";
-import QuickViewSection from "./QuickViewSection";
-import useArticleFilters from "@/hooks/useArticleFilters";
-import { useModalContext } from "@/contexts/ModalContext";
-import { SearchBar } from "./SearchBar";
-import { Link } from "react-router-dom";
-import { HiMiniXMark } from "react-icons/hi2";
-import useScrollToTop from "@/hooks/useScrollToTop";
-import Pagination from "./Pagination";
-import Articlecardd from "./ArticleCardd";
+import React, { useState } from 'react';
+import { FaStar, FaTrash, FaReply } from 'react-icons/fa';
 
-const ArticlesGridView: React.FC = ({
-  articles,
-  isArticlesLoading,
-  selectedView,
-  isLoading,
-  toggleAsFavourite,
-}) => {
-  const { getActiveFiltersCount, changePageHandler, page } =
-    useArticleFilters();
-  useScrollToTop(page);
-  const activeFiltersCount = getActiveFiltersCount();
-  const { openContentModal } = useModalContext();
-  const [selectedArticle, setSelectedArticle] = useState("");
-  const handleCloseQuickView = () => {
-    setSelectedArticle(null);
-  };
+const articless = [
+  { id: 1, title: 'Build stunning courses with Content...', preview: 'Nullam molestie tincidunt sem, at tincidunt libero...', content: 'Full article content for course building...', author: 'Ben Cline', date: 'Dec 15' },
+  { id: 2, title: 'Special Request for Attendance to Quarterly Meeting', preview: 'Phasellus ante felis, eleifend vitae malesuada...', content: 'Full article content for meeting request...', author: 'Erric Hoffman', date: 'Dec 15' },
+  { id: 3, title: "Let's finish your listing!", preview: 'Mauris lorem quam, pretium ac tellus in, bibendum...', content: 'Full article content for listing...', author: 'Airbnb', date: 'Dec 15' },
+  { id: 4, title: 'About Latest TPA Report', preview: 'Curabitur massa ipsum, scelerisque vel mattis...', content: 'Full article content for TPA report...', author: 'Mateusz Nieckarz', date: 'Dec 15' },
+];
+
+
+
+
+
+const ArticleList = ({ onSelect,articles }) => {
+  console.log("articles")
+  console.log(articles)
+  return (
+    <div className="w-1/3 bg-gray-100 border-r border-gray-300 h-screen overflow-y-auto p-4">
+      <h2 className="text-lg font-semibold text-gray-700 mb-4">Inbox</h2>
+      {articles?.data?.map((article) => (
+        <div
+          key={article.id}
+          className="p-3 mb-2 bg-white rounded-lg shadow-md cursor-pointer hover:bg-blue-50 transition"
+          onClick={() => onSelect(article)}
+        >
+          <div className="flex justify-between items-center">
+            <h3 className="text-sm font-semibold text-gray-800">{article.title}</h3>
+            <span className="text-xs text-gray-500">{article.date}</span>
+          </div>
+          <p className="text-xs text-gray-600 mt-1">{article.preview}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const ArticleDetails = ({ article }) => {
+  if (!article) {
+    return (
+      <div className="w-2/3 p-6 flex items-center justify-center text-gray-500">
+        Wybierz artykuł, aby zobaczyć szczegóły.
+      </div>
+    );
+  }
 
   return (
-    <div className="grid grid-row  xl:grid-cols-[13fr_16fr] gap-4  h-fit px-3  max-w-[1740px] mx-auto   ">
-      <div className="flex flex-col gap-1.5 px-2  ">
-        <div className="flex justify-end px-3 ">
-          <Button
-            variant="outline"
-            className={`${
-              activeFiltersCount > 0
-                ? "bg-blue-500 text-neutral-50"
-                : "hover:bg-blue-100 rounded-lg text-slate-600 flex items-center gap-x-1.5"
-            } `}
-            onClick={() =>
-              openContentModal({
-                size: "md",
-                title: "Filtry",
-                content: (
-                  <div className="px-2 ">
-                    <SearchBar immediate={false} />
-                  </div>
-                ),
-              })
-            }
-          >
-            <IoFilter className="w-4 h-4" />
-            {activeFiltersCount > 0
-              ? `+ ${activeFiltersCount} więcej filtrów`
-              : "więcej filtrów"}
-          </Button>
-          {activeFiltersCount > 0 && (
-            <Button variant="ghost" className="hover:bg-transparent">
-              <HiMiniXMark className="w-5 h-5" />
-            </Button>
-          )}
+    <div className="w-2/3 p-6 bg-white h-screen overflow-y-auto">
+      <div className="flex justify-between items-center border-b pb-4 mb-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">{article.title}</h2>
+          <p className="text-sm text-gray-600">{article.author} • {article.date}</p>
         </div>
-
-        <BasicSearchBar
-          className="flex items-center w-full justify-between"
-          visibleFields={{ title: true, tags: false, author: false }}
-        />
-
-        {isArticlesLoading ? (
-          <div className="py-6 flex flex-col gap-[3px] relative  h-full">
-            <Spinner
-              color="border-orange-600"
-              className="absolute top-[43%] left-1/2  "
-            />
-          </div>
-        ) : (
-          <div className="py-6 flex flex-col gap-[3px]">
-            {articles?.data.length > 0 ? (
-              articles?.data?.map((article) => {
-                return (
-                  <div>
-                    <Link
-                      to={`/articles/${article?._id}`}
-                      className={`min-w-[100%] mx-auto  cursor-pointer block xl:hidden `}
-                    >
-                      <ArticleCard
-                        viewType={selectedView}
-                        isLoading={isLoading}
-                        toggleArticleAsFavouriteHandler={toggleAsFavourite}
-                        article={article}
-                        isSelected={selectedArticle === article._id}
-                      />
-                    </Link>
-                    <div
-                      onClick={() => setSelectedArticle(article._id)}
-                      className={`min-w-[100%] mx-auto  cursor-pointer hidden xl:block `}
-                    >
-             <Articlecardd 
-             article={article}
-             selectedArticle={selectedArticle}
-             />
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="mx-auto flex items-center gap-2 text-gray-500 text-lg mt-36  ">
-                <IoIosSearch className="w-8 h-8 text-slate-500" />
-                <span className="text-md  text-slate-500/90 font-semibold">
-                  Nie znaleziono pasujących artykułów ...
-                </span>
-              </div>
-            )}
-            {articles && (
-              <Pagination
-                onPageChange={changePageHandler}
-                currentPage={parseInt(articles?.pagination?.page)} // Używaj page z paginacji
-                totalPageCount={parseInt(articles?.pagination?.pages)} // Używaj pages z paginacji
-              />
-            )}
-          </div>
-        )}
+        <div className="flex space-x-4 text-gray-500">
+          <FaStar className="cursor-pointer hover:text-yellow-500" />
+          <FaReply className="cursor-pointer hover:text-blue-500" />
+          <FaTrash className="cursor-pointer hover:text-red-500" />
+        </div>
       </div>
+      <p className="text-gray-700 text-lg">{article.content}</p>
+    </div>
+  );
+};
 
-      <div className="py-3.5 hidden xl:block">
-        {
-          <QuickViewSection
-            onClose={handleCloseQuickView}
-            articleId={selectedArticle}
-          />
-        }
-      </div>
+const ArticlesGridView = ({articles}) => {
+  const [selectedArticle, setSelectedArticle] = useState(null);
+
+  return (
+    <div className="flex h-screen bg-gray-50">
+      <ArticleList 
+      articles={articles}
+      onSelect={setSelectedArticle} />
+      <ArticleDetails article={selectedArticle} />
     </div>
   );
 };
