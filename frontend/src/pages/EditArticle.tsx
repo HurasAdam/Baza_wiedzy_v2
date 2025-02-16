@@ -95,6 +95,7 @@ const EditArticle = ({ article, type }) => {
           <span>Edytu Artykuł</span>
         </div>
         <ArticleForm
+        type={type}
           tags={formatedTags}
           onSave={onSave}
           article={article}

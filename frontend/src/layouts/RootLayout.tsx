@@ -48,7 +48,7 @@ export default function RootLayout() {
       <AppSidebar />
       <SidebarInset>
         <Navbar />
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-2.5  bg-neutral-100 h-screen ">
+        <div className="flex flex-1 flex-col gap-4   bg-neutral-100 h-screen ">
           <Outlet />
         </div>
         <Toaster />
