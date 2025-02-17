@@ -5,7 +5,7 @@ import { toast } from '@/hooks/use-toast';
 import { articlesApi } from '@/lib/articlesApi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useRef, useState } from 'react';
-import { FaStar, FaTrash, FaReply, FaEdit, FaHistory, FaRegStar, FaCheck } from 'react-icons/fa';
+import { FaStar, FaTrash, FaReply, FaEdit, FaHistory, FaRegStar, FaCheck, FaArrowRight } from 'react-icons/fa';
 import ArticleHistory from './ArticleHistory';
 import { useNavigate } from 'react-router-dom';
 import { TiArrowBack } from 'react-icons/ti';
@@ -18,39 +18,225 @@ import { BiSolidCopy } from 'react-icons/bi';
 import { IoCheckmarkSharp } from 'react-icons/io5';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 
+const FilterBar = ({ search, setSearch, onFilterChange }) => {
+  const [tags, setTags] = useState([]);
+  const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
+  const [verificationStatus, setVerificationStatus] = useState('all'); // all, verified, unverified
 
+  const handleTagChange = (selectedTags) => {
+    setTags(selectedTags);
+    onFilterChange({ tags: selectedTags, dateRange, verificationStatus });
+  };
 
-const ArticleList = ({ onSelect,articles }) => {
-  const [search, setSearch] = useState('');
- 
+  const handleDateChange = (e) => {
+    setDateRange({
+      ...dateRange,
+      [e.target.name]: e.target.value,
+    });
+    onFilterChange({ tags, dateRange, verificationStatus });
+  };
 
+  const handleVerificationChange = (e) => {
+    setVerificationStatus(e.target.value);
+    onFilterChange({ tags, dateRange, verificationStatus: e.target.value });
+  };
 
   return (
-    <div className=" bg-gray-100 border-r border-gray-300  overflow-y-auto p-4 scrollbar-custom">
-      <h2 className="text-lg font-semibold text-gray-700 mb-4">Inbox</h2>
+    <div className="bg-white border-b border-gray-300 shadow-md p-4">
+      <div className="flex justify-between items-center">
+        {/* Wyszukiwarka */}
+        <input
+          type="text"
+          placeholder="🔍 Wyszukaj artykuł..."
+          className="w-1/3 p-2 border rounded-lg"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        {/* Filtry */}
+        <div className="flex gap-4 items-center">
+          <div>
+            <label className="text-sm text-gray-700">Tagi</label>
+            <select
+              className="border p-2 rounded-lg"
+              multiple
+              value={tags}
+              onChange={(e) => handleTagChange([...e.target.selectedOptions].map(o => o.value))}
+            >
+              {/* Assuming you have a list of available tags */}
+              <option value="tag1">Tag 1</option>
+              <option value="tag2">Tag 2</option>
+              <option value="tag3">Tag 3</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-700">Data</label>
+            <div className="flex gap-2">
+              <input
+                type="date"
+                name="startDate"
+                className="p-2 border rounded-lg"
+                value={dateRange.startDate}
+                onChange={handleDateChange}
+              />
+              <input
+                type="date"
+                name="endDate"
+                className="p-2 border rounded-lg"
+                value={dateRange.endDate}
+                onChange={handleDateChange}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-700">Status weryfikacji</label>
+            <select
+              className="border p-2 rounded-lg"
+              value={verificationStatus}
+              onChange={handleVerificationChange}
+            >
+              <option value="all">Wszystkie</option>
+              <option value="verified">Zweryfikowane</option>
+              <option value="unverified">Nieweryfikowane</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+const ArticleList = ({ onSelect, articles }) => {
+  const [search, setSearch] = useState("");  // Stan wyszukiwania
+  const [selectedProduct, setSelectedProduct] = useState("");  // Stan dla produktu
+  const [selectedCategory, setSelectedCategory] = useState("");  // Stan dla kategorii
+  const [isVerified, setIsVerified] = useState(false);  // Stan dla zweryfikowanych
+
+  // Filtrowanie artykułów na podstawie wprowadzonych wartości
+  const filteredArticles = articles?.data?.filter((article) => {
+    const matchesSearch = article.title.toLowerCase().includes(search.toLowerCase()) || 
+                          article.preview.toLowerCase().includes(search.toLowerCase());
+    const matchesProduct = selectedProduct ? article.product === selectedProduct : true;
+    const matchesCategory = selectedCategory ? article.category === selectedCategory : true;
+    const matchesVerified = isVerified ? article.isVerified : true;
+
+    return matchesSearch && matchesProduct && matchesCategory && matchesVerified;
+  });
+
+  // Resetowanie filtrów
+  const resetFilters = () => {
+    setSearch("");
+    setSelectedProduct("");
+    setSelectedCategory("");
+    setIsVerified(false);
+  };
+
+  return (
+    <div className="bg-white border-r border-gray-300 h-full overflow-y-auto p-4 shadow-lg scrollbar-custom ">
+      {/* Nagłówek listy */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-800">📩 Inbox</h2>
+        
+        {/* Przyciski dla filtrów */}
+        <div className="flex items-center gap-4">
+          {/* Więcej filtrów */}
+          <button className="bg-green-500 text-white text-sm px-3 py-1.5 rounded-lg shadow hover:bg-green-600 transition">
+            Więcej filtrów
+          </button>
+
+          {/* Resetuj filtry */}
+          <button
+            onClick={resetFilters}
+            className="bg-red-500 text-white text-sm px-3 py-1.5 rounded-lg shadow hover:bg-red-600 transition"
+          >
+            Resetuj filtry
+          </button>
+        </div>
+      </div>
+
+      {/* Filtry */}
+      <div className="mb-4 flex gap-4">
+        {/* Wybór produktu */}
+        <div className="flex-1">
+          <select
+            value={selectedProduct}
+            onChange={(e) => setSelectedProduct(e.target.value)}
+            className="w-full p-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+          >
+            <option value="">Wybierz produkt</option>
+            <option value="Product1">Produkt 1</option>
+            <option value="Product2">Produkt 2</option>
+            <option value="Product3">Produkt 3</option>
+            {/* Dodaj inne opcje produktów */}
+          </select>
+        </div>
+
+        {/* Wybór kategorii */}
+        <div className="flex-1">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full p-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 transition"
+          >
+            <option value="">Wybierz kategorię</option>
+            <option value="Category1">Kategoria 1</option>
+            <option value="Category2">Kategoria 2</option>
+            <option value="Category3">Kategoria 3</option>
+            {/* Dodaj inne opcje kategorii */}
+          </select>
+        </div>
+
+        {/* Checkbox zweryfikowany */}
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={isVerified}
+            onChange={() => setIsVerified(!isVerified)}
+            className="h-4 w-4 border rounded-md"
+          />
+          <span className="text-sm">Tylko zweryfikowane</span>
+        </div>
+      </div>
+
+      {/* Pole wyszukiwania */}
       <input
         type="text"
-        placeholder="Search..."
-        className="w-full p-2 mb-4 border rounded"
+        placeholder="🔍 Wyszukaj artykuł..."
+        className="w-full p-2 mb-4 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 transition"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      {articles?.data?.map((article) => (
+
+      {/* Lista artykułów */}
+      {filteredArticles?.map((article) => (
         <div
-          key={article.id}
-          className="p-3 mb-2 bg-white rounded-lg shadow-md cursor-pointer hover:bg-blue-50 transition"
-          onClick={() => onSelect(article?._id)}
+          key={article._id}
+          className={`p-3 mb-2 bg-gray-100 rounded-lg shadow-sm cursor-pointer hover:bg-blue-50 transition relative flex ${article.isFavourite ? " border-l-2 border-yellow-600" : ""}`}
+          onClick={() => onSelect(article._id)}
         >
-          <div className="flex justify-between items-center">
-            <h3 className="text-sm font-semibold text-gray-800">{article?.title}</h3>
-            <span className="text-xs text-gray-500">{article?.date}</span>
+          <div className="flex-1">
+            <div className="flex justify-between items-center">
+              <h3 className="text-sm font-semibold text-gray-800">{article.title}</h3>
+              <span className="text-xs text-gray-500">{article.date}</span>
+            </div>
+            <p className="text-xs text-gray-600 mt-1">{article.preview}</p>
           </div>
-          <p className="text-xs text-gray-600 mt-1">{article?.preview}</p>
+
+          {/* Ikona strzałki w prawym dolnym rogu */}
+          <div className="text-gray-600">
+            <FaArrowRight />
+          </div>
         </div>
       ))}
     </div>
   );
 };
+
+
+
 
 const ArticleDetails = ({ articleId }) => {
   const { data: article } = useQuery({
@@ -245,7 +431,7 @@ const handleCopyId = () => {
     IMAGES.findArticleImage;
 
   return (
-    <div className="bg-white rounded-xl shadow-xl w-full mx-auto h-[calc(100vh-47px)] overflow-y-auto scrollbar-custom">
+    <div className="bg-white rounded-xl shadow-xl w-full mx-auto  h-[calc(100vh-47px)] overflow-y-auto scrollbar-custom ">
       {/* Baner z tytułem artykułu */}
   
 <div  className='relative '   style={{ backgroundImage: `url(${bannerURL})` }}>
@@ -264,7 +450,7 @@ const handleCopyId = () => {
 </div>
 
       {/* Nagłówek z dodatkowymi informacjami */}
-      <div className="py-5 px-9">
+      <div className="py-5 px-10">
         <header className="mb-8">
           {/* Tagi przeniesione nad autora */}
           <div className="flex flex-wrap mb-2 space-x-2 justify-between">
@@ -433,13 +619,18 @@ const handleCopyId = () => {
 const ArticlesGridView = ({articles}) => {
   const [selectedArticle, setSelectedArticle] = useState(null);
 
-
+  const [search, setSearch] = useState("");  // Zmienna stanu do wyszukiwania
 
   return (
-    <div className="grid grid-cols-[7fr_12fr] h-[calc(100vh-60px)] bg-gray-50 gap-4">
+   
+
+    <div className="grid grid-cols-[8fr_12fr] h-[calc(100vh-60px)] bg-gray-50 gap-4 ml-6 mr-3  ">
+     
       <ArticleList onSelect={setSelectedArticle} articles={articles} />
+      
       <ArticleDetails articleId={selectedArticle}  />
     </div>
+    
   );
 };
 
