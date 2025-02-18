@@ -1,5 +1,5 @@
-import ArticlesGridView from "@/components/ArticlesGridView";
-import ArticlesTableView from "@/components/ArticlesTableView";
+import ArticlesInlineView from "@/components/articles/views/InlineView/ArticlesInlineView";
+import ArticlesSideBySideView from "@/components/articles/views/SideBySideView/ArticlesSideBySideView";
 import ARTICLES_VIEW_TYPE from "@/enums/articlesViewType";
 import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
 import React from "react";
@@ -15,7 +15,7 @@ const ArticlesViewLayout: React.FC = ({ viewType, articles,isLoading }) => {
   return (
     <div>
       {viewType === ARTICLES_VIEW_TYPE.GRID && (
-        <ArticlesGridView
+        <ArticlesSideBySideView
           articles={articles}
           selectedView={viewType}
           isLoading={isLoading}
@@ -24,7 +24,7 @@ const ArticlesViewLayout: React.FC = ({ viewType, articles,isLoading }) => {
       )}
 
       {viewType === ARTICLES_VIEW_TYPE.TABLE && (
-        <ArticlesTableView
+        <ArticlesInlineView
           articles={articles}
           selectedView={viewType}
           isLoading={isLoading}

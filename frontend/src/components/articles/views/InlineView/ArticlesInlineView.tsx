@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { SearchBar } from "./SearchBar";
 import { IoFilter } from "react-icons/io5";
-import { Button } from "./ui/button";
 import { HiMiniXMark } from "react-icons/hi2";
-import { BasicSearchBar } from "./BasicSearchBar";
-import ArticleCard from "./ArticleCard";
 import useArticleFilters from "@/hooks/useArticleFilters";
 import { useModalContext } from "@/contexts/ModalContext";
-import ArticleCardRe from "./ArticleCardRe";
 import ArticleDetailsInModal from "@/pages/ArticleDetailsInModal";
 import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
-import Pagination from "./Pagination";
 import useScrollToTop from "@/hooks/useScrollToTop";
-import { Skeleton } from "./ui/skeleton";
-import Spinner from "./core/Spinner";
+import { Button } from "@/components/ui/button";
+import { BasicSearchBar } from "@/components/BasicSearchBar";
+import Spinner from "@/components/core/Spinner";
+import { Skeleton } from "@/components/ui/skeleton";
+import ArticleCardRe from "@/components/ArticleCardRe";
+import Pagination from "@/components/Pagination";
+import { SearchBar } from "@/components/SearchBar";
 
-const ArticlesTableView: React.FC = ({
+
+const ArticlesInlineView: React.FC = ({
   articles,
   selectedView,
   isLoading,
@@ -141,4 +141,4 @@ data={articles?.data}
   );
 };
 
-export default ArticlesTableView;
+export default ArticlesInlineView;
