@@ -27,16 +27,16 @@ const SideBySideArticlesList = ({ onSelect, articles }) => {
   };
 
   return (
-    <div className="bg-gray-100 border-r border-gray-300 h-full overflow-y-auto p-6 shadow-lg scrollbar-custom">
+    <div className=" bg-gray-100 border-r border-gray-300 h-full overflow-y-auto p-2 shadow-lg scrollbar-custom">
       {/* Nagłówek */}
  
 
       {/* Lista artykułów */}
-      <div className="space-y-1.5">
+      <div className="space-y-1.5 ">
         {filteredArticles?.map((article) => (
           <div
   key={article._id}
-  className="p-3 bg-white border rounded-lg shadow-sm hover:shadow-md transition cursor-pointer flex justify-between items-center"
+  className={`p-3  bg-white border rounded-lg shadow-sm hover:shadow-md transition cursor-pointer flex justify-between items-center ${article?.isFavourite && "border-l-2 border-l-amber-500"}`}
   onClick={() => onSelect(article._id)}
 >
   <div className="flex flex-col">
@@ -46,11 +46,13 @@ const SideBySideArticlesList = ({ onSelect, articles }) => {
         <FaCheckCircle className="text-green-500 text-sm" title="Zweryfikowany" />
       )}
     </div>
-    <p className="text-xs text-gray-600 mt-1">{article.preview}</p>
+   
   </div>
 
   {/* Mniejsza ikona strzałki */}
-  <FaArrowRight className="text-gray-400 text-sm" />
+<div className=" border bg-slate-50 border-gray-200 rounded-md p-1.5 hover:bg-slate-200" onClick={()=>{}}>
+<FaArrowRight  className=" text-sm text-slate-400 " />
+</div>
 </div>
         ))}
       </div>
