@@ -20,7 +20,7 @@ function App() {
                     <Route path="statistics" element={<StatisticsPage />} />
                     {/* <Route path="articles" element={<SearchPage />} /> */}
                     {/* <Route path="articles/new" element={<CreateArticle />} /> */}
-                    {/* <Route path="articles/favorites" element={<FavouritesPage />} /> */}
+                    {/* <Route path="articles/favorite" element={<FavouritesPage />} /> */}
                     {/* <Route path="articles/:id" element={<ArticleDetails />} /> */}
                     {/* <Route path="call-register" element={<CallRegister />} /> */}
                     {/* <Route path="settings" element={<Settings />} />  */}
@@ -43,8 +43,8 @@ function App() {
                     {/* <Route index path="dashboard" element={<AdminDashboard />} /> */}
                     {/* <Route path="tags" element={<TagsPage />} /> */}
                     {/* <Route path="products" element={<ProductsPage />} /> */}
-                    {/* <Route path="conversation-topics" element={<ConversationTopicsPage />} /> */}
-                    {/* <Route path="removed-articles" element={<TrashedArticlesPage />} /> */}
+                    {/* <Route path="topics" element={<ConversationTopicsPage />} /> */}
+                    {/* <Route path="articles-removed" element={<TrashedArticlesPage />} /> */}
                 </Route>
             </Routes>
         </div>

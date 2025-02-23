@@ -1,6 +1,5 @@
-"use client";
-
 import { ChevronRight, type LucideIcon } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,54 +16,53 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { Link, useLocation } from "react-router-dom";
 
-
-interface IItem{
-  title:string;
-  url:string;
+export interface NavMainItem {
+    title: string;
+    url: string;
+    icon: LucideIcon;
+    isActive?: boolean;
+    items?: SubItem[];
 }
 
-interface INavMainProps{
-  items:{
-    title:string;
-    url:string;
-    icon:LucideIcon;
-    isActive?:boolean;
-    items?:IItem[]
-  }[];
-  label?:string
+interface SubItem {
+    title: string;
+    url: string;
 }
 
-export function NavMain({items,label}:INavMainProps ) {
+interface NavMainProps {
+  items: NavMainItem[];
+  label?: string;
+}
+
+const isActive = (item: NavMainItem, url: string) => {
+    return url.startsWith(item.url) || item.items?.some((subItem) => url.startsWith(subItem.url));
+}
+
+export const NavMain = ({ items, label }: NavMainProps) => {
   const { pathname } = useLocation();
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel className="text-slate-500 text-xs">
        {label}
       </SidebarGroupLabel>
-      <SidebarMenu className="">
+      <SidebarMenu>
         {items.map((item) => {
-        
-          const isActiveMain =
-          pathname.startsWith(item.url) || item.items?.some((subItem) => pathname.startsWith(subItem.url));
-          const hasSubItems = item.items && item.items.length > 0;
+          const isActiveMain = isActive(item, pathname);
+          const hasSubItems = item.items ? item.items.length > 0 : false;
 
           return (
             <Collapsible
               key={item.title}
               asChild
               defaultOpen={isActiveMain}
-         
             >
               <SidebarMenuItem>
                 <CollapsibleTrigger asChild className="py-5">
                   <SidebarMenuButton
-               
                     asChild
                     tooltip={item.title}
-            
-                
                   >
                     {hasSubItems ? (
                       <div  
@@ -92,17 +90,11 @@ export function NavMain({items,label}:INavMainProps ) {
                     </SidebarMenuAction>
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {item.items.map((subItem) => {
-                          const isSubItemActive = pathname === subItem.url;
+                        {item.items?.map((subItem) => {
                           return (
                             <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton 
-                              className="text-neutral-300 "
-                              asChild>
-                                <Link
-                                  to={subItem.url}
-                        
-                                >
+                              <SidebarMenuSubButton asChild className="text-neutral-300">
+                                <Link to={subItem.url}>
                                   <span>{subItem.title}</span>
                                 </Link>
                               </SidebarMenuSubButton>
@@ -115,7 +107,7 @@ export function NavMain({items,label}:INavMainProps ) {
                 ) : null}
               </SidebarMenuItem>
             </Collapsible>
-          );
+          )
         })}
       </SidebarMenu>
     </SidebarGroup>
