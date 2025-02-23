@@ -1,4 +1,20 @@
 import { model, Schema } from 'mongoose';
+import type mongoose from 'mongoose';
+
+export interface INotificationEntity {
+  _id: string | mongoose.Types.ObjectId;
+  userId: string | mongoose.Types.ObjectId;
+  type: string;
+  message: string;
+  isRead: boolean;
+  link: string;
+  articleTitle: string;
+  articleProduct: string;
+}
+
+export interface INotification extends mongoose.Document, INotificationEntity {
+  _id: mongoose.Types.ObjectId;
+}
 
 const notificationSchema = new Schema(
   {
@@ -13,6 +29,5 @@ const notificationSchema = new Schema(
   { timestamps: true },
 );
 
-const NotificationModel = model('Notification', notificationSchema);
+const NotificationModel = model<INotification>('Notification', notificationSchema);
 export default NotificationModel;
-

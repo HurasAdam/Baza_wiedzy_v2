@@ -5,10 +5,12 @@ import appAssert from '../../../../utils/appAssert.js';
 import SessionModel from '../../../session/model.js';
 import UserModel from '../../../user/model.js';
 import verificationCodeModel from '../../model.js';
-import type { IResetPasswordParams } from '../../../../types/account.js';
+import type ResetPasswordDto from './dto.js';
 import type { ICleanUser } from '../../../user/model.js';
 
-export default async ({ verificationCode, password }: IResetPasswordParams): Promise<{ user: ICleanUser }> => {
+export default async (dto: ResetPasswordDto): Promise<{ user: ICleanUser }> => {
+  const { password, verificationCode } = dto;
+
   const validCode = await verificationCodeModel.findOne({
     _id: verificationCode,
     type: EVerificationCodeType.PasswordReset,

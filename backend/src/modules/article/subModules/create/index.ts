@@ -5,11 +5,11 @@ import appAssert from '../../../../utils/appAssert.js';
 import NotificationModel from '../../../notification/model.js';
 import ArticleModel from '../../models/schema.js';
 import { saveArticleChanges } from '../../repository/index.js';
-import type { ICreateArticleParams } from './types.js';
+import type { ICreateArticleDto } from './types.js';
 import type { IArticle } from '../../../../types/article.js';
 
-export default async ({ request, userId }: ICreateArticleParams): Promise<IArticle> => {
-  const { title, employeeDescription, tags, clientDescription, product } = request;
+export default async (dto: ICreateArticleDto): Promise<IArticle> => {
+  const { title, employeeDescription, tags, clientDescription, product, userId } = dto;
 
   const article = await ArticleModel.exists({ title });
   appAssert(!article, EHttpCodes.CONFLICT, 'Article already exists');

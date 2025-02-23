@@ -1,12 +1,9 @@
 import ArticleHistoryModel from '../../../models/history.js';
+import type GetHistoryByUserDto from './dto.js';
 import type { IArticleHistory } from '../../../../../types/article.js';
 
 // eslint-disable-next-line import/prefer-default-export
-export const getUserHistory = async (
-  userId: string,
-  startDate: string,
-  endDate: string,
-): Promise<IArticleHistory[]> => {
+export const getUserHistory = async (dto: GetHistoryByUserDto): Promise<IArticleHistory[]> => {
   // Tworzymy podstawowy filtr
   const filter: {
     updatedBy: string;
@@ -17,19 +14,19 @@ export const getUserHistory = async (
     eventType: string;
     articleId?: { $ne: null };
   } = {
-    updatedBy: userId,
+    updatedBy: dto.id,
     eventType: 'updated',
     articleId: { $ne: null }, // Wyklucz historię bez powiązanego artykułu
   };
 
   // Dodajemy filtr dat, jeśli są podane
-  if (startDate || endDate) {
+  if (dto.startDate || dto.endDate) {
     filter.updatedAt = {};
-    if (startDate) {
-      filter.updatedAt.$gte = new Date(startDate);
+    if (dto.startDate) {
+      filter.updatedAt.$gte = new Date(dto.startDate);
     }
-    if (endDate) {
-      filter.updatedAt.$lte = new Date(endDate);
+    if (dto.endDate) {
+      filter.updatedAt.$lte = new Date(dto.endDate);
     }
   }
 
