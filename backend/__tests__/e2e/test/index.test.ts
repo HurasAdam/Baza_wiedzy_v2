@@ -1,17 +1,23 @@
 import { describe, expect, it } from '@jest/globals';
 import supertest from 'supertest';
-import { app } from '../../utils/setup'
+import { app } from '../../utils/setup.js'
+import { createAccessToken, createCookie } from '../../utils/index.js'
+import { IFullError } from '../../../src/types';
+import { MissingArgError } from '../../../src/errors';
 
-describe('Debug get all', () => {
+describe('Get one article', () => {
   describe('Should throw', () => {
     describe('No data passed', () => {
-      it(`No data in database`, async () => {
-        const res = await supertest(app).get(`/articles/trashed`).send();
+      it(`Missing article id`, async () => {
+        const target = new MissingArgError('articleId')
 
-        console.log('res.body')
-        console.log(res.body)
+        const res = await supertest(app).get(`/articles/trashed`).set('Cookie', createCookie('accessToken', createAccessToken())).send();
 
-        expect(res.status).toEqual(204)
+        const body = res.body as IFullError
+
+        expect(body.message).toEqual(target.message)
+        expect(body.errorCode).toEqual(target.errorCode)
+        expect(res.status).toEqual(target.statusCode)
       });
     });
 

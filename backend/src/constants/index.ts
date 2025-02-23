@@ -9,7 +9,20 @@ const getEnv = (key: string, defaultValue?: string): string => {
   return value;
 };
 
+const fakeConfig = {
+  NODE_ENV: 'nodeEnv',
+  MONGO_URI: 'mongoUri',
+  PORT: '4000',
+  JWT_SECRET: 'jwtSecret',
+  APP_ORIGIN: 'appOrigin',
+  JWT_REFRESH_SECRET: 'jwtRefreshSecret',
+  SOCKET_PORT: '4001',
+  EMAIL_SENDER: 'fakeSender',
+};
+
 export default (): IConfig => {
+  if (process.env.NODE_ENV === 'test') return fakeConfig;
+
   return {
     NODE_ENV: getEnv('NODE_ENV', 'development'),
     MONGO_URI: getEnv('MONGO_URI'),

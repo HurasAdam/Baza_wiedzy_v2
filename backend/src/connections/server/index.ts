@@ -59,6 +59,8 @@ const initErrorHandler = (app: express.Express): void => {
 const initServer = (app: express.Express): http.Server => {
   const server = http.createServer(app);
 
+  if (process.env.NODE_ENV === 'test') return server;
+
   server.listen(getConfig().PORT, () => {
     Log.log('Server', `Listening on ${getConfig().PORT}`);
   });

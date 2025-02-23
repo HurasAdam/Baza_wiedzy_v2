@@ -1,10 +1,10 @@
 import { afterAll, beforeAll } from '@jest/globals';
 import http from 'http'
-import server from '../../src/server/index'
+import server from '../../src/connections/server/index'
 import express from 'express'
 
-  const app = express()
-  let httpServer: http.Server | undefined
+const app = express()
+let httpServer: http.Server | undefined
 
 beforeAll(async () => {
   httpServer = server(app)

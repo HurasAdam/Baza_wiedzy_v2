@@ -1,7 +1,7 @@
 import Log from 'simpl-loggar';
 import { z } from 'zod';
 import { EHttpCodes } from '../../../enums/http.js';
-import AppError from '../../../errors/index.js';
+import AppError, { FullError } from '../../../errors/index.js';
 import { clearAuthCookies } from '../../../utils/cookies.js';
 import type { ErrorRequestHandler, Response } from 'express';
 
@@ -36,7 +36,7 @@ const errorHandler: ErrorRequestHandler = (error, req, res, _next) => {
     return;
   }
 
-  if (error instanceof AppError) {
+  if (error instanceof AppError || error instanceof FullError) {
     handleAppError(res, error);
     return;
   }

@@ -9,38 +9,11 @@ import type { WebSocket } from 'ws';
 let server: WebSocketServer | undefined = undefined;
 
 /**
- *
+ * @param e
+ * @param _ws
  */
-export default function () {
-  init();
-}
-
-/**
- *
- */
-function close(): void {
-  if (server) {
-    server.close();
-  }
-  // users.forEach((u) => {
-  //   u.clients.forEach((c) => {
-  //     c.close(1000, JSON.stringify(new errors.InternalError()));
-  //     userDisconnected(c);
-  //   });
-  // });
-}
-
-/**
- *
- */
-function init(): void {
-  server = new WebSocketServer({
-    port: parseInt(getConfig().SOCKET_PORT),
-  });
-
-  Log.log('Socket', `Started socket on port ${getConfig().SOCKET_PORT}`);
-  startListeners();
-  startHeartbeat();
+function handleError(e: Error, _ws: WebSocket): void {
+  Log.log('Websocket', e);
 }
 
 /**
@@ -54,6 +27,7 @@ function errorWrapper(callback: () => void, ws: WebSocket): void {
     handleError(err as Error, ws);
   }
 }
+
 /**
  *
  */
@@ -74,28 +48,19 @@ function startHeartbeat(): void {
 }
 
 /**
- * @param _ws
+ *
  */
-function userDisconnected(_ws: WebSocket): void {
-  // if (!ws.userId) return;
-  // users = users.filter((u) => {
-  //   return u.userId !== ws.userId;
+function close(): void {
+  if (server) {
+    server.close();
+  }
+  // users.forEach((u) => {
+  //   u.clients.forEach((c) => {
+  //     c.close(1000, JSON.stringify(new errors.InternalError()));
+  //     userDisconnected(c);
+  //   });
   // });
-  console.log('User disconected');
 }
-
-//   function ping(ws:unknown): void {
-//     ws.pong();
-//   }
-
-//   function pong(ws:unknown): void {
-//     const index = users.findIndex((u) => u.userId === ws.userId);
-//     if (index < 0) {
-//       Log.error('Websocket', 'Received ping from connection, which is not registered in users object');
-//     } else {
-//       users[index]!.retry = 0;
-//     }
-//   }
 
 /**
  * @param err
@@ -116,7 +81,8 @@ function handleUserMessage(mess: string, ws: WebSocket): void {
   try {
     message = JSON.parse(mess) as Record<string, string>;
   } catch (_err) {
-    return handleError(new Error('Not json body'), ws);
+    handleError(new Error('Not json body'), ws);
+    return;
   }
 
   Log.log('Socket', 'Got new message', message);
@@ -130,11 +96,14 @@ function handleUserMessage(mess: string, ws: WebSocket): void {
 }
 
 /**
- * @param e
  * @param _ws
  */
-function handleError(e: Error, _ws: WebSocket) {
-  console.log(e);
+function userDisconnected(_ws: WebSocket): void {
+  // if (!ws.userId) return;
+  // users = users.filter((u) => {
+  //   return u.userId !== ws.userId;
+  // });
+  Log.log('User disconnected');
 }
 
 /**
@@ -172,6 +141,45 @@ function startListeners(): void {
   server!.on('error', (err) => handleServerError(err));
   server!.on('close', () => Log.log('Websocket', 'Server closed'));
 }
+
+/**
+ *
+ */
+function init(): void {
+  if (process.env.NODE_ENV === 'test') {
+    server = new WebSocketServer({
+      noServer: true,
+    });
+  } else {
+    server = new WebSocketServer({
+      port: parseInt(getConfig().SOCKET_PORT),
+    });
+  }
+
+  Log.log('Socket', `Started socket on port ${getConfig().SOCKET_PORT}`);
+  startListeners();
+  startHeartbeat();
+}
+
+/**
+ *
+ */
+export default (): void => {
+  init();
+};
+
+//   function ping(ws:unknown): void {
+//     ws.pong();
+//   }
+
+//   function pong(ws:unknown): void {
+//     const index = users.findIndex((u) => u.userId === ws.userId);
+//     if (index < 0) {
+//       Log.error('Websocket', 'Received ping from connection, which is not registered in users object');
+//     } else {
+//       users[index]!.retry = 0;
+//     }
+//   }
 
 //   function sendToUser(userId: string, payload: unknown): void {
 //     const formatted: Record<string, string> = {};
