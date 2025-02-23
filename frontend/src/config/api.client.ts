@@ -1,7 +1,5 @@
 import axios from "axios";
-import queryClient from "./queryClient";
 import { UNAUTHORIZED } from "../constants/http.mjs";
-import { navigate } from "../lib/navigation";
 
 const options = {
   baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
@@ -46,11 +44,11 @@ API.interceptors.response.use(
         }
 
         // W przypadku innych błędów rzucaj je dalej
-        return Promise.reject(refreshError);
+        // return Promise.reject(refreshError);
       }
     }
 
-    return Promise.reject({ status, ...data });
+    // return Promise.reject({ status, ...data });
   }
 );
 

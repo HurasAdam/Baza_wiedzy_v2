@@ -1,40 +1,24 @@
-import React, { useEffect } from "react";
-
-
-
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import useAuth from "@/hooks/useAuth";
 import {
   Navigate,
-  Outlet,
-  useLocation,
-  useNavigate,
+  Outlet
 } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import { NavUser } from "@/components/nav-user";
-import { ADMIN_NAVBAR_OPTIONS, breadcrumbTranslations } from "@/constants";
-
+import { ADMIN_NAVBAR_OPTIONS } from "@/constants";
 import { IMAGES } from "@/constants/images";
 import { AdminSidebar } from "@/components/AdminSidebar";
-import useRoleGuard from "@/hooks/useRoleGuard";
 import { toast } from "@/hooks/use-toast";
-const AdminLayout:React.FC = () => {
+
+const AdminLayout = () => {
   const { user, isLoading } = useAuth();
 
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const pathSegments = pathname
-    .replace(/^\/admin/, "")
-    .split("/")
-    .filter(Boolean);
-
   useEffect(() => {
-    if (user && user?.role !== "admin") {
+    if (user && user?.role === "admin") {
       toast({
         title: "Brak uprawnień",
         description:
