@@ -17,13 +17,13 @@ export interface IUserEntity {
 
 export type ICleanUser = Omit<IUserEntity, 'password'>;
 
-export interface IUserDocument extends IUserEntity, mongoose.Document {
+export interface IUser extends IUserEntity, mongoose.Document {
   _id: ObjectId;
   comparePassword(val: string): Promise<boolean>;
   omitPassword(): ICleanUser;
 }
 
-const userSchema = new Schema<IUserDocument>(
+const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
     surname: { type: String, required: true },
@@ -51,11 +51,11 @@ userSchema.methods.comparePassword = async function (value: string): Promise<boo
   return compareValue(value, this.password);
 };
 
-userSchema.methods.omitPassword = function (): IUserDocument {
+userSchema.methods.omitPassword = function (): IUser {
   const user = this.toObject();
   delete user.password;
   return user;
 };
 
-const UserModel = mongoose.model<IUserDocument>('User', userSchema);
+const UserModel = mongoose.model<IUser>('User', userSchema);
 export default UserModel;

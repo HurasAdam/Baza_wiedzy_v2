@@ -1,17 +1,17 @@
 import UserModel from '../../../../user/model.js';
 import ArticleModel from '../../../models/schema.js';
+import type GetFavArticlesDto from './dto.js';
 import type { IArticle } from '../../../../../types/article.js';
 
 export default async (
-  page: string | undefined,
-  userId: string,
+  dto: GetFavArticlesDto,
 ): Promise<{ favouriteArticles: IArticle[]; totalFavouriteArticles: number; pageNumber: number; pageSize: number }> => {
   const pageSize = 15; // Liczba wyników na stronę
-  const pageNumber = parseInt((page as string) ?? '1');
+  const pageNumber = parseInt(dto.page ?? '1');
   const skip = (pageNumber - 1) * pageSize;
 
   // Znalezienie użytkownika na podstawie ID i pobranie ulubionych artykułów
-  const user = await UserModel.findById(userId).select('favourites');
+  const user = await UserModel.findById(dto.userId).select('favourites');
 
   if (!user) {
     throw new Error('User not found');

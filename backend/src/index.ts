@@ -2,7 +2,7 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import Log from 'simpl-loggar';
 import connectDB from './config/db.js';
-import startServer from './server/index.js';
+import startServer from './connections/server/index.js';
 import type http from 'http';
 
 let app: http.Server | undefined = undefined;

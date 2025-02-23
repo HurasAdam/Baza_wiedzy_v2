@@ -1,3 +1,8 @@
-import type { IProductEntity } from '../../model.ts';
+import type { EBannerType } from '../../../../enums/product.ts';
 
-export type IUpdateProduct = Omit<Partial<IProductEntity>, '_id'>;
+export interface IUpdateProductDto {
+  name: string;
+  labelColor: string;
+  banner: EBannerType;
+  productId: string;
+}

@@ -1,3 +1,9 @@
-import type { ICreateArticleRequest } from '../create/types.js';
-
-export type IUpdateArticle = Partial<ICreateArticleRequest>;
+export interface IUpdateArticleDto {
+  id: string;
+  userId: string;
+  title: string;
+  clientDescription: string;
+  employeeDescription: string;
+  tags: string[];
+  product: string;
+}

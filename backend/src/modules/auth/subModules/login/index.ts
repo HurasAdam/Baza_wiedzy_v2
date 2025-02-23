@@ -3,15 +3,13 @@ import { refreshTokenSignOptions, signToken } from '../../../../tools/passwords.
 import appAssert from '../../../../utils/appAssert.js';
 import SessionModel from '../../../session/model.js';
 import UserModel from '../../../user/model.js';
-import type { ILoginParams } from './types.js';
+import type LoginDto from './dto.js';
 import type { IRefreshTokenPayload } from '../../../../types/tokens.js';
 import type { ICleanUser } from '../../../user/model.js';
 
-export default async ({
-  email,
-  password,
-  userAgent,
-}: ILoginParams): Promise<{ user: ICleanUser; accessToken: string; refreshToken: string }> => {
+export default async (dto: LoginDto): Promise<{ user: ICleanUser; accessToken: string; refreshToken: string }> => {
+  const { email, password } = dto;
+
   const user = await UserModel.findOne({ email });
   appAssert(user, EHttpCodes.UNAUTHORIZED, 'Invalid email or password');
 
@@ -21,7 +19,7 @@ export default async ({
   const userId = user._id;
   const session = await SessionModel.create({
     userId,
-    userAgent,
+    userAgent: dto.userAgent,
   });
 
   const sessionInfo: IRefreshTokenPayload = {

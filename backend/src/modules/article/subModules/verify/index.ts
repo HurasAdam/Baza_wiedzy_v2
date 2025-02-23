@@ -4,8 +4,11 @@ import { EEventType } from '../../../../enums/events.js';
 import { EHttpCodes } from '../../../../enums/http.js';
 import appAssert from '../../../../utils/appAssert.js';
 import { saveArticleChanges } from '../../repository/index.js';
+import type VerifyArticleDto from './dto.js';
 
-export default async (id: string, isVerified: boolean, userId: string): Promise<void> => {
+export default async (dto: VerifyArticleDto): Promise<void> => {
+  const { id, userId, isVerified } = dto;
+
   const article = await ArticleModel.findById({ _id: id });
 
   appAssert(article, EHttpCodes.CONFLICT, 'Article not found');

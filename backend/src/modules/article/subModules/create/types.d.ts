@@ -1,12 +1,8 @@
-export interface ICreateArticleRequest {
+export interface ICreateArticleDto {
   title: string;
   employeeDescription: string;
   tags: string[];
   clientDescription: string;
   product: string;
-}
-
-export interface ICreateArticleParams {
-  request: ICreateArticleRequest;
   userId: string;
 }

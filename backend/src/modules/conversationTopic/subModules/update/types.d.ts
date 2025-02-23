@@ -1,3 +1,5 @@
-import type { ICreateConversationTopicRequest } from '../../../../types/conversations.js';
-
-export type IUpdateConversationTopic = Partial<ICreateConversationTopicRequest>;
+export interface IUpdateConversationTopicDto {
+  title?: string;
+  product?: string;
+  id: string;
+}
