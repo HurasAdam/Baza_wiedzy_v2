@@ -1,12 +1,10 @@
 import { Router } from 'express';
-import {
-  getSingle,
-  getMany,
-  getUsersWithArticleCount,
-  getUsersWithChangeCount,
-  getUsersWithReportCount,
-} from './get/index.js';
-import { getUserConversationReports } from '../conversationReport/get/index.js';
+import get from './get/index.js';
+import getMany from './getMany/index.js';
+import getWithArticleCount from './getWithArticleCount/index.js';
+import getWithChangeCount from './getWithChangeCount/index.js';
+import getWithReportCount from './getWithReportCount/index.js';
+import getConversationReports from '../conversationReport/getUser/index.js';
 
 /**
  * Initialize user routes
@@ -15,12 +13,12 @@ import { getUserConversationReports } from '../conversationReport/get/index.js';
 export default (): Router => {
   const router = Router();
 
-  router.get('/', getSingle());
+  router.get('/', get());
   router.get('/users', getMany());
-  router.get('/statistics', getUsersWithReportCount());
-  router.get('/statistics/:id', getUserConversationReports());
-  router.get('/article-statistics', getUsersWithArticleCount());
-  router.get('/change-statistics', getUsersWithChangeCount());
+  router.get('/statistics', getWithReportCount());
+  router.get('/statistics/:id', getConversationReports());
+  router.get('/article-statistics', getWithArticleCount());
+  router.get('/change-statistics', getWithChangeCount());
 
   return router;
 };

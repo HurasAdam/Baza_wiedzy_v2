@@ -1,8 +1,8 @@
-import { EHttpCodes } from '../../../../enums/http.js';
-import appAssert from '../../../../utils/appAssert.js';
-import ArticleModel from '../../models/schema.js';
+import { EHttpCodes } from '../../../../../enums/http.js';
+import appAssert from '../../../../../utils/appAssert.js';
+import ArticleModel from '../../../models/schema.js';
 import type GetArticleByUserDto from './dto.js';
-import type { IArticleEntity } from '../../../../types/article.js';
+import type { IArticleEntity } from '../../../../../types/article.js';
 
 export default async (
   data: GetArticleByUserDto,

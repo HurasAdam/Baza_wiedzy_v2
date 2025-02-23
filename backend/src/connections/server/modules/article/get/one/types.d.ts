@@ -1,4 +1,4 @@
-import type { IGetOneArticleDto } from '../../../../../modules/article/subModules/getOne/types.d.ts';
+import type { IGetOneArticleDto } from '../../../../../../modules/article/subModules/get/one/types.js';
 import type express from 'express';
 import type { ParsedQs } from 'qs';
 

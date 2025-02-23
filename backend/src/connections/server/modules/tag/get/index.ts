@@ -1,33 +1,16 @@
-import { EHttpCodes } from '../../../../enums/http.js';
-import { getTag, getTags } from '../../../../modules/tag/repository/index.js';
-import catchErrors from '../../../../utils/catchErrors.js';
+import { EHttpCodes } from '../../../../../enums/http.js';
+import GetTagDto from '../../../../../modules/tag/subModules/get/dto.js';
+import getTag from '../../../../../modules/tag/subModules/get/index.js';
+import catchErrors from '../../../../../utils/catchErrors.js';
+import type { IGetTagReq } from './types.js';
 import type express from 'express';
 
-export const getSingle = (): ((
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction,
-) => Promise<void>) => {
+export default (): ((req: IGetTagReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
-    const { id } = req.params;
-    const tag = await getTag({ tagId: id as string });
+    const dto = new GetTagDto({ tagId: req.params.id });
+
+    const tag = await getTag(dto);
+
     res.status(EHttpCodes.OK).json(tag);
-  });
-};
-
-export const getMany = (): ((
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction,
-) => Promise<void>) => {
-  return catchErrors(async (req, res) => {
-   
-
-const {tags,totalCount} = await getTags({req})
-    // Zwracamy dane
-    res.status(200).json({
-      tags,
-      totalCount,
-    });
   });
 };
