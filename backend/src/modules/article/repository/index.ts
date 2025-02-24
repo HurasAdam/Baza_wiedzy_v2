@@ -7,6 +7,71 @@ import ArticleHistoryModel from '../models/history.js';
 import ArticleModel from '../models/schema.js';
 import { compareObjects } from '../shared.js';
 import type { IChange, ISaveArticleChangesProps } from '../../../types/article.js';
+import type { IArticleEntity, IArticleHistoryEntity, ICreateArticle, ICreateArticleHistory } from '../types.js';
+import type { FilterQuery } from 'mongoose';
+
+export const getSchema = async (data: FilterQuery<Partial<IArticleEntity>>): Promise<IArticleEntity[]> => {
+  return ArticleModel.find(data).lean();
+};
+
+export const getHistory = async (
+  data: FilterQuery<Partial<IArticleHistoryEntity>>,
+): Promise<IArticleHistoryEntity[]> => {
+  return ArticleHistoryModel.find(data).lean();
+};
+
+export const getOneSchemaById = async (_id: string): Promise<IArticleEntity | null> => {
+  return ArticleModel.findOne({ _id }).lean();
+};
+
+export const getOneHistoryById = async (_id: string): Promise<IArticleHistoryEntity | null> => {
+  return ArticleHistoryModel.findOne({ _id }).lean();
+};
+
+export const removeOneSchema = async (_id: string): Promise<void> => {
+  await ArticleModel.findOneAndDelete({ _id });
+};
+
+export const removeOneHistory = async (_id: string): Promise<void> => {
+  await ArticleHistoryModel.findOneAndDelete({ _id });
+};
+
+export const updateOneSchema = async (_id: string, newElement: Partial<IArticleEntity>): Promise<void> => {
+  await ArticleModel.findOneAndUpdate({ _id }, newElement);
+};
+
+export const updateOneHistory = async (_id: string, newElement: Partial<IArticleHistoryEntity>): Promise<void> => {
+  await ArticleHistoryModel.findOneAndUpdate({ _id }, newElement);
+};
+
+export const createNewSchema = async (data: ICreateArticle): Promise<string> => {
+  Log.debug('Article repo', 'Creating new article', data);
+  const model = new ArticleModel(data);
+  return (await model.save())._id.toString();
+};
+
+export const createNewHistory = async (data: ICreateArticleHistory): Promise<string> => {
+  const model = new ArticleHistoryModel(data);
+  return (await model.save())._id.toString();
+};
+
+export const getFavoriteArticles = async (ids: string[], skip: number, page: number): Promise<IArticleEntity[]> => {
+  return ArticleModel.find({
+    _id: { $in: ids },
+  })
+    .select([
+      '-clientDescription',
+      '-employeeDescription',
+      '-createdBy',
+      '-verifiedBy',
+      '-createdAt',
+      '-viewsCounter',
+      '-__v',
+    ])
+    .populate([{ path: 'tags', select: ['name'] }])
+    .skip(skip)
+    .limit(page);
+};
 
 export const saveArticleChanges = async ({
   articleId,
@@ -43,11 +108,11 @@ export const saveArticleChanges = async ({
 };
 
 export const getArticleHistory = async ({ articleId }: { articleId: string }) => {
-  // Sprawdzenie, czy artykuł o danym ID istnieje
-  const article = await ArticleModel.findById({ _id: articleId });
+  const article = await getOneSchema(articleId);
+
   appAssert(article, EHttpCodes.NOT_FOUND, 'Article not found');
 
-  // Pobranie historii zmian artykułu z kolekcji ArticleHistory
+  // Get article id and find all of its history
   const articleHistory = await ArticleHistoryModel.aggregate([
     {
       $match: { articleId: new mongoose.Types.ObjectId(articleId) }, // Filtruj po articleId

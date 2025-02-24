@@ -1,6 +1,6 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
-import GetTrashedArticlesDto from '../../../../../modules/article/subModules/getTrashed/dto.js';
-import getTrashed from '../../../../../modules/article/subModules/getTrashed/index.js';
+import GetTrashedArticlesDto from '../../../../../modules/article/subModules/get/trashed/dto.js';
+import getTrashed from '../../../../../modules/article/subModules/get/trashed/index.js';
 import catchErrors from '../../../../../utils/catchErrors.js';
 import type { IGetTrashedArticlesReq } from './types.js';
 import type express from 'express';

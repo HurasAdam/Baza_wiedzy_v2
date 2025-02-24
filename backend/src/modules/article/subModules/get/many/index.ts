@@ -2,7 +2,7 @@ import constructSearchQuery from '../../../../../utils/constructSearchQuery.js';
 import UserModel from '../../../../user/model.js';
 import ArticleModel from '../../../models/schema.js';
 import type GetManyArticlesDto from './dto.js';
-import type { IArticleEntity } from '../../../../../types/article.js';
+import type { IArticleEntity } from '../../../types.js';
 
 export default async (
   dto: GetManyArticlesDto,

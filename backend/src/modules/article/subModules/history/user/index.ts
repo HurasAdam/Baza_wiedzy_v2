@@ -1,6 +1,6 @@
 import ArticleHistoryModel from '../../../models/history.js';
 import type GetHistoryByUserDto from './dto.js';
-import type { IArticleHistory } from '../../../../../types/article.js';
+import type { IArticleHistory } from '../../../types.js';
 
 // eslint-disable-next-line import/prefer-default-export
 export const getUserHistory = async (dto: GetHistoryByUserDto): Promise<IArticleHistory[]> => {

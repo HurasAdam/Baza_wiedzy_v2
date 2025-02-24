@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import addConversationReport from './add/index.js';
-import getAll from './getAll/index.js';
-import getAllReports from './getAllReports/index.js';
-import getUserReports from './getUser/index.js';
+import getAll from './get/all/index.js';
+import getAllReports from './get/allReports/index.js';
+import getUserReports from './get/user/index.js';
 
 /**
  * Initialize conversations report routes

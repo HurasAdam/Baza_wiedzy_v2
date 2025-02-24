@@ -3,7 +3,7 @@ import appAssert from '../../../../../utils/appAssert.js';
 import UserModel from '../../../../user/model.js';
 import ArticleModel from '../../../models/schema.js';
 import type GetOneArticlesDto from './dto.js';
-import type { IArticleEntity } from '../../../../../types/article.js';
+import type { IArticleEntity } from '../../../types.js';
 
 export default async ({ userId, articleId }: GetOneArticlesDto): Promise<IArticleEntity> => {
   const user = await UserModel.findById(userId);

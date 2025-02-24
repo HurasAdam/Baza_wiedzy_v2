@@ -1,50 +1,47 @@
-import Log from 'simpl-loggar';
+import mongoose from 'mongoose';
 import { EEventType } from '../../../../enums/events.js';
 import { EHttpCodes } from '../../../../enums/http.js';
 import appAssert from '../../../../utils/appAssert.js';
-import NotificationModel from '../../../notification/model.js';
-import ArticleModel from '../../models/schema.js';
-import { saveArticleChanges } from '../../repository/index.js';
+import { createNewNotification } from '../../../notification/repository/index.js';
+import { ArticleEntity } from '../../entity.js';
+import { saveArticleChanges, getSchema, createNewSchema } from '../../repository/index.js';
 import type { ICreateArticleDto } from './types.js';
-import type { IArticle } from '../../../../types/article.js';
+import type { ICreateArticle } from '../../types.js';
 
-export default async (dto: ICreateArticleDto): Promise<IArticle> => {
+export default async (dto: ICreateArticleDto): Promise<ArticleEntity> => {
   const { title, employeeDescription, tags, clientDescription, product, userId } = dto;
 
-  const article = await ArticleModel.exists({ title });
-  appAssert(!article, EHttpCodes.CONFLICT, 'Article already exists');
+  const article = await getSchema({ title });
+  appAssert(!article || article.length === 0, EHttpCodes.CONFLICT, 'Article already exists');
 
-  const newArticle = await ArticleModel.create({
+  const newArticle: ICreateArticle = {
     title,
     employeeDescription,
     clientDescription,
-    tags,
-    product,
-    createdBy: userId,
-    verifiedBy: userId,
-  });
+    tags: tags.map((t) => new mongoose.Types.ObjectId(t)),
+    product: new mongoose.Types.ObjectId(product),
+    createdBy: new mongoose.Types.ObjectId(userId),
+    verifiedBy: new mongoose.Types.ObjectId(userId),
+  };
 
-  Log.debug('Article controller', newArticle, 'newArticle');
+  const newId = await createNewSchema(newArticle);
 
   await saveArticleChanges({
-    articleId: newArticle?._id.toString(),
+    articleId: newId,
     updatedBy: userId,
     articleBeforeChanges: null,
     updatedArticle: newArticle,
     eventType: EEventType.Created,
   });
 
-  const notification = await NotificationModel.create({
+  await createNewNotification({
     userId,
     type: 'info',
     message: 'Dodano nowy artykuł',
     articleTitle: newArticle.title,
-    articleProduct: newArticle.product,
-    link: `/articles/${newArticle._id.toString()}`,
+    articleProduct: newArticle.product.toString(),
+    link: `/articles/${newId}`,
   });
 
-  Log.debug('Created notification', notification);
-  await notification.save();
-
-  return newArticle;
+  return new ArticleEntity({ ...newArticle, _id: newId });
 };

@@ -1,43 +1,34 @@
-import UserModel from '../../../../user/model.js';
+import { EHttpCodes } from '../../../../../enums/http.js';
+import appAssert from '../../../../../utils/appAssert.js';
+import { getOneUserById } from '../../../../user/repository/index.js';
 import ArticleModel from '../../../models/schema.js';
+import { getFavoriteArticles } from '../../../repository/index.js';
 import type GetFavArticlesDto from './dto.js';
-import type { IArticle } from '../../../../../types/article.js';
+import type { IArticleEntity } from '../../../types.js';
 
 export default async (
   dto: GetFavArticlesDto,
-): Promise<{ favouriteArticles: IArticle[]; totalFavouriteArticles: number; pageNumber: number; pageSize: number }> => {
-  const pageSize = 15; // Liczba wyników na stronę
+): Promise<{
+  favouriteArticles: IArticleEntity[];
+  totalFavouriteArticles: number;
+  pageNumber: number;
+  pageSize: number;
+}> => {
+  const pageSize = 15;
   const pageNumber = parseInt(dto.page ?? '1');
   const skip = (pageNumber - 1) * pageSize;
 
-  // Znalezienie użytkownika na podstawie ID i pobranie ulubionych artykułów
-  const user = await UserModel.findById(dto.userId).select('favourites');
+  const user = await getOneUserById(dto.userId);
+  appAssert(!user, EHttpCodes.NOT_FOUND, 'User not found');
 
-  if (!user) {
-    throw new Error('User not found');
-  }
+  const { favourites } = user!;
 
-  // Wyciągnięcie tablicy ID artykułów z ulubionych
-  const { favourites } = user;
+  const favouriteArticles = await getFavoriteArticles(
+    favourites.map((f) => f.toString()),
+    skip,
+    pageSize,
+  );
 
-  // Pobranie artykułów na podstawie ID w ulubionych z paginacją
-  const favouriteArticles = await ArticleModel.find({
-    _id: { $in: favourites },
-  })
-    .select([
-      '-clientDescription',
-      '-employeeDescription',
-      '-createdBy',
-      '-verifiedBy',
-      '-createdAt',
-      '-viewsCounter',
-      '-__v',
-    ])
-    .populate([{ path: 'tags', select: ['name'] }])
-    .skip(skip)
-    .limit(pageSize);
-
-  // Jeśli chcesz, możesz również zwrócić całkowitą liczbę ulubionych artykułów, aby obsłużyć paginację na froncie
   const totalFavouriteArticles = await ArticleModel.countDocuments({
     _id: { $in: favourites },
   });

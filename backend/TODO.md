@@ -6,4 +6,4 @@
 - Make sure that dtos include proper validations
 - There are some issues with interfaces. Some agreggations do not have proper types
 - ConversationTopic - get -> query is not specified and user can type anything. This is bad
-
+- Remove zod and replace with custom validation

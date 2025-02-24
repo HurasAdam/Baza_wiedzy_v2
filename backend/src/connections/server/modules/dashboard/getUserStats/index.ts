@@ -1,5 +1,5 @@
-import GetUserStatsDto from '../../../../../modules/dashboard/subModules/getUserStats/dto.js';
-import getUserStats from '../../../../../modules/dashboard/subModules/getUserStats/index.js';
+import GetUserStatsDto from '../../../../../modules/dashboard/subModules/get/userStats/dto.js';
+import getUserStats from '../../../../../modules/dashboard/subModules/get/userStats/index.js';
 import catchErrors from '../../../../../utils/catchErrors.js';
 import type { IGetUserStatsReq } from './types.js';
 import type express from 'express';
