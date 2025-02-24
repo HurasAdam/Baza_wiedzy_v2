@@ -58,7 +58,7 @@ export const NAVBAR_OPTIONS = {
         },
         {
             title: "Ulubione artykuły",
-            url: "/articles/favourite",
+            url: "/favourites",
             icon: GoStarFill,
             isActive: true,
         },

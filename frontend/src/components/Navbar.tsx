@@ -136,7 +136,7 @@ const Navbar: React.FC = ({ notifications }) => {
     return (
       <Link
         className={clsx(
-          "px-3 py-2.5 rounded-xl border border-transparent text-slate-600 text-sm font-semibold  hover:border hover:border-slate-400/90 ",
+          "px-3 py-2.5 rounded-xl border border-transparent  text-slate-600 text-sm font-semibold  hover:border hover:border-slate-400/90",
           isActive ? "bg-slate-600 text-white" : ""
         )}
         to={link}
@@ -149,7 +149,7 @@ const Navbar: React.FC = ({ notifications }) => {
   return (
     <div
       className={clsx(
-        "flex justify-between border-b dark:bg-slate-700 border-b-neutral-200 w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0   ",
+        "flex justify-between border-b dark:bg-slate-700 bg-transparent bg-white  border-b-neutral-200 w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0   ",
         isScrolled ? "bg-white border-b-2" : ""
       )}
     >

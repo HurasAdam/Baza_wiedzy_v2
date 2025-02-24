@@ -2,8 +2,8 @@ export const HomePage = () => {
     console.log("_____HomePage______")
 
     return (
-        <div className="bg-slate-600 text-white p-2">
-            Librus jest super
+        <div className=" text-slate-700 rounded p-2 h-full bg-white">
+           Dashboard
         </div>
     )
 }
