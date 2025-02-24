@@ -1,14 +1,16 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { LoginPage } from "./pages/Login";
 import { RegisterPage } from "./pages/Register";
-import { HomePage } from "./pages/Home";
+import { HomePage } from "./pages/HomePage";
 import { RootLayout } from "./layouts/RootLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import { AuthLayout } from "./layouts/AuthLayout";
+import ArticlesPage from "./pages/ArticlesPage";
+import { StatisticsPage } from "./pages/StatisticsPage";
+import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
+import { FavoritesPage } from "./pages/FavoritesArticlesPage";
 
-const StatisticsPage = () => {
-    return <div>StatisticsPage xdd</div>
-}
+
 
 function App() {
     return (
@@ -17,7 +19,10 @@ function App() {
                 <Route path="/" element={<RootLayout />}>
                     <Route index element={<Navigate to="/dashboard" replace />} />
                     <Route path="dashboard" element={<HomePage />} />
+                    <Route path="articles" element={<ArticlesPage />} />
                     <Route path="statistics" element={<StatisticsPage />} />
+                    <Route path="call-register" element={<TopicsRegisterPage />} />
+                    <Route path="favourites" element={<FavoritesPage />} />
                     {/* <Route path="articles" element={<SearchPage />} /> */}
                     {/* <Route path="articles/new" element={<CreateArticle />} /> */}
                     {/* <Route path="articles/favorite" element={<FavouritesPage />} /> */}

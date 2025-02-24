@@ -22,9 +22,11 @@ export const RootLayout = () => {
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
+                <div className="bg-slate-100">
             <Navbar />
-            <div className="flex flex-1 flex-col gap-4 bg-neutral-100 h-screen">
+            <div className="flex flex-1 flex-col gap-4 p-4  h-screen">
                 <Outlet />
+            </div>
             </div>
             <Toaster />
             </SidebarInset>

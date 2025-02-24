@@ -157,7 +157,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
             <SidebarHeader className="bg-slate-800">
             <TeamSwitcher teams={data.teams} />
             </SidebarHeader>
-            <SidebarContent className="bg-slate-800 text-blue-100/90 ">
+            <SidebarContent className=" bg-slate-800">
                 <NavMain items={NAVBAR_OPTIONS.navMain} />
             </SidebarContent>
             <SidebarRail />
