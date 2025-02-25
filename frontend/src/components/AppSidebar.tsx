@@ -153,7 +153,7 @@ const data = {
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
     return (
-        <Sidebar collapsible="icon" {...props} className="font-nunito">
+        <Sidebar collapsible="icon" {...props} className="font-nunito rounded-2xl">
             <SidebarHeader className="bg-slate-800">
             <TeamSwitcher teams={data.teams} />
             </SidebarHeader>

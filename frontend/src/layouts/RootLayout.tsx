@@ -1,9 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
-import { Toaster } from "@/components/ui/toaster";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import Navbar from "@/components/Navbar";
-import { AppSidebar } from "@/components/AppSidebar";
+import MySidebar from "@/components/MySidebar";
 
 export const RootLayout = () => {
     const { user, status } = useAuth();
@@ -19,17 +17,22 @@ export const RootLayout = () => {
     }
 
     return (
-        <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-                <div className="bg-slate-100">
-            <Navbar />
-            <div className="flex flex-1 flex-col gap-4 p-4  h-screen">
+    
+
+                <div className="bg-gray-100 flex min-h-full">
+                           <MySidebar/>
+                    <div className="w-full">
+         
+            <Navbar/>
+            <div className="flex flex-1 flex-col gap-4 p-4  min-h-screen">
                 <Outlet />
+                </div>
             </div>
+            
             </div>
-            <Toaster />
-            </SidebarInset>
-        </SidebarProvider>
+            
+   
+            
+      
     );
 }
