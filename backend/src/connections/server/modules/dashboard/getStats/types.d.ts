@@ -1,4 +1,4 @@
-import type { IGetStatsQuery } from '../../../../../modules/dashboard/subModules/getStats/types.js';
+import type { IGetStatsQuery } from '../../../../../modules/dashboard/subModules/get/stats/types.js';
 import type express from 'express';
 import type { ParsedQs } from 'qs';
 

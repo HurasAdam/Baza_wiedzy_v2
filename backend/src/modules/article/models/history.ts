@@ -1,27 +1,52 @@
-import { model, Schema } from 'mongoose';
-import type { IArticleHistory } from '../../../types/article.js';
+import mongoose from 'mongoose';
+import { EEventType } from '../../../enums/events.js';
+import type { IArticleHistory } from '../types.js';
 
-// Definicja schematu historii zmian
-const articleHistorySchema = new Schema(
+export const changesSchema = new mongoose.Schema({
+  field: {
+    type: String,
+    required: [true, 'Changes - field not provided'],
+  },
+  oldValue: {
+    type: String,
+    required: [true, 'Changes - oldvalue not provided'],
+  },
+  newValue: {
+    type: String,
+    required: [true, 'Changes - newValue not provided'],
+  },
+});
+
+const articleHistorySchema = new mongoose.Schema(
   {
-    articleId: { type: Schema.Types.ObjectId, ref: 'Article', required: true },
+    articleId: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Article',
+      required: true,
+    },
     eventType: {
       type: String,
       required: true,
-      enum: ['created', 'updated', 'trashed', 'restored', 'verified', 'unverified'],
+      enum: Object.values(EEventType),
     },
     changes: [
       {
-        field: { type: String, required: true }, // Zmienione pole
-        oldValue: { type: String, required: true }, // Poprzednia wartość
-        newValue: { type: String, required: true }, // Nowa wartość
+        type: changesSchema,
+        required: [true, 'Changes not provided'],
       },
     ],
-    updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Użytkownik, który wprowadził zmianę
-    updatedAt: { type: Date, default: Date.now }, // Czas zmiany
+    updatedBy: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   { timestamps: true },
 );
 
-const ArticleHistoryModel = model<IArticleHistory>('ArticleHistory', articleHistorySchema);
+const ArticleHistoryModel = mongoose.model<IArticleHistory>('ArticleHistory', articleHistorySchema);
 export default ArticleHistoryModel;

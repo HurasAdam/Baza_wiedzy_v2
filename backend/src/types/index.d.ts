@@ -1,5 +1,7 @@
 export type * from './email.js';
+export type * from './generic.d.ts';
 export type * from './config.d.ts';
+export type * from './repository.d.ts';
 export type * from './errors.d.ts';
 export type * from './documents.d.ts';
 export type * from './article.d.ts';

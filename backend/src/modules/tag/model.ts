@@ -1,23 +1,26 @@
 import { Schema, model } from 'mongoose';
-import type mongoose from 'mongoose';
+import type { ITag } from './types.js';
 
 const tagSchema = new Schema({
-  name: { type: String, required: true },
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  isDefault: { type: Boolean, default: false },
+  name: {
+    type: String,
+    required: true,
+  },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  isDefault: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-export interface ITagEntity {
-  _id: string | mongoose.Types.ObjectId;
-  name: string;
-  createdBy: string;
-  isDefault: boolean;
-}
+const TagModel = model<ITag>('Tag', tagSchema);
+export default TagModel;
 
-export interface ITag extends ITagEntity, mongoose.Document {
-  _id: mongoose.Types.ObjectId;
-}
-
+// #TODO To rewrite
 tagSchema.pre('save', function (next): void {
   if (this.isDefault && this.isModified('isDefault')) {
     next(new Error('Nie można zmienić statusu domyślnego tagu.'));
@@ -41,6 +44,3 @@ tagSchema.pre('updateOne', function (next): void {
   }
   next();
 });
-
-const TagModel = model<ITag>('Tag', tagSchema);
-export default TagModel;

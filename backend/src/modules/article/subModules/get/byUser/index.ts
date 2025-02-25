@@ -1,13 +1,16 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import appAssert from '../../../../../utils/appAssert.js';
 import ArticleModel from '../../../models/schema.js';
+import ArticleRepository from '../../../repository/article.js';
 import type GetArticleByUserDto from './dto.js';
-import type { IArticleEntity } from '../../../../../types/article.js';
+import type { IArticleEntity } from '../../../types.js';
 
 export default async (
   data: GetArticleByUserDto,
 ): Promise<{ data: IArticleEntity[]; pagination: { page: number; pages: number; total: number } }> => {
   const { id: userId, startDate, endDate } = data;
+
+  const repo = new ArticleRepository();
 
   appAssert(userId, EHttpCodes.CONFLICT, 'User not found');
 
@@ -33,7 +36,7 @@ export default async (
     }
   }
 
-  const total = await ArticleModel.countDocuments(query);
+  const total = await repo.count(query);
   const limit = parseInt(data.limit ?? '20');
   const pageSize = limit;
   const pageNumber = parseInt(data.page ?? '1');

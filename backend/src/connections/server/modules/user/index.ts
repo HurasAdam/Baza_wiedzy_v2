@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import get from './get/index.js';
-import getMany from './getMany/index.js';
+import getMany from './get/many/index.js';
+import get from './get/one/index.js';
 import getWithArticleCount from './getWithArticleCount/index.js';
 import getWithChangeCount from './getWithChangeCount/index.js';
 import getWithReportCount from './getWithReportCount/index.js';
-import getConversationReports from '../conversationReport/getUser/index.js';
+import getConversationReports from '../conversationReport/get/user/index.js';
 
 /**
  * Initialize user routes

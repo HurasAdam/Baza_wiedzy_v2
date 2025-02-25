@@ -1,8 +1,8 @@
 import SessionModel from '../../model.js';
 import type GetSessionDto from './dto.js';
-import type { ISessionDocument } from '../../model.js';
+import type { ISessionEntity } from '../../types.js';
 
-export default async (dto: GetSessionDto): Promise<ISessionDocument[]> => {
+export default async (dto: GetSessionDto): Promise<ISessionEntity[]> => {
   return SessionModel.find(
     {
       userId: dto.userId,

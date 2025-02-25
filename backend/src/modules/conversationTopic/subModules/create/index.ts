@@ -1,14 +1,18 @@
 import { EHttpCodes } from '../../../../enums/http.js';
 import appAssert from '../../../../utils/appAssert.js';
-import ConversationTopicModel from '../../model.js';
+import ConversationTopicRepository from '../../repository/index.js';
 import type CreateConversationTopicDto from './dto.js';
-import type { IConversationTopic } from '../../model.js';
+import type { IConversationTopicEntity } from '../../types.js';
 
-export default async (dto: CreateConversationTopicDto): Promise<{ data: IConversationTopic; message: string }> => {
+export default async (
+  dto: CreateConversationTopicDto,
+): Promise<{ data: IConversationTopicEntity; message: string }> => {
   const { title, product, userId } = dto;
 
-  // Sprawdzanie, czy temat rozmowy z tym tytułem dla danego produktu już istnieje
-  const conversationTopicExists = await ConversationTopicModel.exists({ title, product });
+  const conversationTopicRepo = new ConversationTopicRepository();
+
+  // Sprawdzanie, czy temat rozmowy z tym tytułem dla danego produktu już istnIConversationRaportEntitye
+  const conversationTopicExists = await conversationTopicRepo.get({ title, product });
   appAssert(
     !conversationTopicExists,
     EHttpCodes.CONFLICT,
@@ -16,11 +20,12 @@ export default async (dto: CreateConversationTopicDto): Promise<{ data: IConvers
   );
 
   // Tworzenie nowego tematu rozmowy
-  const createdConversationTopic = await ConversationTopicModel.create({
+  const topicId = await conversationTopicRepo.add({
     title,
     product,
     createdBy: userId,
   });
+  const newTopic = await conversationTopicRepo.getById(topicId);
 
-  return { data: createdConversationTopic, message: 'Conversation topic created successfully' };
+  return { data: newTopic!, message: 'Conversation topic created successfully' };
 };

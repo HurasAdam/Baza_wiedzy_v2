@@ -1,6 +1,6 @@
 import ArticleModel from '../../../models/schema.js';
 import type GetLatestArticlesDto from './dto.js';
-import type { IArticleEntity } from '../../../../../types/article.js';
+import type { IArticleEntity } from '../../../types.js';
 
 export default async (dto: GetLatestArticlesDto): Promise<IArticleEntity[]> => {
   return ArticleModel.find({}, { title: 1, createdAt: 1 })

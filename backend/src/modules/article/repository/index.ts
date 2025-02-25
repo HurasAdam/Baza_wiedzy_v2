@@ -6,7 +6,28 @@ import appAssert from '../../../utils/appAssert.js';
 import ArticleHistoryModel from '../models/history.js';
 import ArticleModel from '../models/schema.js';
 import { compareObjects } from '../shared.js';
+import ArticleRepository from './article.js';
+import ArticleHistoryRepository from './history.js';
 import type { IChange, ISaveArticleChangesProps } from '../../../types/article.js';
+import type { IArticleEntity } from '../types.js';
+
+export const getFavoriteArticles = async (ids: string[], skip: number, page: number): Promise<IArticleEntity[]> => {
+  return ArticleModel.find({
+    _id: { $in: ids },
+  })
+    .select([
+      '-clientDescription',
+      '-employeeDescription',
+      '-createdBy',
+      '-verifiedBy',
+      '-createdAt',
+      '-viewsCounter',
+      '-__v',
+    ])
+    .populate([{ path: 'tags', select: ['name'] }])
+    .skip(skip)
+    .limit(page);
+};
 
 export const saveArticleChanges = async ({
   articleId,
@@ -16,6 +37,8 @@ export const saveArticleChanges = async ({
   eventType,
 }: ISaveArticleChangesProps): Promise<void> => {
   let changes: IChange[] = [];
+
+  const articleHistoryRepo = new ArticleHistoryRepository();
 
   // Porównaj artykuły, jeżeli zmiany zachodzą (np. zaktualizowany artykuł)
   if (eventType === EEventType.Updated && articleBeforeChanges) {
@@ -33,21 +56,22 @@ export const saveArticleChanges = async ({
   Log.debug('Article history', 'Before changes', articleBeforeChanges, 'Updated', updatedArticle);
 
   // Zapisujemy historię zmian
-  const historyEntry = new ArticleHistoryModel({
-    articleId,
+  await articleHistoryRepo.add({
+    articleId: new mongoose.Types.ObjectId(articleId),
     changes,
-    updatedBy,
+    updatedBy: new mongoose.Types.ObjectId(updatedBy),
     eventType,
   });
-  await historyEntry.save();
 };
 
-export const getArticleHistory = async ({ articleId }: { articleId: string }) => {
-  // Sprawdzenie, czy artykuł o danym ID istnieje
-  const article = await ArticleModel.findById({ _id: articleId });
+export const getArticleHistory = async ({ articleId }: { articleId: string }): Promise<unknown[]> => {
+  const articleRepo = new ArticleRepository();
+
+  const article = await articleRepo.getById(articleId);
+
   appAssert(article, EHttpCodes.NOT_FOUND, 'Article not found');
 
-  // Pobranie historii zmian artykułu z kolekcji ArticleHistory
+  // Get article id and find all of its history
   const articleHistory = await ArticleHistoryModel.aggregate([
     {
       $match: { articleId: new mongoose.Types.ObjectId(articleId) }, // Filtruj po articleId

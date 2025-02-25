@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import create from './create/index.js';
-import get from './get/index.js';
-import getMany from './getMany/index.js';
+import getMany from './get/many/index.js';
+import get from './get/one/index.js';
 import remove from './remove/index.js';
 import update from './update/index.js';
 import preventDeleteDefaultTag from '../../middleware/preventDeleteDefaultTag.js';

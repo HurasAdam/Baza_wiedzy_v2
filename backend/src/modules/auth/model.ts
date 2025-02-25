@@ -1,16 +1,26 @@
 import mongoose from 'mongoose';
-import type { IVerificationCodeDocument } from '../../types/documents.js';
+import type { IAuth } from './types.js';
 
-const verificationCodeSchema = new mongoose.Schema<IVerificationCodeDocument>({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-  type: { type: String, required: true },
-  createdAt: { type: Date, required: true, default: Date.now },
-  expiresAt: { type: Date, required: true },
+const authSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    index: true,
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  expiresAt: {
+    type: Date,
+    required: true,
+  },
 });
 
-const verificationCodeModel = mongoose.model<IVerificationCodeDocument>(
-  'VerificationCode',
-  verificationCodeSchema,
-  'verification_codes',
-);
-export default verificationCodeModel;
+const AuthModel = mongoose.model<IAuth>('VerificationCode', authSchema, 'verification_codes');
+export default AuthModel;

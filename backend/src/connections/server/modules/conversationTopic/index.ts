@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import createConversationTopic from './create/index.js';
 import deleteConversationTopic from './delete/index.js';
-import getConversationTopics from './get/index.js';
-import getOne from './getOne/index.js';
+import getMany from './get/many/index.js';
+import getOne from './get/one/index.js';
 import updateConversationTopic from './update/index.js';
 
 /**
@@ -12,7 +12,7 @@ import updateConversationTopic from './update/index.js';
 export default (): Router => {
   const router = Router();
 
-  router.get('/', getConversationTopics());
+  router.get('/', getMany());
   router.get('/:id', getOne());
   router.post('/create', createConversationTopic());
   router.put('/topic/:id/update', updateConversationTopic());

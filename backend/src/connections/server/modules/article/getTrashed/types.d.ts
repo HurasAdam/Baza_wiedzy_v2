@@ -1,4 +1,4 @@
-import type { IGetTrashedArticlesDto } from '../../../../../modules/article/subModules/getTrashed/types.js';
+import type { IGetTrashedArticlesDto } from '../../../../../modules/article/subModules/get/trashed/types.js';
 import type express from 'express';
 import type { ParsedQs } from 'qs';
 

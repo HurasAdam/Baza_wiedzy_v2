@@ -1,19 +1,24 @@
 import { EHttpCodes } from '../../../../enums/http.js';
 import appAssert from '../../../../utils/appAssert.js';
-import ProductModel from '../../model.js';
+import ProductRepository from '../../repository/index.js';
 import type CreateProductDto from './dto.js';
-import type { IProduct } from '../../model.js';
+import type { EBannerType } from '../../../../enums/product.js';
+import type { IProductEntity } from '../../types.js';
 
-export default async (dto: CreateProductDto): Promise<IProduct> => {
+export default async (dto: CreateProductDto): Promise<IProductEntity> => {
   const { name, labelColor, userId } = dto;
 
-  const product = await ProductModel.exists({ name });
-  appAssert(!product, EHttpCodes.CONFLICT, 'Product already exists');
+  const productRepo = new ProductRepository();
 
-  return ProductModel.create({
+  const product = await productRepo.get({ name });
+  appAssert(product, EHttpCodes.CONFLICT, 'Product already exists');
+
+  await productRepo.add({
     name,
     createdBy: userId,
     labelColor,
-    banner: dto.banner,
+    banner: dto.banner as EBannerType,
   });
+
+  return (await productRepo.getById(product[0]!._id as string)) as IProductEntity;
 };
