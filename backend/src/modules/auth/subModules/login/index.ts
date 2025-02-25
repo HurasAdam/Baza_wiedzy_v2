@@ -1,29 +1,33 @@
 import { EHttpCodes } from '../../../../enums/http.js';
 import { refreshTokenSignOptions, signToken } from '../../../../tools/passwords.js';
 import appAssert from '../../../../utils/appAssert.js';
-import SessionModel from '../../../session/model.js';
-import UserModel from '../../../user/model.js';
+import SessionRepository from '../../../session/repository/index.js';
+import UserRepository from '../../../user/repository/index.js';
+import { CleanUserEntity } from '../../../user/utils/entity.js';
+import { comparePassword } from '../../../user/utils/index.js';
 import type LoginDto from './dto.js';
 import type { IRefreshTokenPayload } from '../../../../types/tokens.js';
-import type { ICleanUser } from '../../../user/model.js';
 
-export default async (dto: LoginDto): Promise<{ user: ICleanUser; accessToken: string; refreshToken: string }> => {
+export default async (dto: LoginDto): Promise<{ user: CleanUserEntity; accessToken: string; refreshToken: string }> => {
   const { email, password } = dto;
 
-  const user = await UserModel.findOne({ email });
+  const userRepo = new UserRepository();
+  const sessionRepo = new SessionRepository();
+
+  const user = (await userRepo.get({ email }))[0]!;
   appAssert(user, EHttpCodes.UNAUTHORIZED, 'Invalid email or password');
 
-  const isValid = await user.comparePassword(password);
+  const isValid = await comparePassword(password, user.password);
   appAssert(isValid, EHttpCodes.UNAUTHORIZED, 'Invalid email or password');
 
   const userId = user._id;
-  const session = await SessionModel.create({
+  const sessionId = await sessionRepo.add({
     userId,
-    userAgent: dto.userAgent,
+    userAgent: dto.userAgent!,
   });
 
   const sessionInfo: IRefreshTokenPayload = {
-    sessionId: session._id,
+    sessionId,
   };
 
   const refreshToken = signToken(sessionInfo, refreshTokenSignOptions);
@@ -31,8 +35,9 @@ export default async (dto: LoginDto): Promise<{ user: ICleanUser; accessToken: s
     ...sessionInfo,
     userId,
   });
+
   return {
-    user: user.omitPassword(),
+    user: new CleanUserEntity(user),
     accessToken,
     refreshToken,
   };

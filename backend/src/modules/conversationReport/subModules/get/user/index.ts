@@ -1,12 +1,13 @@
 import Log from 'simpl-loggar';
 import ConversationReportModel from '../../../model.js';
+import ConversationReportRepository from '../../../repository/index.js';
 import type GetUserConversationReportDto from './dto.js';
-import type { IConversationRaport } from '../../../model.js';
+import type { IConversationRaportEntity } from '../../../types.js';
 
 export default async (
   dto: GetUserConversationReportDto,
 ): Promise<{
-  data: IConversationRaport[];
+  data: IConversationRaportEntity[];
   pagination: {
     total: number;
     page: number;
@@ -15,6 +16,8 @@ export default async (
 }> => {
   const { userId } = dto;
   Log.debug('Conversation controller', userId, dto.startDate, dto.endDate);
+
+  const conversationReportRepo = new ConversationReportRepository();
 
   const dateFilter: { $gte?: Date; $lte?: Date } = {};
   if (dto.startDate) {
@@ -29,7 +32,8 @@ export default async (
     topic: { $ne: null },
     ...(Object.keys(dateFilter).length > 0 && { createdAt: dateFilter }),
   };
-  const total = await ConversationReportModel.countDocuments(query);
+
+  const total = await conversationReportRepo.count(query);
 
   const limit = parseInt(dto.limit ?? '20');
   const pageSize = limit;

@@ -11,14 +11,8 @@ export default (): ((req: IGetSessionReq, res: express.Response, next: express.N
 
     const sessions = await get(dto);
 
-    res.status(EHttpCodes.OK).json(
-      // mark the current session
-      sessions.map((session) => ({
-        ...session.toObject(),
-        ...(session.id === dto.sessionId && {
-          isCurrent: true,
-        }),
-      })),
-    );
+    res
+      .status(EHttpCodes.OK)
+      .json(sessions.map((session) => (session._id === dto.sessionId ? session : { ...session, isCurrent: true })));
   });
 };

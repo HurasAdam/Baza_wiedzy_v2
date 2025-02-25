@@ -1,14 +1,14 @@
-import type { ISessionDocument } from '../modules/session/model.ts';
-import type { IUser } from '../modules/user/model.ts';
+import type { ISessionEntity } from '../modules/session/types.js';
+import type { IUserEntity } from '../modules/user/types.js';
 import type { SignOptions } from 'jsonwebtoken';
 
 export interface IRefreshTokenPayload {
-  sessionId: ISessionDocument['_id'];
+  sessionId: ISessionEntity['_id'];
 }
 
 export interface IAccessTokenPayload {
-  userId: IUser['_id'];
-  sessionId: ISessionDocument['_id'];
+  userId: IUserEntity['_id'];
+  sessionId: ISessionEntity['_id'];
 }
 
 export type ISignOptionsAndSecret = SignOptions & {

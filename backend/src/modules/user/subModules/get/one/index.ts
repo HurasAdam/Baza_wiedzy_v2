@@ -1,13 +1,15 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import appAssert from '../../../../../utils/appAssert.js';
-import UserModel from '../../../model.js';
+import UserRepository from '../../../repository/index.js';
 import type GetUserDto from './dto.js';
-import type { IUser } from '../../../model.js';
+import type { IUserEntity } from '../../../types.js';
 
-export default async (dto: GetUserDto): Promise<IUser> => {
+export default async (dto: GetUserDto): Promise<IUserEntity> => {
   const { userId } = dto;
 
-  const user = await UserModel.findById(userId);
+  const userRepo = new UserRepository();
+
+  const user = await userRepo.getById(userId);
   appAssert(user, EHttpCodes.NOT_FOUND, 'User not found');
 
   return user;

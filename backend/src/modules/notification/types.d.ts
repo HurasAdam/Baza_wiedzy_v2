@@ -16,6 +16,8 @@ export interface INotificationEntity extends ICreateNotification {
   link: string;
   articleTitle: string;
   articleProduct: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface INotification extends mongoose.Document, INotificationEntity {

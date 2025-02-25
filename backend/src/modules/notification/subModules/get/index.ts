@@ -1,9 +1,23 @@
-import NotificationModel from '../../model.js';
+import NotificationRepository from '../../repository/index.js';
 import type GetNotificationDto from './dto.js';
-import type { INotification } from '../../model.js';
+import type { INotificationEntity } from '../../types.js';
 
-export default async (dto: GetNotificationDto): Promise<INotification[]> => {
+export default async (dto: GetNotificationDto): Promise<INotificationEntity[]> => {
   const { userId } = dto;
 
-  return NotificationModel.find({ userId }).sort({ isRead: 1, createdAt: -1 }).exec();
+  const notificationRepo = new NotificationRepository();
+
+  const notifications = await notificationRepo.get({ userId });
+
+  return notifications
+    .sort((a, b) => {
+      if (a.isRead > b.isRead) return 1;
+      if (a.isRead < b.isRead) return -1;
+      return 0;
+    })
+    .sort((a, b) => {
+      if (a.createdAt > b.createdAt) return -1;
+      if (a.createdAt < b.createdAt) return 1;
+      return 0;
+    });
 };

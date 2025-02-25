@@ -6,54 +6,10 @@ import appAssert from '../../../utils/appAssert.js';
 import ArticleHistoryModel from '../models/history.js';
 import ArticleModel from '../models/schema.js';
 import { compareObjects } from '../shared.js';
+import ArticleRepository from './article.js';
+import ArticleHistoryRepository from './history.js';
 import type { IChange, ISaveArticleChangesProps } from '../../../types/article.js';
-import type { IArticleEntity, IArticleHistoryEntity, ICreateArticle, ICreateArticleHistory } from '../types.js';
-import type { FilterQuery } from 'mongoose';
-
-export const getSchema = async (data: FilterQuery<Partial<IArticleEntity>>): Promise<IArticleEntity[]> => {
-  return ArticleModel.find(data).lean();
-};
-
-export const getHistory = async (
-  data: FilterQuery<Partial<IArticleHistoryEntity>>,
-): Promise<IArticleHistoryEntity[]> => {
-  return ArticleHistoryModel.find(data).lean();
-};
-
-export const getOneSchemaById = async (_id: string): Promise<IArticleEntity | null> => {
-  return ArticleModel.findOne({ _id }).lean();
-};
-
-export const getOneHistoryById = async (_id: string): Promise<IArticleHistoryEntity | null> => {
-  return ArticleHistoryModel.findOne({ _id }).lean();
-};
-
-export const removeOneSchema = async (_id: string): Promise<void> => {
-  await ArticleModel.findOneAndDelete({ _id });
-};
-
-export const removeOneHistory = async (_id: string): Promise<void> => {
-  await ArticleHistoryModel.findOneAndDelete({ _id });
-};
-
-export const updateOneSchema = async (_id: string, newElement: Partial<IArticleEntity>): Promise<void> => {
-  await ArticleModel.findOneAndUpdate({ _id }, newElement);
-};
-
-export const updateOneHistory = async (_id: string, newElement: Partial<IArticleHistoryEntity>): Promise<void> => {
-  await ArticleHistoryModel.findOneAndUpdate({ _id }, newElement);
-};
-
-export const createNewSchema = async (data: ICreateArticle): Promise<string> => {
-  Log.debug('Article repo', 'Creating new article', data);
-  const model = new ArticleModel(data);
-  return (await model.save())._id.toString();
-};
-
-export const createNewHistory = async (data: ICreateArticleHistory): Promise<string> => {
-  const model = new ArticleHistoryModel(data);
-  return (await model.save())._id.toString();
-};
+import type { IArticleEntity } from '../types.js';
 
 export const getFavoriteArticles = async (ids: string[], skip: number, page: number): Promise<IArticleEntity[]> => {
   return ArticleModel.find({
@@ -82,6 +38,8 @@ export const saveArticleChanges = async ({
 }: ISaveArticleChangesProps): Promise<void> => {
   let changes: IChange[] = [];
 
+  const articleHistoryRepo = new ArticleHistoryRepository();
+
   // Porównaj artykuły, jeżeli zmiany zachodzą (np. zaktualizowany artykuł)
   if (eventType === EEventType.Updated && articleBeforeChanges) {
     changes = compareObjects(
@@ -98,17 +56,18 @@ export const saveArticleChanges = async ({
   Log.debug('Article history', 'Before changes', articleBeforeChanges, 'Updated', updatedArticle);
 
   // Zapisujemy historię zmian
-  const historyEntry = new ArticleHistoryModel({
-    articleId,
+  await articleHistoryRepo.add({
+    articleId: new mongoose.Types.ObjectId(articleId),
     changes,
-    updatedBy,
+    updatedBy: new mongoose.Types.ObjectId(updatedBy),
     eventType,
   });
-  await historyEntry.save();
 };
 
-export const getArticleHistory = async ({ articleId }: { articleId: string }) => {
-  const article = await getOneSchema(articleId);
+export const getArticleHistory = async ({ articleId }: { articleId: string }): Promise<unknown[]> => {
+  const articleRepo = new ArticleRepository();
+
+  const article = await articleRepo.getById(articleId);
 
   appAssert(article, EHttpCodes.NOT_FOUND, 'Article not found');
 

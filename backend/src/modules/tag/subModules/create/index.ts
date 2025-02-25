@@ -1,15 +1,17 @@
 import { EHttpCodes } from '../../../../enums/http.js';
 import appAssert from '../../../../utils/appAssert.js';
-import TagModel from '../../model.js';
+import TagRepository from '../../repository/index.js';
 import type CreateTagDto from './dto.js';
 
 export default async (dto: CreateTagDto): Promise<{ message: string }> => {
   const { name, userId } = dto;
 
-  const tag = await TagModel.exists({ name });
+  const tagRepo = new TagRepository();
+
+  const tag = await tagRepo.get({ name });
   appAssert(!tag, EHttpCodes.CONFLICT, 'Tag already exists');
 
-  await TagModel.create({
+  await tagRepo.add({
     name,
     createdBy: userId,
   });

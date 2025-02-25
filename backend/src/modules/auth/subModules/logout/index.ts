@@ -1,11 +1,13 @@
 import { verifyToken } from '../../../../tools/passwords.js';
-import SessionModel from '../../../session/model.js';
+import SessionRepository from '../../../session/repository/index.js';
 import type { IAccessTokenPayload } from '../../../../types/tokens.js';
 
 export default async (accessToken: string): Promise<void> => {
   const { payload } = verifyToken(accessToken) as { payload: IAccessTokenPayload };
 
+  const repo = new SessionRepository();
+
   if (payload) {
-    await SessionModel.findByIdAndDelete(payload.sessionId);
+    await repo.remove(payload.sessionId.toString());
   }
 };

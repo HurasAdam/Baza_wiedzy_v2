@@ -1,10 +1,13 @@
-import TagModel from '../../../model.js';
+import TagRepository from '../../../repository/index.js';
 import type GetTagDto from './dto.js';
-import type { ITag } from '../../../model.js';
+import type { IOptional } from '../../../../../types/generic.js';
+import type { ITagEntity } from '../../../types.js';
 
-export default async (dto: GetTagDto): Promise<ITag | null> => {
+export default async (dto: GetTagDto): Promise<IOptional<ITagEntity>> => {
   const { tagId } = dto;
 
-  const tag = await TagModel.findById({ _id: tagId });
+  const repo = new TagRepository();
+
+  const tag = await repo.getById(tagId);
   return tag;
 };

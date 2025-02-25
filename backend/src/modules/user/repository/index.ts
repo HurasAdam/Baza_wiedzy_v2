@@ -1,27 +1,10 @@
-import Log from 'simpl-loggar';
+import RepositoryFactory from '../../../tools/abstract/repository.js';
 import UserModel from '../model.js';
-import type { IUserEntity } from '../model.js';
-import type { FilterQuery } from 'mongoose';
+import type { EControllers } from '../../../enums/controller.js';
+import type { IUser } from '../types.js';
 
-export const getUser = async (data: FilterQuery<Partial<IUserEntity>>): Promise<IUserEntity[]> => {
-  return UserModel.find(data).lean();
-};
-
-export const getOneUserById = async (_id: string): Promise<IUserEntity | null> => {
-  return UserModel.findOne({ _id }).lean();
-};
-
-export const removeOneUser = async (_id: string): Promise<void> => {
-  await UserModel.findOneAndDelete({ _id });
-};
-
-export const updateOneUser = async (_id: string, newElement: Partial<IUserEntity>): Promise<void> => {
-  await UserModel.findOneAndUpdate({ _id }, newElement);
-};
-
-export const createNewUser = async (data: ICreateUser): Promise<string> => {
-  Log.debug('User repo', 'Creating new user', data);
-
-  const model = new UserModel(data);
-  return (await model.save())._id.toString();
-};
+export default class UserRepository extends RepositoryFactory<IUser, typeof UserModel, EControllers.User> {
+  constructor() {
+    super(UserModel);
+  }
+}

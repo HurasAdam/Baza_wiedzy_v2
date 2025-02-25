@@ -2,9 +2,7 @@ import ArticleHistoryModel from '../../../models/history.js';
 import type GetHistoryByUserDto from './dto.js';
 import type { IArticleHistory } from '../../../types.js';
 
-// eslint-disable-next-line import/prefer-default-export
-export const getUserHistory = async (dto: GetHistoryByUserDto): Promise<IArticleHistory[]> => {
-  // Tworzymy podstawowy filtr
+export default async (dto: GetHistoryByUserDto): Promise<IArticleHistory[]> => {
   const filter: {
     updatedBy: string;
     updatedAt?: {
@@ -16,10 +14,9 @@ export const getUserHistory = async (dto: GetHistoryByUserDto): Promise<IArticle
   } = {
     updatedBy: dto.id,
     eventType: 'updated',
-    articleId: { $ne: null }, // Wyklucz historię bez powiązanego artykułu
+    articleId: { $ne: null },
   };
 
-  // Dodajemy filtr dat, jeśli są podane
   if (dto.startDate || dto.endDate) {
     filter.updatedAt = {};
     if (dto.startDate) {
@@ -30,16 +27,15 @@ export const getUserHistory = async (dto: GetHistoryByUserDto): Promise<IArticle
     }
   }
 
-  // Zapytanie do bazy danych
   return ArticleHistoryModel.find(filter)
     .populate({
-      path: 'articleId', // Powiązanie z artykułem
-      select: ['title', 'isTrashed'], // Pobierz tylko potrzebne pola
-      match: { isTrashed: false }, // Wyklucz artykuły, które są w koszu
+      path: 'articleId',
+      select: ['title', 'isTrashed'],
+      match: { isTrashed: false },
     })
     .populate({
-      path: 'updatedBy', // Powiązanie z użytkownikiem
-      select: 'name surname', // Pobierz imię i nazwisko użytkownika
+      path: 'updatedBy',
+      select: 'name surname',
     })
     .exec();
 };

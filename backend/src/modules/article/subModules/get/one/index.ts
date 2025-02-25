@@ -1,12 +1,17 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import appAssert from '../../../../../utils/appAssert.js';
-import UserModel from '../../../../user/model.js';
+import UserRepository from '../../../../user/repository/index.js';
 import ArticleModel from '../../../models/schema.js';
 import type GetOneArticlesDto from './dto.js';
 import type { IArticleEntity } from '../../../types.js';
 
-export default async ({ userId, articleId }: GetOneArticlesDto): Promise<IArticleEntity> => {
-  const user = await UserModel.findById(userId);
+export default async (dto: GetOneArticlesDto): Promise<IArticleEntity> => {
+  const { userId, articleId } = dto;
+
+  const userRepo = new UserRepository();
+
+  const user = await userRepo.getById(userId);
+
   const article = await ArticleModel.findById({ _id: articleId }).populate([
     { path: 'tags', select: ['name'] },
     { path: 'createdBy', select: ['name', 'surname'] },

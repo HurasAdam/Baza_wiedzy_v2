@@ -1,7 +1,6 @@
 import { startOfDay, subDays } from 'date-fns';
-import ArticleHistoryModel from '../../../../article/models/history.js';
-import ArticleModel from '../../../../article/models/schema.js';
-import ConversationReportModel from '../../../../conversationReport/model.js';
+import ArticleRepository from '../../../../article/repository/article.js';
+import ConversationReportRepository from '../../../../conversationReport/repository/index.js';
 import type GetStatsDto from './dto.js';
 
 export default async (
@@ -11,7 +10,9 @@ export default async (
   let startDate;
   const endDate = new Date(); // Current date
 
-  // Determine start date based on the range
+  const articleRepo = new ArticleRepository();
+  const conversationReportRepo = new ConversationReportRepository();
+
   if (range === 'today') {
     startDate = startOfDay(new Date());
   } else if (range === 'last7days') {
@@ -22,17 +23,16 @@ export default async (
     throw new Error('Invalid range parameter');
   }
 
-  const articleCount = await ArticleModel.countDocuments({
+  const articleCount = await articleRepo.count({
     isTrashed: false,
-    createdAt: { $gte: startDate, $lte: endDate }, // Added date filter
+    createdAt: { $gte: startDate, $lte: endDate },
   });
 
-  // Filter conversations based on the date range
-  const conversationCount = await ConversationReportModel.countDocuments({
-    createdAt: { $gte: startDate, $lte: endDate }, // Added date filter
+  const conversationCount = await conversationReportRepo.count({
+    createdAt: { $gte: startDate, $lte: endDate },
   });
 
-  const editedArticlesCount = await ArticleHistoryModel.countDocuments({
+  const editedArticlesCount = await articleRepo.count({
     eventType: 'updated',
     updatedAt: { $gte: startDate, $lte: endDate },
   });

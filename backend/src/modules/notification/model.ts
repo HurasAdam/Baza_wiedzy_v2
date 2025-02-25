@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import type { INotificationEntity } from './types.js';
+import type { INotification } from './types.js';
 
 const notificationSchema = new mongoose.Schema(
   {
@@ -8,11 +8,11 @@ const notificationSchema = new mongoose.Schema(
     message: { type: String, required: true },
     isRead: { type: Boolean, default: false },
     link: { type: String, default: null }, // Link do artykułu
-    articleTitle: { type: String, default: null }, // Tytuł artykułu
-    articleProduct: { type: String, default: null }, // Powiązany produkt
+    articleTitle: { type: String, default: null },
+    articleProduct: { type: String, default: null },
   },
   { timestamps: true },
 );
 
-const NotificationModel = mongoose.model<INotificationEntity>('Notification', notificationSchema);
+const NotificationModel = mongoose.model<INotification>('Notification', notificationSchema);
 export default NotificationModel;

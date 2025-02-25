@@ -1,5 +1,5 @@
 import type { EEventType } from '../enums/events.ts';
-import type { IArticle, ICreateArticle } from '../modules/article/types.js';
+import type { IArticleEntity } from '../modules/article/types.js';
 
 export interface IChange {
   field: string;
@@ -9,8 +9,8 @@ export interface IChange {
 
 export interface ISaveArticleChangesProps {
   articleId: string;
-  articleBeforeChanges: IArticle | null;
-  updatedArticle: ICreateArticle;
+  articleBeforeChanges: IArticleEntity | null;
+  updatedArticle: IArticleEntity;
   updatedBy: string;
   eventType: EEventType;
 }
