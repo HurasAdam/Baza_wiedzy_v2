@@ -376,3 +376,14 @@
   animation-delay: 0.1s;
 }
 
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+

@@ -3,12 +3,13 @@ import { LoginPage } from "./pages/Login";
 import { RegisterPage } from "./pages/Register";
 import { HomePage } from "./pages/HomePage";
 import { RootLayout } from "./layouts/RootLayout";
-import AdminLayout from "./layouts/AdminLayout";
+
 import { AuthLayout } from "./layouts/AuthLayout";
-import ArticlesPage from "./pages/ArticlesPage";
+
 import { StatisticsPage } from "./pages/StatisticsPage";
 import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
 import { FavoritesPage } from "./pages/FavoritesArticlesPage";
+import { ArticlesPage } from "./pages/ArticlesPage";
 
 
 
@@ -44,13 +45,13 @@ function App() {
                     <Route path="/register" element={<RegisterPage />} />
                 </Route>
 
-                <Route path="/admin" element={<AdminLayout />}>
-                    {/* <Route index path="dashboard" element={<AdminDashboard />} /> */}
-                    {/* <Route path="tags" element={<TagsPage />} /> */}
-                    {/* <Route path="products" element={<ProductsPage />} /> */}
-                    {/* <Route path="topics" element={<ConversationTopicsPage />} /> */}
-                    {/* <Route path="articles-removed" element={<TrashedArticlesPage />} /> */}
-                </Route>
+                {/* <Route path="/admin" element={<AdminLayout />}>
+                    <Route index path="dashboard" element={<AdminDashboard />} /> 
+                <Route path="tags" element={<TagsPage />} /> 
+                   <Route path="products" element={<ProductsPage />} /> 
+                   <Route path="topics" element={<ConversationTopicsPage />} />
+                    <Route path="articles-removed" element={<TrashedArticlesPage />} /> 
+                </Route> */}
             </Routes>
         </div>
     );
