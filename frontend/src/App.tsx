@@ -39,7 +39,7 @@ function App() {
                     <Route path="appointment" element={<AppointmentPage />} />
                     </Route> */}
                 </Route>
-                
+
                 <Route element={<AuthLayout />}>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
