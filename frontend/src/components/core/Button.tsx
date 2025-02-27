@@ -8,18 +8,18 @@ enum ButtonType {
   Submit = "submit"
 }
 
-interface IAButtonProps{
-    icon?:string;
-    className?:string;
-    label?:string;
-    type?:ButtonType;
-    onClick:()=>void;
-    isLoading?:boolean;
-    disabled?:boolean;
-    labelSize?:string;
+interface IAButtonProps {
+  icon?: JSX.Element;
+  className?: string;
+  label?: string;
+  type?: ButtonType;
+  onClick?: () => void;
+  isLoading?: boolean;
+  disabled?: boolean;
+  labelSize?: string;
 }
 
-const AButton = ({icon,className,label,type,onClick=()=>{}, isLoading,disabled,labelSize}:IAButtonProps) => {
+const AButton = ({ icon, className, label, type, onClick = () => { }, isLoading, disabled, labelSize }: IAButtonProps) => {
   return (
     <Button
       disabled={disabled}
@@ -35,7 +35,7 @@ const AButton = ({icon,className,label,type,onClick=()=>{}, isLoading,disabled,l
       ) : (
         <>
           {icon && <span className={clsx({ "invisible": isLoading })}>{icon}</span>}
-          {label && <span className={clsx({ "invisible": isLoading },`text-${labelSize}`)}>{label}</span>}
+          {label && <span className={clsx({ "invisible": isLoading }, `text-${labelSize}`)}>{label}</span>}
         </>
       )}
     </Button>

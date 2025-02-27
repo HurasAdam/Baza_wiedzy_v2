@@ -15,7 +15,7 @@ import { ArticlesPage } from "./pages/ArticlesPage";
 
 function App() {
     return (
-        <div className="bg-zinc-100">
+        <div className="bg-background  ">
             <Routes>
                 <Route path="/" element={<RootLayout />}>
                     <Route index element={<Navigate to="/dashboard" replace />} />
@@ -24,7 +24,7 @@ function App() {
                     <Route path="statistics" element={<StatisticsPage />} />
                     <Route path="call-register" element={<TopicsRegisterPage />} />
                     <Route path="favourites" element={<FavoritesPage />} />
-                    {/* <Route path="articles" element={<SearchPage />} /> */}
+
                     {/* <Route path="articles/new" element={<CreateArticle />} /> */}
                     {/* <Route path="articles/favorite" element={<FavouritesPage />} /> */}
                     {/* <Route path="articles/:id" element={<ArticleDetails />} /> */}

@@ -83,33 +83,7 @@ const Navbar: React.FC = ({ notifications }) => {
     });
   };
 
-  const navigationItems = [
-    {
-      label: "Baza wiedzy",
-      link: "articles",
-    },
-    {
-      label: "Działy i kontakty",
-      link: "departments",
-    },
-    {
-      label: "Rejestr rozmów",
-      link: "coversation-report",
-    },
 
-    {
-      label: "Statystyki",
-      link: "statistics",
-    },
-    {
-      label: "Ulubione",
-      link: "favourites",
-    },
-    {
-      label: "Moj planer",
-      link: "todos-board",
-    },
-  ];
 
   const profileMenuOptions = [
     {
@@ -149,8 +123,8 @@ const Navbar: React.FC = ({ notifications }) => {
   return (
     <div
       className={clsx(
-        "flex justify-between border-b dark:bg-slate-700 bg-transparent bg-white  border-b-neutral-200 w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0   ",
-        isScrolled ? "bg-white border-b-2" : ""
+        "flex justify-between border-b   bg-background   w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0   ",
+        isScrolled ? "bg-background border-b-2" : ""
       )}
     >
       <div className="flex gap-4">
@@ -197,7 +171,7 @@ const Navbar: React.FC = ({ notifications }) => {
         </div>
       </div>
 
-      <div className="flex gap-1 lg:gap-2.5 items-center">
+      <div className="flex gap-4 items-center">
         <TooltipProvider delayDuration={520}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -208,9 +182,9 @@ const Navbar: React.FC = ({ notifications }) => {
                     content: <ShortcutCallRegisterForm />,
                   });
                 }}
-                className=" border bg-slate-600 group  transition-all hover:bg-slate-600/95 px-2  py-2 rounded-lg shadow-xl   font-semibold  text-slate-100 "
+                className="bg-transparent group  hover:bg-primary transition-all px-2.5 py-1.5 rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
               >
-                <MdPhoneInTalk className="text-secondary group-hover:text-white " />
+                <MdPhoneInTalk className="text-lg group-hover:text-secondary" />
               </button>
             </TooltipTrigger>
             <TooltipContent>
@@ -223,10 +197,10 @@ const Navbar: React.FC = ({ notifications }) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <NavLink
-                className="shadow-xl hover:bg-slate-600/95 group border  bg-slate-600 group   transition-all hover:font-bold px-2 py-2 rounded-lg  font-semibold  text-slate-100 "
+                className="bg-transparent group  hover:bg-primary transition-all px-2.5 py-1.5 rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
                 to="new-article"
               >
-                <MdAssignmentAdd className="text-secondary  w-4 h-4  " />
+                <MdAssignmentAdd className="text-lg group-hover:text-secondary" />
               </NavLink>
             </TooltipTrigger>
             <TooltipContent>
@@ -235,16 +209,14 @@ const Navbar: React.FC = ({ notifications }) => {
           </Tooltip>
         </TooltipProvider>
 
-        {/* <NotificationPanel notifications={notifications} /> */}
-        {/* <Drawer /> */}
         <TooltipProvider delayDuration={490}>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                className="shadow-xl  border  bg-slate-600 group hover:bg-slate-600/95  transition-all hover:font-bold px-2 py-2 rounded-lg  font-semibold  text-slate-100 "
+                className="bg-transparent group hover:bg-primary  transition-all px-2.5 py-1.5  rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
                 onClick={openDrawer}
               >
-                <IoNotifications />
+                <IoNotifications className="text-lg group-hover:text-secondary " />
               </button>
             </TooltipTrigger>
             <TooltipContent>
@@ -257,10 +229,10 @@ const Navbar: React.FC = ({ notifications }) => {
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                className="shadow-xl  border  bg-slate-600 group hover:bg-slate-600/95  transition-all hover:font-bold px-2 py-2 rounded-lg  font-semibold  text-slate-100 "
+                className="bg-transparent group hover:bg-primary   transition-all px-2.5 py-1.5  rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
                 onClick={OpenSettingsMenu}
               >
-                <IoIosSettings />
+                <IoIosSettings className="text-lg group-hover:text-secondary" />
               </button>
             </TooltipTrigger>
             <TooltipContent>
@@ -272,16 +244,16 @@ const Navbar: React.FC = ({ notifications }) => {
         <Dropdown
           options={profileMenuOptions}
           triggerBtn={
-            <div>
+            <div className="group hover:bg-primary-600 hover:text-white transition-all rounded-full">
               <UserAvatar />
             </div>
           }
         />
-        <SideDrawer  isOpen={isDrawerOpen} onClose={closeDrawer}>
-     <NotificationsPanel/>
+        <SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer}>
+          <NotificationsPanel />
         </SideDrawer>
-        {/* <NavUser user={user} /> */}
       </div>
+
     </div>
   );
 };

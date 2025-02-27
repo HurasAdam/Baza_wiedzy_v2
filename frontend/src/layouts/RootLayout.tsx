@@ -19,7 +19,7 @@ export const RootLayout = () => {
     return (
 
 
-        <div className="bg-gray-100 flex min-h-full">
+        <div className="flex min-h-full ">
             <MySidebar />
             <div className="w-full">
 

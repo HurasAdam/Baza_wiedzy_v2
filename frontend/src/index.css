@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -37,8 +38,10 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
   .dark {
     --background: 240 10% 3.9%;
+    --layer: 240, 10%, 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -72,10 +75,12 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -88,10 +93,12 @@
 /* Spinner.css */
 /* Spinner wrapper */
 .spinner-wrapper {
-  position: absolute; /* Dostosowuje spinner do rodzica */
+  position: absolute;
+  /* Dostosowuje spinner do rodzica */
 
   transform: translate(-50%, -50%);
-  z-index: 10; /* Ustaw, by był widoczny nad innymi elementami */
+  z-index: 10;
+  /* Ustaw, by był widoczny nad innymi elementami */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,6 +118,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -139,19 +147,26 @@
 /* Zawijanie tekstu w edytorze */
 .ql-editor {
   color: #444;
-  width: 100% !important; /* Zapewnia, że edytor wewnętrzny zajmuje pełną szerokość */
-  word-wrap: break-word !important; /* Wymusza zawijanie słów */
-  white-space: normal !important; /* Zapewnia normalne zawijanie tekstu */
-  overflow-wrap: break-word; /* Alternatywa dla break-word */
-  word-break: break-word; /* Wymusza łamanie słów */
+  width: 100% !important;
+  /* Zapewnia, że edytor wewnętrzny zajmuje pełną szerokość */
+  word-wrap: break-word !important;
+  /* Wymusza zawijanie słów */
+  white-space: normal !important;
+  /* Zapewnia normalne zawijanie tekstu */
+  overflow-wrap: break-word;
+  /* Alternatywa dla break-word */
+  word-break: break-word;
+  /* Wymusza łamanie słów */
 }
 
 /* Zabezpieczenie przed przekroczeniem szerokości kontenera */
 .ql-editor p {
   max-width: 100% !important;
-  margin-bottom: 16px; /* Ustaw odstęp między paragrafami */
+  margin-bottom: 16px;
+  /* Ustaw odstęp między paragrafami */
   line-height: 1.5;
 }
+
 .ql-editor ol {
   margin-bottom: 10px;
   margin-top: 20px;
@@ -188,7 +203,7 @@
 }
 
 .article-details p {
-  @apply text-base text-gray-800  dark:text-white bg-transparent;
+  @apply text-base text-gray-800 dark:text-white bg-transparent;
 }
 
 .article-details ul,
@@ -297,7 +312,7 @@
 }
 
 .articleDetails-quickView p {
-  @apply text-base text-gray-800  dark:text-white bg-transparent;
+  @apply text-base text-gray-800 dark:text-white bg-transparent;
 }
 
 .articleDetails-quickView ul,
@@ -382,8 +397,8 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
-

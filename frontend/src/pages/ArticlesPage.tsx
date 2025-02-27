@@ -50,7 +50,7 @@ export const ArticlesPage = () => {
   const { data: articles, isLoading, error } = useFetchArticles({ page: "", title: "", author: "" })
 
   return (
-    <div className="text-slate-700 p-5 h-full flex w-full max-w-[1580px] mx-auto gap-6">
+    <div className="text-foreground p-5 h-full flex w-full max-w-[1580px] mx-auto gap-6">
       {/* Sidebar - Filtry */}
       <div className="w-80 p-5 rounded-xl h-fit">
         <h2 className="text-lg font-semibold mb-4">Filtruj artykuły</h2>
