@@ -1,34 +1,25 @@
 import clsx from "clsx";
-import { Button } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import Spinner from "./Spinner";
 
-enum ButtonType {
-  Button = "button",
-  Reset = "reset",
-  Submit = "submit"
-}
+type TestSize = '' | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-interface IAButtonProps {
+interface IButtonProps extends ButtonProps {
   icon?: JSX.Element;
   className?: string;
-  label?: string;
-  type?: ButtonType;
-  onClick?: () => void;
   isLoading?: boolean;
-  disabled?: boolean;
-  labelSize?: string;
+  label?: string;
+  labelSize?: 'xs' | 'sm' | 'base' | 'lg' | `${TestSize}xl`;
 }
 
-const AButton = ({ icon, className, label, type, onClick = () => { }, isLoading, disabled, labelSize }: IAButtonProps) => {
+export const PrimaryButton = ({ icon, className, label, isLoading, labelSize = 'sm', ...props }: IButtonProps) => {
   return (
     <Button
-      disabled={disabled}
-      onClick={onClick}
-      type={type || "button"}
       className={clsx(
         "px-3 py-1.5 outline-none flex items-center justify-center gap-2 min-w-[100px] min-h-[40px]",
         className
       )}
+      {...props}
     >
       {isLoading ? (
         <Spinner animation="spin" size="sm" color="bg-blue-500" />
@@ -41,5 +32,3 @@ const AButton = ({ icon, className, label, type, onClick = () => { }, isLoading,
     </Button>
   )
 }
-
-export default AButton
