@@ -35,6 +35,7 @@ import {
 } from "./ui/tooltip";
 import SettingsContainer from "./SettingsContainer";
 import NotificationsPanel from "./NotificationsPanel";
+import ThemeToggleButton from "./ToggleThemeButton";
 
 
 const Navbar: React.FC = ({ notifications }) => {
@@ -123,10 +124,12 @@ const Navbar: React.FC = ({ notifications }) => {
   return (
     <div
       className={clsx(
-        "flex justify-between border-b   bg-background   w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0   ",
+        "flex justify-between border-b     w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0   bg-card",
         isScrolled ? "bg-background border-b-2" : ""
       )}
     >
+
+
       <div className="flex gap-4">
         <button
           // onClick={()=>dispatch(setOpenSidebar(true))}

@@ -3,9 +3,7 @@ import { LoginPage } from "./pages/Login";
 import { RegisterPage } from "./pages/Register";
 import { HomePage } from "./pages/HomePage";
 import { RootLayout } from "./layouts/RootLayout";
-
 import { AuthLayout } from "./layouts/AuthLayout";
-
 import { StatisticsPage } from "./pages/StatisticsPage";
 import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
 import { FavoritesPage } from "./pages/FavoritesArticlesPage";
@@ -15,7 +13,7 @@ import { ArticlesPage } from "./pages/ArticlesPage";
 
 function App() {
     return (
-        <div className="bg-background  ">
+        <div className="bg-background">
             <Routes>
                 <Route path="/" element={<RootLayout />}>
                     <Route index element={<Navigate to="/dashboard" replace />} />
