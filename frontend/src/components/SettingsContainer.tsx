@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { RiSettings4Fill } from "react-icons/ri";
+import ThemeToggleButton from "./ToggleThemeButton";
 
 const SettingsContainer = () => {
   const [activeTab, setActiveTab] = useState("personalization");
@@ -21,7 +22,7 @@ const SettingsContainer = () => {
   console.log("Kolor navbara");
   console.log(navbarColor);
   return (
-    <div className="flex w-full h-full">
+    <div className="flex w-full h-full ">
       {/* Sidebar - lewa część */}
       <div className="w-full md:w-1/4 p-4 border-r border-gray-200 h-full overflow-auto">
         <h2 className="text-xl font-semibold text-gray-800 mb-4 flex gap-2 items-center">
@@ -31,11 +32,10 @@ const SettingsContainer = () => {
         <ul className="space-y-4">
           <li>
             <button
-              className={`w-full text-left p-2 rounded-md ${
-                activeTab === "personalization"
-                  ? "bg-blue-100 text-blue-600"
-                  : "text-gray-600 hover:bg-gray-100"
-              }`}
+              className={`w-full text-left p-2 rounded-md ${activeTab === "personalization"
+                ? "bg-blue-100 text-blue-600"
+                : "text-gray-600 hover:bg-gray-100"
+                }`}
               onClick={() => setActiveTab("personalization")}
             >
               Personalizacja
@@ -43,11 +43,10 @@ const SettingsContainer = () => {
           </li>
           <li>
             <button
-              className={`w-full text-left p-2 rounded-md ${
-                activeTab === "notifications"
-                  ? "bg-blue-100 text-blue-600"
-                  : "text-gray-600 hover:bg-gray-100"
-              }`}
+              className={`w-full text-left p-2 rounded-md ${activeTab === "notifications"
+                ? "bg-blue-100 text-blue-600"
+                : "text-gray-600 hover:bg-gray-100"
+                }`}
               onClick={() => setActiveTab("notifications")}
             >
               Powiadomienia
@@ -55,11 +54,10 @@ const SettingsContainer = () => {
           </li>
           <li>
             <button
-              className={`w-full text-left p-2 rounded-md ${
-                activeTab === "avatar"
-                  ? "bg-blue-100 text-blue-600"
-                  : "text-gray-600 hover:bg-gray-100"
-              }`}
+              className={`w-full text-left p-2 rounded-md ${activeTab === "avatar"
+                ? "bg-blue-100 text-blue-600"
+                : "text-gray-600 hover:bg-gray-100"
+                }`}
               onClick={() => setActiveTab("avatar")}
             >
               Avatar
@@ -81,25 +79,10 @@ const SettingsContainer = () => {
                 <label className="text-gray-600 font-medium mb-2">
                   Kolor tła
                 </label>
-                <input
-                  type="color"
-                  value={backgroundColor} // Ustawiamy wybrany kolor
-                  onChange={handleBackgroundColorChange} // Funkcja zmieniająca kolor
-                  className="w-full h-10 border border-gray-300 rounded-md"
-                />
+                <ThemeToggleButton />
               </div>
               {/* Kolor navbaru */}
-              <div className="flex flex-col w-full">
-                <label className="text-gray-600 font-medium mb-2">
-                  Kolor navbaru
-                </label>
-                <input
-                  type="color"
-                  value={navbarColor} // Ustawiamy wybrany kolor navbaru
-                  onChange={handleNavbarColorChange} // Funkcja zmieniająca kolor navbaru
-                  className="w-full h-10 border border-gray-300 rounded-md"
-                />
-              </div>
+
             </div>
           </div>
         )}

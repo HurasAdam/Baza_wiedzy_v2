@@ -9,18 +9,18 @@ import { IArticle } from "@/types";
 
 
 
-interface ArticleListProps {
+interface IArticleListProps {
   data: IArticle[];
 }
 
-const ArticleList = ({ data }: ArticleListProps) => {
+const ArticleList = ({ data }: IArticleListProps) => {
 
   return (
     <div className="flex flex-col w-full gap-4">
       <h1 className="text-2xl font-semibold">Artykuły</h1>
       <div className="flex flex-col gap-4">
         {data?.map((article: IArticle, i: number) => (
-          <Card key={i} className={`p-5 rounded-xl shadow-md border hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-emerald-700/65"}`}>
+          <Card key={i} className={`p-5 rounded-xl shadow-md border text-foreground hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-emerald-700/65"}`}>
 
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold truncate max-w-[90%] overflow-hidden">
