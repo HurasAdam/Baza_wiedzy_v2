@@ -27,7 +27,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import ArticleDetailsInModal from "@/pages/ArticleDetailsInModal";
 import { useModalContext } from "@/contexts/ModalContext";
 import { Button } from "./ui/button";
 
@@ -304,7 +303,7 @@ const ArticleHistory = ({
                           {" "}
                           {
                             ARTICLE_HISTORY_FIELD_TRANSLATIONS[
-                              change?.field || change?.field
+                            change?.field || change?.field
                             ]
                           }
                         </div>
@@ -331,7 +330,7 @@ const ArticleHistory = ({
                           {" "}
                           {
                             ARTICLE_HISTORY_FIELD_TRANSLATIONS[
-                              change?.field || change?.field
+                            change?.field || change?.field
                             ]
                           }
                         </div>

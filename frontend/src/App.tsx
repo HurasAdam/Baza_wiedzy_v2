@@ -8,12 +8,16 @@ import { StatisticsPage } from "./pages/StatisticsPage";
 import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
 import { FavoritesPage } from "./pages/FavoritesArticlesPage";
 import { ArticlesPage } from "./pages/ArticlesPage";
+import useTheme from "./hooks/useTheme";
 
 
 
 function App() {
+
+    const { theme } = useTheme();
+
     return (
-        <div className="bg-background">
+        <div className="bg-background theme ">
             <Routes>
                 <Route path="/" element={<RootLayout />}>
                     <Route index element={<Navigate to="/dashboard" replace />} />
