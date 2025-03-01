@@ -3,7 +3,6 @@ import BadgeLabel from "./core/BadgeLabel";
 import { Accordion, AccordionContent, AccordionTrigger } from "./ui/accordion";
 import { AccordionItem } from "@radix-ui/react-accordion";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { Button } from "./ui/button";
 import { IoCheckmarkSharp, IoEyeSharp } from "react-icons/io5";
 import { formatDate } from "@/lib/utils";
 import { FaCheck } from "react-icons/fa6";
@@ -86,10 +85,9 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
           <div
             className="  py-4 flex flex-col  bg-cover bg-center  rounded-md"
             style={{
-              backgroundImage: `url(${
-                BANNER_IMAGES[article?.product?.banner] || BANNER_IMAGES.circle
+              backgroundImage: `url(${BANNER_IMAGES[article?.product?.banner] || BANNER_IMAGES.circle
                 // BANNER_IMAGES?.abstract4
-              })`,
+                })`,
             }}
           >
 
@@ -167,9 +165,8 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                       : IMAGES.unverifiedImage
                   }
                   alt="Thumbnail"
-                  className={`rounded-lg object-cover ${
-                    article?.isVerified ? "bg-emerald-500" : "bg-red-400"
-                  }`}
+                  className={`rounded-lg object-cover ${article?.isVerified ? "bg-emerald-500" : "bg-red-400"
+                    }`}
                 />
               </div>
               <div className=" mx-5 py-5 min-h-full flex items-end xl:hidden">
@@ -211,10 +208,9 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
               <button
                 onClick={() => copyToClipboard(articleReff, callbackFn)}
                 className={`flex items-center gap-1 font-semibold text-sm w-28  justify-center py-2 rounded-md transition-all 
-                  ${
-                    clipBoardCopyMessage === "Skopiowano!"
-                      ? "bg-teal-600/90 text-white "
-                      : "bg-blue-500/90 text-sky-50 hover:bg-blue-600"
+                  ${clipBoardCopyMessage === "Skopiowano!"
+                    ? "bg-teal-600/90 text-white "
+                    : "bg-blue-500/90 text-sky-50 hover:bg-blue-600"
                   }`}
               >
                 {clipBoardCopyMessage === "Skopiowano!" ? (
@@ -282,9 +278,8 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
         {/* Settings Sidebar */}
 
         <div
-          className={`sticky h-fit ${
-            variant === EArticleVariant.FULLSCREEN ? "top-16" : "top-0"
-          }`}
+          className={`sticky h-fit ${variant === EArticleVariant.FULLSCREEN ? "top-16" : "top-0"
+            }`}
         >
           <div className="rounded-lg p-6 border shadow h-fit ">
             <div className=" gap-1.5 justify-end  my-3.5 hidden xl:flex ">
@@ -362,7 +357,7 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                   >
                     {article?.product?.name}
                   </span>
-               
+
                 </div>
               </div>
               <div className="border-t border-gray-200 pt-4">
@@ -374,7 +369,7 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                   <span className="text-gray-700">
                     {article?.createdBy?.name} {article?.createdBy?.surname}
                   </span>
-                 
+
                 </div>
               </div>
 
@@ -409,11 +404,10 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                 <div className="flex justify-between items-center">
                   <span className="text-gray-700">Czy zweryfikowany ?</span>
                   <span
-                    className={`text-gray-700 text-sm px-5 py-1.5 min-w-14 rounded-lg ${
-                      article?.isVerified
-                        ? "bg-emerald-500 text-white"
-                        : "bg-rose-400/90 text-rose-800"
-                    }`}
+                    className={`text-gray-700 text-sm px-5 py-1.5 min-w-14 rounded-lg ${article?.isVerified
+                      ? "bg-emerald-500 text-white"
+                      : "bg-rose-400/90 text-rose-800"
+                      }`}
                   >
                     {article?.isVerified ? "Tak" : "Nie"}
                   </span>
@@ -425,11 +419,11 @@ const ArticleDetailsCard: React.FC<ArticleDetailsCardProps> = ({
                   <IoEyeSharp className="text-slate-600 w-5 h-5" />
                   Ilość wyświetleń
                 </h3>
-           
-                  <span className="text-gray-700 font-semibold text-sm text-center min-w-15 px-5 py-1.5 rounded-lg">
-                    {article?.viewsCounter}
-                  </span>
-             
+
+                <span className="text-gray-700 font-semibold text-sm text-center min-w-15 px-5 py-1.5 rounded-lg">
+                  {article?.viewsCounter}
+                </span>
+
               </div>
             </div>
           </div>

@@ -6,6 +6,8 @@ import { Select } from "@/components/ui/select";
 import { Search, Star } from "lucide-react";
 import { useFetchArticles } from "@/hooks/query/useFetchArticles";
 import { IArticle } from "@/types";
+import { useModalContext } from "@/contexts/ModalContext";
+import SideBySideArticleDetails from "@/components/articles/views/SideBySideView/SideBySideArticleDetails";
 
 
 
@@ -20,29 +22,48 @@ const ArticleList = ({ data }: IArticleListProps) => {
       <h1 className="text-2xl font-semibold">Artykuły</h1>
       <div className="flex flex-col gap-4">
         {data?.map((article: IArticle, i: number) => (
-          <Card key={i} className={`p-5 rounded-xl shadow-md border text-foreground hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-emerald-700/65"}`}>
-
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold truncate max-w-[90%] overflow-hidden">
-                {article.title.length > 110 ? `${article.title.slice(0, 110)}...` : article.title}
-              </h3>
-              <button className="focus:outline-none">
-                <Star className="h-6 w-6 text-gray-400" />
-              </button>
-            </div>
-            <div className="flex gap-1 items-center">
-              <p className="text-xs text-gray-500 mt-2">Produkt:</p>
-              <p className="text-sm text-slate-600 mt-2"> {article?.product?.name}</p>
-            </div>
-            <div className="mt-4 flex justify-end">
-              <p className="text-sm text-gray-500">Wyświetlenia: {article?.viewsCounter}</p>
-            </div>
-          </Card>
+          <ArticleListItem key={i} article={article} />
         ))}
       </div>
     </div>
   )
 }
+
+
+const ArticleListItem = ({ article }: { article: IArticle }) => {
+
+  const { openContentModal, closeContentModal } = useModalContext()
+
+  const handleOpen = (): void => {
+    openContentModal({
+      content: <SideBySideArticleDetails articleId={article?._id} />,
+    })
+  }
+
+  return (
+    <Card
+      onClick={handleOpen}
+      className={`p-5 rounded-xl shadow-md border text-foreground hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-emerald-700/65"}`}>
+
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold truncate max-w-[90%] overflow-hidden">
+          {article.title.length > 110 ? `${article.title.slice(0, 110)}...` : article.title}
+        </h3>
+        <button className="focus:outline-none">
+          <Star className="h-6 w-6 text-gray-400" />
+        </button>
+      </div>
+      <div className="flex gap-1 items-center">
+        <p className="text-xs text-gray-500 mt-2">Produkt:</p>
+        <p className="text-sm text-slate-600 mt-2"> {article?.product?.name}</p>
+      </div>
+      <div className="mt-4 flex justify-end">
+        <p className="text-sm text-gray-500">Wyświetlenia: {article?.viewsCounter}</p>
+      </div>
+    </Card>
+  )
+}
+
 
 
 export const ArticlesPage = () => {

@@ -25,8 +25,8 @@ const MySidebar = () => {
 
   return (
     <TooltipProvider>
-      <div className="w-14 min-h-screen bg-background text-foreground shadow-md flex flex-col items-center py-6 gap-6 border-r bg-card ">
-        <div className="sticky top-20 flex min-h-screen pb-28 flex-col justify-between">
+      <div className="w-14 min-h-screen  text-foreground shadow-md flex flex-col items-center py-6 gap-6 border-r bg-card ">
+        <div className="sticky top-[76px] flex min-h-screen pb-28 flex-col justify-between ">
           <div className="">
             {primaryMenuItems.map((item, index) => (
               <Tooltip key={index}>
