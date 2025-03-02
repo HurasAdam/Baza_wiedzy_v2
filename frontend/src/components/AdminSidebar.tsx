@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/sidebar"
 import { ADMIN_NAVBAR_OPTIONS, ADMIN_NAVBAR_OPTIONS_SECONDARY, NAVBAR_OPTIONS } from "@/constants"
 import { IMAGES } from "@/constants/images"
-import useAuth from "@/hooks/useAuth"
+import { useAuth } from "@/contexts/AuthContext"
 import { NavSecondary } from "./nav-secondary"
 import { Link } from "react-router-dom"
 // This is sample data.
@@ -70,7 +70,7 @@ const data = {
 }
 export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
-const {user} = useAuth();
+  const { user } = useAuth();
 
 
 
@@ -80,13 +80,13 @@ const {user} = useAuth();
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent className="bg-slate-950/90 text-blue-100/90  ">
-        <NavMain 
-        label="Zarządzaj"
-        items={ADMIN_NAVBAR_OPTIONS} />
-  
+        <NavMain
+          label="Zarządzaj"
+          items={ADMIN_NAVBAR_OPTIONS} />
+
       </SidebarContent>
       <SidebarFooter className="bg-slate-950/90">
-      <NavSecondary items={ADMIN_NAVBAR_OPTIONS_SECONDARY} className="text-orange-700  rounded-xl" />
+        <NavSecondary items={ADMIN_NAVBAR_OPTIONS_SECONDARY} className="text-orange-700  rounded-xl" />
 
       </SidebarFooter>
       <SidebarRail />

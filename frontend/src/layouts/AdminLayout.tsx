@@ -4,7 +4,7 @@
 //   SidebarInset,
 //   SidebarProvider,
 // } from "@/components/ui/sidebar";
-// import useAuth from "@/hooks/useAuth";
+// import { useAuth } from "@/hooks/useAuth";
 // import {
 //   Navigate,
 //   Outlet
