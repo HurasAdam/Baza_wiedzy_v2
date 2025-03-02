@@ -4,6 +4,7 @@ import { LoginPage } from "./pages/Login";
 
 import { RootLayout } from "./layouts/RootLayout";
 import { AuthLayout } from "./layouts/AuthLayout";
+
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 // import { HomePage } from "./pages/HomePage";
@@ -11,6 +12,8 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 // import { StatisticsPage } from "./pages/StatisticsPage";
 // import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
 // import { FavoritesPage } from "./pages/FavoritesArticlesPage";
+        
+import useTheme from "./hooks/useTheme";
 
 const HomePage = lazy(() => import("./pages/HomePage").then(module => ({ default: module.HomePage })));
 const ArticlesPage = lazy(() => import("./pages/ArticlesPage").then(module => ({ default: module.ArticlesPage })));
@@ -21,8 +24,11 @@ const FavoritesPage = lazy(() => import("./pages/FavoritesArticlesPage").then(mo
 const RegisterPage = lazy(() => import("./pages/Register").then(module => ({ default: module.RegisterPage })));
 
 function App() {
+
+    const { theme } = useTheme();
+
     return (
-        <div className="bg-background">
+        <div className="bg-background theme">
             <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
                     <Route path="/" element={<RootLayout />}>

@@ -17,7 +17,7 @@ export const ModalContextProvider = ({
     description: "",
     isUsed: false,
     isChecked: false,
-    onConfirm: () => {},
+    onConfirm: () => { },
   });
 
   // Stany dla ContentModal

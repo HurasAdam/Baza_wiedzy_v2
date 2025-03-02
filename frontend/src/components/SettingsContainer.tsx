@@ -17,24 +17,21 @@ const SettingsContainer = () => {
   const handleNavbarColorChange = (event) => {
     setNavbarColor(event.target.value);
   };
-  console.log("TŁO");
-  console.log(backgroundColor);
-  console.log("Kolor navbara");
-  console.log(navbarColor);
+
   return (
     <div className="flex w-full h-full ">
       {/* Sidebar - lewa część */}
-      <div className="w-full md:w-1/4 p-4 border-r border-gray-200 h-full overflow-auto">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4 flex gap-2 items-center">
+      <div className="w-full md:w-1/4 p-4 border-r bg-muted text-foreground h-full overflow-auto">
+        <h2 className="text-xl font-semibold  mb-4 text-foreground flex gap-2 items-center">
           <RiSettings4Fill className="w-7 h-7 " />
           Ustawienia
         </h2>
-        <ul className="space-y-4">
-          <li>
+        <ul className="space-y-4 ">
+          <li className="text-foreground">
             <button
               className={`w-full text-left p-2 rounded-md ${activeTab === "personalization"
-                ? "bg-blue-100 text-blue-600"
-                : "text-gray-600 hover:bg-gray-100"
+                ? "bg-foreground text-orange-700"
+                : " hover:bg-card hover:text-orange-700"
                 }`}
               onClick={() => setActiveTab("personalization")}
             >
@@ -44,8 +41,8 @@ const SettingsContainer = () => {
           <li>
             <button
               className={`w-full text-left p-2 rounded-md ${activeTab === "notifications"
-                ? "bg-blue-100 text-blue-600"
-                : "text-gray-600 hover:bg-gray-100"
+                ? "bg-foreground text-orange-700"
+                : " hover:bg-card hover:text-orange-700"
                 }`}
               onClick={() => setActiveTab("notifications")}
             >
@@ -55,8 +52,8 @@ const SettingsContainer = () => {
           <li>
             <button
               className={`w-full text-left p-2 rounded-md ${activeTab === "avatar"
-                ? "bg-blue-100 text-blue-600"
-                : "text-gray-600 hover:bg-gray-100"
+                ? "bg-foreground text-orange-700"
+                : " hover:bg-card hover:text-orange-700"
                 }`}
               onClick={() => setActiveTab("avatar")}
             >
@@ -67,7 +64,7 @@ const SettingsContainer = () => {
       </div>
 
       {/* Treść zakładki - prawa część */}
-      <div className="w-full md:w-3/4 p-4 h-full overflow-auto">
+      <div className="w-full md:w-3/4 p-4  overflow-auto">
         {activeTab === "personalization" && (
           <div>
             <h3 className="text-lg font-medium text-gray-700 mb-4">

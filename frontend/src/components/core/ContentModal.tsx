@@ -20,21 +20,19 @@ export function ContentModal({
   height,
   closeOnOutsideClick,
 }) {
-  console.log("closeOnOutsideClick");
-  console.log(closeOnOutsideClick);
 
   const modalSizeHandler = (size) => {
     switch (size) {
       case "sm":
-        return " md:max-w-[38vw] min-w-[38vw]  "; // Mały modal na md i większych ekranach
+        return " md:max-w-[38vw] min-w-[38vw]  ";
       case "md":
-        return "max-w-[80vw] min-w-[80vw] sm:max-w-[70vw] sm:min-w-[70vw]  md:max-w-[80vw] md:min-w-[80vw] lg:max-w-[60vw] lg:min-w-[60vw]  xl:max-w-[38vw] xl:min-w-[38vw]"; // Średni modal na md i większych ekranach
+        return "max-w-[80vw] min-w-[80vw] sm:max-w-[70vw] sm:min-w-[70vw]  md:max-w-[80vw] md:min-w-[80vw] lg:max-w-[60vw] lg:min-w-[60vw]  xl:max-w-[38vw] xl:min-w-[38vw]";
       case "lg":
-        return "xl:max-w-[70vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]"; // Duży modal na lg i większych ekranach, a na md większy
+        return "xl:max-w-[70vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]"; //
       case "xl":
-        return "max-w-[90vw] min-w-[90vw] xl:max-w-[72vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]"; // Duży modal na lg i większych ekranach, a na md większy
+        return "max-w-[90vw] min-w-[90vw] xl:max-w-[72vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]";
       default:
-        return "max-w-[90vw] min-w-[90vw] lg:min-w-[60vw] lg:max-w-[84vw] xl:min-w-[50vw] xl:max-w-[61vw] "; // Domyślny rozmiar na dużych ekranach
+        return "max-w-[90vw] min-w-[90vw] lg:min-w-[60vw] lg:max-w-[84vw] xl:min-w-[50vw] xl:max-w-[61vw] ";
     }
   };
 
@@ -58,28 +56,27 @@ export function ContentModal({
       ${modalHeightHandler(height)}
             ${modalSizeHandler(size)}  // Szerokość zależna od propsa size
          filter-none 
-        bg-neutral-100
-        h-fit max-h-[92vh]
-           ${scrollable ? "overflow-y-auto" : "overflow-hidden"} 
-         scrollbar-custom
+       
+        bg-card
+        max-h-fit
+        min-h-[55vh]
+        border-0
+         
+        scrollbar-custom
+        p-0
+         
          
            
          `}
       >
-        <DialogHeader>
-          <DialogTitle className=" "></DialogTitle>
-          {/* <DialogDescription>
-       {description}
-        </DialogDescription> */}
-        </DialogHeader>
+
 
         {/* <DialogFooter>
         <Button type="submit">Save changes</Button>
       </DialogFooter> */}
         <div
-          className={`h-full   mt-1    ${modalHeightHandler(height)} ${
-            !scrollable && "overflow-y-auto "
-          }`}
+          className={`h-full   mt-1    ${modalHeightHandler(height)} ${!scrollable && "overflow-y-auto "
+            }`}
         >
           {children}
         </div>

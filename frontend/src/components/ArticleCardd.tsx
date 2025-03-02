@@ -6,7 +6,7 @@ import { articlesApi } from "@/lib/articlesApi";
 
 const ArticleCard: React.FC = ({ article, toggleFavorite, navigateToArticle }) => {
   const queryClient = useQueryClient();
-  
+
   const { mutate: toggleFavoriteMutation } = useMutation({
     mutationFn: () => articlesApi.toggleFavorite(article._id),
     onSuccess: () => {
@@ -30,7 +30,7 @@ const ArticleCard: React.FC = ({ article, toggleFavorite, navigateToArticle }) =
 
       {/* Tytuł artykułu */}
       <h3 className="text-lg font-semibold text-gray-800 truncate w-10/12">{article.title}</h3>
-      
+
       {/* Tag produktu */}
       <span
         className="text-xs font-semibold px-3 py-1 rounded-full text-white self-start"
@@ -38,7 +38,7 @@ const ArticleCard: React.FC = ({ article, toggleFavorite, navigateToArticle }) =
       >
         {article.product.name}
       </span>
-      
+
       {/* Strzałka nawigacyjna */}
       <button
         className="absolute bottom-4 right-4 text-gray-500 hover:text-gray-900 transition"
