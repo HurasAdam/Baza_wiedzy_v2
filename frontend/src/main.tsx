@@ -6,6 +6,7 @@ import queryClient from './config/queryClient.ts';
 import App from './App.tsx'
 import "./index.css";
 import { AuthProvider } from './contexts/AuthContext.tsx';
+import { ModalSettingsProvider } from './contexts/PreferencesSettingsContext.tsx';
 
 const root = document.getElementById('root')!;
 
@@ -13,7 +14,9 @@ createRoot(root).render(
     <BrowserRouter>
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
-                <App />
+                <ModalSettingsProvider>
+                    <App />
+                </ModalSettingsProvider>
                 <ReactQueryDevtools />
             </AuthProvider>
         </QueryClientProvider>
