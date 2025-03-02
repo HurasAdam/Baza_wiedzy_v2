@@ -1,11 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import useAuth from '@/hooks/useAuth';
+import { useCheckUser } from '@/contexts/AuthContext';
 import { IMAGES } from '@/constants/images';
 
 export const AuthLayout = () => {
-    const { user, status } = useAuth();
-
-    console.log("_____AuthLayout______", status, user)
+    const { status } = useCheckUser();
 
     if (status === 'pending') {
         return <div>Loading... AuthLayout</div>
@@ -37,7 +35,7 @@ export const AuthLayout = () => {
 
 
 // import { IMAGES } from '@/constants/images';
-// import useAuth from '@/hooks/useAuth';
+// import { useAuth } from '@/hooks/useAuth';
 // import React from 'react'
 // import { Navigate, Outlet } from 'react-router-dom'
 

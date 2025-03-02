@@ -3,19 +3,19 @@ import { BrowserRouter } from "react-router-dom";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from './config/queryClient.ts';
-import { ModalContextProvider } from './contexts/ModalContext.tsx';
 import App from './App.tsx'
 import "./index.css";
+import { AuthProvider } from './contexts/AuthContext.tsx';
 
 const root = document.getElementById('root')!;
 
 createRoot(root).render(
-    <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-            <ModalContextProvider>
+    <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider>
                 <App />
-            </ModalContextProvider>
-            <ReactQueryDevtools />
-        </BrowserRouter>
-    </QueryClientProvider>
+                <ReactQueryDevtools />
+            </AuthProvider>
+        </QueryClientProvider>
+    </BrowserRouter>
 )

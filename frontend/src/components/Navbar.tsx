@@ -18,7 +18,6 @@ import UserAvatar from "./core/UserAvatar";
 import { Dropdown } from "./core/Dropdown";
 import { LogOut, Settings, User } from "lucide-react";
 import clsx from "clsx";
-import useAuth from "@/hooks/useAuth";
 import useScrollY from "@/hooks/useScrollY";
 import { SidebarTrigger } from "./ui/sidebar";
 import { Switch } from "./ui/switch";
@@ -36,6 +35,7 @@ import {
 import SettingsContainer from "./SettingsContainer";
 import NotificationsPanel from "./NotificationsPanel";
 import ThemeToggleButton from "./ToggleThemeButton";
+import { useLogout } from "@/contexts/AuthContext";
 
 
 const Navbar: React.FC = ({ notifications }) => {
@@ -45,26 +45,12 @@ const Navbar: React.FC = ({ notifications }) => {
   const navigate = useNavigate();
   const path = location.pathname.split("/")[1];
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user, isLoading } = useAuth();
   const { openContentModal } = useModalContext();
   const isScrolled = useScrollY();
 
-
-
-
-
-
-  const { mutate: logoutUser } = useMutation({
-    mutationFn: () => {
-      return api.logout();
-    },
-    onSettled: () => {
-      queryClient.clear();
-      navigate("/login", { replace: true });
-    },
-  });
-  console.log(user);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const { logoutAction } = useLogout();
 
   function openDrawer() {
     setIsDrawerOpen(true);
@@ -102,7 +88,7 @@ const Navbar: React.FC = ({ notifications }) => {
       icon: <Settings />,
       actionHandler: () => console.log("ustawienia"),
     },
-    { label: "Wyloguj się", icon: <LogOut />, actionHandler: logoutUser },
+    { label: "Wyloguj się", icon: <LogOut />, actionHandler: logoutAction },
   ];
 
   const NavLinkItem: React.FC = ({ element }) => {

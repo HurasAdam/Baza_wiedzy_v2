@@ -1,12 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
-import useAuth from "@/hooks/useAuth";
+import { useCheckUser } from "@/contexts/AuthContext";
+import { ModalContextProvider } from "@/contexts/ModalContext";
 import Navbar from "@/components/Navbar";
 import MySidebar from "@/components/MySidebar";
 
 export const RootLayout = () => {
-    const { user, status } = useAuth();
-
-    console.log('_____RootLayout_____', status, user)
+    const { status } = useCheckUser();
 
     if (status === 'pending') {
         return <div>Loading... RootLayout</div>;
@@ -17,22 +16,18 @@ export const RootLayout = () => {
     }
 
     return (
+        <ModalContextProvider>
+            <div className="flex min-h-full ">
+                <MySidebar />
+                <div className="w-full">
 
-
-        <div className="flex min-h-full ">
-            <MySidebar />
-            <div className="w-full">
-
-                <Navbar />
-                <div className="flex flex-1 flex-col gap-4 p-4  min-h-screen">
-                    <Outlet />
+                    <Navbar />
+                    <div className="flex flex-1 flex-col gap-4 p-4  min-h-screen">
+                        <Outlet />
+                    </div>
                 </div>
+
             </div>
-
-        </div>
-
-
-
-
+        </ModalContextProvider>
     );
 }
