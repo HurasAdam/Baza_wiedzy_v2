@@ -8,6 +8,7 @@ import {
   DialogOverlay,
   DialogTitle,
 } from "@/components/ui/dialog";
+import useModalSize from "@/hooks/useModalSize";
 
 export function ContentModal({
   isOpen,
@@ -21,18 +22,20 @@ export function ContentModal({
   closeOnOutsideClick,
 }) {
 
-  const modalSizeHandler = (size) => {
+
+
+  const modalSizeHandler = (size: string) => {
     switch (size) {
       case "sm":
-        return " md:max-w-[38vw] min-w-[38vw]  ";
+        return "w-full max-w-[90vw] sm:max-w-[480px] md:max-w-[600px] lg:max-w-[640px] xl:max-w-[700px] 2xl:max-w-[760px]";
       case "md":
-        return "max-w-[80vw] min-w-[80vw] sm:max-w-[70vw] sm:min-w-[70vw]  md:max-w-[80vw] md:min-w-[80vw] lg:max-w-[60vw] lg:min-w-[60vw]  xl:max-w-[38vw] xl:min-w-[38vw]";
+        return "w-full max-w-[90vw] sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] xl:max-w-[1000px] 2xl:max-w-[1080px]";
       case "lg":
-        return "xl:max-w-[70vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]"; //
+        return "w-full max-w-[90vw] sm:max-w-[800px] md:max-w-[1000px] lg:max-w-[1100px] xl:max-w-[1200px] 2xl:max-w-[1300px]";
       case "xl":
-        return "max-w-[90vw] min-w-[90vw] xl:max-w-[72vw] lg:min-w-[70vw] md:max-w-[85vw] md:min-w-[90vw]";
+        return "w-full max-w-[90vw] sm:max-w-[900px] md:max-w-[1100px] lg:max-w-[1300px] xl:max-w-[1400px] 2xl:max-w-[1500px]";
       default:
-        return "max-w-[90vw] min-w-[90vw] lg:min-w-[60vw] lg:max-w-[84vw] xl:min-w-[50vw] xl:max-w-[61vw] ";
+        return "w-full max-w-[90vw]";
     }
   };
 

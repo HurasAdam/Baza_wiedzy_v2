@@ -246,7 +246,7 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
       {/* Baner z tytułem artykułu */}
 
       <div className='relative ' style={{ backgroundImage: `url(${bannerURL})` }}>
-        <div className='flex justify-between py-5 pt-10 px-8'>
+        <div className='flex justify-between py-5 pt-10 px-9'>
 
           <span className='w-fit h-fit py-1.5 px-2 text-sm text-white border rounded bg-blue-500' style={{ backgroundColor: `${article?.product?.labelColor}` }}>  {article?.product?.name}</span>
           <div className="  bg-white bg-opacity-70 rounded-full px-3 py-1 shadow">
