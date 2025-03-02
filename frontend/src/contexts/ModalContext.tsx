@@ -1,6 +1,8 @@
 import { AlertModal } from "@/components/core/AlertModal";
 import { ContentModal } from "@/components/core/ContentModal";
+import useModalSize from "@/hooks/useModalSize";
 import React, { useCallback, useContext, useState } from "react";
+import { useModalSettings } from "./PreferencesSettingsContext";
 
 // Stwórz kontekst
 const ModalContext = React.createContext(undefined);
@@ -22,6 +24,7 @@ export const ModalContextProvider = ({
 
   // Stany dla ContentModal
   const [isContentModalOpen, setIsContentModalOpen] = useState<boolean>(false);
+
   const [contentModal, setContentModal] = useState({
     title: "",
     description: "",
@@ -58,6 +61,10 @@ export const ModalContextProvider = ({
   }, [alertModal, closeModal]);
 
   // Funkcje dla ContentModal
+
+  const { modalSize } = useModalSettings();
+
+
   const openContentModal = useCallback(
     ({
       closeOnOutsideClick = true,
@@ -73,7 +80,7 @@ export const ModalContextProvider = ({
         title,
         description,
         content,
-        size,
+        size: size ?? null,
         height,
         scrollable,
       });
@@ -115,20 +122,18 @@ export const ModalContextProvider = ({
       )}
 
       {/* Memoized ContentModal */}
-      {isContentModalOpen && (
-        <MemoizedContentModal
-          closeOnOutsideClick={contentModal.closeOnOutsideClick}
-          height={contentModal.height}
-          size={contentModal.size}
-          isOpen={isContentModalOpen}
-          onClose={closeContentModal}
-          title={contentModal.title}
-          description={contentModal.description}
-          scrollable={contentModal.scrollable}
-        >
-          {contentModal.content}
-        </MemoizedContentModal>
-      )}
+      <MemoizedContentModal
+        closeOnOutsideClick={contentModal.closeOnOutsideClick}
+        height={contentModal.height}
+        size={contentModal.size ?? modalSize}  // używamy aktualnej wartości z kontekstu, gdy contentModal.size jest null
+        isOpen={isContentModalOpen}
+        onClose={closeContentModal}
+        title={contentModal.title}
+        description={contentModal.description}
+        scrollable={contentModal.scrollable}
+      >
+        {contentModal.content}
+      </MemoizedContentModal>
 
       {children}
     </ModalContext.Provider>

@@ -11,6 +11,7 @@ import SideBySideArticleDetails from "@/components/articles/views/SideBySideView
 
 
 
+
 interface IArticleListProps {
   data: IArticle[];
 }
@@ -37,6 +38,7 @@ const ArticleListItem = ({ article }: { article: IArticle }) => {
   const handleOpen = (): void => {
     openContentModal({
       content: <SideBySideArticleDetails articleId={article?._id} />,
+      height: "80",
     })
   }
 
