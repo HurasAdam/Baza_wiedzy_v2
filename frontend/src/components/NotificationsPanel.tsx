@@ -70,7 +70,7 @@ const NotificationsPanel = () => {
 
                     {notification.articleProduct && (
                       <p className="text-xs text-gray-600 mt-1 text-foreground/60">
-                        <strong className="text-bakcground/95">Produkt:</strong> {notification.articleProduct}
+                        <strong className="text-card/80">Produkt:</strong> {notification.articleProduct}
                       </p>
                     )}
 
