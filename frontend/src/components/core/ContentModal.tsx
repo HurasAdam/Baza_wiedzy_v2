@@ -27,13 +27,13 @@ export function ContentModal({
   const modalSizeHandler = (size: string) => {
     switch (size) {
       case "sm":
-        return "w-full max-w-[90vw] sm:max-w-[480px] md:max-w-[600px] lg:max-w-[640px] xl:max-w-[700px] 2xl:max-w-[760px]";
+        return "w-full max-w-[90vw] sm:max-w-[480px] md:max-w-[600px] lg:max-w-[640px] xl:max-w-[700px] 2xl:max-w-[760px] p-2";
       case "md":
-        return "w-full max-w-[90vw] sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] xl:max-w-[1000px] 2xl:max-w-[1080px]";
+        return "w-full max-w-[90vw] sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] xl:max-w-[1000px] 2xl:max-w-[1080px] px-5";
       case "lg":
-        return "w-full max-w-[90vw] sm:max-w-[800px] md:max-w-[1000px] lg:max-w-[1100px] xl:max-w-[1200px] 2xl:max-w-[1300px]";
+        return "w-full max-w-[90vw] sm:max-w-[800px] md:max-w-[1000px] lg:max-w-[1100px] xl:max-w-[1200px] 2xl:max-w-[1300px] p-4";
       case "xl":
-        return "w-full max-w-[90vw] sm:max-w-[900px] md:max-w-[1100px] lg:max-w-[1300px] xl:max-w-[1400px] 2xl:max-w-[1500px]";
+        return "w-full max-w-[90vw] sm:max-w-[900px] md:max-w-[1100px] lg:max-w-[1300px] xl:max-w-[1400px] 2xl:max-w-[1500px] p-6";
       default:
         return "w-full max-w-[90vw]";
     }
@@ -59,17 +59,12 @@ export function ContentModal({
       ${modalHeightHandler(height)}
             ${modalSizeHandler(size)}  // Szerokość zależna od propsa size
          filter-none 
-       
+       overflow-y-auto scrollbar-custom
         bg-card
         max-h-fit
         min-h-[55vh]
-        border-0
-         
-        scrollbar-custom
-        p-0
-         
-         
-           
+  
+        scrollbar-custom  
          `}
       >
 

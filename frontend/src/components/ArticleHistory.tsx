@@ -150,7 +150,7 @@ const ArticleHistory = ({
       <div className=" overflow-y-auto h-full  break-words w-full box-border scrollbar-custom ">
         {!selectedItem && (
           <div className="pt-5 h-full max-h-[88vh] min-h-[88vh] h-full">
-            <div className=" shadow bg-neutral-100 h-full rounded-lg p-6 text-center py-14  ">
+            <div className=" shadow bg-background h-full rounded-lg p-6 text-center py-14  ">
               <span className="text-xl font-semibold  text-slate-600 ">
                 {" "}
                 Wybierz element historii, aby zobaczyć szczegóły.
@@ -167,8 +167,8 @@ const ArticleHistory = ({
         )}{" "}
         {selectedItem?.eventType === "created" && (
           <div className="max-h-[88vh]    ">
-            <div className="h-full min-h-[88vh] flex flex-col gap-6 p-6 bg-white rounded-lg shadow-md border border-indigo-200 ">
-              <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-ful">
+            <div className="h-full min-h-[88vh] flex flex-col gap-6 p-6 bg-background rounded-lg shadow-md border border-muted ">
+              <div className="flex items-center  gap-4 pb-4 border-b border-gray-200 w-full">
                 <div>
                   <div className="w-12 h-12 bg-teal-800 text-white flex items-center justify-center rounded-full">
                     <FaFileSignature size={24} />
@@ -184,7 +184,7 @@ const ArticleHistory = ({
                 </div>
               </div>
               <div className="text-center mt-16 ">
-                <p className="text-lg text-gray-600 flex justify-center gap-2 font-semibold">
+                <p className="text-lg text-foreground flex justify-center gap-2 font-semibold">
                   Artykuł został dodany przez:
                   <p className="text-teal-700">
                     {selectedItem?.updatedBy?.name}{" "}
@@ -200,7 +200,7 @@ const ArticleHistory = ({
               >
                 <AccordionItem value="item-1" className="border-none ">
                   <AccordionTrigger
-                    className="text-base border-0 shadow-none max-w-fit mx-auto "
+                    className="text-base  border-0 shadow-none max-w-fit mx-auto "
                     onClick={() => setShowArticleDetails(!showArticleDetails)}
                   >
                     Pokaż szczegóły
@@ -208,7 +208,7 @@ const ArticleHistory = ({
                   <AccordionContent className="break-words break-all whitespace-pre-wrap pt-4 pb-10 text-base border-0 px-8 py-1   ">
                     <div className=" py-3  text-slate-600  leading-6 text-sm ">
                       {/* Title */}
-                      <div className="rounded    px-6 py-2 pb-4 border-b border-gray-200 w-ful ">
+                      <div className="rounded text-foreground   px-6 py-2 pb-4 border-b border-gray-200 w-ful ">
                         <span className="">Tytuł:</span>
                         <div className=" font-inter text-lg ">
                           {selectedItem?.articleDetails?.title}
@@ -216,7 +216,7 @@ const ArticleHistory = ({
                       </div>
 
                       {/* Employee Description */}
-                      <div className="   px-6 py-5  ">
+                      <div className="   px-6 py-5 text-foreground ">
                         <div className="my-10 pb-4 border-b border-gray-200 w-ful">
                           <span>Uwagi:</span>
                           <div

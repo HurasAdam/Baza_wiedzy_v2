@@ -53,24 +53,24 @@ const NotificationsPanel = () => {
                 className={cn(
                   "relative flex flex-col gap-2 p-4 border-l-4 rounded-lg shadow-md transition-all duration-200 cursor-pointer",
                   "hover:bg-opacity-90  active:opacity-80",
-                  isUnread ? "bg-blue-100 border-blue-500" : "bg-gray-100 border-gray-300"
+                  isUnread ? " bg-muted/45 border-blue-500 " : "  bg-muted/45 border border-muted/55  "
                 )}
               >
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0">{notificationIcons[notification.type]}</div>
 
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-800">{notification.message}</p>
+                    <p className="text-sm font-medium text-foreground/90">{notification.message}</p>
 
                     {notification.articleTitle && (
-                      <p className="text-xs text-gray-600 mt-1">
+                      <p className="text-xs text-gray-600 mt-1 text-foreground/60">
                         <strong>Artykuł:</strong> {notification.articleTitle}
                       </p>
                     )}
 
                     {notification.articleProduct && (
-                      <p className="text-xs text-gray-600 mt-1">
-                        <strong>Produkt:</strong> {notification.articleProduct}
+                      <p className="text-xs text-gray-600 mt-1 text-foreground/60">
+                        <strong className="text-bakcground/95">Produkt:</strong> {notification.articleProduct}
                       </p>
                     )}
 

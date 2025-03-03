@@ -8,18 +8,18 @@ import { FaAddressBook } from "react-icons/fa6";
 
 const MySidebar = () => {
   const primaryMenuItems = [
-    { icon: <Home size={24} />, label: "Start", link: "/dashboard" },
-    { icon: <PiArticleMediumFill size={23} />, label: "Baza Artykułów", link: "/articles" },
-    { icon: <ImStatsBars2 size={23} />, label: "Statystyki", link: "/statistics" },
-    { icon: <FaPhoneSquareAlt size={23} />, label: "Statystyki", link: "/statistics" },
-    { icon: <FaAddressBook size={23} />, label: "Statystyki", link: "/statistics" },
+    { icon: <Home size={22} />, label: "Start", link: "/dashboard" },
+    { icon: <PiArticleMediumFill size={22} />, label: "Baza Artykułów", link: "/articles" },
+    { icon: <ImStatsBars2 size={22} />, label: "Statystyki", link: "/statistics" },
+    { icon: <FaPhoneSquareAlt size={22} />, label: "Statystyki", link: "/statistics" },
+    { icon: <FaAddressBook size={22} />, label: "Statystyki", link: "/statistics" },
 
   ];
 
 
   const utilityMenuItems = [
-    { icon: <Settings size={23} />, label: "Ustawienia", link: "/settings" },
-    { icon: <LogOut size={23} />, label: "Wyloguj się", link: "/logout" },
+    { icon: <Settings size={22} />, label: "Ustawienia", link: "/settings" },
+    { icon: <LogOut size={22} />, label: "Wyloguj się", link: "/logout" },
 
   ]
 

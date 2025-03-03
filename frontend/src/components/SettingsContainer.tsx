@@ -24,7 +24,7 @@ const SettingsContainer = () => {
   return (
     <div className="flex w-full h-full ">
       {/* Sidebar - lewa część */}
-      <div className="w-full md:w-1/4 p-4 border-r bg-muted text-foreground h-full overflow-auto">
+      <div className="w-full md:w-1/4 p-4 border-r  text-foreground h-full overflow-auto">
         <h2 className="text-xl font-semibold  mb-4 text-foreground flex gap-2 items-center">
           <RiSettings4Fill className="w-7 h-7 " />
           Ustawienia
@@ -67,10 +67,10 @@ const SettingsContainer = () => {
       </div>
 
       {/* Treść zakładki - prawa część */}
-      <div className="w-full md:w-3/4 p-4  overflow-auto">
+      <div className="w-full md:w-3/4 p-4  overflow-auto ">
         {activeTab === "personalization" && (
           <div>
-            <h3 className="text-lg font-medium text-gray-700 mb-4">
+            <h3 className="text-lg font-medium  mb-4 text-sidebar-primary-foreground">
               Personalizacja
             </h3>
             <div className="flex flex-col gap-6">
