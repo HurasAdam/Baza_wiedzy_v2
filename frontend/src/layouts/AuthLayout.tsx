@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { useCheckUser } from '@/contexts/AuthContext';
+import { useCheckUser } from '@/hooks/auth/useCheckUser';
 import { IMAGES } from '@/constants/images';
 
 export const AuthLayout = () => {

@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useCheckUser } from "@/contexts/AuthContext";
+import { useCheckUser } from "@/hooks/auth/useCheckUser";
 import { ModalContextProvider } from "@/contexts/ModalContext";
 import Navbar from "@/components/Navbar";
 import MySidebar from "@/components/MySidebar";

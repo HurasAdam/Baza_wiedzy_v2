@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/sidebar"
 import { ADMIN_NAVBAR_OPTIONS, ADMIN_NAVBAR_OPTIONS_SECONDARY, NAVBAR_OPTIONS } from "@/constants"
 import { IMAGES } from "@/constants/images"
-import { useAuth } from "@/contexts/AuthContext"
 import { NavSecondary } from "./nav-secondary"
 import { Link } from "react-router-dom"
 // This is sample data.
@@ -70,7 +69,7 @@ const data = {
 }
 export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
-  const { user } = useAuth();
+
 
 
 
