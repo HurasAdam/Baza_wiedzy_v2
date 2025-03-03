@@ -35,7 +35,7 @@ import {
 import SettingsContainer from "./SettingsContainer";
 import NotificationsPanel from "./NotificationsPanel";
 import ThemeToggleButton from "./ToggleThemeButton";
-import { useLogout } from "@/contexts/AuthContext";
+import { useLogout } from "@/hooks/auth/useLogout";
 
 
 const Navbar: React.FC = ({ notifications }) => {
