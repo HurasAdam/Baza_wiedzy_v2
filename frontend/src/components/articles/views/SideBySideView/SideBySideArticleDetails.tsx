@@ -242,7 +242,7 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
     IMAGES.findArticleImage;
 
   return (
-    <div className="rounded-xl shadow-xl w-full mx-auto  h-[calc(100vh-47px)] overflow-y-auto scrollbar-custom  ">
+    <div className="rounded-xl shadow-xl w-full mx-auto  h-[calc(100vh-47px)]   ">
       {/* Baner z tytułem artykułu */}
 
       <div className='relative ' style={{ backgroundImage: `url(${bannerURL})` }}>

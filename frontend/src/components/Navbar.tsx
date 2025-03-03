@@ -110,8 +110,8 @@ const Navbar: React.FC = ({ notifications }) => {
   return (
     <div
       className={clsx(
-        "flex justify-between border-b     w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0   bg-card",
-        isScrolled ? "bg-background border-b-2" : ""
+        "flex justify-between  bg-card  border-b   w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0   ",
+        isScrolled ? "border-b " : ""
       )}
     >
 

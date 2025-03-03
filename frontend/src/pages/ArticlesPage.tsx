@@ -23,7 +23,7 @@ const ArticleList = ({ data }: IArticleListProps) => {
       <h1 className="text-2xl font-semibold">Artykuły</h1>
       <div className="flex flex-col gap-4">
         {data?.map((article: IArticle, i: number) => (
-          <ArticleListItem key={i} article={article} />
+          <ArticleListItem key={i} article={article} className="hover:border-b hover:bg-muted/40 cursor-pointer transition-all" />
         ))}
       </div>
     </div>
@@ -31,7 +31,7 @@ const ArticleList = ({ data }: IArticleListProps) => {
 }
 
 
-const ArticleListItem = ({ article }: { article: IArticle }) => {
+const ArticleListItem = ({ article, className }: { article: IArticle, className?: string }) => {
 
   const { openContentModal, closeContentModal } = useModalContext()
 
@@ -45,10 +45,10 @@ const ArticleListItem = ({ article }: { article: IArticle }) => {
   return (
     <Card
       onClick={handleOpen}
-      className={`p-5 rounded-xl shadow-md border text-foreground hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-emerald-700/65"}`}>
+      className={`px-5 py-3 rounded-xl shadow-md border text-foreground hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-emerald-700/65 "} ${className}`}>
 
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold truncate max-w-[90%] overflow-hidden">
+        <h3 className="text-base font-semibold truncate max-w-[90%] overflow-hidden text-foreground">
           {article.title.length > 110 ? `${article.title.slice(0, 110)}...` : article.title}
         </h3>
         <button className="focus:outline-none">
@@ -56,8 +56,8 @@ const ArticleListItem = ({ article }: { article: IArticle }) => {
         </button>
       </div>
       <div className="flex gap-1 items-center">
-        <p className="text-xs text-gray-500 mt-2">Produkt:</p>
-        <p className="text-sm text-slate-600 mt-2"> {article?.product?.name}</p>
+        <p className="text-xs text-card-foreground mt-2">Produkt:</p>
+        <p className="text-xs text-popover-foreground mt-2"> {article?.product?.name}</p>
       </div>
       <div className="mt-4 flex justify-end">
         <p className="text-sm text-gray-500">Wyświetlenia: {article?.viewsCounter}</p>
@@ -73,7 +73,7 @@ export const ArticlesPage = () => {
   const { data: articles, isLoading, error } = useFetchArticles({ page: "", title: "", author: "" })
 
   return (
-    <div className="text-foreground p-5 h-full flex w-full max-w-[1580px] mx-auto gap-6">
+    <div className="text-foreground p-5 h-full flex w-full max-w-[1580px] mx-auto gap-6  ">
       {/* Sidebar - Filtry */}
       <div className="w-80 p-5 rounded-xl h-fit">
         <h2 className="text-lg font-semibold mb-4">Filtruj artykuły</h2>

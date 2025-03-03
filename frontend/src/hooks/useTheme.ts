@@ -5,7 +5,8 @@ export enum Theme {
     SLATE = "slate",
     DARK = "dark",
     FALCON = "falcon",
-    PHOENIX = "phoenix"
+    PHOENIX = "phoenix",
+    LINEAR = "linear"
 }
 
 
@@ -15,7 +16,7 @@ const useTheme = () => {
     });
 
     useEffect(() => {
-        document.body.classList.remove("light", "slate", "dark", "falcon", "phoenix");
+        document.body.classList.remove("light", "slate", "dark", "falcon", "phoenix", "linear");
         document.body.classList.add(theme);
         localStorage.setItem("theme", theme);
     }, [theme]);

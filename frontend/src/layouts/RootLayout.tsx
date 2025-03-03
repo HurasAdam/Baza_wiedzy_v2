@@ -22,7 +22,7 @@ export const RootLayout = () => {
                 <div className="w-full">
 
                     <Navbar />
-                    <div className="flex flex-1 flex-col gap-4 p-4  min-h-screen">
+                    <div className="flex flex-1 flex-col gap-4 p-4  min-h-screen ">
                         <Outlet />
                     </div>
                 </div>

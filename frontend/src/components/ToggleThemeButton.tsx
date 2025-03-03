@@ -1,6 +1,6 @@
 import useTheme, { Theme } from "@/hooks/useTheme";
 
-const themes: Theme[] = [Theme.LIGHT, Theme.SLATE, Theme.DARK, Theme.FALCON, Theme.PHOENIX];
+const themes: Theme[] = [Theme.LIGHT, Theme.SLATE, Theme.DARK, Theme.FALCON, Theme.PHOENIX, Theme.LINEAR];
 
 const ThemeToggleButton = () => {
     const { theme, changeTheme } = useTheme();
