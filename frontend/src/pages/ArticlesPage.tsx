@@ -38,7 +38,7 @@ const ArticleListItem = ({ article, className }: { article: IArticle, className?
   const handleOpen = (): void => {
     openContentModal({
       content: <SideBySideArticleDetails articleId={article?._id} />,
-      height: "80",
+      height: "50",
     })
   }
 
