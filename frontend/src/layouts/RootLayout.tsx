@@ -1,8 +1,8 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useCheckUser } from "@/hooks/auth/useCheckUser";
-import { ModalContextProvider } from "@/contexts/ModalContext";
-import Navbar from "@/components/Navbar";
 import MySidebar from "@/components/MySidebar";
+import Navbar from "@/components/Navbar";
+import { ModalContextProvider } from "@/contexts/ModalContext";
+import { useCheckUser } from "@/hooks/auth/useCheckUser";
+import { Navigate, Outlet } from "react-router-dom";
 
 export const RootLayout = () => {
     const { status } = useCheckUser();

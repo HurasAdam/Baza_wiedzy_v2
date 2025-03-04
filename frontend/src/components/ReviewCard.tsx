@@ -1,18 +1,12 @@
 import { useModalContext } from "@/contexts/ModalContext";
 import { toast } from "@/hooks/use-toast";
-import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
 import { articlesApi } from "@/lib/articlesApi";
-import EditArticle from "@/pages/EditArticle";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
+import { FaHistory } from "react-icons/fa";
+import { MdDelete, MdOutlineSettingsBackupRestore } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import ArticleHistory from "./ArticleHistory";
-import { FaRegStar, FaStar } from "react-icons/fa6";
-import { FaEdit, FaHistory } from "react-icons/fa";
-import { TiArrowBack } from "react-icons/ti";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { MdDelete } from "react-icons/md";
-import { MdOutlineSettingsBackupRestore } from "react-icons/md";
 
 const ReviewCard: React.FC = ({
   article,

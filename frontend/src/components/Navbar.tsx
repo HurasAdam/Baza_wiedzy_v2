@@ -29,7 +29,6 @@ import { useLogout } from "@/hooks/auth/useLogout";
 
 
 const Navbar: React.FC = ({ notifications }) => {
-  //   const {showContentModal} = useAppContext();
   const queryClient = useQueryClient();
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,7 +36,6 @@ const Navbar: React.FC = ({ notifications }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { openContentModal } = useModalContext();
   const isScrolled = useScrollY();
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const { logoutAction } = useLogout();
