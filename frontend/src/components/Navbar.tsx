@@ -1,31 +1,22 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { authApi } from "../../services/authApi";
-import NotificationPanel from "./NotificationPanel";
+import { useQueryClient } from "@tanstack/react-query";
+
 import { IoNotifications } from "react-icons/io5";
 import { SideDrawer } from "./core/SideDrawer";
 import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
-import Modal from "./SearchModal";
-import SearchModal from "./SearchModal";
-import { useAppContext } from "../../contexts/AppContext";
-import ConversationSummaryForm from "../forms/ConversationSummaryForm";
 import { IoIosSettings } from "react-icons/io";
-import { MdNoteAdd, MdOutlineSearch, MdPhoneInTalk } from "react-icons/md";
+import { MdPhoneInTalk } from "react-icons/md";
 import { MdAssignmentAdd } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
-import { api } from "../lib/api";
 import UserAvatar from "./core/UserAvatar";
 import { Dropdown } from "./core/Dropdown";
 import { LogOut, Settings, User } from "lucide-react";
 import clsx from "clsx";
 import useScrollY from "@/hooks/useScrollY";
-import { SidebarTrigger } from "./ui/sidebar";
-import { Switch } from "./ui/switch";
 import { SearchBar } from "./SearchBar";
 import { useModalContext } from "@/contexts/ModalContext";
 import ShortcutCallRegisterForm from "./forms/ShortcutCallRegisterForm";
 import { IoIosSearch } from "react-icons/io";
-
 import {
   Tooltip,
   TooltipContent,
@@ -34,12 +25,10 @@ import {
 } from "./ui/tooltip";
 import SettingsContainer from "./SettingsContainer";
 import NotificationsPanel from "./NotificationsPanel";
-import ThemeToggleButton from "./ToggleThemeButton";
 import { useLogout } from "@/hooks/auth/useLogout";
 
 
 const Navbar: React.FC = ({ notifications }) => {
-  //   const {showContentModal} = useAppContext();
   const queryClient = useQueryClient();
   const location = useLocation();
   const navigate = useNavigate();
@@ -47,7 +36,6 @@ const Navbar: React.FC = ({ notifications }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { openContentModal } = useModalContext();
   const isScrolled = useScrollY();
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const { logoutAction } = useLogout();

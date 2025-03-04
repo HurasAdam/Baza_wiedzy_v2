@@ -1,6 +1,5 @@
-import React from 'react'
-import { Avatar } from '../ui/avatar'
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+import { Avatar } from '../ui/avatar'
 
 const UserAvatar = () => {
   return (

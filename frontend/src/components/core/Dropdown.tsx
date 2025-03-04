@@ -1,31 +1,11 @@
-import {
-
-    CreditCard,
-
-    Keyboard,
-
-    LogOut,
-
-    Settings,
-    User,
-
-  } from "lucide-react"
   
-  import { Button } from "@/components/ui/button"
   import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
   
   export function Dropdown({ triggerBtn,options=[], position = {align:"center"} }: { triggerBtn: React.ReactNode,options:[]}) {
 

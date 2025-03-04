@@ -1,23 +1,19 @@
-import React from "react";
-import { HiMiniXMark } from "react-icons/hi2";
-import QuickArticleDetails from "./QuickArticleDetails";
-import { Button } from "./ui/button";
 import { IMAGES } from "@/constants/images";
-import { X } from "lucide-react";
-import ArticleDetailsCard from "./ArticleDetailsCard";
-import { articlesApi } from "@/lib/articlesApi";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FaEdit, FaHistory, FaRegStar, FaStar } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { TiArrowBack } from "react-icons/ti";
-import ArticleHistory from "./ArticleHistory";
-import { useNavigate } from "react-router-dom";
 import { useModalContext } from "@/contexts/ModalContext";
 import { toast } from "@/hooks/use-toast";
-import ArticleDetailsCardLite from "./ArticleDetailsCardLite";
 import useMarkArticleAsFavourite from "@/hooks/useMarkArticleAsFavourite";
+import { articlesApi } from "@/lib/articlesApi";
 import EditArticle from "@/pages/EditArticle";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { X } from "lucide-react";
+import React from "react";
+import { FaEdit, FaHistory, FaRegStar, FaStar } from "react-icons/fa";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { MdDelete } from "react-icons/md";
+import { TiArrowBack } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
+import ArticleDetailsCardLite from "./ArticleDetailsCardLite";
+import ArticleHistory from "./ArticleHistory";
 
 interface IProps {
   articleId: string;
@@ -104,7 +100,7 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
       title: "Edytuj Artykuł",
       description:
         "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
-      content: <EditArticle type="view" article={article} />,
+      content: <EditArticle type="view" article={ article } />,
       size: "xl",
     });
   };
@@ -115,7 +111,7 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
       description:
         "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
       content: (
-        <ArticleHistory articleId={article?._id} showBackwardArrow={false} />
+        <ArticleHistory articleId={ article?._id } showBackwardArrow={ false } />
       ),
       size: "xl",
       height: "82",
@@ -125,9 +121,8 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
 
   const articleDropdownOptions = [
     {
-      label: `${
-        article?.isFavourite ? "Usuń z ulubionych" : "Dodaj do ulubionych"
-      }`,
+      label: `${article?.isFavourite ? "Usuń z ulubionych" : "Dodaj do ulubionych"
+        }`,
       icon: article?.isFavourite ? <FaStar /> : <FaRegStar />,
       actionHandler: (article) => markAsFavouriteHandler({ id: article?._id }),
     },
@@ -139,26 +134,26 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
 
     ...(article?.isVerified
       ? [
-          {
-            label: "Cofnij weryfikację",
+        {
+          label: "Cofnij weryfikację",
 
-            actionHandler: () => {
-              verifyArticleHandler({ id: article?._id, isVerified: false });
-            },
-            icon: <TiArrowBack />,
+          actionHandler: () => {
+            verifyArticleHandler({ id: article?._id, isVerified: false });
           },
-        ]
+          icon: <TiArrowBack />,
+        },
+      ]
       : [
-          {
-            label: "Zweryfikuj",
+        {
+          label: "Zweryfikuj",
 
-            actionHandler: (article) => {
-              verifyArticleHandler({ id: article?._id, isVerified: true });
-            },
-
-            icon: <IoMdCheckmarkCircleOutline />,
+          actionHandler: (article) => {
+            verifyArticleHandler({ id: article?._id, isVerified: true });
           },
-        ]),
+
+          icon: <IoMdCheckmarkCircleOutline />,
+        },
+      ]),
     {
       label: "Historia modyfikacji",
       icon: <FaHistory />,
@@ -181,7 +176,7 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
       <div className="  rounded-xl  min-h-[82vh] max-h-[82vh] sticky top-16 right-0 overflow-hidden ">
         <img
           className="object-contain w-full h-[94vh] "
-          src={IMAGES.data_placeholder}
+          src={ IMAGES.data_placeholder }
           alt=""
         />
       </div>
@@ -192,16 +187,16 @@ const QuickViewSection: React.FC<IProps> = ({ articleId, onClose }) => {
     <div className=" bg-white border shadow  rounded-xl overflow-y-auto min-h-[80vh] max-h-[80vh] sticky top-16 right-0 scrollbar-custom">
       <div className="flex justify-end absolute top-0 right-0">
         <button
-          onClick={onClose}
+          onClick={ onClose }
           className="hover:bg-slate-700 px-1.5 py-1.5 rounded-lg  group"
         >
           <X className="w-5 h-5 text-slate-500 group-hover:text-neutral-50" />
         </button>
       </div>
-      {/* <QuickArticleDetails articleId={articleId} /> */}
+      {/* <QuickArticleDetails articleId={articleId} /> */ }
       <ArticleDetailsCardLite
-        actionOptions={articleDropdownOptions}
-        article={article}
+        actionOptions={ articleDropdownOptions }
+        article={ article }
       />
     </div>
   );

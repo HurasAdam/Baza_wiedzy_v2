@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react'
-import { IoIosSearch } from 'react-icons/io';
-import { Input } from '../ui/input';
-import { SelectBox } from '../core/SelectBox';
-import { Button } from '../ui/button';
-import { useForm } from 'react-hook-form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useModalContext } from '@/contexts/ModalContext';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 
-import { tagsApi } from '@/lib/tagsApi';
 import { toast } from '@/hooks/use-toast';
+import { tagsApi } from '@/lib/tagsApi';
 
 interface ITagFormProps{
   tagId?:string;

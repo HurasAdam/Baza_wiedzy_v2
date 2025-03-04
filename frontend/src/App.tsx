@@ -12,7 +12,7 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 // import { StatisticsPage } from "./pages/StatisticsPage";
 // import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
 // import { FavoritesPage } from "./pages/FavoritesArticlesPage";
-        
+
 import useTheme from "./hooks/useTheme";
 
 const HomePage = lazy(() => import("./pages/HomePage").then(module => ({ default: module.HomePage })));

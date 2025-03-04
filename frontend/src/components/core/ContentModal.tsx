@@ -1,14 +1,8 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogOverlay,
-  DialogTitle,
+  DialogOverlay
 } from "@/components/ui/dialog";
-import useModalSize from "@/hooks/useModalSize";
 
 export function ContentModal({
   isOpen,
