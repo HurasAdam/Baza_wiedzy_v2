@@ -5,8 +5,13 @@ import { PiArticleMediumFill } from "react-icons/pi";
 import { ImStatsBars2 } from "react-icons/im";
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa6";
+import { useLogout } from "@/hooks/auth/useLogout";
+import { useModalSettings } from "./Navbar";
 
 const MySidebar = () => {
+  const { logoutAction } = useLogout();
+  const { openModalSettings } = useModalSettings();
+
   const primaryMenuItems = [
     { icon: <Home size={22} />, label: "Start", link: "/dashboard" },
     { icon: <PiArticleMediumFill size={22} />, label: "Baza Artykułów", link: "/articles" },
@@ -18,8 +23,8 @@ const MySidebar = () => {
 
 
   const utilityMenuItems = [
-    { icon: <Settings size={22} />, label: "Ustawienia", link: "/settings" },
-    { icon: <LogOut size={22} />, label: "Wyloguj się", link: "/logout" },
+    { icon: <Settings size={22} />, label: "Ustawienia", onClick: openModalSettings },
+    { icon: <LogOut size={22} />, label: "Wyloguj się", onClick: logoutAction },
 
   ]
 
@@ -44,9 +49,9 @@ const MySidebar = () => {
               {utilityMenuItems.map((item, index) => (
                 <Tooltip key={index}>
                   <TooltipTrigger asChild>
-                    <Link to={item.link} className="block p-2.5 rounded-lg transition">
-                      {item.icon}
-                    </Link>
+                      <button onClick={item.onClick} className="block p-2.5 rounded-lg transition">
+                        {item.icon}
+                      </button>
                   </TooltipTrigger>
                   <TooltipContent>{item.label}</TooltipContent>
                 </Tooltip>

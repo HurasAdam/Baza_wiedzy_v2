@@ -27,6 +27,22 @@ import SettingsContainer from "./SettingsContainer";
 import NotificationsPanel from "./NotificationsPanel";
 import { useLogout } from "@/hooks/auth/useLogout";
 
+export const useModalSettings = () => {
+  const { openContentModal } = useModalContext();
+  
+  const openModalSettings = () => {
+    openContentModal({
+      description: "",
+      content: <SettingsContainer />,
+      enableOutsideClickClose: false,
+      size: "lg",
+      height: "80",
+    });
+  };
+
+  return { openModalSettings };
+}
+
 
 const Navbar: React.FC = ({ notifications }) => {
   const queryClient = useQueryClient();
@@ -36,6 +52,8 @@ const Navbar: React.FC = ({ notifications }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { openContentModal } = useModalContext();
   const isScrolled = useScrollY();
+  const { openModalSettings } = useModalSettings();
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const { logoutAction } = useLogout();
@@ -47,18 +65,6 @@ const Navbar: React.FC = ({ notifications }) => {
   function closeDrawer() {
     setIsDrawerOpen(false);
   }
-
-  const OpenSettingsMenu = () => {
-    openContentModal({
-      description: "",
-      content: <SettingsContainer />,
-      enableOutsideClickClose: false,
-      size: "lg",
-      height: "80",
-    });
-  };
-
-
 
   const profileMenuOptions = [
     {
@@ -207,7 +213,7 @@ const Navbar: React.FC = ({ notifications }) => {
             <TooltipTrigger asChild>
               <button
                 className="bg-transparent group hover:bg-primary   transition-all px-2.5 py-1.5  rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
-                onClick={OpenSettingsMenu}
+                onClick={openModalSettings}
               >
                 <IoIosSettings className="text-lg group-hover:text-secondary" />
               </button>
