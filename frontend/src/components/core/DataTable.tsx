@@ -1,16 +1,16 @@
 import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
-import BadgeLabel from "./BadgeLabel"
-import {  useNavigate } from "react-router-dom"
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { FiCheckCircle } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import BadgeLabel from "./BadgeLabel";
 
 import { MdOutlineOpenInNew } from "react-icons/md";
    

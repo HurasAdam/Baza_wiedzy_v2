@@ -1,18 +1,11 @@
-import * as React from "react";
-import { Minus, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
+  DrawerHeader
 } from "@/components/ui/drawer";
+import * as React from "react";
 import { ScrollArea } from "../ui/scroll-area";
-import { Switch } from "../ui/switch";
 
 
 interface SideDrawerProps {

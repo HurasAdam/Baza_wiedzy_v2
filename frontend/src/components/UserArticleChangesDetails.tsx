@@ -1,18 +1,13 @@
+import { IMAGES } from '@/constants/images'
 import ARTICLE_HISTORY_FIELD_TRANSLATIONS from '@/enums/articleHistoryFieldTranslations'
 import { articlesApi } from '@/lib/articlesApi'
+import { formatDate } from '@/lib/utils'
 import { useQuery } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import { diff_match_patch } from "diff-match-patch"
+import { useState } from 'react'
 import { FaFileSignature, FaTrashCan } from 'react-icons/fa6'
 import { IoIosCheckmark } from 'react-icons/io'
-import { LiaExchangeAltSolid } from 'react-icons/lia'
-import { MdEditDocument } from "react-icons/md";
-import { MdArticle } from "react-icons/md";
-import { MdDone, MdOutlineQuestionMark, MdOutlineSettingsBackupRestore } from 'react-icons/md'
-import ArticleHistoryActivityCard from './ArticleHistoryActivityCard'
-import { IMAGES } from '@/constants/images'
-import { formatDate } from '@/lib/utils'
-import { diff_match_patch } from "diff-match-patch";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion'
+import { MdArticle, MdEditDocument, MdOutlineQuestionMark, MdOutlineSettingsBackupRestore } from "react-icons/md"
 import UserHistoryActivityCard from './UserHistoryActivityCard'
 
 

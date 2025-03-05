@@ -1,18 +1,13 @@
-import React, { useEffect } from "react";
-import { IoIosSearch } from "react-icons/io";
-import { Input } from "../ui/input";
-import { SelectBox } from "../core/SelectBox";
-import { Button } from "../ui/button";
-import { useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { productsApi } from "@/lib/productsApi";
-import { Textarea } from "../ui/textarea";
-import { conversationTopicApi } from "@/lib/conversationTopicsApi";
-import { useModalContext } from "@/contexts/ModalContext";
-import { ColorPicker } from "../ColorPicker";
-import { toast } from "@/hooks/use-toast";
-import { IMAGES } from "@/constants/images";
 import { BANNER_IMAGES } from "@/constants/productBanners";
+import { useModalContext } from "@/contexts/ModalContext";
+import { toast } from "@/hooks/use-toast";
+import { productsApi } from "@/lib/productsApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { ColorPicker } from "../ColorPicker";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 interface IProductFormProps {
   productId?: string;
