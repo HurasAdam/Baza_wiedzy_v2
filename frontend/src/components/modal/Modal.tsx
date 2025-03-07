@@ -1,13 +1,11 @@
-import type { ReactNode } from "react";
 import clsx from "clsx";
 import {
   Dialog,
   DialogContent,
   DialogOverlay,
 } from "@/components/ui/dialog";
-
-type SizeModal = 'sm' | 'md' | 'lg' | 'xl';
-type HeightModal = 'sm' | 'md' | 'lg';
+import { useModalSettings } from "@/contexts/PreferencesSettingsContext";
+import { ModalProps, WidthModal } from "./types";
 
 const modalSizes = {
   sm: "sm:max-w-[480px] md:max-w-[600px] lg:max-w-[640px] xl:max-w-[700px] 2xl:max-w-[760px] p-2",
@@ -16,31 +14,24 @@ const modalSizes = {
   xl: "sm:max-w-[900px] md:max-w-[1100px] lg:max-w-[1300px] xl:max-w-[1400px] 2xl:max-w-[1500px] p-6",
 }
 
-interface ContentModalProps {
-  isOpen: true,
-  children: ReactNode;
-  onClose(): void;
-  size?: SizeModal;
-  height: HeightModal;
-  closeOnOutsideClick?: boolean;
-}
-
 const modalHeightes = {
   sm: 20,
   md: 50,
   lg: 80
 }
 
-export const ContentModal = ({
+export const Modal = ({
   isOpen,
   children,
   onClose,
-  size,
-  height = 'lg',
+  width,
+  height = 'md',
   closeOnOutsideClick = true,
-}: ContentModalProps) => {
+}: ModalProps) => {
+  const { modalSize } = useModalSettings();
 
   const heightValue = modalHeightes[height];
+  const widthValue = width ?? modalSize;
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -52,17 +43,12 @@ export const ContentModal = ({
         }}
         className={clsx(
           `filter-none scrollbar-custom bg-card scrollbar-custom w-full`, 
-          {
-            // "overflow-y-auto": scrollable,
-            [modalSizes[size as SizeModal]]: size,
-            [`h-[${heightValue}vh]`]: true
-          })
-        }
+          modalSizes[widthValue as WidthModal],
+          `h-[${heightValue}vh]`
+        )}
       >
         <div className="mt-6 overflow-auto">
-          {/* <div className="p-4 overflow-y-auto"> */}
             {children}
-          {/* </div> */}
         </div>
       </DialogContent>
       <DialogOverlay />

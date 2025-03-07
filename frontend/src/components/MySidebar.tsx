@@ -6,11 +6,34 @@ import { ImStatsBars2 } from "react-icons/im";
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa6";
 import { useLogout } from "@/hooks/auth/useLogout";
+import { useModal } from "@/components/modal/hooks/useModal";
+import SettingsContainer from "./SettingsContainer";
 import { useModalSettings } from "./Navbar";
+import { Modal } from "./modal/Modal";
+
+
+// const useSettingsModal = () => {
+//   const {  } = useModal({ content: <SettingsContainer /> })
+
+
+// }
+
 
 const MySidebar = () => {
   const { logoutAction } = useLogout();
-  const { openModalSettings } = useModalSettings();
+  // const { openModalSettings } = useModalSettings();
+
+  const { isOpen, openModal, closeModal } = useModal();
+
+  // const openModalSettings = () => {
+  //   openContentModal({
+  //     description: "",
+  //     content: <SettingsContainer />,
+  //     enableOutsideClickClose: false,
+  //     size: "lg",
+  //     height: "md",
+  //   });
+  // };
 
   const primaryMenuItems = [
     { icon: <Home size={22} />, label: "Start", link: "/dashboard" },
@@ -23,7 +46,7 @@ const MySidebar = () => {
 
 
   const utilityMenuItems = [
-    { icon: <Settings size={22} />, label: "Ustawienia", onClick: openModalSettings },
+    { icon: <Settings size={22} />, label: "Ustawienia", onClick: openModal },
     { icon: <LogOut size={22} />, label: "Wyloguj się", onClick: logoutAction },
 
   ]
@@ -60,6 +83,9 @@ const MySidebar = () => {
           </div>
         </div>
       </div>
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        <SettingsContainer />
+      </Modal>
     </TooltipProvider>
   );
 };

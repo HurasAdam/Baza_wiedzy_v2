@@ -22,7 +22,7 @@ const SettingsContainer = () => {
   const { modalSize, changeModalSize } = useModalSettings();
 
   return (
-    <div className="flex w-full h-full ">
+    <div className="flex w-full">
       {/* Sidebar - lewa część */}
       <div className="w-full md:w-1/4 p-4 border-r  text-foreground h-full overflow-auto">
         <h2 className="text-xl font-semibold  mb-4 text-foreground flex gap-2 items-center">

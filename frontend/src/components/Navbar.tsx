@@ -36,7 +36,7 @@ export const useModalSettings = () => {
       content: <SettingsContainer />,
       enableOutsideClickClose: false,
       size: "lg",
-      height: "80",
+      height: "md",
     });
   };
 
