@@ -13,3 +13,6 @@ Thos todos might be outdated. Validate each one of them
 - ConversationRepo add might incorrectly return data
 - #TODOS
 - Repository has incorrect types for update
+- Create 404 router with proper response
+- Get favorites returns "{ data: [], currentPage: 1, totalPages: 0 }" when there is no data. Should probably return all 0 or all 1
+

@@ -5,7 +5,7 @@ import ArticleRepository from '../../../repository/article.js';
 import type { IMarkFavDto } from './types.js';
 import type mongoose from 'mongoose';
 
-export default async (dto: IMarkFavDto): Promise<void> => {
+export default async (dto: IMarkFavDto): Promise<boolean> => {
   const userRepo = new UserRepository();
   const articleRepo = new ArticleRepository();
 
@@ -24,4 +24,6 @@ export default async (dto: IMarkFavDto): Promise<void> => {
   }
 
   await userRepo.update(dto.userId, { favourites: user.favourites });
+
+  return isFavorite;
 };

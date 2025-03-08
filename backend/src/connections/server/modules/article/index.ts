@@ -23,7 +23,7 @@ import verifyArticle from './verify/index.js';
  */
 export default (): Router => {
   const router = Router();
-  Log.debug('Router', 'Creating endpoints');
+  Log.debug('Router', 'Creating article endpoints');
 
   // router.get("/",getSessionsHandler)
   router.get('/', getMany());

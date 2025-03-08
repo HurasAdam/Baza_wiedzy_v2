@@ -1,17 +1,17 @@
 import { afterAll, beforeAll } from '@jest/globals';
-import http from 'http'
-import server from '../../src/connections/server/index'
-import express from 'express'
+import express from 'express';
+import server from '../../src/connections/server/index';
+import type http from 'http';
 
-const app = express()
-let httpServer: http.Server | undefined
+const app = express();
+let httpServer: http.Server | undefined;
 
-beforeAll(async () => {
-  httpServer = server(app)
+beforeAll(() => {
+  httpServer = server(app);
 });
 
-afterAll(async () => {
-  httpServer?.close()
+afterAll(() => {
+  httpServer?.close();
 });
 
 export { app, httpServer };

@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import fakeData from './fakeData/index.json';
 import { EAudience } from '../../src/enums/audience.js';
 import { getConfig } from '../../src/tools/config.js';
 import type { ISignOptionsAndSecret } from '../../src/types/index.js';
@@ -20,7 +21,7 @@ export const createAccessToken = (userId?: string): string => {
 
   const payload = {
     sessionId: 'fakeSessionId',
-    userId: userId ?? 'fakeUserId',
+    userId: userId ?? fakeData.data.users[0]!._id,
   };
 
   const { secret, ...signOpts } = accessTokenSignOptions;
