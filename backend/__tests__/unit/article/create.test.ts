@@ -21,7 +21,7 @@ describe('Create article', () => {
     tags: [fakeData.data.tags[0]!.id],
     clientDescription: 'C Desc',
     product: fakeData.data.products[0]!.id,
-    userId: fakeData.data.users[0]!.id,
+    userId: fakeData.data.users[0]!._id,
   };
 
   beforeAll(async () => {

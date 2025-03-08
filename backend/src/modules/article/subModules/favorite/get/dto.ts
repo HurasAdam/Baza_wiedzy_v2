@@ -13,7 +13,7 @@ export default class GetFavArticlesDto implements IGetFavArticlesDto {
   }
 
   private validate(): void {
-    new Validation(this.userId, 'userId').isDefined().isString();
-    if (this.page) new Validation(this.page, 'page').isDefined().isString();
+    new Validation(this.userId, 'userId').isDefined().isString().hasLength(24, 24).isObjectId();
+    if (this.page) new Validation(this.page, 'page').isDefined().isString().hasMinLength(1);
   }
 }

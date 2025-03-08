@@ -22,9 +22,9 @@ export default async (
   const userRepo = new UserRepository();
 
   const user = await userRepo.getById(dto.userId);
-  appAssert(!user, EHttpCodes.NOT_FOUND, 'User not found');
+  appAssert(user, EHttpCodes.NOT_FOUND, 'User not found');
 
-  const { favourites } = user!;
+  const { favourites } = user;
 
   const favouriteArticles = await getFavoriteArticles(
     favourites.map((f) => f.toString()),

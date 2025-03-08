@@ -14,7 +14,7 @@ export default class MarkFavDto implements IMarkFavDto {
   }
 
   private validate(): void {
-    new Validation(this.id, 'id').isDefined().isString();
-    new Validation(this.userId, 'userId').isDefined().isString();
+    new Validation(this.id, 'id').isDefined().isString().hasLength(24, 24).isObjectId();
+    new Validation(this.userId, 'userId').isDefined().isString().hasLength(24, 24).isObjectId();
   }
 }
