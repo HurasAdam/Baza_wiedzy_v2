@@ -1,33 +1,29 @@
-import API from "@/config/api.client"
+import API from "@/config/api.client";
 
- const getAllProducts = async () =>{
+const getAllProducts = () => {
     return API.get("/products");
-
 }
 
-const createProduct = async (formData) =>{
-    console.log(formData)
-    return API.post("/products/create",formData);
-
+const createProduct = (formData) => {
+    return API.post("/products/create", formData);
 }
 
-const deleteProduct = async (id) =>{
+const deleteProduct = (id: string) => {
     return API.delete(`/products/product/${id}/delete`);
 }
 
-const getProduct = async(id)=>{
+const getProduct = (id: string) => {
     return API.get(`/products/product/${id}`);
 }
 
-const updateProduct = async(productId,formData)=>{
-    return API.put(`/products/product/${productId}/update`,formData);
+const updateProduct = (productId: string, formData) => {
+    return API.put(`/products/product/${productId}/update`, formData);
 }
 
-
-export  const productsApi ={
+export const productsApi = {
     getAllProducts,
     createProduct,
     deleteProduct,
     getProduct,
     updateProduct
-} 
+}
