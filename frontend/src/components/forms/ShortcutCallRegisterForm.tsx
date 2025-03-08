@@ -116,7 +116,7 @@ export default function ShortcutCallRegisterForm({ setActualStep, setFullFormDat
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-3.5 my-3">
+                <div className="flex flex-col gap-3.5 my-3 bg-card">
                     {isConversationTopicsLoading ? (
                         <div className="skeleton-container">
                             <Spinner position="center" color="bg-blue-500" />
@@ -146,7 +146,7 @@ export default function ShortcutCallRegisterForm({ setActualStep, setFullFormDat
                     ) : filteredTopics.length > 0 ? (
                         filteredTopics.map((topic: ITopic) => <ConversationReportCard key={topic._id} topic={topic} />)
                     ) : (
-                        <div className="flex flex-col items-center justify-center border p-8 bg-slate-50 rounded-lg text-center text-slate-500 shadow-lg min-h-[500px] transition-all ease-in-out duration-300">
+                        <div className="flex flex-col items-center justify-center border p-8 bg-card rounded-lg text-center text-foreground shadow-lg min-h-[500px] transition-all ease-in-out duration-300">
                             <div className="w-48 h-48 mb-6">
                                 <img
                                     src={IMAGES.notFoundImage}
@@ -154,8 +154,8 @@ export default function ShortcutCallRegisterForm({ setActualStep, setFullFormDat
                                     className="object-contain w-full h-full"
                                 />
                             </div>
-                            <p className="text-xl font-medium text-slate-700">Brak wyników</p>
-                            <p className="mt-4 text-sm text-slate-500">
+                            <p className="text-xl font-medium text-foreground">Brak wyników</p>
+                            <p className="mt-4 text-sm text-foreground">
                                 Żadne tematy nie pasują do Twoich kryteriów. Spróbuj zmienić filtry lub szukaj ponownie.
                             </p>
                             <Button
