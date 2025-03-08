@@ -1,4 +1,4 @@
-import { registerSchema } from '../../schemas.js';
+import Validation from '../../../../tools/validation.js';
 import type { IRegisterDto } from './types.js';
 
 export default class RegisterDto implements IRegisterDto {
@@ -19,12 +19,11 @@ export default class RegisterDto implements IRegisterDto {
   }
 
   private validate(): void {
-    registerSchema.parse({
-      userAgent: this.userAgent,
-      name: this.name,
-      surname: this.surname,
-      email: this.email,
-      password: this.password,
-    });
+    new Validation(this.email, 'email').isDefined().isString().hasLength(255, 1);
+    new Validation(this.password, 'password').isDefined().isString().hasLength(255, 6);
+    new Validation(this.surname, 'surname').isDefined().isString().hasLength(255, 3);
+    new Validation(this.name, 'name').isDefined().isString().hasLength(255, 3);
+
+    if (this.userAgent) new Validation(this.userAgent, 'userAgent').isDefined().isString();
   }
 }

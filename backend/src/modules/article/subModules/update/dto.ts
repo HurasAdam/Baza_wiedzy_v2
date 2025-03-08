@@ -29,6 +29,6 @@ export default class UpdateArticleDto implements IUpdateArticleDto {
     new Validation(this.clientDescription, 'clientDescription').isDefined().isString();
     new Validation(this.employeeDescription, 'employeeDescription').isDefined().isString();
     new Validation(this.tags, 'tags').isDefined().isArray().isStringArray();
-    new Validation(this.product, 'product').isDefined().isString();
+    new Validation(this.product, 'product').isDefined().isString().isObjectId();
   }
 }

@@ -1,6 +1,6 @@
 import { EHttpCodes } from '../../../../../../enums/http.js';
 import getManyConversationTopics from '../../../../../../modules/conversationTopic/subModules/get/many/index.js';
-import catchErrors from '../../../../../../utils/catchErrors.js';
+import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetConversationReportReq } from '../../../conversationReport/get/allReports/types.js';
 import type express from 'express';
 

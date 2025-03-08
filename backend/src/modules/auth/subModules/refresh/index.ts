@@ -1,8 +1,8 @@
+import { oneDay, thirtyDaysFromNow } from '../../../../enums/dates.js';
 import { EHttpCodes } from '../../../../enums/http.js';
 import { UnauthorizedError } from '../../../../errors/index.js';
 import { refreshTokenSignOptions, signToken, verifyToken } from '../../../../tools/passwords.js';
 import appAssert from '../../../../utils/appAssert.js';
-import { oneDay, thirtyDaysFromNow } from '../../../../utils/date.js';
 import SessionRepository from '../../../session/repository/index.js';
 import type { IAccessTokenPayload, IRefreshTokenPayload } from '../../../../types/tokens.js';
 
@@ -21,7 +21,7 @@ export default async (refreshToken: string): Promise<{ accessToken: string; newR
   appAssert(session.expiresAt.getTime() > now, EHttpCodes.UNAUTHORIZED, 'Session expired');
 
   // refresh the session if it expires in the next 24hrs
-  const sessionNeedsRefresh = session.expiresAt.getTime() - now <= oneDay;
+  const sessionNeedsRefresh = session.expiresAt.getTime() - now <= oneDay();
   if (sessionNeedsRefresh) {
     session.expiresAt = thirtyDaysFromNow();
     await sessionRepo.update(session._id as string, { expiresAt: thirtyDaysFromNow() });

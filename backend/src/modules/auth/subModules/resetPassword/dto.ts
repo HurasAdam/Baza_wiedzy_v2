@@ -1,4 +1,4 @@
-import { resetPasswordSchema } from '../../schemas.js';
+import Validation from '../../../../tools/validation.js';
 import type { IResetPasswordDto } from './types.js';
 
 export default class ResetPasswordDto implements IResetPasswordDto {
@@ -13,9 +13,7 @@ export default class ResetPasswordDto implements IResetPasswordDto {
   }
 
   private validate(): void {
-    resetPasswordSchema.parse({
-      verificationCode: this.verificationCode,
-      password: this.password,
-    });
+    new Validation(this.password, 'password').isDefined().isString().hasLength(255, 6);
+    new Validation(this.verificationCode, 'verificationCode').isDefined().isString().hasLength(24, 1);
   }
 }

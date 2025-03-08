@@ -17,6 +17,6 @@ export default class UpdateConversationTopicDto implements IUpdateConversationTo
   private validate(): void {
     if (this.title) new Validation(this.title, 'title').isDefined().isString();
     if (this.product) new Validation(this.id, 'id').isDefined().isString();
-    new Validation(this.product, 'product').isDefined().isString();
+    new Validation(this.product, 'product').isDefined().isString().isObjectId();
   }
 }

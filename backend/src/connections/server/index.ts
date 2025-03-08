@@ -4,7 +4,6 @@ import express from 'express';
 import Log from 'simpl-loggar';
 import authenticate from './middleware/authenticate.js';
 import errorHandler from './middleware/errorHandlers.js';
-import getConfig from '../../constants/index.js';
 import initWebsocketServer from '../websocket/index.js';
 import articleRoutes from './modules/article/index.js';
 import authRoutes from './modules/auth/index.js';
@@ -16,6 +15,7 @@ import productRoutes from './modules/product/index.js';
 import sessionRoutes from './modules/session/index.js';
 import tagRoutes from './modules/tag/index.js';
 import userRoutes from './modules/user/index.js';
+import { getConfig } from '../../tools/config.js';
 import http from 'http';
 
 const initUnprotectedRoutes = (app: express.Express): void => {

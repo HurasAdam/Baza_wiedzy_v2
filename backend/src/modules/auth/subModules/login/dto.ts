@@ -1,4 +1,4 @@
-import { loginSchema } from '../../schemas.js';
+import Validation from '../../../../tools/validation.js';
 import type { ILoginDto } from './types.js';
 
 export default class LoginDto implements ILoginDto {
@@ -15,10 +15,8 @@ export default class LoginDto implements ILoginDto {
   }
 
   private validate(): void {
-    loginSchema.parse({
-      userAgent: this.userAgent,
-      password: this.password,
-      email: this.email,
-    });
+    new Validation(this.email, 'email').isDefined().isString().hasLength(255, 3);
+    new Validation(this.password, 'password').isDefined().isString().hasLength(255, 6);
+    if (this.userAgent) new Validation(this.userAgent, 'userAgent').isDefined().isString().hasMinLength(1);
   }
 }

@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import logout from '../../../../../modules/auth/subModules/logout/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
-import { clearAuthCookies } from '../../../../../utils/cookies.js';
+import catchErrors from '../../../utils/catchErrors.js';
+import { clearAuthCookies } from '../../../utils/cookies.js';
 import type { ILogoutReq } from './types.js';
 import type express from 'express';
 

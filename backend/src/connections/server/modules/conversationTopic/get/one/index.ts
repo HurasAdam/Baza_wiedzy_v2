@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../../enums/http.js';
 import GetOneConversationTopicDto from '../../../../../../modules/conversationTopic/subModules/get/one/dto.js';
 import getConversationTopics from '../../../../../../modules/conversationTopic/subModules/get/one/index.js';
-import catchErrors from '../../../../../../utils/catchErrors.js';
+import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetOneConversationTopicReq } from './types.js';
 import type express from 'express';
 

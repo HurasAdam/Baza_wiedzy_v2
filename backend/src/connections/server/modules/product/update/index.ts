@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import UpdateProductDto from '../../../../../modules/product/subModules/update/dto.js';
 import update from '../../../../../modules/product/subModules/update/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IUpdateProductReq } from './types.js';
 import type express from 'express';
 

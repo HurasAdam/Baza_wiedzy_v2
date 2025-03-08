@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import UpdateArticleDto from '../../../../../modules/article/subModules/update/dto.js';
 import updateArticle from '../../../../../modules/article/subModules/update/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IUpdateArticleReq } from './types.js';
 import type express from 'express';
 

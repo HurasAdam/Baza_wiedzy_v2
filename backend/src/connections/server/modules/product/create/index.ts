@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import CreateProductDto from '../../../../../modules/product/subModules/create/dto.js';
 import createProduct from '../../../../../modules/product/subModules/create/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { ICreateProductReq } from './types.js';
 import type express from 'express';
 

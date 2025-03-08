@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import RemoveSessionDto from '../../../../../modules/session/subModules/remove/dto.js';
 import remove from '../../../../../modules/session/subModules/remove/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IRemoveSessionReq } from './types.js';
 import type express from 'express';
 

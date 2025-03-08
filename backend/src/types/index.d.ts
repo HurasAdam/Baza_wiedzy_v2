@@ -1,4 +1,5 @@
 export type * from './email.js';
+export type * from './utils.d.ts';
 export type * from './generic.d.ts';
 export type * from './config.d.ts';
 export type * from './repository.d.ts';

@@ -1,6 +1,6 @@
 import { EHttpCodes } from '../../../../../../enums/http.js';
 import get from '../../../../../../modules/product/subModules/get/many/index.js';
-import catchErrors from '../../../../../../utils/catchErrors.js';
+import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetManyProductsReq } from './types.js';
 import type express from 'express';
 

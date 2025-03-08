@@ -20,7 +20,8 @@ const fakeConfig = {
   EMAIL_SENDER: 'fakeSender',
 };
 
-export default (): IConfig => {
+// eslint-disable-next-line import/prefer-default-export
+export const getConfig = (): IConfig => {
   if (process.env.NODE_ENV === 'test') return fakeConfig;
 
   return {

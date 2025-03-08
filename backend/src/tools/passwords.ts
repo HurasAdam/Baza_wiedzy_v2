@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import getConfig from '../constants/index.js';
+import { getConfig } from './config.js';
 import { EAudience } from '../enums/audience.js';
 import type { IAccessTokenPayload, IRefreshTokenPayload, ISignOptionsAndSecret } from '../types/index.js';
 import type { VerifyOptions, SignOptions } from 'jsonwebtoken';

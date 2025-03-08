@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../../enums/http.js';
 import GetLatestArticlesDto from '../../../../../../modules/article/subModules/get/latest/dto.js';
 import getLatest from '../../../../../../modules/article/subModules/get/latest/index.js';
-import catchErrors from '../../../../../../utils/catchErrors.js';
+import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetLatestArticleReq } from './types.js';
 import type express from 'express';
 

@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import TrashArticleDto from '../../../../../modules/article/subModules/trash/dto.js';
 import trashArticle from '../../../../../modules/article/subModules/trash/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { ITrashArticleReq } from './types.js';
 import type express from 'express';
 

@@ -1,6 +1,6 @@
 import Log from 'simpl-loggar';
 import { WebSocketServer } from 'ws';
-import getConfig from '../../constants/index.js';
+import { getConfig } from '../../tools/config.js';
 import type { WebSocket } from 'ws';
 
 // let users:WebSocket[]=[];

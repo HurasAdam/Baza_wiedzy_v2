@@ -1,8 +1,8 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import refreshAccessToken from '../../../../../modules/auth/subModules/refresh/index.js';
 import appAssert from '../../../../../utils/appAssert.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
-import { getAccessTokenCookieOptions, getRefreshTokenCookieOptions } from '../../../../../utils/cookies.js';
+import catchErrors from '../../../utils/catchErrors.js';
+import { getAccessTokenCookieOptions, getRefreshTokenCookieOptions } from '../../../utils/cookies.js';
 import type { IRefreshTokenReq } from './types.js';
 import type express from 'express';
 

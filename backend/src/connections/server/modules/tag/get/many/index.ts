@@ -1,6 +1,6 @@
 import GetManyTagsDto from '../../../../../../modules/tag/subModules/get/many/dto.js';
 import get from '../../../../../../modules/tag/subModules/get/many/index.js';
-import catchErrors from '../../../../../../utils/catchErrors.js';
+import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetManyTagReq } from './types.js';
 import type express from 'express';
 

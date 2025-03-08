@@ -1,4 +1,4 @@
-import { newConversationReportSchema } from '../../schema.js';
+import Validation from '../../../../tools/validation.js';
 import type { IAddConversationReportDto } from './types.js';
 
 export default class AddConversationReportDto implements IAddConversationReportDto {
@@ -15,9 +15,9 @@ export default class AddConversationReportDto implements IAddConversationReportD
   }
 
   private validate(): void {
-    newConversationReportSchema.parse({
-      description: this.description,
-      topic: this.topic,
-    });
+    new Validation(this.topic, 'topic').isDefined().isString().hasMinLength(1);
+    new Validation(this.userId, 'userId').isDefined().isString();
+
+    if (this.description) new Validation(this.description, 'description').isDefined().isString().hasLength(190);
   }
 }

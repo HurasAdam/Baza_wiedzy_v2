@@ -1,6 +1,6 @@
 import GetArticleByUserDto from '../../../../../../modules/article/subModules/get/byUser/dto.js';
 import getByUser from '../../../../../../modules/article/subModules/get/byUser/index.js';
-import catchErrors from '../../../../../../utils/catchErrors.js';
+import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetArticleByUserReq } from './types.js';
 import type express from 'express';
 

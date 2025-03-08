@@ -1,8 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import type { ParsedQs } from 'qs';
 
-export type AsyncController = (req: Request, res: Response, next: NextFunction) => Promise<unknown>;
-
 /**
  * @param controller
  */

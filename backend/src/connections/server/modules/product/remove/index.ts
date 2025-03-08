@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import RemoveProductDto from '../../../../../modules/product/subModules/remove/dto.js';
 import remove from '../../../../../modules/product/subModules/remove/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IRemoveProductReq } from './types.js';
 import type express from 'express';
 

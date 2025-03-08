@@ -1,6 +1,6 @@
 import GetStatsDto from '../../../../../modules/dashboard/subModules/get/stats/dto.js';
 import getStats from '../../../../../modules/dashboard/subModules/get/stats/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IGetStatsReq } from './types.js';
 import type express from 'express';
 

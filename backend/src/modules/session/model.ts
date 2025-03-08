@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { thirtyDaysFromNow } from '../../utils/date.js';
+import { thirtyDaysFromNow } from '../../enums/dates.js';
 import type { ISession } from './types.js';
 
 const sessionSchema = new mongoose.Schema({
@@ -17,7 +17,7 @@ const sessionSchema = new mongoose.Schema({
   },
   expiresAt: {
     type: Date,
-    default: thirtyDaysFromNow,
+    default: thirtyDaysFromNow(),
   },
 });
 

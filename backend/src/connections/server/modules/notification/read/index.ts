@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import ReadNotificationsDto from '../../../../../modules/notification/subModules/read/dto.js';
 import readNotification from '../../../../../modules/notification/subModules/read/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IReadNotificationsReq } from './types.js';
 import type express from 'express';
 

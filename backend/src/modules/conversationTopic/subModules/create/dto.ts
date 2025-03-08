@@ -1,5 +1,4 @@
 import Validation from '../../../../tools/validation.js';
-import { newConversationTopicSchema } from '../../schema.js';
 import type { ICreateConversationTopicDto } from './types.js';
 
 export default class CreateConversationTopicDto implements ICreateConversationTopicDto {
@@ -12,11 +11,12 @@ export default class CreateConversationTopicDto implements ICreateConversationTo
     this.title = data.title;
     this.product = data.product;
 
-    this.validate(data);
+    this.validate();
   }
 
-  private validate(data: ICreateConversationTopicDto): void {
+  private validate(): void {
     new Validation(this.userId, 'userId').isDefined().isString();
-    newConversationTopicSchema.parse(data);
+    new Validation(this.product, 'product').isDefined().isString().isObjectId();
+    new Validation(this.title, 'title').isDefined().isString().hasLength(40, 1);
   }
 }

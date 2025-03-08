@@ -2,11 +2,11 @@ import type { JestConfigWithTsJest } from 'ts-jest';
 
 const config: JestConfigWithTsJest = {
   verbose: true,
-  moduleDirectories: ['node_modules', 'src', "__tests__", __dirname],
+  moduleDirectories: ['node_modules', 'src', '__tests__', __dirname],
   moduleFileExtensions: ['js', 'ts', 'json'],
   testPathIgnorePatterns: ['build'],
   extensionsToTreatAsEsm: ['.ts'],
-  rootDir: "../",
+  rootDir: '../',
   preset: 'ts-jest/presets/default-esm',
   testMatch: ['**/*.test.ts'],
   testEnvironment: 'node',
@@ -22,10 +22,10 @@ const config: JestConfigWithTsJest = {
       'ts-jest',
       {
         useESM: true,
-        tsconfig: "tsconfig.test.json",
+        tsconfig: 'tsconfig.test.json',
       },
     ],
-  }
+  },
 };
 
 export default config;

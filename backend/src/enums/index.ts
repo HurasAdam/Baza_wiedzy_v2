@@ -1,4 +1,5 @@
 export * from './events.js';
+export * from './dates.js';
 export * from './product.js';
 export * from './controller.js';
 export * from './audience.js';

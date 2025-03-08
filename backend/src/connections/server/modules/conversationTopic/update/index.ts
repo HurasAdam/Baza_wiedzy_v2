@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import UpdateConversationTopicDto from '../../../../../modules/conversationTopic/subModules/update/dto.js';
 import updateConversation from '../../../../../modules/conversationTopic/subModules/update/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IUpdateConversationTopicReq } from './types.js';
 import type express from 'express';
 

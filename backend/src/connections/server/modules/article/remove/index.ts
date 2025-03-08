@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import RemoveArticleDto from '../../../../../modules/article/subModules/remove/dto.js';
 import removeArticle from '../../../../../modules/article/subModules/remove/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IRemoveArticleReq } from './types.js';
 import type express from 'express';
 

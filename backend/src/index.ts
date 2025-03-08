@@ -1,22 +1,21 @@
 import 'dotenv/config';
-import mongoose from 'mongoose';
 import Log from 'simpl-loggar';
-import connectDB from './config/db.js';
+import Mongo from './connections/mongoose/index.js';
 import startServer from './connections/server/index.js';
-import type http from 'http';
-
-let app: http.Server | undefined = undefined;
+import State from './tools/state.js';
 
 const start = async (): Promise<void> => {
-  await connectDB();
-  app = startServer();
+  const mongo = new Mongo();
+
+  State.mongo = mongo;
+  State.server = startServer();
+
+  await mongo.init();
 };
 
 const close = (): void => {
-  if (app) app.close();
-  mongoose.disconnect().catch((err) => {
-    Log.error('Mongoose', 'Got error while disconnecting from mongoose', (err as Error).message);
-  });
+  if (State.server) State.server.close();
+  State.mongo.disconnect();
 };
 
 start()

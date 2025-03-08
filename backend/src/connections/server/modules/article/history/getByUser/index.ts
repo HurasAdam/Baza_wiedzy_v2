@@ -1,6 +1,6 @@
 import GetHistoryByUserDto from '../../../../../../modules/article/subModules/history/user/dto.js';
 import getUserHistory from '../../../../../../modules/article/subModules/history/user/index.js';
-import catchErrors from '../../../../../../utils/catchErrors.js';
+import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetHistoryByUserReq } from './types.js';
 import type express from 'express';
 

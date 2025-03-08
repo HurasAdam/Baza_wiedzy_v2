@@ -1,5 +1,4 @@
 import Validation from '../../../../tools/validation.js';
-import { newTagSchema } from '../../schema.js';
 import type { IUpdateTagDto } from './types.js';
 
 export default class UpdateTagDto implements IUpdateTagDto {
@@ -15,6 +14,6 @@ export default class UpdateTagDto implements IUpdateTagDto {
 
   private validate(): void {
     new Validation(this.tagId, 'tagId').isDefined().isString();
-    newTagSchema.parse(this.name);
+    new Validation(this.name, 'name').isDefined().isString().hasLength(20, 2);
   }
 }

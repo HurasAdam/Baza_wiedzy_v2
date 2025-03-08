@@ -2,7 +2,7 @@ import { EHttpCodes } from '../../../../../../enums/http.js';
 import GetOneArticlesDto from '../../../../../../modules/article/subModules/get/one/dto.js';
 import getOne from '../../../../../../modules/article/subModules/get/one/index.js';
 import incrementArticleViews from '../../../../../../modules/article/subModules/views/increment/index.js';
-import catchErrors from '../../../../../../utils/catchErrors.js';
+import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetOneArticleReq } from './types.js';
 import type express from 'express';
 

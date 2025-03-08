@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import RestoreArticleDto from '../../../../../modules/article/subModules/restore/dto.js';
 import restoreArticle from '../../../../../modules/article/subModules/restore/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IRestoreArticleReq } from './types.js';
 import type express from 'express';
 

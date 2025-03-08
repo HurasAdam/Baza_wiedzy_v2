@@ -1,4 +1,4 @@
-import { newArticleSchema } from '../../../../modules/article/schema.js';
+import Validation from '../../../../tools/validation.js';
 import type { ICreateArticleDto } from './types.js';
 
 export default class CreateArticlesDto implements ICreateArticleDto {
@@ -17,10 +17,15 @@ export default class CreateArticlesDto implements ICreateArticleDto {
     this.product = data.product;
     this.userId = data.userId;
 
-    this.validate(data);
+    this.validate();
   }
 
-  private validate(data: ICreateArticleDto): void {
-    newArticleSchema.parse(data);
+  private validate(): void {
+    new Validation(this.title, 'title').isDefined().isString().hasLength(90, 4);
+    new Validation(this.employeeDescription, 'employeeDescription').isDefined().isString().hasLength(9000, 6);
+    new Validation(this.clientDescription, 'clientDescription').isDefined().isString().hasLength(9000, 6);
+    new Validation(this.tags, 'tags').isDefined().isStringArray().minElements(1).isObjectIdArray();
+    new Validation(this.product, 'product').isDefined().isString().isObjectId();
+    new Validation(this.userId, 'userId').isDefined().isString().isObjectId();
   }
 }

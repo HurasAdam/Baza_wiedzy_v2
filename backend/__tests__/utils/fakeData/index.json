@@ -1,0 +1,34 @@
+{
+  "data": {
+    "users": [
+      {
+        "id": "67cc21a97f94d1cbe46ad665"
+      }
+    ],
+    "products": [
+      {
+        "id": "67cc21a97f94d1cbe46ad666"
+      }
+    ],
+    "tags": [
+      {
+        "id": "67cc302170bcca806bc9d6d0"
+      }
+    ],
+    "article": [
+      {
+      "_id": "67cc30d69d02f5984c4528c0",
+      "title": "title",
+      "employeeDescription": "E Desc",
+      "clientDescription": "C Desc",
+      "product": "67cc21a97f94d1cbe46ad666",
+      "tags": [ "67cc302170bcca806bc9d6d0" ],
+      "createdBy": "67cc21a97f94d1cbe46ad665",
+      "verifiedBy": "67cc21a97f94d1cbe46ad665",
+      "viewsCounter": 0,
+      "isTrashed": false,
+      "isVerified": false
+      }
+    ]
+  }
+}

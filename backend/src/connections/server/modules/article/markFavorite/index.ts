@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import MarkFavDto from '../../../../../modules/article/subModules/favorite/mark/dto.js';
 import markFavorite from '../../../../../modules/article/subModules/favorite/mark/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IMarkFavReq } from './types.js';
 import type express from 'express';
 

@@ -1,6 +1,6 @@
 import GetConversationReportDto from '../../../../../../modules/conversationReport/subModules/get/one/dto.js';
 import getConversationReports from '../../../../../../modules/conversationReport/subModules/get/one/index.js';
-import catchErrors from '../../../../../../utils/catchErrors.js';
+import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetConversationReportReq } from './types.js';
 import type express from 'express';
 

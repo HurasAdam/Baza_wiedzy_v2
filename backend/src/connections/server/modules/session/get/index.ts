@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import GetSessionDto from '../../../../../modules/session/subModules/get/dto.js';
 import get from '../../../../../modules/session/subModules/get/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IGetSessionReq } from './types.js';
 import type express from 'express';
 

@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import AddConversationReportDto from '../../../../../modules/conversationReport/subModules/add/dto.js';
 import add from '../../../../../modules/conversationReport/subModules/add/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IAddConversationReportReq } from './types.js';
 import type express from 'express';
 

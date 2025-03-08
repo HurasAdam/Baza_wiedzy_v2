@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import UpdateTagDto from '../../../../../modules/tag/subModules/update/dto.js';
 import update from '../../../../../modules/tag/subModules/update/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IUpdateTagReq } from './types.js';
 import type express from 'express';
 

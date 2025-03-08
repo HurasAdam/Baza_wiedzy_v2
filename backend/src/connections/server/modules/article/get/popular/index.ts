@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../../enums/http.js';
 import GetPopularArticles from '../../../../../../modules/article/subModules/get/popular/dto.js';
 import getPopular from '../../../../../../modules/article/subModules/get/popular/index.js';
-import catchErrors from '../../../../../../utils/catchErrors.js';
+import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetPopularArticlesReq } from './types.js';
 import type express from 'express';
 

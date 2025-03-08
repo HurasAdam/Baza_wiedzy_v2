@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import GetUserWithArticleCountDto from '../../../../../modules/user/subModules/getWithArticleCount/dto.js';
 import get from '../../../../../modules/user/subModules/getWithArticleCount/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { IGetUsersWithArticleChangesReq } from './types.js';
 import type express from 'express';
 

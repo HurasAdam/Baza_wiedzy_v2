@@ -1,7 +1,7 @@
 import { EHttpCodes } from '../../../../../enums/http.js';
 import CreateArticlesDto from '../../../../../modules/article/subModules/create/dto.js';
 import createArticle from '../../../../../modules/article/subModules/create/index.js';
-import catchErrors from '../../../../../utils/catchErrors.js';
+import catchErrors from '../../../utils/catchErrors.js';
 import type { ICreateArticleReq } from './types.js';
 import type express from 'express';
 
