@@ -2,7 +2,7 @@ import { AlertModal } from "@/components/core/AlertModal";
 import { ContentModal } from "@/components/core/ContentModal";
 import useModalSize from "@/hooks/useModalSize";
 import React, { useCallback, useContext, useState } from "react";
-import { useModalSettings } from "./PreferencesSettingsContext";
+import { useModalSettings } from "./ModalSettingsContext";
 
 // Stwórz kontekst
 const ModalContext = React.createContext(undefined);
@@ -62,7 +62,7 @@ export const ModalContextProvider = ({
 
   // Funkcje dla ContentModal
 
-  const { modalSize } = useModalSettings();
+  const { modalWidth: modalSize } = useModalSettings();
 
 
   const openContentModal = useCallback(

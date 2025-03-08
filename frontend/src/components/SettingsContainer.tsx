@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { RiSettings4Fill } from "react-icons/ri";
 import ThemeToggleButton from "./ToggleThemeButton";
-import { useModalSettings } from "@/contexts/PreferencesSettingsContext";
+import { useModalSettings } from "@/contexts/ModalSettingsContext";
 
 const SettingsContainer = () => {
   const [activeTab, setActiveTab] = useState("personalization");
@@ -19,7 +19,7 @@ const SettingsContainer = () => {
     setNavbarColor(event.target.value);
   };
 
-  const { modalSize, changeModalSize } = useModalSettings();
+  const { modalWidth, changeModalWidth } = useModalSettings();
 
   return (
     <div className="flex w-full">
@@ -91,8 +91,8 @@ const SettingsContainer = () => {
               </label>
               <div className="relative">
                 <select
-                  value={modalSize}
-                  onChange={(e) => changeModalSize(e.target.value)}
+                  value={modalWidth}
+                  onChange={(e) => changeModalWidth(e.target.value)}
                   className="appearance-none bg-input block w-full px-4 py-2 pr-10 border border-gray-300 rounded-md shadow-sm text-foreground focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="sm">Mały</option>
