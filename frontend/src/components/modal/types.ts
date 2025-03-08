@@ -12,16 +12,8 @@ export interface ModalProps {
   onClose(): void;
 }
 
-// export interface UseModalProps {
-//   content: ReactNode;
-//   width?: WidthModal;
-//   height?: HeightModal;
-//   closeOnOutsideClick?: boolean;
-// }
-
 export interface UseModal {
     isOpen: boolean;
-    // config: UseModalProps;
     openModal(): void;
     closeModal(): void;
 }
