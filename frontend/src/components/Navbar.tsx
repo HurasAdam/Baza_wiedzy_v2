@@ -1,6 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
-
-import { useModalContext } from "@/contexts/ModalContext";
 import { useLogout } from "@/hooks/auth/useLogout";
 import useScrollY from "@/hooks/useScrollY";
 import clsx from "clsx";
@@ -41,11 +38,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/t
 const Navbar: React.FC = ({ notifications }) => {
     const { openModal: openSettingsModal, isOpen, closeModal } = useModal();
     const { openModal: openCallsModal, isOpen: isCallsModalOpen, closeModal: closeCallsModal } = useModal();
-    const queryClient = useQueryClient();
+    const { openModal: openSearchModal, isOpen: isSearchModalOpen, closeModal: closeSearchModal } = useModal();
     const location = useLocation();
     const navigate = useNavigate();
     const path = location.pathname.split("/")[1];
-    const { openContentModal } = useModalContext();
     const isScrolled = useScrollY();
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -118,26 +114,7 @@ const Navbar: React.FC = ({ notifications }) => {
                 <div className=" flex justify-around w-full items-center space-x-3.5 "></div>
                 <div className="">
                     <button
-                        onClick={() =>
-                            openContentModal({
-                                height: "fit",
-                                size: "sm",
-                                title: "Znajdź artykuł ",
-                                content: (
-                                    <div className="px-2 ">
-                                        <SearchBar
-                                            enableSearchNavigation={true}
-                                            visibleFields={{
-                                                title: true,
-                                                tags: false,
-                                                author: false,
-                                            }}
-                                            immediate={false}
-                                        />
-                                    </div>
-                                ),
-                            })
-                        }
+                        onClick={openSearchModal}
                         className="flex items-center gap-1 w-[240px] h-full rounded-xl  border border-gray-200 cursor-pointer hover:bg-indigo-50 hover:border-indigo-100 hover:text-slate-500 bg-slate-50 p-0.5 px-3 text-slate-400 text-[14px]"
                     >
                         <IoIosSearch className="text-slate-500" />
@@ -228,6 +205,17 @@ const Navbar: React.FC = ({ notifications }) => {
             </Modal>
             <Modal isOpen={isCallsModalOpen} onClose={closeCallsModal}>
                 <ShortcutCallRegisterForm />
+            </Modal>
+            <Modal height="sm" isOpen={isSearchModalOpen} onClose={closeSearchModal}>
+                <SearchBar
+                    enableSearchNavigation={true}
+                    visibleFields={{
+                        title: true,
+                        tags: false,
+                        author: false,
+                    }}
+                    immediate={false}
+                />
             </Modal>
         </div>
     );

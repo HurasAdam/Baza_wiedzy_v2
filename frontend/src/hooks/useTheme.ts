@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export enum Theme {
     LIGHT = "light",
@@ -6,9 +6,9 @@ export enum Theme {
     DARK = "dark",
     FALCON = "falcon",
     PHOENIX = "phoenix",
-    LINEAR = "linear"
+    LINEAR = "linear",
+    ROSE = "rose",
 }
-
 
 const useTheme = () => {
     const [theme, setTheme] = useState(() => {
@@ -16,7 +16,7 @@ const useTheme = () => {
     });
 
     useEffect(() => {
-        document.body.classList.remove("light", "slate", "dark", "falcon", "phoenix", "linear");
+        document.body.classList.remove("light", "slate", "dark", "falcon", "phoenix", "linear", "rose");
         document.body.classList.add(theme);
         localStorage.setItem("theme", theme);
     }, [theme]);

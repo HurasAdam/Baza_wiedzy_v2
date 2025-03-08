@@ -244,6 +244,37 @@
     }
 }
 
+.rose {
+    /* Tło i tekst */
+    --background: 22 94% 12%;
+    /* Głęboka, niemal czarna szarość */
+    --foreground: 0 0% 92%;
+    /* Jasny, kontrastujący tekst */
+
+    /* Karty, popovery, i inne elementy */
+    --card: 210 10% 12%;
+    /* Nieco jaśniejsze niż tło, aby wyróżniały się elementy */
+    --card-foreground: 0 0% 98%;
+    --popover: 210 10% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Akcent – przyciski i interakcje */
+    --primary: 210 67% 45%;
+    /* Ten sam wyrazisty niebieski, zapewniający spójność */
+    --primary-foreground: 0 0% 100%;
+    --ring: 210 100% 45%;
+
+    /* Elementy pomocnicze */
+    --secondary: 210 14% 25%;
+    /* Głębszy odcień szarości dla wtórnych elementów */
+    --secondary-foreground: 0 0% 92%;
+    --muted: 210 10% 20%;
+    --muted-foreground: 0 0% 70%;
+
+    /* Obramowania */
+    --border: 210 14% 20%;
+}
+
 @layer base {
     * {
         @apply border-border;
