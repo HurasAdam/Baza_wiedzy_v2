@@ -25,6 +25,10 @@ export default abstract class RepositoryFactory<T extends Document, U extends Mo
     return this.model.find(data).lean<types.IRepositoryGetManyData[Z]>();
   }
 
+  async getOne(data: FilterQuery<Partial<types.IRepositoryGetData[Z]>>): Promise<types.IRepositoryGetData[Z] | null> {
+    return this.model.findOne(data).lean<types.IRepositoryGetData[Z]>();
+  }
+
   async add(data: types.IRepositoryAddData[Z]): Promise<string> {
     const newElement = new this.model(data);
     const callback = await newElement.save();
