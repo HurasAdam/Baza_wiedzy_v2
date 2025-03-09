@@ -8,13 +8,13 @@ import type { IArticleEntity } from '../../../types.js';
 export default async (
   dto: GetManyArticlesDto,
 ): Promise<{ data: IArticleEntity[]; pagination: { total: number; page: number; pages: number } }> => {
-  const { userId } = dto;
+  const { userId, ...sortParams } = dto;
 
   const userRepo = new UserRepository();
   const articleRepo = new ArticleRepository();
 
   const query = {
-    ...constructSearchQuery({ limit: dto.limit, page: dto.page, sortBy: dto.sortBy }),
+    ...constructSearchQuery(sortParams),
     isTrashed: { $ne: true },
   };
   const user = await userRepo.getById(userId);

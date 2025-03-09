@@ -3,4 +3,6 @@ export interface IGetManyArticlesDto {
   limit?: string;
   page?: string;
   sortBy?: string;
+  product?: string;
+  title?: string;
 }

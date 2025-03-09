@@ -17,7 +17,7 @@ export default async (
   const existingUser = await userRepo.get({
     email,
   });
-  appAssert(!existingUser, EHttpCodes.CONFLICT, 'Email already in use');
+  appAssert(existingUser, EHttpCodes.CONFLICT, 'Email already in use');
 
   const userId = await userRepo.add({
     name,

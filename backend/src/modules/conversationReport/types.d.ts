@@ -2,7 +2,7 @@ import type mongoose from 'mongoose';
 
 export interface ICreateConversationReport {
   topic: string | mongoose.Types.ObjectId;
-  description: string;
+  description?: string;
   createdBy: string | mongoose.Types.ObjectId;
 }
 

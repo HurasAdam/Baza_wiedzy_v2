@@ -3,7 +3,7 @@ import type express from 'express';
 import type { ParsedQs } from 'qs';
 
 interface IGetOneArticleParams {
-  articleId: string;
+  id: string;
 }
 
 export type IGetOneArticleReq = express.Request<

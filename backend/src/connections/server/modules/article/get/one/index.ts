@@ -8,7 +8,7 @@ import type express from 'express';
 
 export default (): ((req: IGetOneArticleReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
-    const articleId = req?.params?.articleId;
+    const articleId = req?.params?.id;
     const dto = new GetOneArticlesDto({ articleId, userId: req.userId });
 
     const article = await getOne(dto);

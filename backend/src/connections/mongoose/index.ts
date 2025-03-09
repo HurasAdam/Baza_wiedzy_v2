@@ -22,7 +22,6 @@ export default class Mongo {
 
   private async startServer(): Promise<void> {
     await mongoose.connect(getConfig().MONGO_URI, {
-      dbName: 'Messages',
       serverSelectionTimeoutMS: 5000,
     } as ConnectOptions);
 

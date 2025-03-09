@@ -10,11 +10,12 @@ export default async (dto: AddConversationReportDto): Promise<void> => {
   const conversationTopicRepo = new ConversationTopicRepository();
   const conversationReportRepo = new ConversationReportRepository();
 
-  const conversationTopic = await conversationTopicRepo.get({ topic });
-  appAssert(!conversationTopic, EHttpCodes.CONFLICT, 'Conversation topic does not exist');
+  const conversationTopic = (await conversationTopicRepo.get({ _id: topic }))[0];
+
+  appAssert(conversationTopic, EHttpCodes.CONFLICT, 'Conversation topic does not exist');
 
   await conversationReportRepo.add({
-    description: dto.description ?? '',
+    description: dto.description,
     createdBy: userId,
     topic,
   });
