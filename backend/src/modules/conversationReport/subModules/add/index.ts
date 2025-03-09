@@ -4,6 +4,11 @@ import ConversationTopicRepository from '../../../conversationTopic/repository/i
 import ConversationReportRepository from '../../repository/index.js';
 import type AddConversationReportDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to add conversation report.
+ * @param dto
+ * @returns AddConversationReport.
+ */
 export default async (dto: AddConversationReportDto): Promise<void> => {
   const { topic, userId } = dto;
 

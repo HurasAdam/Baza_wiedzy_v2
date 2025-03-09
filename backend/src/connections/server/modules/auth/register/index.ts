@@ -6,6 +6,10 @@ import { setAuthCookies } from '../../../utils/cookies.js';
 import type { IRegisterReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to register user.
+ * @returns RegisterUser.
+ */
 export default (): ((req: IRegisterReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new RegisterDto(req.body, req.headers['user-agent']);

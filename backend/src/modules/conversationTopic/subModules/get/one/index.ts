@@ -2,6 +2,11 @@ import ConversationTopicModel from '../../../model.js';
 import type GetConversationTopicDto from './dto.js';
 import type { IConversationTopicEntity } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get one conversation topic.
+ * @param dto
+ * @returns GetOneConversationTopic.
+ */
 export default async (dto: GetConversationTopicDto): Promise<IConversationTopicEntity | null> => {
   const { topicId } = dto;
 

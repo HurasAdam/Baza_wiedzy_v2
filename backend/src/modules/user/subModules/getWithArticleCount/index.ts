@@ -4,6 +4,11 @@ import type GetUserWithArticleCountDto from './dto.js';
 import type mongoose from 'mongoose';
 import type { FilterQuery } from 'mongoose';
 
+/**
+ * Export controller, for endpoint to get user with article count.
+ * @param dto
+ * @returns GetUserWithArticleCount.
+ */
 export default async (
   dto: GetUserWithArticleCountDto,
 ): Promise<{ id: mongoose.Types.ObjectId; name: string; surname: string; createdArticleCount: string }[]> => {

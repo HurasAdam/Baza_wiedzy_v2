@@ -4,6 +4,11 @@ import ProductRepository from '../../../repository/index.js';
 import type GetProductDto from './dto.js';
 import type { IProductEntity } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get one product.
+ * @param dto
+ * @returns GetOneProduct.
+ */
 export default async (dto: GetProductDto): Promise<IProductEntity | null> => {
   const { productId } = dto;
 

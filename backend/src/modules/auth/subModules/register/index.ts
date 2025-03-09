@@ -6,6 +6,11 @@ import UserRepository from '../../../user/repository/index.js';
 import { CleanUserEntity } from '../../../user/utils/entity.js';
 import type RegisterDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to register user.
+ * @param dto
+ * @returns RegisterUser.
+ */
 export default async (
   dto: RegisterDto,
 ): Promise<{ user: CleanUserEntity; accessToken: string; refreshToken: string }> => {

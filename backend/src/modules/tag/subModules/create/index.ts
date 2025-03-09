@@ -3,6 +3,11 @@ import appAssert from '../../../../utils/appAssert.js';
 import TagRepository from '../../repository/index.js';
 import type CreateTagDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to create tag.
+ * @param dto
+ * @returns CreateTag.
+ */
 export default async (dto: CreateTagDto): Promise<{ message: string }> => {
   const { name, userId } = dto;
 

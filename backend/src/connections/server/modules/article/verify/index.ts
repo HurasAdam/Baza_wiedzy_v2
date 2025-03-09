@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IVerifyArticleReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to verifying article.
+ * @returns VerifyArticle.
+ */
 export default (): ((req: IVerifyArticleReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new VerifyArticleDto({ id: req.params.id, isVerified: req.body.isVerified, userId: req.userId });

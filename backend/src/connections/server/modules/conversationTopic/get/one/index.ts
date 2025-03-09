@@ -5,6 +5,10 @@ import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetOneConversationTopicReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to get one conversation topic.
+ * @returns GetOneConversationTopic.
+ */
 export default (): ((
   req: IGetOneConversationTopicReq,
   res: express.Response,

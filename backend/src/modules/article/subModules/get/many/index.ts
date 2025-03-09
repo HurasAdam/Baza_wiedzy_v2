@@ -5,6 +5,11 @@ import ArticleRepository from '../../../repository/article.js';
 import type GetManyArticlesDto from './dto.js';
 import type { IArticleEntity } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get many articles.
+ * @param dto
+ * @returns GetManyArticles.
+ */
 export default async (
   dto: GetManyArticlesDto,
 ): Promise<{ data: IArticleEntity[]; pagination: { total: number; page: number; pages: number } }> => {

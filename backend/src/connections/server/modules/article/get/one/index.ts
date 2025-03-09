@@ -6,6 +6,10 @@ import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetOneArticleReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to getting one articles.
+ * @returns GetOneArticles.
+ */
 export default (): ((req: IGetOneArticleReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const articleId = req?.params?.id;

@@ -2,6 +2,11 @@ import SessionModel from '../../model.js';
 import type GetSessionDto from './dto.js';
 import type { ISessionEntity } from '../../types.js';
 
+/**
+ * Export controller, for endpoint to get session.
+ * @param dto
+ * @returns GetSession.
+ */
 export default async (dto: GetSessionDto): Promise<ISessionEntity[]> => {
   return SessionModel.find(
     {

@@ -5,6 +5,10 @@ import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetManyArticleReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to getting many articles.
+ * @returns GetManyArticles.
+ */
 export default (): ((req: IGetManyArticleReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetManyArticlesDto(req);

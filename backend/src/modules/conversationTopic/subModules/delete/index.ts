@@ -3,6 +3,11 @@ import appAssert from '../../../../utils/appAssert.js';
 import ConversationTopicRepository from '../../repository/index.js';
 import type DeleteConversationTopicDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to delete conversation topic.
+ * @param dto
+ * @returns DeleteConversationTopic.
+ */
 export default async (dto: DeleteConversationTopicDto): Promise<{ message: string }> => {
   const { topicId } = dto;
 

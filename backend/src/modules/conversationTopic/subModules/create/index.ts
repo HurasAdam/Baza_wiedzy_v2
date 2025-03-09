@@ -4,6 +4,11 @@ import ConversationTopicRepository from '../../repository/index.js';
 import type CreateConversationTopicDto from './dto.js';
 import type { IConversationTopicEntity } from '../../types.js';
 
+/**
+ * Export controller, for endpoint to create conversation topic.
+ * @param dto
+ * @returns CreateConversationTopic.
+ */
 export default async (
   dto: CreateConversationTopicDto,
 ): Promise<{ data: IConversationTopicEntity; message: string }> => {

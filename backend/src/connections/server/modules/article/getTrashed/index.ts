@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IGetTrashedArticlesReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to getting trashed.
+ * @returns GetTrashedArticles.
+ */
 export default (): ((
   req: IGetTrashedArticlesReq,
   res: express.Response,

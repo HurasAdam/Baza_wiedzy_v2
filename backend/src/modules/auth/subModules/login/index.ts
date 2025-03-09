@@ -8,6 +8,11 @@ import { comparePassword } from '../../../user/utils/index.js';
 import type LoginDto from './dto.js';
 import type { IRefreshTokenPayload } from '../../../../types/tokens.js';
 
+/**
+ * Export controller, for endpoint to login user.
+ * @param dto
+ * @returns LoginUser.
+ */
 export default async (dto: LoginDto): Promise<{ user: CleanUserEntity; accessToken: string; refreshToken: string }> => {
   const { email, password } = dto;
 

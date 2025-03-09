@@ -6,6 +6,11 @@ import appAssert from '../../../../utils/appAssert.js';
 import SessionRepository from '../../../session/repository/index.js';
 import type { IAccessTokenPayload, IRefreshTokenPayload } from '../../../../types/tokens.js';
 
+/**
+ * Export controller, for endpoint to refresh token.
+ * @param refreshToken
+ * @returns RefreshToken.
+ */
 export default async (refreshToken: string): Promise<{ accessToken: string; newRefreshToken: string | undefined }> => {
   const { payload } = verifyToken<IRefreshTokenPayload>(refreshToken, {
     secret: refreshTokenSignOptions.secret,

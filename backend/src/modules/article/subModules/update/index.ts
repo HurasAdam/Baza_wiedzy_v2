@@ -6,6 +6,11 @@ import ArticleRepository from '../../repository/article.js';
 import { saveArticleChanges } from '../../repository/index.js';
 import type UpdateArticleDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to update articles.
+ * @param dto
+ * @returns UpdateArticle.
+ */
 export default async (dto: UpdateArticleDto): Promise<void> => {
   const { id, userId, title, clientDescription, employeeDescription, tags, product } = dto;
 

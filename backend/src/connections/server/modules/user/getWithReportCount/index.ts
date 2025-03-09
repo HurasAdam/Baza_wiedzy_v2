@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IGetUsersWithReportCountReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to get with report count.
+ * @returns GetWithReportCount.
+ */
 export default (): ((
   req: IGetUsersWithReportCountReq,
   res: express.Response,

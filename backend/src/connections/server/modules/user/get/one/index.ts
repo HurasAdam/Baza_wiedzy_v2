@@ -5,6 +5,10 @@ import { CleanUserEntity } from '../../../../../../modules/user/utils/entity.js'
 import catchErrors from '../../../../utils/catchErrors.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to get one user.
+ * @returns GetOneUser.
+ */
 export default (): ((req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetUserDto({ userId: req.userId });

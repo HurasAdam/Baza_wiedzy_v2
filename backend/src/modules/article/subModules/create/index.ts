@@ -9,6 +9,11 @@ import { saveArticleChanges } from '../../repository/index.js';
 import type { ICreateArticleDto } from './types.js';
 import type { ICreateArticle } from '../../types.js';
 
+/**
+ * Export controller, for endpoint to create article logic.
+ * @param dto
+ * @returns CreateArticleLogic.
+ */
 export default async (dto: ICreateArticleDto): Promise<ArticleEntity> => {
   const { title, employeeDescription, tags, clientDescription, product, userId } = dto;
 

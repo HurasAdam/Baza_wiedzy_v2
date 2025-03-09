@@ -5,6 +5,10 @@ import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetPopularArticlesReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to getting popular articles.
+ * @returns GetPopularArticles.
+ */
 export default (): ((
   req: IGetPopularArticlesReq,
   res: express.Response,

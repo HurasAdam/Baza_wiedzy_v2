@@ -6,6 +6,11 @@ import { getFavoriteArticles } from '../../../repository/index.js';
 import type GetFavArticlesDto from './dto.js';
 import type { IArticleEntity } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get favorite articles.
+ * @param dto
+ * @returns GetFavoriteArticles.
+ */
 export default async (
   dto: GetFavArticlesDto,
 ): Promise<{

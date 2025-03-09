@@ -3,6 +3,11 @@ import mongoose from 'mongoose';
 import ConversationReportModel from '../../../model.js';
 import type GetConversationReportDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to get one conversation report.
+ * @param dto
+ * @returns GetOneConversationReport.
+ */
 export default async (dto: GetConversationReportDto): Promise<unknown[]> => {
   const { topicId, startDate, endDate, limit, range } = dto;
 

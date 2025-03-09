@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IRemoveArticleReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to removing article.
+ * @returns RemoveArticles.
+ */
 export default (): ((req: IRemoveArticleReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new RemoveArticleDto(req.params);

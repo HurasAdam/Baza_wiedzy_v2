@@ -5,6 +5,11 @@ import ArticleRepository from '../../repository/article.js';
 import { saveArticleChanges } from '../../repository/index.js';
 import type RestoreArticleDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to restore trashed article.
+ * @param dto
+ * @returns RestoreArticle.
+ */
 export default async (dto: RestoreArticleDto): Promise<void> => {
   const { userId, id } = dto;
 

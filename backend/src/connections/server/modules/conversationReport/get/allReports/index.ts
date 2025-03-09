@@ -4,6 +4,10 @@ import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetConversationReportReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to get conversation reports.
+ * @returns GetConversationReports.
+ */
 export default (): ((
   req: IGetConversationReportReq,
   res: express.Response,

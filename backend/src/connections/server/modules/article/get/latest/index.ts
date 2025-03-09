@@ -5,6 +5,10 @@ import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetLatestArticleReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to getting latest articles.
+ * @returns GetLatestArticles.
+ */
 export default (): ((
   req: IGetLatestArticleReq,
   res: express.Response,

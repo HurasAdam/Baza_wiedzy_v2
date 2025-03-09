@@ -24,6 +24,11 @@ const updateArticle = async (article: IArticleEntity, id: string, tag: ITagEntit
   }
 };
 
+/**
+ * Export controller, for endpoint to remove tag.
+ * @param dto
+ * @returns RemoveTag.
+ */
 export default async (dto: RemoveTagDto): Promise<{ message: string }> => {
   const { id } = dto;
 

@@ -5,6 +5,11 @@ import ArticleRepository from '../../../repository/article.js';
 import type GetTrashedArticlesDto from './dto.js';
 import type { IArticleEntity } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get trashed articles.
+ * @param dto
+ * @returns GetTrashedArticles.
+ */
 export default async (
   dto: GetTrashedArticlesDto,
 ): Promise<{ data: IArticleEntity[]; pagination: { total: number; page: number; pages: number } }> => {

@@ -3,6 +3,11 @@ import appAssert from '../../../../utils/appAssert.js';
 import TagRepository from '../../repository/index.js';
 import type UpdateTagDto from './dto.js';
 
+/**
+ * Update tag logic.
+ * @param dto
+ * @returns
+ */
 export default async (dto: UpdateTagDto): Promise<{ message: string }> => {
   const { tagId, name } = dto;
 

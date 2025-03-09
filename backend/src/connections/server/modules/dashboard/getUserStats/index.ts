@@ -4,6 +4,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IGetUserStatsReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to get user dashboard stats.
+ * @returns GetUserDashboardStats.
+ */
 export default (): ((req: IGetUserStatsReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetUserStatsDto(req.query, req.userId);

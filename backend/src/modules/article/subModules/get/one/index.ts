@@ -5,6 +5,11 @@ import ArticleModel from '../../../models/schema.js';
 import type GetOneArticlesDto from './dto.js';
 import type { IArticleEntity } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get one article.
+ * @param dto
+ * @returns GetOneArticles.
+ */
 export default async (dto: GetOneArticlesDto): Promise<IArticleEntity> => {
   const { userId, articleId } = dto;
 

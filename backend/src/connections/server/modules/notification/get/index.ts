@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IGetNotificationsReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to get notification.
+ * @returns GetNotificcations.
+ */
 export default (): ((
   req: IGetNotificationsReq,
   res: express.Response,

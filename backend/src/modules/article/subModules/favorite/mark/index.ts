@@ -5,6 +5,11 @@ import ArticleRepository from '../../../repository/article.js';
 import type { IMarkFavDto } from './types.js';
 import type mongoose from 'mongoose';
 
+/**
+ * Export controller, for endpoint to mark favorite articles.
+ * @param dto
+ * @returns .
+ */
 export default async (dto: IMarkFavDto): Promise<boolean> => {
   const userRepo = new UserRepository();
   const articleRepo = new ArticleRepository();

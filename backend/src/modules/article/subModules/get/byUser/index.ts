@@ -5,6 +5,11 @@ import ArticleRepository from '../../../repository/article.js';
 import type GetArticleByUserDto from './dto.js';
 import type { IArticleEntity } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get articles by user.
+ * @param data
+ * @returns GetArticleByUser.
+ */
 export default async (
   data: GetArticleByUserDto,
 ): Promise<{ data: IArticleEntity[]; pagination: { page: number; pages: number; total: number } }> => {

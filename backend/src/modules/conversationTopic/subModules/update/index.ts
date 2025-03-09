@@ -4,6 +4,11 @@ import ProductRepository from '../../../product/repository/index.js';
 import ConversationTopicRepository from '../../repository/index.js';
 import type UpdateConversationTopicDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to update conversation topic.
+ * @param dto
+ * @returns UpdateConversationTopic.
+ */
 export default async (dto: UpdateConversationTopicDto): Promise<void> => {
   const { id } = dto;
 

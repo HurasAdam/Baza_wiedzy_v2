@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { ICreateConversationTopicReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to create conversationReportTopic.
+ * @returns CreateConversationReportTopic.
+ */
 export default (): ((
   req: ICreateConversationTopicReq,
   res: express.Response,

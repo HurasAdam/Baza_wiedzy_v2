@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IUpdateConversationTopicReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to update conversation topic.
+ * @returns UpdateConversationTopic.
+ */
 export default (): ((
   req: IUpdateConversationTopicReq,
   res: express.Response,

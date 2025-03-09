@@ -5,6 +5,11 @@ import type GetUsersWithReportCountDto from './dto.js';
 import type mongoose from 'mongoose';
 import type { FilterQuery } from 'mongoose';
 
+/**
+ * Export controller, for endpoint to get user with report count.
+ * @param dto
+ * @returns GetUsersWithReportCount.
+ */
 export default async (
   dto: GetUsersWithReportCountDto,
 ): Promise<{ id: mongoose.Types.ObjectId; name: string; surname: string; createdArticleCount: string }[]> => {

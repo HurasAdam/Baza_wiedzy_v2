@@ -5,6 +5,11 @@ import ConversationTopicRepository from '../../../conversationTopic/repository/i
 import ProductRepository from '../../repository/index.js';
 import type RemoveProductDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to remove product.
+ * @param dto
+ * @returns .
+ */
 export default async (dto: RemoveProductDto): Promise<{ message: string }> => {
   const { productId } = dto;
 

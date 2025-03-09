@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IUpdateArticleReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to update article.
+ * @returns UpdateArticle.
+ */
 export default (): ((req: IUpdateArticleReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors<IUpdateArticleReq>(async (req, res) => {
     const dto = new UpdateArticleDto(req.body, req.params.id, req.userId);

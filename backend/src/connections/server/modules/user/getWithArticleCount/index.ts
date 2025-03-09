@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IGetUsersWithArticleChangesReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to get with article count.
+ * @returns GetWithArticleCount.
+ */
 export default (): ((
   req: IGetUsersWithArticleChangesReq,
   res: express.Response,

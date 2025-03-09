@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IUpdateProductReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to update product.
+ * @returns UpdateProduct.
+ */
 export default (): ((req: IUpdateProductReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new UpdateProductDto({ ...req.body, productId: req.params.id });

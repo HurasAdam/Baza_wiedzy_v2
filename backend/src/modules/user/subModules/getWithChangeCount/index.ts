@@ -4,6 +4,11 @@ import type GetUserWithChangeCountDto from './dto.js';
 import type { FilterQuery } from 'mongoose';
 import type mongoose from 'mongoose';
 
+/**
+ * Export controller, for endpoint to get user with change count.
+ * @param dto
+ * @returns GetUserWithChangeCount.
+ */
 export default async (
   dto: GetUserWithChangeCountDto,
 ): Promise<{ id: mongoose.Types.ObjectId; name: string; surname: string; createdArticleCount: string }[]> => {

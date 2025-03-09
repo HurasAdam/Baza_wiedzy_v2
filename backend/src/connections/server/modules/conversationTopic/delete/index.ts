@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IDeleteConversationTopicReq } from './types.d.ts';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to delete conversation report topic.
+ * @returns DeleteConversationReportTopic.
+ */
 export default (): ((
   req: IDeleteConversationTopicReq,
   res: express.Response,

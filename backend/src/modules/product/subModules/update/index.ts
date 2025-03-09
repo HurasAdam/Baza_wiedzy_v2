@@ -3,6 +3,11 @@ import appAssert from '../../../../utils/appAssert.js';
 import ProductRepository from '../../repository/index.js';
 import type UpdateProductDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to update product.
+ * @param dto
+ * @returns UpdateProduct.
+ */
 export default async (dto: UpdateProductDto): Promise<void> => {
   const { name, labelColor, banner, productId } = dto;
 

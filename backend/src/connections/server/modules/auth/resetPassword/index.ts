@@ -6,6 +6,10 @@ import { clearAuthCookies } from '../../../utils/cookies.js';
 import type { IResetPasswordReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to reset user's password.
+ * @returns ResetPassword.
+ */
 export default (): ((req: IResetPasswordReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new ResetPasswordDto(req.body);

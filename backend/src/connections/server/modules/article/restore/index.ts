@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IRestoreArticleReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to restoring removed article.
+ * @returns RestoreArticle.
+ */
 export default (): ((req: IRestoreArticleReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new RestoreArticleDto({ id: req.params.id, userId: req.userId });

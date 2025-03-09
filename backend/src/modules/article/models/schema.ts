@@ -48,6 +48,10 @@ const articleSchema = new Schema(
       ref: 'Product',
       required: true,
     },
+    category: {
+      type: [mongoose.Types.ObjectId],
+      default: [],
+    },
   },
 
   { timestamps: true },

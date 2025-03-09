@@ -4,6 +4,10 @@ import catchErrors from '../../../../utils/catchErrors.js';
 import type { IGetHistoryByUserReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to getting articles by user.
+ * @returns GetArticlesByUser.
+ */
 export default (): ((
   req: IGetHistoryByUserReq,
   res: express.Response,

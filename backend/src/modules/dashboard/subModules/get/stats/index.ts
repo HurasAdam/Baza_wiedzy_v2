@@ -3,6 +3,11 @@ import ArticleRepository from '../../../../article/repository/article.js';
 import ConversationReportRepository from '../../../../conversationReport/repository/index.js';
 import type GetStatsDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to get dashboard stats.
+ * @param dto
+ * @returns GetDashboardStats.
+ */
 export default async (
   dto: GetStatsDto,
 ): Promise<{ articleCount: number; conversationCount: number; editedArticlesCount: number }> => {

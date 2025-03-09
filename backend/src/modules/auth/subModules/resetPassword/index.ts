@@ -10,6 +10,11 @@ import type ResetPasswordDto from './dto.js';
 import type { ICleanUser } from '../../../user/types.js';
 import type { IAuthEntity } from '../../types.js';
 
+/**
+ * Export controller, for endpoint to reset password.
+ * @param dto
+ * @returns ResetPassword.
+ */
 export default async (dto: ResetPasswordDto): Promise<{ user: ICleanUser }> => {
   const { password, verificationCode } = dto;
 

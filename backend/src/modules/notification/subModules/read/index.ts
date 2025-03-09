@@ -3,6 +3,11 @@ import appAssert from '../../../../utils/appAssert.js';
 import NotificationRepository from '../../repository/index.js';
 import type ReadNotificationDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to read notifications.
+ * @param dto
+ * @returns ReadNotification.
+ */
 export default async (dto: ReadNotificationDto): Promise<void> => {
   const { id } = dto;
 

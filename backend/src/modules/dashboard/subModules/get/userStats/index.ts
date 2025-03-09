@@ -4,6 +4,11 @@ import ConversationReportRepository from '../../../../conversationReport/reposit
 import ArticleHistoryRepository from '../../../../notification/repository/index.js';
 import type GetUserStatsDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to get user dashboard stats.
+ * @param dto
+ * @returns GetUserDashboardStats.
+ */
 export default async (
   dto: GetUserStatsDto,
 ): Promise<{ userArticles: number; userEditedArticles: number; userConversations: number }> => {

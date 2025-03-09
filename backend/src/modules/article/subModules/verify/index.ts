@@ -6,6 +6,11 @@ import ArticleRepository from '../../repository/article.js';
 import { saveArticleChanges } from '../../repository/index.js';
 import type VerifyArticleDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to verify article.
+ * @param dto
+ * @returns VerifyArticle.
+ */
 export default async (dto: VerifyArticleDto): Promise<void> => {
   const { id, userId, isVerified } = dto;
 

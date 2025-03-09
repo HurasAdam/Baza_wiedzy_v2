@@ -3,6 +3,11 @@ import type GetTagDto from './dto.js';
 import type { IOptional } from '../../../../../types/generic.js';
 import type { ITagEntity } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get one tag.
+ * @param dto
+ * @returns GetOneTag.
+ */
 export default async (dto: GetTagDto): Promise<IOptional<ITagEntity>> => {
   const { tagId } = dto;
 

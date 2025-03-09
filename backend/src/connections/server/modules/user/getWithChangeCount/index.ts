@@ -5,6 +5,10 @@ import catchErrors from '../../../utils/catchErrors.js';
 import type { IGetWithChangesCountReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to get with change count.
+ * @returns GetWithChangeCount.
+ */
 export default (): ((
   req: IGetWithChangesCountReq,
   res: express.Response,

@@ -2,6 +2,11 @@ import constructSearchQuery from '../../../../../utils/constructSearchQuery.js';
 import ConversationTopicModel from '../../../model.js';
 import type { ParsedQs } from 'qs';
 
+/**
+ * Export controller, for endpoint to get many conversation topics.
+ * @param baseQuery
+ * @returns GetManyConversationTopics.
+ */
 export default (baseQuery: ParsedQs): unknown => {
   const query = constructSearchQuery(baseQuery);
 

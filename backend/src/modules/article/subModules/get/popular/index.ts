@@ -4,6 +4,11 @@ import ArticleModel from '../../../models/schema.js';
 import type GetPopularArticles from './dto.js';
 import type { IArticle } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get popular articles.
+ * @param dto
+ * @returns GetPopularArticles.
+ */
 export default async (dto: GetPopularArticles): Promise<IArticle[]> => {
   const { limit } = dto;
 

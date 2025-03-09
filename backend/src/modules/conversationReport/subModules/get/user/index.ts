@@ -4,6 +4,11 @@ import ConversationReportRepository from '../../../repository/index.js';
 import type GetUserConversationReportDto from './dto.js';
 import type { IConversationRaportEntity } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get conversation reports by user.
+ * @param dto
+ * @returns GetUserConversationReport.
+ */
 export default async (
   dto: GetUserConversationReportDto,
 ): Promise<{

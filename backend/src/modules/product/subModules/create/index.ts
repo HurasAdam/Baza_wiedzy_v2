@@ -5,6 +5,11 @@ import type CreateProductDto from './dto.js';
 import type { EBannerType } from '../../../../enums/product.js';
 import type { IProductEntity } from '../../types.js';
 
+/**
+ * Export controller, for endpoint to create product.
+ * @param dto
+ * @returns CreateProduct.
+ */
 export default async (dto: CreateProductDto): Promise<IProductEntity> => {
   const { name, labelColor, userId } = dto;
 

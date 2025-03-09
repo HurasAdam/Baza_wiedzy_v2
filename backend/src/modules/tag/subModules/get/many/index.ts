@@ -2,6 +2,11 @@ import TagModel from '../../../model.js';
 import type GetManyTagsDto from './dto.js';
 import type { ITagEntity } from '../../../types.js';
 
+/**
+ * Export controller, for endpoint to get many tags.
+ * @param dto
+ * @returns GetManyTags.
+ */
 export default async (dto: GetManyTagsDto): Promise<{ tags: ITagEntity[]; totalCount: number }> => {
   const { search } = dto;
 

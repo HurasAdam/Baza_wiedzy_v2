@@ -3,6 +3,11 @@ import appAssert from '../../../../utils/appAssert.js';
 import ArticleRepository from '../../repository/article.js';
 import type RemoveArticleDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to remove article.
+ * @param dto
+ * @returns RemoveArticle.
+ */
 export default async (dto: RemoveArticleDto): Promise<void> => {
   const { id } = dto;
 

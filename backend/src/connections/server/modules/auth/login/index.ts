@@ -6,6 +6,10 @@ import { setAuthCookies } from '../../../utils/cookies.js';
 import type { ILoginReq } from './types.js';
 import type express from 'express';
 
+/**
+ * Export controller, for endpoint to login user.
+ * @returns LoginUser.
+ */
 export default (): ((req: ILoginReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new LoginDto(req.body, req.headers['user-agent']);

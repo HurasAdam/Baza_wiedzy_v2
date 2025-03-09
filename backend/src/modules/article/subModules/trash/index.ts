@@ -5,6 +5,11 @@ import ArticleRepository from '../../repository/article.js';
 import { saveArticleChanges } from '../../repository/index.js';
 import type TrashArticleDto from './dto.js';
 
+/**
+ * Export controller, for endpoint to trash article.
+ * @param dto
+ * @returns TrashArticle.
+ */
 export default async (dto: TrashArticleDto): Promise<void> => {
   const { id, userId } = dto;
 
