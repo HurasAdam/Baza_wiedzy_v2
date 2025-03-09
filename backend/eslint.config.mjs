@@ -122,7 +122,7 @@ export default [
       'import/no-named-as-default': 0,
       'import/no-named-as-default-member': 0,
       'import/no-cycle': 2,
-      'import/prefer-default-export': 2,
+      'import/prefer-default-export': 0,
       'import/no-absolute-path': 2,
       'import/no-extraneous-dependencies': 2,
       'import/no-unresolved': 0,
