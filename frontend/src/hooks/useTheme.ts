@@ -8,6 +8,9 @@ export enum Theme {
     PHOENIX = "phoenix",
     LINEAR = "linear",
     ROSE = "rose",
+    ONYX = "onyx",
+    LUXURE_DARK = "luxure-dark",
+    SUNRISE_LIGHT = "sunrise-light",
 }
 
 const useTheme = () => {
@@ -16,7 +19,19 @@ const useTheme = () => {
     });
 
     useEffect(() => {
-        document.body.classList.remove("light", "slate", "dark", "falcon", "phoenix", "linear", "rose");
+        document.body.classList.remove(
+            "light",
+            "slate",
+            "dark",
+            "falcon",
+            "phoenix",
+            "linear",
+            "rose",
+            "cyberpunk",
+            "onyx",
+            "forest",
+            "luxure-dark"
+        );
         document.body.classList.add(theme);
         localStorage.setItem("theme", theme);
     }, [theme]);

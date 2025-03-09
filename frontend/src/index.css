@@ -245,34 +245,95 @@
 }
 
 .rose {
-    /* Tło i tekst */
-    --background: 22 94% 12%;
-    /* Głęboka, niemal czarna szarość */
-    --foreground: 0 0% 92%;
-    /* Jasny, kontrastujący tekst */
+    --background: 340, 25%, 15%; /* Przydymiony, ciemny różowy beż */
+    --layer: 340, 28%, 12%;
+    --foreground: 340, 30%, 85%;
+    --card: 340, 25%, 18%;
+    --card-foreground: 340, 30%, 90%;
+    --popover: 340, 28%, 14%;
+    --popover-foreground: 340, 30%, 88%;
+    --primary: 340, 50%, 45%; /* Przytłumiony, ciemniejszy pudrowy róż */
+    --primary-foreground: 0, 0%, 100%;
+    --secondary: 340, 30%, 35%;
+    --secondary-foreground: 340, 30%, 85%;
+    --muted: 340, 20%, 25%;
+    --muted-foreground: 340, 20%, 65%;
+    --accent: 340, 40%, 40%;
+    --accent-foreground: 0, 0%, 95%;
+    --destructive: 0, 55%, 40%;
+    --destructive-foreground: 340, 20%, 98%;
+    --border: 340, 20%, 30%;
+    --input: 340, 20%, 30%;
+    --ring: 340, 50%, 45%;
+    --chart-1: 340, 50%, 45%;
+    --chart-2: 340, 40%, 40%;
+    --chart-3: 20, 50%, 50%;
+    --chart-4: 260, 40%, 50%;
+    --chart-5: 300, 50%, 45%;
+    --sidebar-background: 340, 20%, 18%;
+    --sidebar-foreground: 340, 30%, 85%;
+    --sidebar-primary: 340, 50%, 45%;
+    --sidebar-primary-foreground: 0, 0%, 100%;
+    --sidebar-accent: 340, 25%, 40%;
+    --sidebar-accent-foreground: 340, 30%, 85%;
+    --sidebar-border: 340, 20%, 30%;
+    --sidebar-ring: 340, 50%, 45%;
+}
 
-    /* Karty, popovery, i inne elementy */
-    --card: 210 10% 12%;
-    /* Nieco jaśniejsze niż tło, aby wyróżniały się elementy */
-    --card-foreground: 0 0% 98%;
-    --popover: 210 10% 12%;
-    --popover-foreground: 0 0% 98%;
+.onyx {
+    --background: 230, 15%, 12%;
+    --layer: 230, 20%, 10%;
+    --foreground: 0, 0%, 90%;
+    --card: 230, 15%, 16%;
+    --card-foreground: 0, 0%, 95%;
+    --popover: 230, 20%, 10%;
+    --popover-foreground: 0, 0%, 95%;
+    --primary: 220, 80%, 60%;
+    --primary-foreground: 0, 0%, 10%;
+    --secondary: 220, 20%, 25%;
+    --secondary-foreground: 0, 0%, 95%;
+    --muted: 220, 15%, 20%;
+    --muted-foreground: 0, 0%, 70%;
+    --accent: 220, 60%, 50%;
+    --accent-foreground: 0, 0%, 95%;
+    --destructive: 0, 60%, 45%;
+    --destructive-foreground: 0, 0%, 95%;
+    --border: 220, 20%, 18%;
+    --input: 220, 20%, 18%;
+    --ring: 220, 80%, 50%;
+    --chart-1: 220, 80%, 55%;
+    --chart-2: 160, 60%, 50%;
+    --chart-3: 30, 70%, 55%;
+    --chart-4: 280, 70%, 55%;
+    --chart-5: 340, 75%, 50%;
+    --sidebar-background: 230, 15%, 12%;
+    --sidebar-foreground: 0, 0%, 90%;
+    --sidebar-primary: 220, 80%, 60%;
+    --sidebar-primary-foreground: 0, 0%, 100%;
+    --sidebar-accent: 220, 20%, 25%;
+    --sidebar-accent-foreground: 0, 0%, 90%;
+    --sidebar-border: 220, 20%, 18%;
+    --sidebar-ring: 220, 80%, 50%;
+}
 
-    /* Akcent – przyciski i interakcje */
-    --primary: 210 67% 45%;
-    /* Ten sam wyrazisty niebieski, zapewniający spójność */
-    --primary-foreground: 0 0% 100%;
-    --ring: 210 100% 45%;
-
-    /* Elementy pomocnicze */
-    --secondary: 210 14% 25%;
-    /* Głębszy odcień szarości dla wtórnych elementów */
-    --secondary-foreground: 0 0% 92%;
-    --muted: 210 10% 20%;
-    --muted-foreground: 0 0% 70%;
-
-    /* Obramowania */
-    --border: 210 14% 20%;
+.luxure-dark {
+    --background: 240, 10%, 5%;
+    --layer: 240, 12%, 8%;
+    --foreground: 40, 15%, 85%;
+    --card: 240, 10%, 10%;
+    --card-foreground: 40, 20%, 90%;
+    --popover: 240, 12%, 8%;
+    --popover-foreground: 40, 15%, 85%;
+    --primary: 40, 80%, 55%; /* Szlachetne złoto */
+    --primary-foreground: 0, 0%, 10%;
+    --secondary: 40, 40%, 30%; /* Przygaszone złoto */
+    --secondary-foreground: 0, 0%, 90%;
+    --muted: 40, 15%, 20%;
+    --muted-foreground: 40, 10%, 70%;
+    --accent: 40, 70%, 50%; /* Intensywniejsze złoto */
+    --accent-foreground: 0, 0%, 10%;
+    --border: 40, 30%, 25%;
+    --ring: 40, 80%, 55%;
 }
 
 @layer base {

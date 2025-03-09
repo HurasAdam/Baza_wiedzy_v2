@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { RiSettings4Fill } from "react-icons/ri";
 import { useModalSettings } from "../contexts/ModalSettingsContext";
+import useTheme from "../hooks/useTheme";
 import ThemeToggleButton from "./ToggleThemeButton";
+import ToggleWidthModalButton from "./ToggleWidthModalButton";
 
 const SettingsContainer = () => {
     const [activeTab, setActiveTab] = useState("personalization");
@@ -20,7 +22,7 @@ const SettingsContainer = () => {
     };
 
     const { modalWidth, changeModalWidth } = useModalSettings();
-
+    const { theme, changeTheme } = useTheme();
     return (
         <div className="flex w-full h-full">
             {/* Sidebar - lewa część */}
@@ -70,11 +72,11 @@ const SettingsContainer = () => {
             </div>
 
             {/* Treść zakładki - prawa część */}
-            <div className="w-full md:w-3/4 p-4  overflow-auto ">
+            <div className="w-full md:w-3/4 p-4  overflow-auto bg-background">
                 {activeTab === "personalization" && (
                     <div>
                         <h3 className="text-lg font-medium  mb-4 text-sidebar-primary-foreground">Personalizacja</h3>
-                        <div className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-6 mb-10">
                             {/* Kolor tła */}
                             <div className="flex flex-col w-full">
                                 <label className="text-foreground font-medium text-sm mb-2">
@@ -85,25 +87,9 @@ const SettingsContainer = () => {
                             {/* Kolor navbaru */}
                         </div>
 
-                        <div className="flex flex-col gap-2">
-                            <label className="text-gray-600 font-medium mb-2">Rozmiar okna modalnego:</label>
-                            <div className="relative">
-                                <select
-                                    value={modalWidth}
-                                    onChange={(e) => changeModalWidth(e.target.value)}
-                                    className="appearance-none bg-input block w-full px-4 py-2 pr-10 border border-gray-300 rounded-md shadow-sm text-foreground focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
-                                >
-                                    <option value="sm">Mały</option>
-                                    <option value="md">Średni</option>
-                                    <option value="lg">Duży</option>
-                                    <option value="xl">Bardzo duży</option>
-                                </select>
-                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                                    <svg className="fill-current h-4 w-4" viewBox="0 0 20 20">
-                                        <path d="M5.516 7.548l4.484 4.484 4.484-4.484L16 9.032l-6 6-6-6z" />
-                                    </svg>
-                                </div>
-                            </div>
+                        <div className="flex flex-col gap-2 ">
+                            <label className="text-foreground font-medium mb-2 text-sm">Rozmiar okna modalnego:</label>
+                            <ToggleWidthModalButton />
                         </div>
                     </div>
                 )}
