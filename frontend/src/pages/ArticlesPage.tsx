@@ -12,34 +12,59 @@ import { Modal } from "../components/modal/Modal";
 import { useFetchProducts } from "@/hooks/query/useFetchProducts";
 import { SelectBox } from "@/components/core/SelectBox";
 
-interface IArticleListProps {
-    data: IArticle[];
-    isLoading: boolean;
-}
+const ArticleList = () => {
+    const [params] = useSearchParams();
+    const { articles, isError, isLoading, error } = useFetchArticles(params);
 
-const ArticleList = ({ data, isLoading }: IArticleListProps) => {
-    if (!isLoading && data.length === 0) {
+    if (isError) {
         return (
-            <div className="flex flex-col flex-1 gap-4 bg-orange-600">
+            <>
+                <div>Coś poszło nie tak przy szukaniu artykułów</div>
+                <div>{error?.message}</div>
+            </>
+        );
+    }
+
+    if (!isLoading && articles.data.length === 0) {
+        return (
+            <>
                 <h1 className="text-2xl font-semibold">Artykuły</h1>
-                <div className="flex flex-col gap-4">Nie znaleziono artykułów</div>
-            </div>
+                <div className="m-5">Nie znaleziono artykułów</div>
+            </>
         );
     }
 
     return (
-        <div className="flex flex-col flex-1 gap-4">
-            <h1 className="text-2xl font-semibold">Artykuły</h1>
-            <div className="flex flex-col gap-4">
-                {data?.map((article: IArticle, i: number) => (
-                    <ArticleListItem
-                        key={i}
-                        article={article}
-                        className="hover:border-b hover:bg-muted/40 cursor-pointer transition-all"
-                    />
-                ))}
+        <>
+            <div className="flex justify-between mb-4">
+                <h1 className="text-2xl font-semibold">Artykuły</h1>
+                <SelectBox
+                    value={params.get("sort") || "default"}
+                    onChange={() => void 0}
+                    data={[
+                        {
+                            label: "Domyśle",
+                            value: "default",
+                        },
+                        {
+                            label: "Popularne",
+                            value: "popular",
+                        },
+                        {
+                            label: "Najnowsze",
+                            value: "latest",
+                        },
+                    ]}
+                />
             </div>
-        </div>
+            {articles.data?.map((article: IArticle, i: number) => (
+                <ArticleListItem
+                    key={i}
+                    article={article}
+                    className="hover:border-b hover:bg-muted/40 cursor-pointer transition-all"
+                />
+            ))}
+        </>
     );
 };
 
@@ -47,10 +72,10 @@ const ArticleListItem = ({ article, className }: { article: IArticle; className?
     const { openModal, isOpen, closeModal } = useModal();
 
     return (
-        <>
+        <div className="mb-4">
             <Card
                 onClick={openModal}
-                className={`px-5 py-3 rounded-xl shadow-md border text-foreground hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-emerald-700/65 "} ${className}`}
+                className={`p-4 shadow-md border text-foreground hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-emerald-700/65 "} ${className}`}
             >
                 <div className="flex justify-between items-center">
                     <h3 className="text-base font-semibold truncate max-w-[90%] overflow-hidden text-foreground">
@@ -71,22 +96,13 @@ const ArticleListItem = ({ article, className }: { article: IArticle; className?
             <Modal isOpen={isOpen} onClose={closeModal}>
                 <SideBySideArticleDetails articleId={article?._id} />
             </Modal>
-        </>
+        </div>
     );
 };
-export const ArticlesPage = () => {
-    const [params, setParams] = useSearchParams();
-    const { articles, isError, isLoading, error } = useFetchArticles(params);
-    const { products } = useFetchProducts();
 
-    if (isError) {
-        return (
-            <>
-                <div>Coś poszło nie tak przy szukaniu artykułów</div>
-                <div>{error?.message}</div>
-            </>
-        );
-    }
+const ArticlesFilter = () => {
+    const [params, setParams] = useSearchParams();
+    const { products } = useFetchProducts();
 
     const titleParamHandler: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = event.currentTarget.value;
@@ -114,43 +130,49 @@ export const ArticlesPage = () => {
     };
 
     return (
-        <div className="text-foreground p-5 h-full flex w-full max-w-[1580px] mx-auto gap-6">
-            {/* Sidebar - Filtry */}
-            <div className="w-80 pt-12 rounded-xl h-fit">
-                <h2 className="text-lg font-semibold mb-4">Filtruj artykuły</h2>
-                <div className="mb-4">
-                    <label className="font-medium mb-2 block">Szukaj</label>
-                    <div className="relative">
-                        <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-                        <Input
-                            placeholder="Wpisz tytuł artykułu..."
-                            className="pl-10"
-                            value={params.get("title") || ""}
-                            onChange={titleParamHandler}
-                        />
-                    </div>
+        <div className="w-80 pt-12 rounded-xl h-fit">
+            <h2 className="text-lg font-semibold mb-4">Filtruj artykuły</h2>
+            <div className="mb-4">
+                <label className="font-medium mb-2 block">Szukaj</label>
+                <div className="relative">
+                    <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+                    <Input
+                        placeholder="Wpisz tytuł artykułu..."
+                        className="pl-10"
+                        value={params.get("title") || ""}
+                        onChange={titleParamHandler}
+                    />
                 </div>
-
-                <div className="mb-4">
-                    <label className="font-medium mb-2 block">Produkt</label>
-                    <div className="space-y-2">
-                        <SelectBox
-                            value={params.get("product") || ""}
-                            onChange={productHandler}
-                            data={products?.map((prod) => ({
-                                label: prod.name,
-                                value: prod._id,
-                            }))}
-                        />
-                    </div>
-                </div>
-
-                <Button className="w-full mt-3" onClick={resetFilterHandler}>
-                    Wyczyść filtry
-                </Button>
             </div>
 
-            <ArticleList data={articles.data} isLoading={isLoading} />
+            <div className="mb-4">
+                <label className="font-medium mb-2 block">Produkt</label>
+                <div className="space-y-2">
+                    <SelectBox
+                        value={params.get("product") || ""}
+                        onChange={productHandler}
+                        data={products?.map((prod) => ({
+                            label: prod.name,
+                            value: prod._id,
+                        }))}
+                    />
+                </div>
+            </div>
+
+            <Button className="w-full mt-3" onClick={resetFilterHandler}>
+                Wyczyść filtry
+            </Button>
+        </div>
+    );
+};
+
+export const ArticlesPage = () => {
+    return (
+        <div className="text-foreground p-5 h-full flex w-full max-w-[1580px] mx-auto gap-6">
+            <ArticlesFilter />
+            <div className="w-full">
+                <ArticleList />
+            </div>
         </div>
     );
 };
