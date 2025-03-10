@@ -1,89 +1,67 @@
-import { useModal } from "@/components/modal/hooks/useModal";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useLogout } from "@/hooks/auth/useLogout";
-import { Home, LogOut, Settings } from "lucide-react";
-import { FaPhoneSquareAlt } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 import { FaAddressBook } from "react-icons/fa6";
 import { ImStatsBars2 } from "react-icons/im";
+import { Home, LogOut, Settings } from "lucide-react";
+import { FaPhoneSquareAlt } from "react-icons/fa";
 import { PiArticleMediumFill } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import clsx from "clsx";
+import { useLogout } from "@/hooks/auth/useLogout";
+import { useModal } from "@/components/modal/hooks/useModal";
 import SettingsContainer from "./SettingsContainer";
 import { Modal } from "./modal/Modal";
 
-// const useSettingsModal = () => {
-//   const {  } = useModal({ content: <SettingsContainer /> })
-
-// }
-
-const MySidebar = () => {
+export const MySidebar = () => {
     const { logoutAction } = useLogout();
-    // const { openModalSettings } = useModalSettings();
-
     const { isOpen, openModal, closeModal } = useModal();
 
-    // const openModalSettings = () => {
-    //   openContentModal({
-    //     description: "",
-    //     content: <SettingsContainer />,
-    //     enableOutsideClickClose: false,
-    //     size: "lg",
-    //     height: "md",
-    //   });
-    // };
-
     const primaryMenuItems = [
-        { icon: <Home size={22} />, label: "Start", link: "/dashboard" },
-        { icon: <PiArticleMediumFill size={22} />, label: "Baza Artykułów", link: "/articles" },
-        { icon: <ImStatsBars2 size={22} />, label: "Statystyki", link: "/statistics" },
-        { icon: <FaPhoneSquareAlt size={22} />, label: "Statystyki", link: "/statistics" },
-        { icon: <FaAddressBook size={22} />, label: "Statystyki", link: "/statistics" },
+        { icon: <Home size={24} />, label: "Główna", link: "/dashboard" },
+        { icon: <PiArticleMediumFill size={24} />, label: "Artykuły", link: "/articles" },
+        { icon: <ImStatsBars2 size={24} />, label: "Statystyki", link: "/statistics" },
+        { icon: <FaPhoneSquareAlt size={24} />, label: "Strona 4", link: "/strona-4" },
+        { icon: <FaAddressBook size={24} />, label: "Strona 5", link: "/strona-5" },
     ];
 
     const utilityMenuItems = [
-        { icon: <Settings size={22} />, label: "Ustawienia", onClick: openModal },
-        { icon: <LogOut size={22} />, label: "Wyloguj się", onClick: logoutAction },
+        { icon: <Settings size={24} />, label: "Ustawienia", onClick: openModal },
+        { icon: <LogOut size={24} />, label: "Wyloguj", onClick: logoutAction },
     ];
 
     return (
-        <TooltipProvider>
-            <div className="w-14 min-h-screen text-foreground shadow-md flex flex-col items-center py-6 gap-6 border-r bg-card ">
-                <div className="absolute top-[76px] flex min-h-screen pb-28 flex-col justify-between ">
-                    <div className="">
-                        {primaryMenuItems.map((item, index) => (
-                            <Tooltip key={index}>
-                                <TooltipTrigger asChild>
-                                    <Link
-                                        to={item.link}
-                                        className="block p-2.5 text-foreground rounded-lg transition group-hover:text-foreground"
-                                    >
-                                        {item.icon}
-                                    </Link>
-                                </TooltipTrigger>
-                                <TooltipContent>{item.label}</TooltipContent>
-                            </Tooltip>
-                        ))}
-                    </div>
-                    <div>
-                        <div className="">
-                            {utilityMenuItems.map((item, index) => (
-                                <Tooltip key={index}>
-                                    <TooltipTrigger asChild>
-                                        <button onClick={item.onClick} className="block p-2.5 rounded-lg transition">
-                                            {item.icon}
-                                        </button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>{item.label}</TooltipContent>
-                                </Tooltip>
-                            ))}
-                        </div>
-                    </div>
+        <div className="w-24 h-full">
+            <div className="w-24 fixed top-0 h-full py-6 flex flex-col text-foreground bg-card">
+                <div className="flex-1 overflow-auto">
+                    {primaryMenuItems.map((item, index) => (
+                        <NavLink
+                            key={index}
+                            to={item.link}
+                            className={({ isActive }) =>
+                                clsx("block text-center py-4 mx-2 text-foreground transition rounded-lg", {
+                                    "bg-background": isActive,
+                                })
+                            }
+                        >
+                            <div className="inline-block">{item.icon}</div>
+                            <span className="block text-sm">{item.label}</span>
+                        </NavLink>
+                    ))}
+                </div>
+                <div className="text-center pt-2">
+                    {utilityMenuItems.map((item, index) => (
+                        <button
+                            key={index}
+                            onClick={item.onClick}
+                            className="mx-auto py-4 text-foreground transition group-hover:text-foreground"
+                        >
+                            <div className="inline-block">{item.icon}</div>
+                            <span className="block text-sm">{item.label}</span>
+                        </button>
+                    ))}
                 </div>
             </div>
             <Modal isOpen={isOpen} onClose={closeModal}>
                 <SettingsContainer />
             </Modal>
-        </TooltipProvider>
+        </div>
     );
 };
-
-export default MySidebar;

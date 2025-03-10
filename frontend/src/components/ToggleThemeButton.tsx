@@ -1,8 +1,6 @@
+import clsx from "clsx";
 import useTheme, { Theme } from "@/hooks/useTheme";
-import { Home } from "lucide-react";
-import { FaPhoneSquareAlt } from "react-icons/fa";
-import { ImStatsBars2 } from "react-icons/im";
-import { PiArticleMediumFill } from "react-icons/pi";
+
 const themes: Theme[] = [
     Theme.LIGHT,
     Theme.SLATE,
@@ -15,32 +13,27 @@ const themes: Theme[] = [
     Theme.LUXURE_DARK,
 ];
 
-const primaryMenuItems = [
-    { icon: <Home size={7} /> },
-    { icon: <PiArticleMediumFill size={7} /> },
-    { icon: <ImStatsBars2 size={7} /> },
-    { icon: <FaPhoneSquareAlt size={7} /> },
-];
-
-const ThemeToggleButton = () => {
+export const ThemeToggleButton = () => {
     const { theme, changeTheme } = useTheme();
 
     return (
-        <div className="grid grid-cols-3 gap-4 p-4  ">
-            {themes.map((t) => (
+        <div className="flex flex-wrap gap-5">
+            {themes.map((th) => (
                 <div>
-                    <div className="mb-1.5 px-1">
-                        <span className="text-xs text-foreground ">{t}</span>
-                    </div>
+                    <div className="mb-1.5 px-1 text-center">{th}</div>
                     <button
-                        key={t}
-                        onClick={() => changeTheme(t)}
-                        className={`relative w-32 h-24 rounded-lg border-2 overflow-hidden shadow-md flex flex-col
-            ${theme === t ? "border-blue-500 ring-2 ring-blue-300" : "border-white/10"}
-          `}
+                        key={th}
+                        onClick={() => changeTheme(th)}
+                        className={clsx(
+                            "relative w-28 h-20 rounded-lg border-4 overflow-hidden shadow-md flex flex-col",
+                            {
+                                "border-blue-500 ring-2 ring-blue-300": th === theme,
+                                "border-white/10": th !== theme,
+                            }
+                        )}
                     >
-                        <ThemePreview theme={t} />
-                        {theme === t && (
+                        <ThemePreview theme={th} />
+                        {th === theme && (
                             <div className="absolute inset-0 flex items-center justify-center  text-foreground font-bold text-sm">
                                 Wybrano
                             </div>
@@ -54,33 +47,19 @@ const ThemeToggleButton = () => {
 
 const ThemePreview = ({ theme }: { theme: Theme }) => {
     return (
-        <div className={`w-full h-full flex flex-col`}>
+        <div className="w-full h-full flex flex-col">
             {/* NAVBAR */}
-            <div className={`h-1/5 } border-b-[0.5px] ${getButtonClass(theme)} ${getNavbarClass(theme)}`} />
+            <div className={`h-1/5 border-b-[0.5px] ${getBtnClass(theme)} ${getNavbarClass(theme)}`} />
 
             <div className="flex h-full">
                 {/* SIDEBAR*/}
-                <div
-                    className={`w-[10px] border-r-[0.5px] ${getButtonClass(theme)} h-full ${getNavbarClass(theme)} flex flex-col justify-between `}
-                >
-                    {primaryMenuItems?.map((item) => {
-                        return <div className={`${getTextClass(theme)} `}>{item.icon}</div>;
-                    })}
-                </div>
+                <div className={clsx("w-[14px] border-r-[0.5px]", getBtnClass(theme), getNavbarClass(theme))} />
 
                 {/* MAIN CONTENT*/}
-                <div
-                    className={`h-full flex flex-col gap-2 items-center justify-center w-full   ${getBackgroundClass(theme)}`}
-                >
-                    <div
-                        className={`w-3/4 h-1/6 rounded-md border-[0.5px] ${getButtonClass(theme)} ${getNavbarClass(theme)}`}
-                    />
-                    <div
-                        className={`w-3/4 h-1/6 rounded-md border-[0.5px] ${getButtonClass(theme)} ${getNavbarClass(theme)}`}
-                    />
-                    <div
-                        className={`w-3/4 h-1/6 rounded-md border-[0.5px] ${getButtonClass(theme)} ${getNavbarClass(theme)}`}
-                    />
+                <div className={clsx("flex flex-col gap-2 items-center justify-center w-full", getBgClass(theme))}>
+                    <div className={clsx("w-3/4 h-1/6 border-[0.5px]", getBtnClass(theme), getNavbarClass(theme))} />
+                    <div className={clsx("w-3/4 h-1/6 border-[0.5px]", getBtnClass(theme), getNavbarClass(theme))} />
+                    <div className={clsx("w-3/4 h-1/6 border-[0.5px]", getBtnClass(theme), getNavbarClass(theme))} />
                 </div>
             </div>
         </div>
@@ -113,7 +92,7 @@ const getNavbarClass = (theme: Theme): string => {
     }
 };
 
-const getBackgroundClass = (theme: Theme): string => {
+const getBgClass = (theme: Theme): string => {
     switch (theme) {
         case Theme.LIGHT:
             return "bg-neutral-200";
@@ -138,7 +117,7 @@ const getBackgroundClass = (theme: Theme): string => {
     }
 };
 
-const getButtonClass = (theme: Theme): string => {
+const getBtnClass = (theme: Theme): string => {
     switch (theme) {
         case Theme.LIGHT:
             return "border-none";
@@ -162,24 +141,3 @@ const getButtonClass = (theme: Theme): string => {
             return "bg-gray-100";
     }
 };
-
-const getTextClass = (theme: Theme): string => {
-    switch (theme) {
-        case Theme.LIGHT:
-            return "text-slate-600";
-        case Theme.SLATE:
-            return "text-neutral-100";
-        case Theme.DARK:
-            return "text-neutral-100";
-        case Theme.FALCON:
-            return "text-neutral-100";
-        case Theme.PHOENIX:
-            return "text-neutral-100";
-        case Theme.LINEAR:
-            return "text-gradient-to-r from-purple-700 to-pink-700";
-        default:
-            return "text-gray-400";
-    }
-};
-
-export default ThemeToggleButton;
