@@ -7,9 +7,8 @@ import type UpdateConversationTopicDto from './dto.js';
 /**
  * Export controller, for endpoint to update conversation topic.
  * @param dto
- * @returns UpdateConversationTopic.
  */
-export default async (dto: UpdateConversationTopicDto): Promise<void> => {
+const updateConversationTopic = async (dto: UpdateConversationTopicDto): Promise<void> => {
   const { id } = dto;
 
   const conversationTopicRepo = new ConversationTopicRepository();
@@ -38,3 +37,5 @@ export default async (dto: UpdateConversationTopicDto): Promise<void> => {
 
   await conversationTopicRepo.update(conversationTopic._id as string, conversationTopic);
 };
+
+export default updateConversationTopic;

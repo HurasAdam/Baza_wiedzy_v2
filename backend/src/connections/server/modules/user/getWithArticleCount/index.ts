@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get with article count.
- * @returns GetWithArticleCount.
  */
-export default (): ((
+const getWithArticleCount = (): ((
   req: IGetUsersWithArticleChangesReq,
   res: express.Response,
   next: express.NextFunction,
@@ -22,3 +21,5 @@ export default (): ((
     res.status(EHttpCodes.OK).json(data);
   });
 };
+
+export default getWithArticleCount;

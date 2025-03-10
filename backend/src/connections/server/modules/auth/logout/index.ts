@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to Logout user.
- * @returns LogoutUser.
  */
-export default (): ((req: ILogoutReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const logoutUser = (): ((req: ILogoutReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const accessToken = req.cookies.accessToken as string;
 
@@ -19,3 +18,5 @@ export default (): ((req: ILogoutReq, res: express.Response, next: express.NextF
     res.status(EHttpCodes.OK).json({ message: 'Logout successful' });
   });
 };
+
+export default logoutUser;

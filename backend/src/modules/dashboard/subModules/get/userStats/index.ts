@@ -7,9 +7,8 @@ import type GetUserStatsDto from './dto.js';
 /**
  * Export controller, for endpoint to get user dashboard stats.
  * @param dto
- * @returns GetUserDashboardStats.
  */
-export default async (
+const getUserDashboardStats = async (
   dto: GetUserStatsDto,
 ): Promise<{ userArticles: number; userEditedArticles: number; userConversations: number }> => {
   const { userId, range } = dto;
@@ -18,8 +17,8 @@ export default async (
   const articleRepo = new ArticleRepository();
   const articleHistoryRepo = new ArticleHistoryRepository();
 
-  let startDate;
-  const endDate = new Date(); // Aktualna data
+  let startDate: Date;
+  const endDate = new Date();
 
   // Określenie startDate w zależności od zakresu (range)
   if (range === 'today') {
@@ -53,3 +52,5 @@ export default async (
 
   return { userArticles, userEditedArticles, userConversations };
 };
+
+export default getUserDashboardStats;

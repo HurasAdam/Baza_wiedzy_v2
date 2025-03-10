@@ -9,7 +9,11 @@ import type express from 'express';
  * Export controller, for endpoint to removing article.
  * @returns RemoveArticles.
  */
-export default (): ((req: IRemoveArticleReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const removeArticles = (): ((
+  req: IRemoveArticleReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new RemoveArticleDto(req.params);
 
@@ -18,3 +22,5 @@ export default (): ((req: IRemoveArticleReq, res: express.Response, next: expres
     res.status(EHttpCodes.OK).json({ message: 'Artykuł i powiązana historia zostały usunięte.' });
   });
 };
+
+export default removeArticles;

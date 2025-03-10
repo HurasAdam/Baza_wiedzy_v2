@@ -7,9 +7,8 @@ import type { IConversationRaportEntity } from '../../../types.js';
 /**
  * Export controller, for endpoint to get conversation reports by user.
  * @param dto
- * @returns GetUserConversationReport.
  */
-export default async (
+const getUserConversationReport = async (
   dto: GetUserConversationReportDto,
 ): Promise<{
   data: IConversationRaportEntity[];
@@ -68,3 +67,4 @@ export default async (
     },
   };
 };
+export default getUserConversationReport;

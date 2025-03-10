@@ -8,9 +8,8 @@ import type { IArticleEntity } from '../../../types.js';
 /**
  * Export controller, for endpoint to get trashed articles.
  * @param dto
- * @returns GetTrashedArticles.
  */
-export default async (
+const getTrashedArticles = async (
   dto: GetTrashedArticlesDto,
 ): Promise<{ data: IArticleEntity[]; pagination: { total: number; page: number; pages: number } }> => {
   const { userId } = dto;
@@ -59,3 +58,5 @@ export default async (
     },
   };
 };
+
+export default getTrashedArticles;

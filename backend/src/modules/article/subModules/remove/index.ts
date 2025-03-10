@@ -6,9 +6,8 @@ import type RemoveArticleDto from './dto.js';
 /**
  * Export controller, for endpoint to remove article.
  * @param dto
- * @returns RemoveArticle.
  */
-export default async (dto: RemoveArticleDto): Promise<void> => {
+const removeArticle = async (dto: RemoveArticleDto): Promise<void> => {
   const { id } = dto;
 
   const articleRepo = new ArticleRepository();
@@ -21,3 +20,5 @@ export default async (dto: RemoveArticleDto): Promise<void> => {
 
   await articleRepo.removeMany({ articleId: id });
 };
+
+export default removeArticle;

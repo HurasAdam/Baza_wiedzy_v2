@@ -7,9 +7,12 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to remove session.
- * @returns RemoveSession.
  */
-export default (): ((req: IRemoveSessionReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const removeSession = (): ((
+  req: IRemoveSessionReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new RemoveSessionDto({ sessionId: req.params.id, userId: req.userId });
 
@@ -18,3 +21,5 @@ export default (): ((req: IRemoveSessionReq, res: express.Response, next: expres
     res.status(EHttpCodes.OK).json({ message: 'Session removed' });
   });
 };
+
+export default removeSession;

@@ -13,9 +13,8 @@ import type { IAuthEntity } from '../../types.js';
 /**
  * Export controller, for endpoint to reset password.
  * @param dto
- * @returns ResetPassword.
  */
-export default async (dto: ResetPasswordDto): Promise<{ user: ICleanUser }> => {
+const resetPassword = async (dto: ResetPasswordDto): Promise<{ user: ICleanUser }> => {
   const { password, verificationCode } = dto;
 
   const authRepo = new AuthRepository();
@@ -46,3 +45,5 @@ export default async (dto: ResetPasswordDto): Promise<{ user: ICleanUser }> => {
 
   return { user: new CleanUserEntity(updatedUser) };
 };
+
+export default resetPassword;

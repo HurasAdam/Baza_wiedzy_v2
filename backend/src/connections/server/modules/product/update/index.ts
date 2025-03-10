@@ -7,9 +7,12 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to update product.
- * @returns UpdateProduct.
  */
-export default (): ((req: IUpdateProductReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const updateProduct = (): ((
+  req: IUpdateProductReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new UpdateProductDto({ ...req.body, productId: req.params.id });
 
@@ -18,3 +21,5 @@ export default (): ((req: IUpdateProductReq, res: express.Response, next: expres
     res.status(EHttpCodes.OK).json({ message: 'Produkt został zaktualizowany' });
   });
 };
+
+export default updateProduct;

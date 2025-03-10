@@ -6,14 +6,13 @@ import type GetStatsDto from './dto.js';
 /**
  * Export controller, for endpoint to get dashboard stats.
  * @param dto
- * @returns GetDashboardStats.
  */
-export default async (
+const getDashboardStats = async (
   dto: GetStatsDto,
 ): Promise<{ articleCount: number; conversationCount: number; editedArticlesCount: number }> => {
   const { range } = dto;
-  let startDate;
-  const endDate = new Date(); // Current date
+  let startDate: Date;
+  const endDate: Date = new Date();
 
   const articleRepo = new ArticleRepository();
   const conversationReportRepo = new ConversationReportRepository();
@@ -44,3 +43,5 @@ export default async (
 
   return { articleCount, editedArticlesCount, conversationCount };
 };
+
+export default getDashboardStats;

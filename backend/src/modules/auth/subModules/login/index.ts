@@ -11,9 +11,10 @@ import type { IRefreshTokenPayload } from '../../../../types/tokens.js';
 /**
  * Export controller, for endpoint to login user.
  * @param dto
- * @returns LoginUser.
  */
-export default async (dto: LoginDto): Promise<{ user: CleanUserEntity; accessToken: string; refreshToken: string }> => {
+const loginUser = async (
+  dto: LoginDto,
+): Promise<{ user: CleanUserEntity; accessToken: string; refreshToken: string }> => {
   const { email, password } = dto;
 
   const userRepo = new UserRepository();
@@ -47,3 +48,5 @@ export default async (dto: LoginDto): Promise<{ user: CleanUserEntity; accessTok
     refreshToken,
   };
 };
+
+export default loginUser;

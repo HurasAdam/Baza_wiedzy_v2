@@ -6,9 +6,12 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get dashboard stats.
- * @returns GetDashboardStats.
  */
-export default (): ((req: IGetStatsReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getDashboardStats = (): ((
+  req: IGetStatsReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetStatsDto(req.query);
 
@@ -21,3 +24,5 @@ export default (): ((req: IGetStatsReq, res: express.Response, next: express.Nex
     });
   });
 };
+
+export default getDashboardStats;

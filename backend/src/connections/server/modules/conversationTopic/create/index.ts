@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to create conversationReportTopic.
- * @returns CreateConversationReportTopic.
  */
-export default (): ((
+const createConversationReportTopic = (): ((
   req: ICreateConversationTopicReq,
   res: express.Response,
   next: express.NextFunction,
@@ -22,3 +21,5 @@ export default (): ((
     res.status(EHttpCodes.OK).json(newTag);
   });
 };
+
+export default createConversationReportTopic;

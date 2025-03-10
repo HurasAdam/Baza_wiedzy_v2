@@ -8,9 +8,8 @@ import type { IProductEntity } from '../../types.js';
 /**
  * Export controller, for endpoint to create product.
  * @param dto
- * @returns CreateProduct.
  */
-export default async (dto: CreateProductDto): Promise<IProductEntity> => {
+const createProduct = async (dto: CreateProductDto): Promise<IProductEntity> => {
   const { name, labelColor, userId } = dto;
 
   const productRepo = new ProductRepository();
@@ -27,3 +26,5 @@ export default async (dto: CreateProductDto): Promise<IProductEntity> => {
 
   return (await productRepo.getById(product[0]!._id as string)) as IProductEntity;
 };
+
+export default createProduct;

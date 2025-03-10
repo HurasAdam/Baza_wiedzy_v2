@@ -5,9 +5,8 @@ import type { ITagEntity } from '../../../types.js';
 /**
  * Export controller, for endpoint to get many tags.
  * @param dto
- * @returns GetManyTags.
  */
-export default async (dto: GetManyTagsDto): Promise<{ tags: ITagEntity[]; totalCount: number }> => {
+const getManyTags = async (dto: GetManyTagsDto): Promise<{ tags: ITagEntity[]; totalCount: number }> => {
   const { search } = dto;
 
   // Filtr do wyszukiwania tagów
@@ -39,3 +38,5 @@ export default async (dto: GetManyTagsDto): Promise<{ tags: ITagEntity[]; totalC
   const totalCount = await TagModel.countDocuments(filter);
   return { tags: tags as ITagEntity[], totalCount };
 };
+
+export default getManyTags;

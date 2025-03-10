@@ -8,9 +8,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to register user.
- * @returns RegisterUser.
  */
-export default (): ((req: IRegisterReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const registerUser = (): ((req: IRegisterReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new RegisterDto(req.body, req.headers['user-agent']);
 
@@ -20,3 +19,5 @@ export default (): ((req: IRegisterReq, res: express.Response, next: express.Nex
     res.status(EHttpCodes.CREATED).json(user);
   });
 };
+
+export default registerUser;

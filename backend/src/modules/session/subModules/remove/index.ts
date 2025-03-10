@@ -6,9 +6,8 @@ import type RemoveSessionDto from './dto.js';
 /**
  * Export controller, for endpoint to remove session.
  * @param dto
- * @returns RemoveSession.
  */
-export default async (dto: RemoveSessionDto): Promise<void> => {
+const removeSession = async (dto: RemoveSessionDto): Promise<void> => {
   const { sessionId, userId } = dto;
 
   const repo = new SessionRepository();
@@ -19,3 +18,5 @@ export default async (dto: RemoveSessionDto): Promise<void> => {
   });
   appAssert(deleted, EHttpCodes.NOT_FOUND, 'Session not found');
 };
+
+export default removeSession;

@@ -8,9 +8,8 @@ import type { IArticleEntity } from '../../../types.js';
 /**
  * Export controller, for endpoint to get many articles.
  * @param dto
- * @returns GetManyArticles.
  */
-export default async (
+const getManyArticles = async (
   dto: GetManyArticlesDto,
 ): Promise<{ data: IArticleEntity[]; pagination: { total: number; page: number; pages: number } }> => {
   const { userId, ...sortParams } = dto;
@@ -57,3 +56,5 @@ export default async (
     },
   };
 };
+
+export default getManyArticles;

@@ -6,9 +6,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get all conversation reports.
- * @returns GetAllConversationReports.
  */
-export default (): ((
+const getAllConversationReports = (): ((
   req: IGetAllConversationReportsReq,
   res: express.Response,
   next: express.NextFunction,
@@ -19,3 +18,5 @@ export default (): ((
     res.status(EHttpCodes.OK).json(data);
   });
 };
+
+export default getAllConversationReports;

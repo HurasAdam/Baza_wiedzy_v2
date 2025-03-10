@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to getting latest articles.
- * @returns GetLatestArticles.
  */
-export default (): ((
+const getLatestArticles = (): ((
   req: IGetLatestArticleReq,
   res: express.Response,
   next: express.NextFunction,
@@ -22,3 +21,5 @@ export default (): ((
     res.status(EHttpCodes.OK).json(latestArticles);
   });
 };
+
+export default getLatestArticles;

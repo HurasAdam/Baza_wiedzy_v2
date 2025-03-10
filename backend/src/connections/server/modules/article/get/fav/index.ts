@@ -5,9 +5,12 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get favorite articles.
- * @returns GetArticles.
  */
-export default (): ((req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getArticles = (): ((
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetFavArticlesDto({ userId: req.userId, page: req.query.page as string });
 
@@ -20,3 +23,5 @@ export default (): ((req: express.Request, res: express.Response, next: express.
     });
   });
 };
+
+export default getArticles;

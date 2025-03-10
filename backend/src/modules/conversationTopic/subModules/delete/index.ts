@@ -6,9 +6,8 @@ import type DeleteConversationTopicDto from './dto.js';
 /**
  * Export controller, for endpoint to delete conversation topic.
  * @param dto
- * @returns DeleteConversationTopic.
  */
-export default async (dto: DeleteConversationTopicDto): Promise<{ message: string }> => {
+const deleteConversationTopic = async (dto: DeleteConversationTopicDto): Promise<{ message: string }> => {
   const { topicId } = dto;
 
   const conversationTopicRepo = new ConversationTopicRepository();
@@ -21,3 +20,5 @@ export default async (dto: DeleteConversationTopicDto): Promise<{ message: strin
 
   return { message: 'Conversataion topic deleted successfully' };
 };
+
+export default deleteConversationTopic;

@@ -6,9 +6,8 @@ import type ReadNotificationDto from './dto.js';
 /**
  * Export controller, for endpoint to read notifications.
  * @param dto
- * @returns ReadNotification.
  */
-export default async (dto: ReadNotificationDto): Promise<void> => {
+const readNotification = async (dto: ReadNotificationDto): Promise<void> => {
   const { id } = dto;
 
   const notificationRepo = new NotificationRepository();
@@ -18,3 +17,5 @@ export default async (dto: ReadNotificationDto): Promise<void> => {
 
   await notificationRepo.update(id, { isRead: true });
 };
+
+export default readNotification;

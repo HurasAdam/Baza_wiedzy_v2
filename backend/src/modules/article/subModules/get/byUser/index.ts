@@ -8,9 +8,8 @@ import type { IArticleEntity } from '../../../types.js';
 /**
  * Export controller, for endpoint to get articles by user.
  * @param data
- * @returns GetArticleByUser.
  */
-export default async (
+const getArticleByUser = async (
   data: GetArticleByUserDto,
 ): Promise<{ data: IArticleEntity[]; pagination: { page: number; pages: number; total: number } }> => {
   const { id: userId, startDate, endDate } = data;
@@ -64,3 +63,5 @@ export default async (
 
   return responseObject;
 };
+
+export default getArticleByUser;

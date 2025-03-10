@@ -6,9 +6,12 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get user dashboard stats.
- * @returns GetUserDashboardStats.
  */
-export default (): ((req: IGetUserStatsReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getUserDashboardStats = (): ((
+  req: IGetUserStatsReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetUserStatsDto(req.query, req.userId);
 
@@ -21,3 +24,5 @@ export default (): ((req: IGetUserStatsReq, res: express.Response, next: express
     });
   });
 };
+
+export default getUserDashboardStats;

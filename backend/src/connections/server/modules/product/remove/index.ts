@@ -7,9 +7,12 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to remove product.
- * @returns RemoveProduct.
  */
-export default (): ((req: IRemoveProductReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const removeProduct = (): ((
+  req: IRemoveProductReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new RemoveProductDto({ productId: req.params.id });
 
@@ -18,3 +21,5 @@ export default (): ((req: IRemoveProductReq, res: express.Response, next: expres
     res.status(EHttpCodes.OK).json(conversationTproduct);
   });
 };
+
+export default removeProduct;

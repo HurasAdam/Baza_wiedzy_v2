@@ -5,9 +5,8 @@ import type { IArticleHistory } from '../../../types.js';
 /**
  * Export controller, for endpoint to get article history by user.
  * @param dto
- * @returns GetArticleHistoryByUser.
  */
-export default async (dto: GetHistoryByUserDto): Promise<IArticleHistory[]> => {
+const getArticleHistoryByUser = async (dto: GetHistoryByUserDto): Promise<IArticleHistory[]> => {
   const filter: {
     updatedBy: string;
     updatedAt?: {
@@ -44,3 +43,5 @@ export default async (dto: GetHistoryByUserDto): Promise<IArticleHistory[]> => {
     })
     .exec();
 };
+
+export default getArticleHistoryByUser;

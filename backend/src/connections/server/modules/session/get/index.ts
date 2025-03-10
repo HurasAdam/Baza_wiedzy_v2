@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get session.
- * @returns GetSession.
  */
-export default (): ((req: IGetSessionReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getSession = (): ((req: IGetSessionReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetSessionDto({ userId: req.userId, sessionId: req.sessionId });
 
@@ -20,3 +19,5 @@ export default (): ((req: IGetSessionReq, res: express.Response, next: express.N
       .json(sessions.map((session) => (session._id === dto.sessionId ? session : { ...session, isCurrent: true })));
   });
 };
+
+export default getSession;

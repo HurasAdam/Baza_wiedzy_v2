@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to getting popular articles.
- * @returns GetPopularArticles.
  */
-export default (): ((
+const getPopularArticles = (): ((
   req: IGetPopularArticlesReq,
   res: express.Response,
   next: express.NextFunction,
@@ -22,3 +21,5 @@ export default (): ((
     res.status(EHttpCodes.OK).json(popularArticles);
   });
 };
+
+export default getPopularArticles;

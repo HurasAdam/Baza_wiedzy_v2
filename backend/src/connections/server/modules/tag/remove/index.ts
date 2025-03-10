@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to remove tag.
- * @returns RemoveTag.
  */
-export default (): ((req: IRemoveTagReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const removeTag = (): ((req: IRemoveTagReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new RemoveTagDto({ id: req.params.id as string });
 
@@ -18,3 +17,5 @@ export default (): ((req: IRemoveTagReq, res: express.Response, next: express.Ne
     res.status(EHttpCodes.OK).json({ message });
   });
 };
+
+export default removeTag;

@@ -6,9 +6,8 @@ import ArticleRepository from '../../../repository/article.js';
  * Export controller, for endpoint to increment views.
  * @param root0
  * @param root0.articleId
- * @returns IncrementViews.
  */
-export default async ({ articleId }: { articleId: string }): Promise<{ status: EHttpCodes }> => {
+const incrementViews = async ({ articleId }: { articleId: string }): Promise<{ status: EHttpCodes }> => {
   const articleRepo = new ArticleRepository();
 
   const article = await articleRepo.getById(articleId);
@@ -18,3 +17,5 @@ export default async ({ articleId }: { articleId: string }): Promise<{ status: E
   await articleRepo.update(article._id as string, article);
   return { status: EHttpCodes.OK };
 };
+
+export default incrementViews;

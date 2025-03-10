@@ -5,9 +5,8 @@ import type { IConversationTopicEntity } from '../../../types.js';
 /**
  * Export controller, for endpoint to get one conversation topic.
  * @param dto
- * @returns GetOneConversationTopic.
  */
-export default async (dto: GetConversationTopicDto): Promise<IConversationTopicEntity | null> => {
+const getOneConversationTopic = async (dto: GetConversationTopicDto): Promise<IConversationTopicEntity | null> => {
   const { topicId } = dto;
 
   const conversationTopic = await ConversationTopicModel.findById({ _id: topicId }).populate([
@@ -15,3 +14,5 @@ export default async (dto: GetConversationTopicDto): Promise<IConversationTopicE
   ]);
   return conversationTopic;
 };
+
+export default getOneConversationTopic;

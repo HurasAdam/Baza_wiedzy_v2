@@ -8,9 +8,8 @@ import type { FilterQuery } from 'mongoose';
 /**
  * Export controller, for endpoint to get user with report count.
  * @param dto
- * @returns GetUsersWithReportCount.
  */
-export default async (
+const getUsersWithReportCount = async (
   dto: GetUsersWithReportCountDto,
 ): Promise<{ id: mongoose.Types.ObjectId; name: string; surname: string; createdArticleCount: string }[]> => {
   const { startDate, endDate } = dto;
@@ -93,3 +92,5 @@ export default async (
   // 4. Połącz wyniki i posortuj
   return [...usersWithReportCount, ...usersWithZeroReports];
 };
+
+export default getUsersWithReportCount;

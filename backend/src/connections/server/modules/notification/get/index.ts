@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get notification.
- * @returns GetNotificcations.
  */
-export default (): ((
+const getNotificcations = (): ((
   req: IGetNotificationsReq,
   res: express.Response,
   next: express.NextFunction,
@@ -22,3 +21,5 @@ export default (): ((
     res.status(EHttpCodes.OK).json(data);
   });
 };
+
+export default getNotificcations;

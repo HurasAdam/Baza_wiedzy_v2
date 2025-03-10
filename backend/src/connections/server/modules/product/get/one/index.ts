@@ -7,9 +7,12 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get one product.
- * @returns GetOneProduct.
  */
-export default (): ((req: IGetProductReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getOneProduct = (): ((
+  req: IGetProductReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetProductDto({ productId: req.params.id });
 
@@ -18,3 +21,5 @@ export default (): ((req: IGetProductReq, res: express.Response, next: express.N
     res.status(EHttpCodes.OK).json(product);
   });
 };
+
+export default getOneProduct;

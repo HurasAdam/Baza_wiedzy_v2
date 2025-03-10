@@ -8,9 +8,8 @@ import type { IArticleEntity } from '../../../types.js';
 /**
  * Export controller, for endpoint to get one article.
  * @param dto
- * @returns GetOneArticles.
  */
-export default async (dto: GetOneArticlesDto): Promise<IArticleEntity> => {
+const getOneArticle = async (dto: GetOneArticlesDto): Promise<IArticleEntity> => {
   const { userId, articleId } = dto;
 
   const userRepo = new UserRepository();
@@ -36,3 +35,5 @@ export default async (dto: GetOneArticlesDto): Promise<IArticleEntity> => {
 
   return articleObj;
 };
+
+export default getOneArticle;

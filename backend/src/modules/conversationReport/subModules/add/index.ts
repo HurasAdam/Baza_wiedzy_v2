@@ -7,9 +7,8 @@ import type AddConversationReportDto from './dto.js';
 /**
  * Export controller, for endpoint to add conversation report.
  * @param dto
- * @returns AddConversationReport.
  */
-export default async (dto: AddConversationReportDto): Promise<void> => {
+const addConversationReport = async (dto: AddConversationReportDto): Promise<void> => {
   const { topic, userId } = dto;
 
   const conversationTopicRepo = new ConversationTopicRepository();
@@ -25,3 +24,5 @@ export default async (dto: AddConversationReportDto): Promise<void> => {
     topic,
   });
 };
+
+export default addConversationReport;

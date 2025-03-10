@@ -5,9 +5,8 @@ import type { INotificationEntity } from '../../types.js';
 /**
  * Export controller, for endpoint to get notifications.
  * @param dto
- * @returns GetNotification.
  */
-export default async (dto: GetNotificationDto): Promise<INotificationEntity[]> => {
+const getNotification = async (dto: GetNotificationDto): Promise<INotificationEntity[]> => {
   const { userId } = dto;
 
   const notificationRepo = new NotificationRepository();
@@ -26,3 +25,5 @@ export default async (dto: GetNotificationDto): Promise<INotificationEntity[]> =
       return 0;
     });
 };
+
+export default getNotification;

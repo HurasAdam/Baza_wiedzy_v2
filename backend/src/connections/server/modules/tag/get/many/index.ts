@@ -6,9 +6,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get many tags.
- * @returns GetManyTags.
  */
-export default (): ((req: IGetManyTagReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getManyTags = (): ((req: IGetManyTagReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetManyTagsDto(req.query);
 
@@ -20,3 +19,5 @@ export default (): ((req: IGetManyTagReq, res: express.Response, next: express.N
     });
   });
 };
+
+export default getManyTags;

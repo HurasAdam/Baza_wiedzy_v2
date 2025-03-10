@@ -9,9 +9,8 @@ import type VerifyArticleDto from './dto.js';
 /**
  * Export controller, for endpoint to verify article.
  * @param dto
- * @returns VerifyArticle.
  */
-export default async (dto: VerifyArticleDto): Promise<void> => {
+const verifyArticle = async (dto: VerifyArticleDto): Promise<void> => {
   const { id, userId, isVerified } = dto;
 
   const articleRepo = new ArticleRepository();
@@ -39,3 +38,5 @@ export default async (dto: VerifyArticleDto): Promise<void> => {
     });
   }
 };
+
+export default verifyArticle;

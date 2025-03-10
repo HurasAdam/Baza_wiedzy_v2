@@ -6,9 +6,8 @@ import type CreateTagDto from './dto.js';
 /**
  * Export controller, for endpoint to create tag.
  * @param dto
- * @returns CreateTag.
  */
-export default async (dto: CreateTagDto): Promise<{ message: string }> => {
+const createTag = async (dto: CreateTagDto): Promise<{ message: string }> => {
   const { name, userId } = dto;
 
   const tagRepo = new TagRepository();
@@ -25,3 +24,5 @@ export default async (dto: CreateTagDto): Promise<{ message: string }> => {
   // return { data: createdTag, message: 'Tag został dodany' };
   return { message: 'Tag został dodany' };
 };
+
+export default createTag;

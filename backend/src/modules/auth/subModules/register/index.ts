@@ -9,9 +9,8 @@ import type RegisterDto from './dto.js';
 /**
  * Export controller, for endpoint to register user.
  * @param dto
- * @returns RegisterUser.
  */
-export default async (
+const registerUser = async (
   dto: RegisterDto,
 ): Promise<{ user: CleanUserEntity; accessToken: string; refreshToken: string }> => {
   const { email, password, surname, name } = dto;
@@ -54,3 +53,5 @@ export default async (
     refreshToken,
   };
 };
+
+export default registerUser;

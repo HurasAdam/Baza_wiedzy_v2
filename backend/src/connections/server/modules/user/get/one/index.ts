@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get one user.
- * @returns GetOneUser.
  */
-export default (): ((req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getOneUser = (): ((req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetUserDto({ userId: req.userId });
 
@@ -18,3 +17,5 @@ export default (): ((req: express.Request, res: express.Response, next: express.
     res.status(EHttpCodes.OK).json(new CleanUserEntity(user));
   });
 };
+
+export default getOneUser;

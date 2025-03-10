@@ -7,9 +7,8 @@ import type { FilterQuery } from 'mongoose';
 /**
  * Export controller, for endpoint to get user with article count.
  * @param dto
- * @returns GetUserWithArticleCount.
  */
-export default async (
+const getUserWithArticleCount = async (
   dto: GetUserWithArticleCountDto,
 ): Promise<{ id: mongoose.Types.ObjectId; name: string; surname: string; createdArticleCount: string }[]> => {
   const { startDate, endDate } = dto;
@@ -89,3 +88,5 @@ export default async (
     createdArticleCount: string;
   }[];
 };
+
+export default getUserWithArticleCount;

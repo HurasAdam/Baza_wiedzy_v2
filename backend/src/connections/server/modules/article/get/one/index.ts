@@ -8,9 +8,12 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to getting one articles.
- * @returns GetOneArticles.
  */
-export default (): ((req: IGetOneArticleReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getOneArticle = (): ((
+  req: IGetOneArticleReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const articleId = req?.params?.id;
     const dto = new GetOneArticlesDto({ articleId, userId: req.userId });
@@ -20,3 +23,5 @@ export default (): ((req: IGetOneArticleReq, res: express.Response, next: expres
     res.status(EHttpCodes.OK).json(article);
   });
 };
+
+export default getOneArticle;

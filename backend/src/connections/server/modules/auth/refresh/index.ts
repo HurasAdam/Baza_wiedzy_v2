@@ -8,14 +8,17 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to refresh user token.
- * @returns RefreshToken.
  */
-export default (): ((req: IRefreshTokenReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const refreshToken = (): ((
+  req: IRefreshTokenReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
-    const refreshToken = req.cookies.refreshToken as string | undefined;
-    appAssert(refreshToken, EHttpCodes.UNAUTHORIZED, 'Missing refresh token');
+    const token = req.cookies.refreshToken as string | undefined;
+    appAssert(token, EHttpCodes.UNAUTHORIZED, 'Missing refresh token');
 
-    const { accessToken, newRefreshToken } = await refreshAccessToken(refreshToken);
+    const { accessToken, newRefreshToken } = await refreshAccessToken(token);
 
     if (newRefreshToken) {
       res.cookie('refreshToken', newRefreshToken, getRefreshTokenCookieOptions());
@@ -27,3 +30,5 @@ export default (): ((req: IRefreshTokenReq, res: express.Response, next: express
       .json({ message: 'Access token refreshed' });
   });
 };
+
+export default refreshToken;

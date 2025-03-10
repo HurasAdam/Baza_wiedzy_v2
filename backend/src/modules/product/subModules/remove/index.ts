@@ -8,9 +8,8 @@ import type RemoveProductDto from './dto.js';
 /**
  * Export controller, for endpoint to remove product.
  * @param dto
- * @returns .
  */
-export default async (dto: RemoveProductDto): Promise<{ message: string }> => {
+const removeProduct = async (dto: RemoveProductDto): Promise<{ message: string }> => {
   const { productId } = dto;
 
   const productRepo = new ProductRepository();
@@ -39,3 +38,5 @@ export default async (dto: RemoveProductDto): Promise<{ message: string }> => {
 
   return { message: 'Product deleted successfully' };
 };
+
+export default removeProduct;

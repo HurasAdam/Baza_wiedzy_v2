@@ -7,9 +7,12 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to marking article as favorite.
- * @returns MarkArticleAsFavorite.
  */
-export default (): ((req: IMarkFavReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const markArticleAsFavorite = (): ((
+  req: IMarkFavReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new MarkFavDto(req);
 
@@ -20,3 +23,5 @@ export default (): ((req: IMarkFavReq, res: express.Response, next: express.Next
     });
   });
 };
+
+export default markArticleAsFavorite;

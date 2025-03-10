@@ -6,9 +6,8 @@ import type GetConversationReportDto from './dto.js';
 /**
  * Export controller, for endpoint to get one conversation report.
  * @param dto
- * @returns GetOneConversationReport.
  */
-export default async (dto: GetConversationReportDto): Promise<unknown[]> => {
+const getOneConversationReport = async (dto: GetConversationReportDto): Promise<unknown[]> => {
   const { topicId, startDate, endDate, limit, range } = dto;
 
   let computedStartDate: Date | null = null;
@@ -100,3 +99,5 @@ export default async (dto: GetConversationReportDto): Promise<unknown[]> => {
     ...(limit ? [{ $limit: parseInt(limit, 10) }] : []),
   ]);
 };
+
+export default getOneConversationReport;

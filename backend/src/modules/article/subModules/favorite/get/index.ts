@@ -2,16 +2,15 @@ import { EHttpCodes } from '../../../../../enums/http.js';
 import appAssert from '../../../../../utils/appAssert.js';
 import UserRepository from '../../../../user/repository/index.js';
 import ArticleRepository from '../../../repository/article.js';
-import { getFavoriteArticles } from '../../../repository/index.js';
+import { getFavoriteArticles as getFavoriteArticlesRepo } from '../../../repository/index.js';
 import type GetFavArticlesDto from './dto.js';
 import type { IArticleEntity } from '../../../types.js';
 
 /**
  * Export controller, for endpoint to get favorite articles.
  * @param dto
- * @returns GetFavoriteArticles.
  */
-export default async (
+const getFavoriteArticles = async (
   dto: GetFavArticlesDto,
 ): Promise<{
   favouriteArticles: IArticleEntity[];
@@ -31,7 +30,7 @@ export default async (
 
   const { favourites } = user;
 
-  const favouriteArticles = await getFavoriteArticles(
+  const favouriteArticles = await getFavoriteArticlesRepo(
     favourites.map((f) => f.toString()),
     skip,
     pageSize,
@@ -48,3 +47,5 @@ export default async (
     pageSize,
   };
 };
+
+export default getFavoriteArticles;

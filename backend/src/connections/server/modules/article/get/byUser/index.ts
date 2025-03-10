@@ -6,9 +6,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to getting articles by user.
- * @returns GetArticleByUser.
  */
-export default (): ((
+const getArticleByUser = (): ((
   req: IGetArticleByUserReq,
   res: express.Response,
   next: express.NextFunction,
@@ -19,3 +18,5 @@ export default (): ((
     res.status(200).json(userArticles);
   });
 };
+
+export default getArticleByUser;

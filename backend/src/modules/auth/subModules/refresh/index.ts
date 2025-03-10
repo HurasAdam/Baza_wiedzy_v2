@@ -9,10 +9,10 @@ import type { IAccessTokenPayload, IRefreshTokenPayload } from '../../../../type
 /**
  * Export controller, for endpoint to refresh token.
  * @param refreshToken
- * @returns RefreshToken.
+ * @param token
  */
-export default async (refreshToken: string): Promise<{ accessToken: string; newRefreshToken: string | undefined }> => {
-  const { payload } = verifyToken<IRefreshTokenPayload>(refreshToken, {
+const refreshToken = async (token: string): Promise<{ accessToken: string; newRefreshToken: string | undefined }> => {
+  const { payload } = verifyToken<IRefreshTokenPayload>(token, {
     secret: refreshTokenSignOptions.secret,
   }) as { payload: IAccessTokenPayload };
   appAssert(payload, EHttpCodes.UNAUTHORIZED, 'Invalid refresh token');
@@ -51,3 +51,5 @@ export default async (refreshToken: string): Promise<{ accessToken: string; newR
     newRefreshToken,
   };
 };
+
+export default refreshToken;

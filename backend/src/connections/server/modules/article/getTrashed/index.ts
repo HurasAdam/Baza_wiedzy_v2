@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to getting trashed.
- * @returns GetTrashedArticles.
  */
-export default (): ((
+const getTrashedArticles = (): ((
   req: IGetTrashedArticlesReq,
   res: express.Response,
   next: express.NextFunction,
@@ -22,3 +21,5 @@ export default (): ((
     res.status(EHttpCodes.OK).json(responseObject);
   });
 };
+
+export default getTrashedArticles;

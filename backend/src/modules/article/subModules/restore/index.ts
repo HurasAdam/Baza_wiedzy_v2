@@ -8,9 +8,8 @@ import type RestoreArticleDto from './dto.js';
 /**
  * Export controller, for endpoint to restore trashed article.
  * @param dto
- * @returns RestoreArticle.
  */
-export default async (dto: RestoreArticleDto): Promise<void> => {
+const restoreArticle = async (dto: RestoreArticleDto): Promise<void> => {
   const { userId, id } = dto;
 
   const articleRepo = new ArticleRepository();
@@ -31,3 +30,5 @@ export default async (dto: RestoreArticleDto): Promise<void> => {
     eventType: EEventType.Restored,
   });
 };
+
+export default restoreArticle;

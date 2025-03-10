@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get with change count.
- * @returns GetWithChangeCount.
  */
-export default (): ((
+const getWithChangeCount = (): ((
   req: IGetWithChangesCountReq,
   res: express.Response,
   next: express.NextFunction,
@@ -22,3 +21,5 @@ export default (): ((
     res.status(EHttpCodes.OK).json(data);
   });
 };
+
+export default getWithChangeCount;

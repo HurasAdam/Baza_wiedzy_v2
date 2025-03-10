@@ -6,9 +6,8 @@ import type UpdateTagDto from './dto.js';
 /**
  * Update tag logic.
  * @param dto
- * @returns
  */
-export default async (dto: UpdateTagDto): Promise<{ message: string }> => {
+const updateTag = async (dto: UpdateTagDto): Promise<{ message: string }> => {
   const { tagId, name } = dto;
 
   const tagRepo = new TagRepository();
@@ -29,3 +28,5 @@ export default async (dto: UpdateTagDto): Promise<{ message: string }> => {
 
   return { message: 'Tag has been updated' };
 };
+
+export default updateTag;

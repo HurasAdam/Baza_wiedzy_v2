@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get one tag.
- * @returns GetOneTag.
  */
-export default (): ((req: IGetTagReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getOneTag = (): ((req: IGetTagReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetTagDto({ tagId: req.params.id });
 
@@ -18,3 +17,5 @@ export default (): ((req: IGetTagReq, res: express.Response, next: express.NextF
     res.status(EHttpCodes.OK).json(tag);
   });
 };
+
+export default getOneTag;

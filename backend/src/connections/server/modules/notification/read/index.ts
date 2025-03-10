@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to read notification.
- * @returns GetNotification.
  */
-export default (): ((
+const getNotification = (): ((
   req: IReadNotificationsReq,
   res: express.Response,
   next: express.NextFunction,
@@ -22,3 +21,5 @@ export default (): ((
     res.status(EHttpCodes.OK).json({ data: 'Notification marked as read' });
   });
 };
+
+export default getNotification;

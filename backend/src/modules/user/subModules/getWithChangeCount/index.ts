@@ -7,9 +7,8 @@ import type mongoose from 'mongoose';
 /**
  * Export controller, for endpoint to get user with change count.
  * @param dto
- * @returns GetUserWithChangeCount.
  */
-export default async (
+const getUserWithChangeCount = async (
   dto: GetUserWithChangeCountDto,
 ): Promise<{ id: mongoose.Types.ObjectId; name: string; surname: string; createdArticleCount: string }[]> => {
   const { startDate, endDate } = dto;
@@ -90,3 +89,5 @@ export default async (
   // Łączenie wyników z użytkownikami, którzy mają zero zmian
   return [...usersWithChangeCount, ...usersWithZeroChanges];
 };
+
+export default getUserWithChangeCount;

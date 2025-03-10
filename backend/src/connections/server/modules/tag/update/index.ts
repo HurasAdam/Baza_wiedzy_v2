@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to update tag.
- * @returns UpdateTag.
  */
-export default (): ((req: IUpdateTagReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const updateTag = (): ((req: IUpdateTagReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new UpdateTagDto(req.body, req.params.id);
 
@@ -18,3 +17,5 @@ export default (): ((req: IUpdateTagReq, res: express.Response, next: express.Ne
     res.status(EHttpCodes.OK).json({ message });
   });
 };
+
+export default updateTag;

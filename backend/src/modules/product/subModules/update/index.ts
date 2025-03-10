@@ -6,9 +6,8 @@ import type UpdateProductDto from './dto.js';
 /**
  * Export controller, for endpoint to update product.
  * @param dto
- * @returns UpdateProduct.
  */
-export default async (dto: UpdateProductDto): Promise<void> => {
+const updateProduct = async (dto: UpdateProductDto): Promise<void> => {
   const { name, labelColor, banner, productId } = dto;
 
   const productRepo = new ProductRepository();
@@ -30,3 +29,5 @@ export default async (dto: UpdateProductDto): Promise<void> => {
 
   await productRepo.update(product._id as string, product);
 };
+
+export default updateProduct;

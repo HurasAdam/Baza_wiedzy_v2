@@ -7,9 +7,12 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to getting many articles.
- * @returns GetManyArticles.
  */
-export default (): ((req: IGetManyArticleReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getManyArticles = (): ((
+  req: IGetManyArticleReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (req, res) => {
     const dto = new GetManyArticlesDto(req);
 
@@ -18,3 +21,5 @@ export default (): ((req: IGetManyArticleReq, res: express.Response, next: expre
     res.status(EHttpCodes.OK).json(responseObject);
   });
 };
+
+export default getManyArticles;

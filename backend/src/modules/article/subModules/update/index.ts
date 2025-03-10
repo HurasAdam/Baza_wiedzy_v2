@@ -9,9 +9,8 @@ import type UpdateArticleDto from './dto.js';
 /**
  * Export controller, for endpoint to update articles.
  * @param dto
- * @returns UpdateArticle.
  */
-export default async (dto: UpdateArticleDto): Promise<void> => {
+const updateArticle = async (dto: UpdateArticleDto): Promise<void> => {
   const { id, userId, title, clientDescription, employeeDescription, tags, product } = dto;
 
   const articleRepo = new ArticleRepository();
@@ -39,3 +38,5 @@ export default async (dto: UpdateArticleDto): Promise<void> => {
     eventType: EEventType.Updated,
   });
 };
+
+export default updateArticle;

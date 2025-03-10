@@ -7,9 +7,8 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to update conversation topic.
- * @returns UpdateConversationTopic.
  */
-export default (): ((
+const updateConversationTopic = (): ((
   req: IUpdateConversationTopicReq,
   res: express.Response,
   next: express.NextFunction,
@@ -22,3 +21,5 @@ export default (): ((
     res.status(EHttpCodes.OK).json({ message: 'Temat rozmowy został zaktualizowany' });
   });
 };
+
+export default updateConversationTopic;

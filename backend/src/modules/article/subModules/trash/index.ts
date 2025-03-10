@@ -8,9 +8,8 @@ import type TrashArticleDto from './dto.js';
 /**
  * Export controller, for endpoint to trash article.
  * @param dto
- * @returns TrashArticle.
  */
-export default async (dto: TrashArticleDto): Promise<void> => {
+const trashArticle = async (dto: TrashArticleDto): Promise<void> => {
   const { id, userId } = dto;
 
   const articleRepo = new ArticleRepository();
@@ -31,3 +30,5 @@ export default async (dto: TrashArticleDto): Promise<void> => {
     eventType: EEventType.Trashed,
   });
 };
+
+export default trashArticle;

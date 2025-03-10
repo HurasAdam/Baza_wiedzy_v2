@@ -7,9 +7,8 @@ import type { IConversationTopicEntity } from '../../types.js';
 /**
  * Export controller, for endpoint to create conversation topic.
  * @param dto
- * @returns CreateConversationTopic.
  */
-export default async (
+const createConversationTopic = async (
   dto: CreateConversationTopicDto,
 ): Promise<{ data: IConversationTopicEntity; message: string }> => {
   const { title, product, userId } = dto;
@@ -34,3 +33,5 @@ export default async (
 
   return { data: newTopic!, message: 'Conversation topic created successfully' };
 };
+
+export default createConversationTopic;

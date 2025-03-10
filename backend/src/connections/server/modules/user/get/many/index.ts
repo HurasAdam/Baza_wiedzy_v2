@@ -6,12 +6,17 @@ import type express from 'express';
 
 /**
  * Export controller, for endpoint to get many users.
- * @returns GetManyUsers.
  */
-export default (): ((req: IGetManyUsersReq, res: express.Response, next: express.NextFunction) => Promise<void>) => {
+const getManyUsers = (): ((
+  req: IGetManyUsersReq,
+  res: express.Response,
+  next: express.NextFunction,
+) => Promise<void>) => {
   return catchErrors(async (_req, res) => {
     const users = await getUsers();
 
     res.status(EHttpCodes.OK).json(users);
   });
 };
+
+export default getManyUsers;

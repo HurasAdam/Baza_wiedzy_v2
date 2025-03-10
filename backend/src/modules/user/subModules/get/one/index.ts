@@ -7,9 +7,8 @@ import type { IUserEntity } from '../../../types.js';
 /**
  * Export controller, for endpoint to get one user.
  * @param dto
- * @returns GetOneUser.
  */
-export default async (dto: GetUserDto): Promise<IUserEntity> => {
+const getOneUser = async (dto: GetUserDto): Promise<IUserEntity> => {
   const { userId } = dto;
 
   const userRepo = new UserRepository();
@@ -19,3 +18,5 @@ export default async (dto: GetUserDto): Promise<IUserEntity> => {
 
   return user;
 };
+
+export default getOneUser;

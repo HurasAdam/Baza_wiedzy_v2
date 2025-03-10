@@ -7,9 +7,8 @@ import type { IProductEntity } from '../../../types.js';
 /**
  * Export controller, for endpoint to get one product.
  * @param dto
- * @returns GetOneProduct.
  */
-export default async (dto: GetProductDto): Promise<IProductEntity | null> => {
+const getOneProduct = async (dto: GetProductDto): Promise<IProductEntity | null> => {
   const { productId } = dto;
 
   const productRepo = new ProductRepository();
@@ -18,3 +17,5 @@ export default async (dto: GetProductDto): Promise<IProductEntity | null> => {
   appAssert(product, EHttpCodes.NOT_FOUND, 'Product not found');
   return product;
 };
+
+export default getOneProduct;
