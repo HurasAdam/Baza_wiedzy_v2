@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import getConfig from '../constants/index.js';
+import { JWT_REFRESH_SECRET, JWT_SECRET } from '../constants/index.js';
 import { EAudience } from '../enums/audience.js';
 import type { IAccessTokenPayload, IRefreshTokenPayload, ISignOptionsAndSecret } from '../types/index.js';
 import type { VerifyOptions, SignOptions } from 'jsonwebtoken';
@@ -19,12 +19,12 @@ const defaults: SignOptions = {
 
 const accessTokenSignOptions: ISignOptionsAndSecret = {
   expiresIn: '15m',
-  secret: getConfig().JWT_SECRET,
+  secret: JWT_SECRET,
 };
 
 export const refreshTokenSignOptions: ISignOptionsAndSecret = {
   expiresIn: '30d',
-  secret: getConfig().JWT_REFRESH_SECRET,
+  secret: JWT_REFRESH_SECRET,
 };
 
 export const signToken = (
@@ -44,7 +44,7 @@ export const verifyToken = <TPayload extends object = IAccessTokenPayload>(
     secret?: string;
   },
 ): { payload: TPayload } | { error: string } => {
-  const { secret = getConfig().JWT_SECRET, ...verifyOpts } = options ?? {};
+  const { secret = JWT_SECRET, ...verifyOpts } = options ?? {};
   try {
     const payload = jwt.verify(token, secret, {
       ...defaults,

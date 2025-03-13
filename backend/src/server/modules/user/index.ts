@@ -1,26 +1,22 @@
 import { Router } from 'express';
 import {
-  getSingle,
-  getMany,
-  getUsersWithArticleCount,
-  getUsersWithChangeCount,
-  getUsersWithReportCount,
-} from './get/index.js';
-import { getUserConversationReports } from '../conversationReport/get/index.js';
+  getUserHandler,
+  getUsersHandler,
+  getUsersWithArticleCountHandler,
+  getUsersWithChangeCountHandler,
+  getUsersWithReportCountHandler,
+} from './controller.js';
+import { getUserConversationReports } from '../conversationReport/controller.js';
 
-/**
- * Initialize user routes
- * Prefix: /user.
- */
-export default (): Router => {
-  const router = Router();
+const userRoutes = Router();
 
-  router.get('/', getSingle());
-  router.get('/users', getMany());
-  router.get('/statistics', getUsersWithReportCount());
-  router.get('/statistics/:id', getUserConversationReports());
-  router.get('/article-statistics', getUsersWithArticleCount());
-  router.get('/change-statistics', getUsersWithChangeCount());
+// prefix: /user
 
-  return router;
-};
+userRoutes.get('/', getUserHandler);
+
+userRoutes.get('/users', getUsersHandler);
+userRoutes.get('/statistics', getUsersWithReportCountHandler);
+userRoutes.get('/statistics/:id', getUserConversationReports);
+userRoutes.get('/article-statistics', getUsersWithArticleCountHandler);
+userRoutes.get('/change-statistics', getUsersWithChangeCountHandler);
+export default userRoutes;

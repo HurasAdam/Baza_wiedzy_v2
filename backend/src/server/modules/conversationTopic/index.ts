@@ -1,21 +1,15 @@
 import { Router } from 'express';
-import createConversationTopic from './create/index.js';
-import deleteConversationTopic from './delete/index.js';
-import { getConversationTopics, getSingleConversationTopic } from './get/index.js';
-import updateConversationTopic from './update/index.js';
+import { createConversationTopicHandler, deleteConversationTopicHandler, getConversationTopicsHandler, getSingleConversationTopicHandler, updateConversationTopicleHandler } from './controller.js';
 
-/**
- * Initialize conversations routes
- * Prefix: /conversation-topics.
- */
-export default (): Router => {
-  const router = Router();
 
-  router.get('/', getConversationTopics());
-  router.get('/:id', getSingleConversationTopic());
-  router.post('/create', createConversationTopic());
-  router.put('/topic/:id/update', updateConversationTopic());
-  router.delete('/topic/:id/delete', deleteConversationTopic());
+const conversationTopicRoutes = Router();
 
-  return router;
-};
+// prefix /conversation-topics
+
+conversationTopicRoutes.get('/', getConversationTopicsHandler);
+conversationTopicRoutes.get('/:id', getSingleConversationTopicHandler);
+conversationTopicRoutes.post('/create', createConversationTopicHandler);
+conversationTopicRoutes.put('/topic/:id/update', updateConversationTopicleHandler);
+conversationTopicRoutes.delete('/topic/:id/delete', deleteConversationTopicHandler);
+
+export default conversationTopicRoutes;

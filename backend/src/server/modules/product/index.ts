@@ -1,21 +1,20 @@
 import { Router } from 'express';
-import create from './create/index.js';
-import { getMany, getSingle } from './get/index.js';
-import remove from './remove/index.js';
-import update from './update/index.js';
+import {
+  createProductHandler,
+  deleteProductHandler,
+  getProductsHandler,
+  getSingleProductHandler,
+  updateProductHandler,
+} from './controller.js';
 
-/**
- * Initialize product routes
- * Prefix: /products.
- */
-export default (): Router => {
-  const router = Router();
+const productRoutes = Router();
 
-  router.get('/', getMany());
-  router.get('/product/:id', getSingle());
-  router.post('/create', create());
-  router.delete('/product/:id/delete', remove());
-  router.put('/product/:id/update', update());
+// prefix /products
 
-  return router;
-};
+productRoutes.get('/', getProductsHandler);
+productRoutes.get('/product/:id', getSingleProductHandler);
+productRoutes.post('/create', createProductHandler);
+productRoutes.delete('/product/:id/delete', deleteProductHandler);
+productRoutes.put('/product/:id/update', updateProductHandler);
+
+export default productRoutes;

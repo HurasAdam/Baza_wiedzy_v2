@@ -1,15 +1,11 @@
 import { Router } from 'express';
-import { getDashboardStats, getUserDashboardStats } from './get/index.js';
+import { getDashboardStatsHandler, getUserDashboardStatsHandler } from './controller.js';
 
-/**
- * Initialize dashboard routes
- * Prefix: /tags.
- */
-export default (): Router => {
-  const router = Router();
+const dashboardRoutes = Router();
 
-  router.get('/stats', getDashboardStats());
-  router.get('/userStats', getUserDashboardStats());
+// prefix /tags
 
-  return router;
-};
+dashboardRoutes.get('/stats', getDashboardStatsHandler);
+dashboardRoutes.get('/userStats', getUserDashboardStatsHandler);
+
+export default dashboardRoutes;

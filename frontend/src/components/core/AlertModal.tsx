@@ -7,10 +7,8 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
   } from "@/components/ui/alert-dialog";
-  import { Button } from "@/components/ui/button";
-import { useCallback, useState } from "react";
+  import { useCallback, useState } from "react";
 import { Input } from "../ui/input";
   
   interface AlertModalProps {

@@ -1,21 +1,12 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
   Frame,
-  GalleryVerticalEnd,
   Map,
   PieChart,
-  Settings2,
-  SquareTerminal,
 } from "lucide-react"
 import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
 
-import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import {
   Sidebar,
@@ -24,10 +15,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { ADMIN_NAVBAR_OPTIONS, ADMIN_NAVBAR_OPTIONS_SECONDARY, NAVBAR_OPTIONS } from "@/constants"
+import { ADMIN_NAVBAR_OPTIONS, ADMIN_NAVBAR_OPTIONS_SECONDARY } from "@/constants"
 import { IMAGES } from "@/constants/images"
 import { NavSecondary } from "./nav-secondary"
-import { Link } from "react-router-dom"
 // This is sample data.
 const data = {
   user: {

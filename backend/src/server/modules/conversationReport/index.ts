@@ -1,17 +1,12 @@
 import { Router } from 'express';
-import addConversationReport from './add/index.js';
-import { getAllConversationReports, getAllReports } from './get/index.js';
+import { addConversationReportHandler, getAllConversationReportsHandler, getAllReports } from './controller.js';
 
-/**
- * Initialize conversations report routes
- * Prefix: /conversation-report.
- */
-export default (): Router => {
-  const router = Router();
+const conversationReportRoutes = Router();
 
-  router.get('/', getAllConversationReports());
-  router.get('/all', getAllReports());
-  router.post('/add', addConversationReport());
+// prefix /conversation-report
 
-  return router;
-};
+conversationReportRoutes.get('/', getAllConversationReportsHandler);
+conversationReportRoutes.get('/all', getAllReports);
+conversationReportRoutes.post('/add', addConversationReportHandler);
+
+export default conversationReportRoutes;

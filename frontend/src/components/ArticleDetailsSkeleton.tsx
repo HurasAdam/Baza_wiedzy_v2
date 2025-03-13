@@ -1,28 +1,15 @@
-import BadgeLabel from '@/components/core/BadgeLabel';
 import { articlesApi } from '@/lib/articlesApi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-  } from "@/components/ui/accordion"
-  
+
+
+
 import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-import { IoCheckmarkCircle } from 'react-icons/io5';
-import { useOutletContext } from "react-router-dom";
-import { BsFillQuestionCircleFill } from "react-icons/bs";
-import { IoMdArrowDropright, IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { formatDate } from '@/lib/utils';
-import { FaCalendarCheck } from 'react-icons/fa6';
-import { Dropdown } from '@/components/core/Dropdown';
-import { HiDotsHorizontal } from "react-icons/hi";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { FaStar } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { TiArrowBack } from "react-icons/ti";
 import { MdDelete } from "react-icons/md";
-import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { toast } from '@/hooks/use-toast';
 import { Skeleton } from "@/components/ui/skeleton"
 import { useModalContext } from '@/contexts/ModalContext';
