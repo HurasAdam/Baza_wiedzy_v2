@@ -1,29 +1,52 @@
-import 'dotenv/config';
-import mongoose from 'mongoose';
-import Log from 'simpl-loggar';
-import connectDB from './config/db.js';
-import startServer from './server/index.js';
-import type http from 'http';
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import connectDB from "./config/db";
+import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
+import cookieParser from "cookie-parser";
+import errorHandler from "./middleware/errorHandlers";
+import authRoutes from "./routes/auth.route";
+import userRoutes from "./routes/user.route";
+import authenticate from "./middleware/authenticate";
+import sessionRoutes from "./routes/session.route";
+import articleRoutes from "./routes/article.route";
+import tagRoutes from "./routes/tag.route";
+import conversationTopicRoutes from "./routes/conversationTopic.route";
+import conversationReportRoutes from "./routes/conversationReport.route";
+import productRoutes from "./routes/product.route";
+import dashboardRoutes from "./routes/dashboard.route";
 
-let app: http.Server | undefined = undefined;
 
-const start = async (): Promise<void> => {
-  await connectDB();
-  app = startServer();
-};
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+app.use(cors({
+    origin: APP_ORIGIN,
+    credentials:true,
+}))
+app.use(cookieParser());
 
-const close = (): void => {
-  if (app) app.close();
-  mongoose.disconnect().catch((err) => {
-    Log.error('Mongoose', 'Got error while disconnecting from mongoose', (err as Error).message);
-  });
-};
 
-start()
-  .then(() => {
-    Log.log('App', 'App started');
-  })
-  .catch((err) => {
-    Log.error('App', (err as Error).message, (err as Error).stack);
-    close();
-  });
+app.use("/auth", authRoutes);
+
+//#protected routes
+app.use("/user", authenticate,userRoutes);
+app.use("/sessions", authenticate,sessionRoutes);
+app.use("/articles",authenticate, articleRoutes);
+app.use("/tags",authenticate, tagRoutes);
+app.use("/products",authenticate, productRoutes);
+app.use("/conversation-topics",authenticate, conversationTopicRoutes);
+app.use("/conversation-report",authenticate, conversationReportRoutes);
+app.use("/dashboard", authenticate, dashboardRoutes)
+
+app.use(errorHandler);
+
+connectDB(()=>{
+    app.listen(PORT, ()=>{
+    console.log(`Server is running on port ${PORT} in ${NODE_ENV} environment`)
+})
+})
+
+
+
+

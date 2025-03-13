@@ -1,24 +1,30 @@
-import { EHttpCodes } from '../enums/http.js';
-import ConversationReportModel from '../modules/conversationReport/model.js';
-import ConversationTopicModel from '../modules/conversationTopic/model.js';
-import appAssert from '../utils/appAssert.js';
-import type { IConversationRaport } from '../modules/conversationReport/model.js';
-import type { ICreateConversationRaportTopicParams } from '../types/conversations.js';
+import { CONFLICT } from "../constants/http";
+import ConversationReportModel from "../models/ConversationReport.model";
+import ConversationTopicModel from "../models/ConversationTopic.model";
+import TagModel from "../models/Tag.model";
+import appAssert from "../utils/appAssert";
 
-// eslint-disable-next-line import/prefer-default-export
-export const addConversationReport = async ({
-  request,
-  userId,
-}: ICreateConversationRaportTopicParams): Promise<IConversationRaport> => {
-  const { topic, description } = request;
+interface CreateConversationTopicRequest {
+    description?: string;
+    topic:string
+  }
 
-  const conversationTopic = await ConversationTopicModel.exists({ topic });
-  appAssert(!conversationTopic, EHttpCodes.CONFLICT, 'Conversation topic does not exist');
 
-  const createdConversationTopic = await ConversationReportModel.create({
-    description,
-    createdBy: userId,
-    topic,
-  });
-  return createdConversationTopic;
-};
+interface CreateConversationTopicParams {
+    request: CreateConversationTopicRequest;
+    userId: string; 
+  }
+
+export const addConversationReport = async({request, userId}:CreateConversationTopicParams)=>{
+    const {topic,description} = request;
+
+    const conversationTopic = await ConversationTopicModel.exists({topic});
+    appAssert(!conversationTopic, CONFLICT, "Conversation topic does not exist");
+
+    const createdConversationTopic = await ConversationReportModel.create({
+        description,
+        createdBy:userId,
+        topic
+    })
+    return createdConversationTopic;
+}

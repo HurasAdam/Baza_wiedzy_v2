@@ -1,16 +1,29 @@
-import { EHttpCodes } from '../enums/http.js';
-import ArticleModel from '../modules/article/schema.model.js';
-import ConversationTopicModel from '../modules/conversationTopic/model.js';
-import ProductModel from '../modules/product/model.js';
-import appAssert from '../utils/appAssert.js';
-import type { IProduct } from '../modules/product/model.js';
-import type { ICreateProductParams } from '../types/products.js';
+import { CONFLICT, NOT_FOUND } from "../constants/http";
+import ArticleModel from "../models/Article.model";
+import ConversationTopicModel from "../models/ConversationTopic.model";
+import ProductModel from "../models/Product.model";
+import TagModel from "../models/Tag.model";
+import appAssert from "../utils/appAssert";
 
-export const createProduct = async ({ request, userId }: ICreateProductParams): Promise<IProduct> => {
+interface CreateProductRequest {
+  name: string;
+  labelColor: string;
+  banner?: string;
+}
+
+interface CreateProductParams {
+  request: CreateProductRequest;
+  userId: string; // userId to string
+}
+
+export const createProduct = async ({
+  request,
+  userId,
+}: CreateProductParams) => {
   const { name, labelColor, banner } = request;
 
   const product = await ProductModel.exists({ name });
-  appAssert(!product, EHttpCodes.CONFLICT, 'Product already exists');
+  appAssert(!product, CONFLICT, "Product already exists");
 
   const createdProduct = await ProductModel.create({
     name,
@@ -21,10 +34,10 @@ export const createProduct = async ({ request, userId }: ICreateProductParams): 
   return createdProduct;
 };
 
-export const deleteProduct = async ({ productId }: { productId: string }): Promise<{ message: string }> => {
+export const deleteProduct = async ({ productId }: { productId: string }) => {
   // Znajdź produkt w bazie
   const product = await ProductModel.findById({ _id: productId });
-  appAssert(product, EHttpCodes.NOT_FOUND, 'Product not found');
+  appAssert(product, NOT_FOUND, "Product not found");
 
   // Sprawdź, czy istnieją powiązane tematy rozmów
   const relatedTopicsCount = await ConversationTopicModel.countDocuments({
@@ -37,18 +50,22 @@ export const deleteProduct = async ({ productId }: { productId: string }): Promi
 
   appAssert(
     relatedTopicsCount === 0 && relatedArticlesCount === 0,
-    EHttpCodes.CONFLICT,
-    'Cannot delete product. It is used in one or more conversation topics or articles.',
+    CONFLICT,
+    "Cannot delete product. It is used in one or more conversation topics or articles."
   );
 
   // Usuń produkt, jeśli brak powiązań
   await ProductModel.findByIdAndDelete({ _id: productId });
 
-  return { message: 'Product deleted successfully' };
+  return { message: "Product deleted successfully" };
 };
 
-export const getSingleProduct = async ({ productId }: { productId: string }): Promise<IProduct> => {
+export const getSingleProduct = async ({
+  productId,
+}: {
+  productId: string;
+}) => {
   const product = await ProductModel.findById({ _id: productId });
-  appAssert(product, EHttpCodes.NOT_FOUND, 'Product not found');
+  appAssert(product, NOT_FOUND, "Product not found");
   return product;
 };

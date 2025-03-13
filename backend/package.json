@@ -1,32 +1,17 @@
 {
   "name": "backend",
-  "version": "0.1.0",
-  "description": "Backend service for baza_wiedzy application",
-  "productName": "backend",
-  "author": "https://github.com/HurasAdam",
-  "license": "UNLICENSED",
-  "private": false,
-  "type": "module",
-  "main": "build/src/index.js",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "start": "node build/src/index.js",
-    "start:dev": "concurrently 'npm run build:watch' 'cross-env NODE_ENV=development nodemon build/src/index.js'",
-    "build": "tsc -p tsconfig.json",
-    "build:watch": "tsc -w -p tsconfig.json",
-    "lint": "cross-env NODE_ENV=development eslint -c eslint.config.mjs . --fix --cache",
-    "listErrors": "node_modules/.bin/tsc --skipLibCheck",
-    "lintStaged": "npx lint-staged"
+    "dev": "ts-node-dev --files src/index.ts index.d.ts",
+    "start": "node index.js",
+    "build": "tsc && cp ./package.json ./dist"
   },
-  "lint-staged": {
-    "*.ts": [
-      "cross-env NODE_ENV=development eslint --cache"
-    ],
-    "*.json,.{eslintrc,prettierrc}": [
-      "prettier --ignore-path .eslintignore --parser json --write"
-    ]
-  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
-    "@types/ws": "^8.5.14",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -34,40 +19,17 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "8.9.5",
-    "simpl-loggar": "^0.5.3",
-    "ws": "^8.18.0",
+    "mongoose": "^8.6.3",
+    "resend": "^4.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.2",
-    "@eslint/eslintrc": "^3.1.0",
-    "@eslint/js": "^9.9.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
+    "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "22.10.7",
-    "@typescript-eslint/eslint-plugin": "8.22.0",
-    "@typescript-eslint/parser": "8.22.0",
-    "concurrently": "9.1.2",
-    "cross-env": "7.0.3",
-    "eslint": "9.19.0",
-    "eslint-config-prettier": "10.0.1",
-    "eslint-plugin-check-file": "2.8.0",
-    "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-jest": "28.11.0",
-    "eslint-plugin-jsdoc": "^50.0.0",
-    "eslint-plugin-prettier": "5.2.3",
-    "eslint-plugin-sort-class-members": "1.21.0",
-    "nodemon": "3.1.9",
-    "prettier": "3.4.2",
-    "ts-node": "^10.9.2",
-    "tslib": "^2.6.3",
-    "typescript": "5.7.3"
-  },
-  "engines": {
-    "node": ">=16"
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.2"
   }
 }
