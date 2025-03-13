@@ -2,8 +2,8 @@ import axios from "axios";
 import { UNAUTHORIZED } from "../constants/http.mjs";
 
 const options = {
-  baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
-  withCredentials: true, // to ensure cookies like refreshToken are sent
+    baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
+    withCredentials: true, // to ensure cookies like refreshToken are sent
 };
 
 // create a separate client for refreshing the access token
@@ -14,43 +14,39 @@ TokenRefreshClient.interceptors.response.use((response) => response.data);
 const API = axios.create(options);
 
 API.interceptors.response.use(
-  (response) => response.data,
-  async (error) => {
-    const { config, response } = error;
-    const { status, data } = response || {};
-    
-    console.log("Interceptor error response:", response);
-    console.log("Error status:", status);
-    console.log("Error data:", data);
-    // Sprawdź, czy access token wygasł
-    if (status === UNAUTHORIZED && data?.errorCode === "InvalidAccessToken") {
-      
-      console.log("Access token expired, trying to refresh the token...");
+    (response) => response.data,
+    async (error) => {
+        const { config, response } = error;
+        const { status, data } = response || {};
 
-      try {
-        // Spróbuj odświeżyć access token za pomocą refresh tokena
-        await TokenRefreshClient.get("/auth/refresh");
+        console.log("Interceptor error response:", response);
+        console.log("Error status:", status);
+        console.log("Error data:", data);
+        // Sprawdź, czy access token wygasł
+        if (status === UNAUTHORIZED && data?.errorCode === "InvalidAccessToken") {
+            console.log("Access token expired, trying to refresh the token...");
 
-        // Powtórz oryginalne żądanie z nowym tokenem
-        return API(config);
-      } catch (refreshError) {
-        console.error("Error during token refresh:", refreshError);
+            try {
+                // Spróbuj odświeżyć access token za pomocą refresh tokena
+                await TokenRefreshClient.get("/auth/refresh");
 
-        // Jeżeli refresh token również zwróci 401 (Unauthorized)
-        if (refreshError.response?.status === UNAUTHORIZED) {
-          console.log("Refresh token invalid, logging out user...");
+                // Powtórz oryginalne żądanie z nowym tokenem
+                return API(config);
+            } catch (refreshError) {
+                console.error("Error during token refresh:", refreshError);
 
-     
+                // Jeżeli refresh token również zwróci 401 (Unauthorized)
+                if (refreshError.response?.status === UNAUTHORIZED) {
+                    console.log("Refresh token invalid, logging out user...");
+                }
+
+                // W przypadku innych błędów rzucaj je dalej
+                return Promise.reject(refreshError);
+            }
         }
 
-        // W przypadku innych błędów rzucaj je dalej
-        // return Promise.reject(refreshError);
-      }
+        return Promise.reject({ status, ...data });
     }
-
-    // return Promise.reject({ status, ...data });
-  }
 );
-
 
 export default API;
