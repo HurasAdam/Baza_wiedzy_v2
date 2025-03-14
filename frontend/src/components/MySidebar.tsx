@@ -29,23 +29,26 @@ export const MySidebar = () => {
 
     return (
         <div className="min-w-24 h-full">
+            {/* Sidebar bez zmian kolorystycznych */}
             <div className="w-24 fixed top-0 h-full py-12 flex flex-col text-foreground bg-transparent">
-                <div className="flex-1 overflow-auto flex flex-col gap-8 items-center">
+                <div className="flex-1 overflow-auto flex flex-col gap-4 items-center">
                     {primaryMenuItems.map((item, index) => (
                         <NavLink
                             key={index}
                             to={item.link}
                             className={({ isActive }) =>
-                                clsx(
-                                    "block text-center border border-background shadow-lg bg-background min-w-16 max-w-12 py-1.5  text-foreground transition rounded-lg",
-                                    {
-                                        "bg-muted": isActive,
-                                    }
-                                )
+                                clsx("group block text-center transition-all duration-300 p-2 ", {
+                                    "  text-primary": isActive, // lekkie powiększenie aktywnego elementu
+                                })
                             }
                         >
-                            <div className="inline-block">{item.icon}</div>
-                            <span className="block text-xs">{item.label}</span>
+                            <div
+                                className="inline-block transition-transform duration-300 ease-in-out
+                                           group-hover:scale-110 group-hover:drop-shadow-md"
+                            >
+                                {item.icon}
+                            </div>
+                            <span className="block text-xs mt-1">{item.label}</span>
                         </NavLink>
                     ))}
                 </div>
@@ -54,10 +57,10 @@ export const MySidebar = () => {
                         <button
                             key={index}
                             onClick={item.onClick}
-                            className="mx-auto py-4 text-foreground min-w-16 max-w-12 rounded-xl hover:bg-background transition group-hover:text-foreground"
+                            className="group mx-auto py-4 transition-transform duration-300 ease-in-out
+                                       hover:scale-110 hover:drop-shadow-md"
                         >
                             <div className="inline-block">{item.icon}</div>
-                            {/* <span className="block text-sm">{item.label}</span> */}
                         </button>
                     ))}
                 </div>

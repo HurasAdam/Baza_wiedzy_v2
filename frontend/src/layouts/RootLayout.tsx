@@ -19,7 +19,7 @@ export const RootLayout = () => {
         <ModalContextProvider>
             <div className="flex min-h-full bg-card ">
                 <MySidebar />
-                <div className="w-full">
+                <div className="w-full ">
                     <Navbar />
                     <div className="flex flex-1 flex-col gap-4 p-4  min-h-screen bg-background rounded-xl ">
                         <Outlet />
