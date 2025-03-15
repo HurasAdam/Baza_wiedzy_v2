@@ -224,9 +224,27 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
     const bannerURL = (article?.product?.banner && BANNER_IMAGES[article.product.banner]) || IMAGES.findArticleImage;
 
     return (
-        <div className="rounded-xl shadow-xl w-full mx-auto  h-[calc(100vh-47px)]   ">
+        <div className="rounded-xl shadow-xl w-full mx-auto 0     ">
             {/* Baner z tytułem artykułu */}
-
+            <div className="z-40 sticky top-0 bg-card rounded-t flex justify-between  border-b border-muted">
+                <div className="flex gap-2 justify-end sticky  py-1.5 ml-4">
+                    <button className=" text-foreground hover:bg-muted  justify-center flex items-center rounded-lg gap-1.5 border px-3.5 text-xs">
+                        <FaHistory /> Historia zmian
+                    </button>
+                </div>
+                <div className="flex gap-2 justify-end sticky  py-1.5 mr-11 ">
+                    {actionOptions?.map((option) => {
+                        return (
+                            <button
+                                onClick={() => option.actionHandler({ id: article?._id })}
+                                className=" text-foreground hover:bg-muted w-9 h-9  justify-center flex items-center rounded-lg "
+                            >
+                                {option?.icon}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
             <div className="relative " style={{ backgroundImage: `url(${bannerURL})` }}>
                 <div className="flex justify-between py-5 pt-10 px-9">
                     <span
@@ -246,7 +264,7 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
             </div>
 
             {/* Nagłówek z dodatkowymi informacjami */}
-            <div className="py-5 px-10">
+            <div className="py-5 px-[60px]">
                 <header className="mb-8">
                     {/* Tagi przeniesione nad autora */}
                     <div className="flex flex-wrap mb-2 space-x-2 justify-between">
@@ -260,7 +278,7 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
                                 </span>
                             ))}
                         </div>
-                        <div className="flex gap-2">
+                        {/* <div className="flex gap-2">
                             {actionOptions?.map((option) => {
                                 return (
                                     <button
@@ -271,7 +289,7 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
                                     </button>
                                 );
                             })}
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Autor i data publikacji */}
