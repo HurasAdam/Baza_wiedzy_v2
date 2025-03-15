@@ -1,19 +1,15 @@
-import type { Request, Response, NextFunction } from 'express';
-import type { ParsedQs } from 'qs';
+import { NextFunction,Request,Response } from "express"
 
-export type AsyncController = (req: Request, res: Response, next: NextFunction) => Promise<unknown>;
+type AsyncController = (req:Request,res:Response,next:NextFunction)=> Promise<any>
 
-/**
- * @param controller
- */
-export default function <T extends Request<unknown, unknown, unknown, ParsedQs>>(
-  controller: (req: T, res: Response, next: NextFunction) => Promise<void>,
-) {
-  return async (req: T, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      await controller(req, res, next);
-    } catch (error) {
-      next(error);
+
+const catchErrors = (controller:AsyncController):AsyncController =>
+    async(req,res,next)=>{
+        try{
+await controller (req,res,next);
+        }catch(error){
+            next(error)
+        }
     }
-  };
-}
+
+export default catchErrors;

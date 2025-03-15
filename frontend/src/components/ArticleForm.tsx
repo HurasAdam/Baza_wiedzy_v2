@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -13,12 +13,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "./ui/textarea";
-import MultipleSelector, { MultiSelect } from "./ui/MultiSelector";
-import { useMemo, useState } from "react";
+import MultipleSelector from "./ui/MultiSelector";
+import { useMemo } from "react";
 import { useModalContext } from "@/contexts/ModalContext";
 import { useNavigate } from "react-router-dom";
-import ArticleDetails from "@/pages/ArticleDetails";
 import Editor from "./editor/Editor";
 import ArticleDetailsInModal from "@/pages/ArticleDetailsInModal";
 import { SelectBox } from "./core/SelectBox";

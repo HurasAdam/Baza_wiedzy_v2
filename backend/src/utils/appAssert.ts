@@ -1,22 +1,22 @@
-import AppError from '../errors/index.js';
-import type { EAppErrorCode } from '../enums/errors.js';
-import type { EHttpCodes } from '../enums/http.js';
-import assert from 'node:assert';
+import assert from "node:assert";
+import AppError from "./AppError";
+import { HttpStatusCode } from "../constants/http";
+import AppErrorCode from "../constants/appErrorCode";
 
 type AppAssert = (
-  condition: unknown,
-  httpStatusCode: EHttpCodes,
+  condition: any,
+  httpStatusCode: HttpStatusCode,
   message: string,
-  appErrorCode?: EAppErrorCode,
+  appErrorCode?: AppErrorCode
 ) => asserts condition;
 /**
  * Asserts a condition and throws an AppError if the condition is falsy.
- * @param condition
- * @param httpStatusCode
- * @param message
- * @param appErrorCode
  */
-const appAssert: AppAssert = (condition, httpStatusCode, message, appErrorCode) =>
-  assert(condition, new AppError(httpStatusCode, message, appErrorCode));
+const appAssert: AppAssert = (
+  condition,
+  httpStatusCode,
+  message,
+  appErrorCode
+) => assert(condition, new AppError(httpStatusCode, message, appErrorCode));
 
 export default appAssert;

@@ -1,6 +1,6 @@
+import clsx from "clsx";
 import { useState } from "react";
 import { RiSettings4Fill } from "react-icons/ri";
-import clsx from "clsx";
 import { ThemeToggleButton } from "./ToggleThemeButton";
 import { ToggleWidthModalButton } from "./ToggleWidthModalButton";
 
@@ -8,7 +8,7 @@ const SettingsContainer = () => {
     const [activeTab, setActiveTab] = useState("personalization");
 
     return (
-        <div className="flex w-full h-full pt-2">
+        <div className="flex w-full h-full pt-2 ">
             {/* Sidebar - lewa część */}
             <div className="p-4 pr-8 border-r text-foreground h-full overflow-auto">
                 <h2 className="text-2xl font-semibold mb-8 text-foreground flex gap-3 items-center">
@@ -53,7 +53,7 @@ const SettingsContainer = () => {
             </div>
 
             {/* Treść zakładki - prawa część */}
-            <div className="flex-1 p-4 pl-8 overflow-auto">
+            <div className="flex-1 p-4 pl-8 ">
                 {activeTab === "personalization" && (
                     <div>
                         <h3 className="text-2xl mb-8">Personalizacja</h3>

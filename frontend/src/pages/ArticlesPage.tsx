@@ -1,16 +1,16 @@
-import { type ChangeEventHandler } from "react";
-import { useSearchParams } from "react-router-dom";
 import SideBySideArticleDetails from "@/components/articles/views/SideBySideView/SideBySideArticleDetails";
+import { SelectBox } from "@/components/core/SelectBox";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useFetchArticles } from "@/hooks/query/useFetchArticles";
+import { useFetchProducts } from "@/hooks/query/useFetchProducts";
 import { IArticle } from "@/types";
 import { Search, Star } from "lucide-react";
+import { type ChangeEventHandler } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useModal } from "../components/modal/hooks/useModal";
 import { Modal } from "../components/modal/Modal";
-import { useFetchProducts } from "@/hooks/query/useFetchProducts";
-import { SelectBox } from "@/components/core/SelectBox";
 
 const ArticleList = () => {
     const [params] = useSearchParams();

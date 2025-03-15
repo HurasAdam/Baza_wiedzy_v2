@@ -1,6 +1,5 @@
 import { AlertModal } from "@/components/core/AlertModal";
 import { ContentModal } from "@/components/core/ContentModal";
-import useModalSize from "@/hooks/useModalSize";
 import React, { useCallback, useContext, useState } from "react";
 import { useModalSettings } from "./ModalSettingsContext";
 

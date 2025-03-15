@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FaCheckCircle, FaRedo } from "react-icons/fa";
-import { FaArrowRight, FaFilter } from "react-icons/fa6";
+import { FaCheckCircle } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa6";
 
 const SideBySideArticlesList = ({ onSelect, articles }) => {
   const [search, setSearch] = useState("");
