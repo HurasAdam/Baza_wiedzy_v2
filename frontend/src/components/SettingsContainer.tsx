@@ -10,17 +10,17 @@ const SettingsContainer = () => {
     return (
         <div className="flex w-full h-full pt-2 ">
             {/* Sidebar - lewa część */}
-            <div className="p-4 pr-8 border-r text-foreground h-full overflow-auto">
-                <h2 className="text-2xl font-semibold mb-8 text-foreground flex gap-3 items-center">
+            <div className="w-[236px] py-2 px-3 border-r text-foreground h-full overflow-auto">
+                <h2 className="text-2xl font-semibold mb-10  text-foreground flex gap-3 items-center">
                     <RiSettings4Fill size={26} />
                     Ustawienia
                 </h2>
                 <ul className="space-y-4">
                     <li className="text-foreground">
                         <button
-                            className={clsx("w-full text-left p-2 rounded-md", {
-                                "bg-foreground text-orange-700": activeTab === "personalization",
-                                "hover:bg-card hover:text-orange-700": activeTab !== "personalization",
+                            className={clsx("w-full text-sm text-left py-1.5 px-3 rounded-md", {
+                                "bg-primary text-background": activeTab === "personalization",
+                                "hover:bg-muted": activeTab !== "personalization",
                             })}
                             onClick={() => setActiveTab("personalization")}
                         >
@@ -29,9 +29,9 @@ const SettingsContainer = () => {
                     </li>
                     <li>
                         <button
-                            className={clsx("w-full text-left p-2 rounded-md", {
-                                "bg-foreground text-orange-700": activeTab === "notifications",
-                                "hover:bg-card hover:text-orange-700": activeTab !== "notifications",
+                            className={clsx("w-full text-sm text-left py-1.5 px-3 rounded-md", {
+                                "bg-primary  text-background": activeTab === "notifications",
+                                "hover:bg-muted": activeTab !== "notifications",
                             })}
                             onClick={() => setActiveTab("notifications")}
                         >
@@ -40,9 +40,9 @@ const SettingsContainer = () => {
                     </li>
                     <li>
                         <button
-                            className={clsx("w-full text-left p-2 rounded-md", {
-                                "bg-foreground text-orange-700": activeTab === "avatar",
-                                "hover:bg-card hover:text-orange-700": activeTab !== "avatar",
+                            className={clsx("w-full text-sm text-left py-1.5 px-3 rounded-md", {
+                                "bg-primary  text-background": activeTab === "avatar",
+                                "hover:bg-muted": activeTab !== "avatar",
                             })}
                             onClick={() => setActiveTab("avatar")}
                         >
@@ -53,21 +53,21 @@ const SettingsContainer = () => {
             </div>
 
             {/* Treść zakładki - prawa część */}
-            <div className="flex-1 p-4 pl-8 ">
+            <div className="flex-1 p-4 px-8 ">
                 {activeTab === "personalization" && (
                     <div>
-                        <h3 className="text-2xl mb-8">Personalizacja</h3>
+                        <h3 className="text-xl mb-8 border-b pb-3">Personalizacja</h3>
                         <div className="flex flex-col gap-6 mb-10">
                             {/* Kolor tła */}
                             <div className="flex flex-col w-full">
-                                <label className="text-foreground mb-4">Wybierz motyw</label>
+                                <label className="text-foreground mb-4 ">Motyw interfejsu</label>
                                 <ThemeToggleButton />
                             </div>
                             {/* Kolor navbaru */}
                         </div>
 
                         <div className="flex flex-col gap-2 ">
-                            <label className="text-foreground mb-2">Rozmiar okna modalnego:</label>
+                            <label className="text-foreground mb-2  border-b  pb-3">Rozmiar okna modalnego</label>
                             <ToggleWidthModalButton />
                         </div>
                     </div>

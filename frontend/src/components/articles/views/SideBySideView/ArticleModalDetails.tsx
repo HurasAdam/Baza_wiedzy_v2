@@ -3,7 +3,6 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { IMAGES } from "@/constants/images";
 import { BANNER_IMAGES } from "@/constants/productBanners";
-import { useModalContext } from "@/contexts/ModalContext";
 import { toast } from "@/hooks/use-toast";
 import useCopyToClipboard from "@/hooks/useCopyToClipboard";
 import { articlesApi } from "@/lib/articlesApi";
@@ -16,9 +15,22 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { IoCheckmarkSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { TiArrowBack } from "react-icons/ti";
-import { useNavigate } from "react-router-dom";
+import { Alert } from "../../../alert/Alert";
+import { useAlert } from "../../../alert/hooks/useAlert";
+import { Modal } from "../../../modal/Modal";
+import { useModal } from "../../../modal/hooks/useModal";
+import EditArticle from "../../Edit/EditArticle";
 
-const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
+const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
+    const { openModal: openArticleHistoryModal, isOpen, closeModal } = useModal();
+    const {
+        openModal: openEditArticleModal,
+        isOpen: isEditArticleModalOpen,
+        closeModal: closeEditArticleModal,
+    } = useModal();
+    const { isOpen: isVerifyAlertOpen, openAlert: openVerifyAlert, closeAlert: closeVerifyAlert } = useAlert();
+    const { isOpen: isUnverifyAlertOpen, openAlert: openUnverifyAlrty, closeAlert: closeUnverifyAlert } = useAlert();
+    const { isOpen: isDeleteAlertOpen, openAlert: openDeleteAlert, closeAlert: closeDeleteAlert } = useAlert();
     const { data: article, isLoading } = useQuery({
         queryKey: ["article", articleId],
         queryFn: () => articlesApi.getArticle({ id: articleId }),
@@ -32,19 +44,16 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
     const callbackFn = () => {
         setClipBoardCopyMessage("Skopiowano!");
         setTimeout(() => {
-            setClipBoardCopyMessage(""); // Resetowanie wiadomości po pewnym czasie
+            setClipBoardCopyMessage("");
         }, 760);
     };
 
     const handleCopyId = () => {
         setClipBoardCopiedId(true);
         setTimeout(() => {
-            setClipBoardCopiedId(false); // Resetowanie wiadomości po pewnym czasie
-        }, 1000); // Zmieniono czas na 1 sekundę (np. 1000 ms)
+            setClipBoardCopiedId(false);
+        }, 1000);
     };
-
-    const navigate = useNavigate();
-    const { openModal, openContentModal, closeContentModal } = useModalContext();
 
     const { mutate } = useMutation({
         mutationFn: ({ id, isVerified }) => {
@@ -58,15 +67,17 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
                 variant: "success",
                 duration: 3550,
             });
+            closeVerifyAlert();
+            closeUnverifyAlert();
         },
     });
 
     const { mutate: markAsFavouriteHandler } = useMutation({
         mutationFn: ({ id }) => {
-            return articlesApi.markArticleAsFavourite({ id: id || articleId });
+            return articlesApi.markArticleAsFavourite({ id });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries(["article", id]);
+            queryClient.invalidateQueries(["article", articleId]);
             toast({
                 title: "Sukces",
                 description: data?.message,
@@ -81,11 +92,7 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
             return articlesApi.trashArticle({ id });
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries("articles");
-            navigate("/articles");
-            if (type === "modal") {
-                closeContentModal();
-            }
+            queryClient.invalidateQueries(["article", articleId]);
 
             toast({
                 title: "Sukces",
@@ -93,51 +100,36 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
                 variant: "success",
                 duration: 3550,
             });
+
+            closeDeleteAlert();
+            closeModal();
         },
     });
 
+    const verifyArticleHandler = () => {
+        openVerifyAlert();
+    };
+    const unverifyArticleHandler = () => {
+        openUnverifyAlrty();
+    };
     const deleteArticleHandler = ({ id }) => {
-        openModal(
-            "Czy jestes pewien?",
-            "Czy jesteś pewien, że chcesz usunąć ten artykuł? Potwierdź, aby kontynuować.",
-            () => {
-                deleteArticleMutation({ id: id || articleId });
-            }
-        );
+        // deleteArticleMutation({ id: id || articleId });
+        openDeleteAlert();
     };
 
-    const verifyArticleHandler = ({ id, isVerified }) => {
-        const modalTitle = !isVerified ? "Cofnięcie weryfikacji artykułu" : "Potwierdzenie weryfikacji artykułu";
-
-        const modalDescription = !isVerified
-            ? "Czy na pewno chcesz cofnąć weryfikację tego artykułu? To może wpłynąć na jego wiarygodność."
-            : "Czy na pewno chcesz zweryfikować ten artykuł? Zweryfikowany artykuł będzie oznaczony jako wiarygodny.";
-        openModal(modalTitle, modalDescription, () => {
-            mutate({ id: id || articleId, isVerified });
-        });
+    const onVerifyConfirm = ({ isVerified }) => {
+        mutate({ id: articleId, isVerified });
+    };
+    const onUnverifyConfirm = ({ isVerified }) => {
+        mutate({ id: articleId, isVerified });
+    };
+    const onDeleteConfirm = () => {
+        deleteArticleMutation({ id: articleId });
+    };
+    const editArticleHandler = (article) => {
+        openEditArticleModal();
     };
 
-    const EditArticleHandler = (article) => {
-        openContentModal({
-            closeOnOutsideClick: false,
-            title: "Edytuj Artykuł",
-            description:
-                "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
-            content: <EditArticle type={"view"} article={article} />,
-            size: "lg",
-        });
-    };
-    const showArticleHistory = (article) => {
-        openContentModal({
-            title: "Edytuj Artykuł",
-            description:
-                "Tutaj możesz edytować tytuł, treść oraz inne szczegóły artykułu. Po zakończeniu kliknij `Zapisz zmiany`, aby zastosować aktualizacje.",
-            content: <ArticleHistory articleId={article?._id} showBackwardArrow={false} />,
-            size: "lg",
-            height: "82",
-            scrollable: false,
-        });
-    };
     const actionOptions = [
         {
             label: `${article?.isFavourite ? "Usuń z ulubionych" : "Dodaj do ulubionych"}`,
@@ -147,7 +139,7 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
         {
             label: "Edytuj",
             icon: <FaEdit />,
-            actionHandler: () => EditArticleHandler(article),
+            actionHandler: () => editArticleHandler(article),
         },
 
         ...(article?.isVerified
@@ -156,7 +148,7 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
                       label: "Cofnij weryfikację",
 
                       actionHandler: () => {
-                          verifyArticleHandler({ id: articleId, isVerified: false });
+                          unverifyArticleHandler();
                       },
                       icon: <TiArrowBack />,
                   },
@@ -166,20 +158,13 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
                       label: "Zweryfikuj",
 
                       actionHandler: () => {
-                          verifyArticleHandler({ id: articleId, isVerified: true });
+                          verifyArticleHandler();
                       },
 
                       icon: <IoMdCheckmarkCircleOutline />,
                   },
               ]),
-        {
-            label: "Historia modyfikacji",
-            icon: <FaHistory />,
-            actionHandler: () => showArticleHistory(article),
-            tooltip: "Zobacz historię modyfikacji",
-        },
 
-        // {label:"Zweryfikuj", icon: article?.isVerified ?<IoArrowBackCircleSharp/>:<FaCheckCircle/> , actionHandler:()=>mutate({id, isVerified: true }) },
         {
             label: "Usuń",
             icon: <MdDelete />,
@@ -228,11 +213,14 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
             {/* Baner z tytułem artykułu */}
             <div className="z-40 sticky top-0 bg-card rounded-t flex justify-between  border-b border-muted">
                 <div className="flex gap-2 justify-end sticky  py-1.5 ml-4">
-                    <button className=" text-foreground hover:bg-muted  justify-center flex items-center rounded-lg gap-1.5 border px-3.5 text-xs">
+                    <button
+                        onClick={openArticleHistoryModal}
+                        className=" text-foreground hover:bg-muted  justify-center flex items-center rounded-lg gap-1.5 border px-3.5 text-xs"
+                    >
                         <FaHistory /> Historia zmian
                     </button>
                 </div>
-                <div className="flex gap-2 justify-end sticky  py-1.5 mr-11 ">
+                <div className="flex gap-2 justify-end sticky  py-1.5 mr-14 ">
                     {actionOptions?.map((option) => {
                         return (
                             <button
@@ -258,7 +246,7 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
                         <span className="text-sm text-gray-800">👁️ {article?.viewsCounter} Wyświetleń</span>
                     </div>
                 </div>
-                <h1 className="text-2xl py-5 px-9 font-bold shadow-2xl text-slate-200 bg-gray-800/50 backdrop-blur">
+                <h1 className="text-2xl py-5 px-12 font-bold shadow-2xl text-slate-200 bg-gray-800/50 backdrop-blur">
                     {article?.title}
                 </h1>
             </div>
@@ -414,8 +402,39 @@ const SideBySideArticleDetails = ({ articleId }: { articleId: string }) => {
                     </section>
                 </div>
             </div>
+            <Modal isOpen={isOpen} onClose={closeModal} closeOnOutsideClick={false}>
+                <ArticleHistory articleId={article?._id} showBackwardArrow={false} onBackward={closeModal} />
+            </Modal>
+            <Modal isOpen={isEditArticleModalOpen} onClose={closeEditArticleModal} closeOnOutsideClick={false}>
+                <EditArticle type={"view"} article={article} />
+            </Modal>
+            <Alert
+                isOpen={isVerifyAlertOpen}
+                onConfirm={() => onVerifyConfirm({ isVerified: true })}
+                onCancel={closeVerifyAlert}
+            >
+                <div>
+                    Czy jesteś pewien że chcesz ustawić status tego artukułu jako{" "}
+                    <span className="text-green-500">Zweryfikowany</span>?
+                </div>
+            </Alert>
+            <Alert
+                isOpen={isUnverifyAlertOpen}
+                onConfirm={() => onUnverifyConfirm({ isVerified: false })}
+                onCancel={closeUnverifyAlert}
+            >
+                <div className="leading-relaxed">
+                    <span> Czy jesteś pewien że chcesz cofnąć weryfikację tego artykułu, ustawiając status jako </span>
+                    <span className="text-rose-600 font-semibold">Do weryfikacji</span> ?
+                </div>
+            </Alert>
+            <Alert isOpen={isDeleteAlertOpen} onConfirm={() => onDeleteConfirm()} onCancel={closeDeleteAlert}>
+                <div className="leading-relaxed">
+                    <span> Czy jesteś pewien że chcesz przenieść ten artykuł do kosza ? </span>
+                </div>
+            </Alert>
         </div>
     );
 };
 
-export default SideBySideArticleDetails;
+export default ArticleModalDetails;

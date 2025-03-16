@@ -1,4 +1,4 @@
-import SideBySideArticleDetails from "@/components/articles/views/SideBySideView/SideBySideArticleDetails";
+import ArticleModalDetails from "@/components/articles/views/SideBySideView/ArticleModalDetails";
 import { SelectBox } from "@/components/core/SelectBox";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -94,7 +94,7 @@ const ArticleListItem = ({ article, className }: { article: IArticle; className?
                 </div>
             </Card>
             <Modal isOpen={isOpen} onClose={closeModal}>
-                <SideBySideArticleDetails articleId={article?._id} />
+                <ArticleModalDetails articleId={article?._id} />
             </Modal>
         </div>
     );
