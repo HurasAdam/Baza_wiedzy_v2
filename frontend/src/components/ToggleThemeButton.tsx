@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import useTheme, { Theme } from "@/hooks/useTheme";
+import clsx from "clsx";
 
 const themes: Theme[] = [
     Theme.LIGHT,
@@ -20,7 +20,7 @@ export const ThemeToggleButton = () => {
         <div className="flex flex-wrap gap-5">
             {themes.map((th) => (
                 <div>
-                    <div className="mb-1.5 px-1 text-center">{th}</div>
+                    <div className="mb-1.5 px-1 text-center text-sm">{th}</div>
                     <button
                         key={th}
                         onClick={() => changeTheme(th)}
