@@ -1,9 +1,9 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { LoginPage } from "./pages/Login";
 
-import { RootLayout } from "./layouts/RootLayout";
 import { AuthLayout } from "./layouts/AuthLayout";
+import { RootLayout } from "./layouts/RootLayout";
 
 import { NotFoundPage } from "./pages/NotFoundPage";
 
@@ -13,18 +13,24 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 // import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
 // import { FavoritesPage } from "./pages/FavoritesArticlesPage";
 
+import CreateArticle from "./components/articles/Create/CreateArticle";
 import useTheme from "./hooks/useTheme";
 
-const HomePage = lazy(() => import("./pages/HomePage").then(module => ({ default: module.HomePage })));
-const ArticlesPage = lazy(() => import("./pages/ArticlesPage").then(module => ({ default: module.ArticlesPage })));
-const StatisticsPage = lazy(() => import("./pages/StatisticsPage").then(module => ({ default: module.StatisticsPage })));
-const TopicsRegisterPage = lazy(() => import("./pages/TopicsRegisterPage").then(module => ({ default: module.TopicsRegisterPage })));
-const FavoritesPage = lazy(() => import("./pages/FavoritesArticlesPage").then(module => ({ default: module.FavoritesPage })));
+const HomePage = lazy(() => import("./pages/HomePage").then((module) => ({ default: module.HomePage })));
+const ArticlesPage = lazy(() => import("./pages/ArticlesPage").then((module) => ({ default: module.ArticlesPage })));
+const StatisticsPage = lazy(() =>
+    import("./pages/StatisticsPage").then((module) => ({ default: module.StatisticsPage }))
+);
+const TopicsRegisterPage = lazy(() =>
+    import("./pages/TopicsRegisterPage").then((module) => ({ default: module.TopicsRegisterPage }))
+);
+const FavoritesPage = lazy(() =>
+    import("./pages/FavoritesArticlesPage").then((module) => ({ default: module.FavoritesPage }))
+);
 
-const RegisterPage = lazy(() => import("./pages/Register").then(module => ({ default: module.RegisterPage })));
+const RegisterPage = lazy(() => import("./pages/Register").then((module) => ({ default: module.RegisterPage })));
 
 function App() {
-
     const { theme } = useTheme();
 
     return (
@@ -38,6 +44,7 @@ function App() {
                         <Route path="statistics" element={<StatisticsPage />} />
                         <Route path="call-register" element={<TopicsRegisterPage />} />
                         <Route path="favourites" element={<FavoritesPage />} />
+                        <Route path="new-article" element={<CreateArticle />} />
 
                         {/* <Route path="articles/new" element={<CreateArticle />} /> */}
                         {/* <Route path="articles/favorite" element={<FavouritesPage />} /> */}
@@ -59,7 +66,6 @@ function App() {
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<RegisterPage />} />
                     </Route>
-
 
                     {/* <Route path="/admin" element={<AdminLayout />}>
                     <Route index path="dashboard" element={<AdminDashboard />} /> 

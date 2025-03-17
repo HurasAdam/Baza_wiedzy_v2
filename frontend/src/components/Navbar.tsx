@@ -7,7 +7,8 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { IoIosSearch, IoIosSettings } from "react-icons/io";
 import { IoNotifications } from "react-icons/io5";
 import { MdAssignmentAdd, MdPhoneInTalk } from "react-icons/md";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import CreateArticle from "./articles/Create/CreateArticle";
 import { Dropdown } from "./core/Dropdown";
 import { SideDrawer } from "./core/SideDrawer";
 import UserAvatar from "./core/UserAvatar";
@@ -39,6 +40,11 @@ const Navbar: React.FC = ({ notifications }) => {
     const { openModal: openSettingsModal, isOpen, closeModal } = useModal();
     const { openModal: openCallsModal, isOpen: isCallsModalOpen, closeModal: closeCallsModal } = useModal();
     const { openModal: openSearchModal, isOpen: isSearchModalOpen, closeModal: closeSearchModal } = useModal();
+    const {
+        openModal: openCreateArticleModal,
+        isOpen: isCreateArticleModalOpen,
+        closeModal: closeCreateArticleModal,
+    } = useModal();
     const location = useLocation();
     const navigate = useNavigate();
     const path = location.pathname.split("/")[1];
@@ -143,12 +149,12 @@ const Navbar: React.FC = ({ notifications }) => {
                 <TooltipProvider delayDuration={490}>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <NavLink
+                            <div
+                                onClick={openCreateArticleModal}
                                 className="bg-transparent group  hover:bg-primary transition-all px-2.5 py-1.5 rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
-                                to="new-article"
                             >
                                 <MdAssignmentAdd className="text-lg group-hover:text-secondary" />
-                            </NavLink>
+                            </div>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>Dodaj artykuł</p>
@@ -216,6 +222,9 @@ const Navbar: React.FC = ({ notifications }) => {
                     }}
                     immediate={false}
                 />
+            </Modal>
+            <Modal isOpen={isCreateArticleModalOpen} onClose={closeCreateArticleModal}>
+                <CreateArticle />
             </Modal>
         </div>
     );
