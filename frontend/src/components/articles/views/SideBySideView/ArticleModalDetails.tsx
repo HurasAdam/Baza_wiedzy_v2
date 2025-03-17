@@ -419,6 +419,7 @@ const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                 </div>
             </Alert>
             <Alert
+                requireConfirmation={true}
                 isOpen={isUnverifyAlertOpen}
                 onConfirm={() => onUnverifyConfirm({ isVerified: false })}
                 onCancel={closeUnverifyAlert}
@@ -428,7 +429,12 @@ const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                     <span className="text-rose-600 font-semibold">Do weryfikacji</span> ?
                 </div>
             </Alert>
-            <Alert isOpen={isDeleteAlertOpen} onConfirm={() => onDeleteConfirm()} onCancel={closeDeleteAlert}>
+            <Alert
+                isOpen={isDeleteAlertOpen}
+                onConfirm={() => onDeleteConfirm()}
+                onCancel={closeDeleteAlert}
+                requireConfirmation={true}
+            >
                 <div className="leading-relaxed">
                     <span> Czy jesteś pewien że chcesz przenieść ten artykuł do kosza ? </span>
                 </div>

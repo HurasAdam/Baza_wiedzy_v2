@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { ConfirmationCheckbox } from "../core/ConfirmationCheckbox";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -10,37 +11,47 @@ import {
     AlertDialogTitle,
 } from "../ui/alert-dialog";
 
-interface AlertModalProps {
+interface Props {
     isOpen: boolean;
     children: ReactNode;
     onCancel: () => void;
     onConfirm: () => void;
+    requireConfirmation?: boolean;
 }
 
-export function Alert({ isOpen, onCancel, onConfirm, children }: AlertModalProps) {
+export function Alert({ isOpen, onCancel, onConfirm, children, requireConfirmation = false }: Props) {
+    const [isChecked, setIsChecked] = useState(false);
+
+    useEffect(() => {
+        if (!isOpen) {
+            setIsChecked(false);
+        }
+    }, [isOpen]);
+
+    if (!isOpen) {
+        return null;
+    }
+
     return (
         <AlertDialog open={isOpen}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Czy jestes pewien</AlertDialogTitle>
+                    <AlertDialogTitle>Czy jesteś pewien?</AlertDialogTitle>
                     <AlertDialogDescription>{children}</AlertDialogDescription>
                 </AlertDialogHeader>
-                {/* {isUsed && (
-                    <div className="">
-                        <label className="flex items-center gap-1.5  cursor-pointer">
-                            <Input
-                                className="w-4 h-4 cursor-pointer "
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={handleCheckboxConfirmation}
-                            />
-                            Rozumiem <span className="text-gray-400 text-sm">(wymagane)</span>
-                        </label>
-                    </div>
-                )} */}
+                {requireConfirmation && (
+                    <ConfirmationCheckbox
+                        onChange={setIsChecked}
+                        checked={isChecked}
+                        label="Rozumiem"
+                        id="confirmation"
+                    />
+                )}
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={onCancel}>Anuluj</AlertDialogCancel>
-                    <AlertDialogAction onClick={onConfirm}>Potwierdź</AlertDialogAction>
+                    <AlertDialogAction onClick={onConfirm} disabled={requireConfirmation && !isChecked}>
+                        Potwierdź
+                    </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
