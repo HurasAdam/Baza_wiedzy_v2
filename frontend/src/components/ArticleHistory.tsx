@@ -121,39 +121,52 @@ const ArticleHistory = ({ articleId, showBackwardArrow = false, closeArticleHist
             {/* Sidebar - lewa część */}
             <div className="min-w-[320px] py-4 pl-6 pr-5 border-r bg-card shadow-sm h-full overflow-auto scrollbar-custom">
                 <ul className="relative space-y-5">
-                    {history?.map((historyItem, index) => (
-                        <li
-                            key={index}
-                            className="relative flex gap-4 items-center"
-                            onClick={() => showDetails({ id: historyItem._id })}
-                        >
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-foreground shadow-md z-10">
-                                {TASKTYPEICON[historyItem?.eventType]}
-                            </div>
-                            {index !== history.length - 1 && (
-                                <div className="absolute top-12 left-4 w-0.5 h-full bg-muted"></div>
-                            )}
-                            <div className="bg-background px-4 py-3 rounded-xl shadow-md border border w-full">
-                                <h4 className="font-semibold text-foreground text-sm tracking-wide">
-                                    {EVENT_TYPE_TRANSLATIONS[historyItem?.eventType]}
-                                </h4>
-                                <p className="text-xs text-gray-500 ">
-                                    {new Date(historyItem?.updatedAt).toLocaleString()}
-                                </p>
-                            </div>
-                        </li>
-                    ))}
+                    {history?.map((historyItem, index) => {
+                        const isActive = historyItem._id === selectedItem;
+                        return (
+                            <li
+                                key={index}
+                                className={`relative flex gap-4 items-center `}
+                                onClick={() => showDetails({ id: historyItem._id })}
+                            >
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center bg-blue-500 text-foreground shadow-md z-10">
+                                    {TASKTYPEICON[historyItem?.eventType]}
+                                </div>
+                                {index !== history.length - 1 && (
+                                    <div className="absolute top-12 left-4 w-0.5 h-full bg-muted"></div>
+                                )}
+                                <div
+                                    className={`bg-background px-4 py-3 rounded-xl shadow-md  border w-full cursor-pointer ${isActive && "border-primary border bg-muted/80"}`}
+                                >
+                                    <h4 className="font-semibold text-foreground text-sm tracking-wide">
+                                        {EVENT_TYPE_TRANSLATIONS[historyItem?.eventType]}
+                                    </h4>
+                                    <p className="text-xs text-gray-500 ">
+                                        {new Date(historyItem?.updatedAt).toLocaleString()}
+                                    </p>
+                                </div>
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
             {/* Treść zakładki - prawa część */}
-            <div className="flex-1 p-4 px-8 bg-background w-full h-full">
+            <div className="flex-1 p-4 px-5 bg-background w-full h-full">
                 <div className="flex-1 flex flex-col h-full">
                     {selectedItem && !isLoadingDetails && historyItem ? (
                         <ArticleHistoryDetails historyItem={historyItem} />
                     ) : isLoadingDetails ? (
                         <div>Ładowanie szczegółów...</div>
                     ) : (
-                        <div>Wybierz historię, aby zobaczyć szczegóły.</div>
+                        <div className="flex-1 p-4 px-5 bg-background w-full h-full flex justify-center items-center">
+                            <div className="text-center">
+                                <div className="w-16 h-16 rounded-full bg-gray-300 animate-pulse mx-auto mb-4"></div>
+                                <h3 className="text-xl font-semibold text-foreground/85">Wybierz element z listy</h3>
+                                <p className="text-sm text-foreground/75 mt-2">
+                                    Aby zobaczyć szczegóły historii, kliknij w jedną z pozycji po lewej stronie.
+                                </p>
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>
