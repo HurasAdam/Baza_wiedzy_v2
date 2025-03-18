@@ -29,7 +29,7 @@ const formSchema = z.object({
         .string()
         .min(3, { message: "Tytuł musi mieć co najmniej 3 znaki." })
         .max(90, { message: "Tytuł nie może przekraczać 90 znaków." }),
-    product: z.string(),
+    product: z.string().min(1, { message: "Wybierz produkt" }),
     tags: z
         .array(
             z.object({
@@ -153,7 +153,7 @@ const ArticleForm = ({ tags, products }: Props) => {
                                                         value={language.label}
                                                         key={language.value}
                                                         onSelect={() => {
-                                                            form.setValue("name_7474905886", language.value);
+                                                            form.setValue("product", language.value);
                                                         }}
                                                     >
                                                         <Check
@@ -177,7 +177,6 @@ const ArticleForm = ({ tags, products }: Props) => {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="tags"
@@ -237,7 +236,6 @@ const ArticleForm = ({ tags, products }: Props) => {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="name_2536348418"
@@ -291,7 +289,6 @@ const ArticleForm = ({ tags, products }: Props) => {
                         </FormItem>
                     )}
                 />
-
                 <FormField
                     control={form.control}
                     name="name_9554331714"
@@ -309,7 +306,7 @@ const ArticleForm = ({ tags, products }: Props) => {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
+                <Button type="submit">Utwórz</Button>
             </form>
         </Form>
     );
