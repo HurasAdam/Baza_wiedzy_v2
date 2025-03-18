@@ -1,7 +1,12 @@
 import { IMAGES } from "../../../../constants/images";
 import { dateFormater, getAvatarColor, getAvatarFallbackText } from "../../../../lib/utils";
+import { HistoryItem } from "../ArticleHistoryDetails";
 
-const CreatedEvent = ({ historyItem }) => {
+interface Props {
+    historyItem: HistoryItem;
+}
+
+const CreatedEvent = ({ historyItem }: Props) => {
     const { updatedBy, createdAt } = historyItem;
 
     const name = historyItem?.updatedBy?.name;
@@ -12,9 +17,10 @@ const CreatedEvent = ({ historyItem }) => {
     return (
         <div className="history-details py-6 px-4 rounded-lg shadow-md bg-card relative overflow-hidden h-full">
             {/* Górna część z informacjami */}
-            <h3 className="text-2xl font-bold mb-3 text-foreground ">🚀 Artykuł utworzony</h3>
-            <div className="relative z-10 flex flex-col justify-between py-5 px-3 min-h-full">
+
+            <div className="relative z-10 flex flex-col  py-5 px-3 min-h-full ">
                 {/* Tło z efektem glassmorphism */}
+                <h3 className="text-2xl font-bold mb-5 z-10 text-foreground ">🚀 Artykuł utworzony</h3>
                 <div className="absolute inset-0 bg-background opacity-65 backdrop-blur-md rounded-lg "></div>
 
                 <div className=" p-4 rounded-2xl border border-white/30 bg-white/10 backdrop-blur-md shadow-lg">
