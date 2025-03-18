@@ -20,7 +20,7 @@ interface Change {
     newValue: string | null;
 }
 
-interface HistoryItem {
+export interface HistoryItem {
     _id: string;
     articleId: string;
     eventType: EventType;
@@ -39,7 +39,8 @@ const ArticleHistoryDetails = ({ historyItem }: props) => {
     if (!historyItem) {
         return <div>Brak dostępnych zmian.</div>;
     }
-
+    console.log("historyItem 111");
+    console.log(historyItem);
     const { eventType } = historyItem;
 
     const eventComponents = {
