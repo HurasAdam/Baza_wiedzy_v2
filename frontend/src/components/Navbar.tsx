@@ -8,7 +8,6 @@ import { IoIosSearch, IoIosSettings } from "react-icons/io";
 import { IoNotifications } from "react-icons/io5";
 import { MdAssignmentAdd, MdPhoneInTalk } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import CreateArticle from "./articles/Create/CreateArticle";
 import { Dropdown } from "./core/Dropdown";
 import { SideDrawer } from "./core/SideDrawer";
 import UserAvatar from "./core/UserAvatar";
@@ -36,15 +35,11 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/t
 //     return { openModalSettings };
 // };
 
-const Navbar: React.FC = ({ notifications }) => {
+const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
     const { openModal: openSettingsModal, isOpen, closeModal } = useModal();
     const { openModal: openCallsModal, isOpen: isCallsModalOpen, closeModal: closeCallsModal } = useModal();
     const { openModal: openSearchModal, isOpen: isSearchModalOpen, closeModal: closeSearchModal } = useModal();
-    const {
-        openModal: openCreateArticleModal,
-        isOpen: isCreateArticleModalOpen,
-        closeModal: closeCreateArticleModal,
-    } = useModal();
+
     const location = useLocation();
     const navigate = useNavigate();
     const path = location.pathname.split("/")[1];
@@ -222,9 +217,6 @@ const Navbar: React.FC = ({ notifications }) => {
                     }}
                     immediate={false}
                 />
-            </Modal>
-            <Modal isOpen={isCreateArticleModalOpen} onClose={closeCreateArticleModal}>
-                <CreateArticle />
             </Modal>
         </div>
     );

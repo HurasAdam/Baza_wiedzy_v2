@@ -63,9 +63,10 @@ interface Product {
 interface Props {
     tags: Tag[];
     products: Product[];
+    onSave: ({ formData }) => void;
 }
 
-const ArticleForm = ({ tags, products }: Props) => {
+const ArticleForm = ({ tags, products, onSave }: Props) => {
     const [files, setFiles] = useState<File[] | null>(null);
 
     const dropZoneConfig = {
@@ -84,12 +85,11 @@ const ArticleForm = ({ tags, products }: Props) => {
             file: [],
         },
     });
-    const val = form.getValues();
-    console.log("VALUES");
-    console.log(val);
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            console.log(values);
+            const finalFormData = { ...values, tags: values.tags.map((tag) => tag.value) };
+            onSave({ formData: finalFormData });
             toast(
                 <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
                     <code className="text-white">{JSON.stringify(values, null, 2)}</code>
