@@ -1,16 +1,14 @@
-import API from "@/config/api.client"
+import API from "@/config/api.client";
 
-export const getUserNotifications = async() =>{
-    return API.get('/notifications');
-}
+export const getUserNotifications = async () => {
+    return API.get("/notifications");
+};
 
-export const markAsRead = async(id) =>{
+export const markAsRead = async (id) => {
     return API.put(`/notifications/${id}/read`);
-}
+};
 
-
-
-export  const notificationApi ={
+export const notificationApi = {
     getUserNotifications,
-    markAsRead
-} 
+    markAsRead,
+};

@@ -1,4 +1,3 @@
-
 export interface ITag {
     _id: string;
     name: string;
@@ -21,5 +20,5 @@ export interface IArticle {
     isTrashed: boolean;
     product?: IProduct;
     createdAt: string;
-    isFavourite: boolean
+    isFavourite: boolean;
 }

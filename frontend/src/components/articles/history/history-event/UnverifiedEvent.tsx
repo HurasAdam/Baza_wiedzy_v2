@@ -1,5 +1,6 @@
 import { IMAGES } from "../../../../constants/images";
-import { dateFormater, getAvatarColor, getAvatarFallbackText } from "../../../../lib/utils";
+import { dateFormater } from "@/utils/date-formater";
+import { getAvatarColor, getAvatarFallbackText } from "@/utils/avatar";
 import { HistoryItem } from "../ArticleHistoryDetails";
 
 interface Props {
