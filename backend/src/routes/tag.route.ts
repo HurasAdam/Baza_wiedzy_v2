@@ -1,7 +1,6 @@
 import { Router } from "express";
 
 import { createTagHandler, deleteTagHandler, getSingleTagHandler, getTagsHandler, updateTagHandler } from "../controllers/tag.controller";
-import { deleteArticleHandler } from "../controllers/article.controller";
 import preventDeleteDefaultTag from "../middleware/preventDeleteDefaultTag";
 
 

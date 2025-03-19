@@ -1,21 +1,21 @@
 import { Router } from 'express';
 import {
-  createArticleHandler,
-  deleteArticleHandler,
-  getArticleHandler,
-  getArticleHistoryHandler,
-  getArticlesCreatedBySelectedUser,
-  getArticlesHandler,
-  getArticlesHistoryByUser,
-  getHistoryItemHandler,
-  getLatestArticlesForDashboard,
-  getPopularArticlesHandler,
-  getTrashedArticlesHandler,
-  markAsFavouriteHandler,
-  restoreArticleHandler,
-  trashArticleHandler,
-  updateArticleHandler,
-  verifyArticleHandler,
+  createArticleController,
+  deleteArticleController,
+  getArticleController,
+  getArticleHistoryController,
+  getArticlesCreatedByUserController,
+  getArticlesController,
+  getArticlesHistoryByUserController,
+  getHistoryItemController,
+  getLatestArticlesController,
+  getPopularArticlesController,
+  getTrashedArticlesController,
+  markAsFavouriteController,
+  restoreArticleController,
+  trashArticleController,
+  updateArticleController,
+  verifyArticleController,
 } from '../controllers/article.controller';
 
 const articleRoutes = Router();
@@ -23,22 +23,22 @@ const articleRoutes = Router();
 // prefix /articles
 
 // articleRoutes.get("/",getSessionsHandler)
-articleRoutes.post('/create', createArticleHandler);
-articleRoutes.get('/', getArticlesHandler);
-articleRoutes.get('/popular', getPopularArticlesHandler);
-articleRoutes.get('/latest', getLatestArticlesForDashboard);
-articleRoutes.get('/trashed', getTrashedArticlesHandler);
-articleRoutes.get('/:id', getArticleHandler);
-articleRoutes.post('/article/:id/verify', verifyArticleHandler);
-articleRoutes.post('/article/:id/markAsFavourite', markAsFavouriteHandler);
-articleRoutes.put('/article/:id/update', updateArticleHandler);
-articleRoutes.delete('/article/:id/delete', deleteArticleHandler);
-articleRoutes.put('/article/:id/trash', trashArticleHandler);
-articleRoutes.put('/article/:id/restore', restoreArticleHandler);
-articleRoutes.get('/article/:id/history', getArticleHistoryHandler);
-articleRoutes.get('/article/history/:id', getHistoryItemHandler);
+articleRoutes.post('/create', createArticleController);
+articleRoutes.get('/', getArticlesController);
+articleRoutes.get('/popular', getPopularArticlesController);
+articleRoutes.get('/latest', getLatestArticlesController);
+articleRoutes.get('/trashed', getTrashedArticlesController);
+articleRoutes.get('/:id', getArticleController);
+articleRoutes.post('/article/:id/verify', verifyArticleController);
+articleRoutes.post('/article/:id/markAsFavourite', markAsFavouriteController);
+articleRoutes.put('/article/:id/update', updateArticleController);
+articleRoutes.delete('/article/:id/delete', deleteArticleController);
+articleRoutes.put('/article/:id/trash', trashArticleController);
+articleRoutes.put('/article/:id/restore', restoreArticleController);
+articleRoutes.get('/article/:id/history', getArticleHistoryController);
+articleRoutes.get('/article/history/:id', getHistoryItemController);
 
-articleRoutes.get('/userArticles/:id', getArticlesCreatedBySelectedUser);
-articleRoutes.get('/userHistory/:id', getArticlesHistoryByUser);
+articleRoutes.get('/userArticles/:id', getArticlesCreatedByUserController);
+articleRoutes.get('/userHistory/:id', getArticlesHistoryByUserController);
 
 export default articleRoutes;

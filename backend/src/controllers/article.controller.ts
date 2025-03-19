@@ -11,7 +11,7 @@ import catchErrors from '../utils/catchErrors';
 import { constructSearchQuery } from '../utils/constructSearchQuery';
 import { newArticleSchema } from './article.schemas';
 
-export const createArticleHandler = catchErrors(async (req, res) => {
+export const createArticleController = catchErrors(async (req, res) => {
   const request = newArticleSchema.parse(req.body);
   const { userId } = req;
   const newArticle = await createArticle({ request, userId });
@@ -30,7 +30,7 @@ export const createArticleHandler = catchErrors(async (req, res) => {
   return res.status(OK).json({ message: 'Dodano nowy artykuł', data: newArticle });
 });
 
-export const getLatestArticlesForDashboard = catchErrors(async (req, res) => {
+export const getLatestArticlesController = catchErrors(async (req, res) => {
   const limit = parseInt(req.query.limit as string) || 4;
 
   const latestArticles = await ArticleModel.find({}, { title: 1, createdAt: 1 })
@@ -41,7 +41,7 @@ export const getLatestArticlesForDashboard = catchErrors(async (req, res) => {
   return res.status(OK).json(latestArticles);
 });
 
-export const getArticlesHandler = catchErrors(async (req, res) => {
+export const getArticlesController = catchErrors(async (req, res) => {
   const { userId } = req;
   const query = {
     ...constructSearchQuery(req.query),
@@ -84,7 +84,7 @@ export const getArticlesHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(responseObject);
 });
 
-export const getTrashedArticlesHandler = catchErrors(async (req, res) => {
+export const getTrashedArticlesController = catchErrors(async (req, res) => {
   const { userId } = req;
   const query = {
     ...constructSearchQuery(req.query),
@@ -127,7 +127,7 @@ export const getTrashedArticlesHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(responseObject);
 });
 
-export const getArticleHandler = catchErrors(async (req, res) => {
+export const getArticleController = catchErrors(async (req, res) => {
   const { userId }: { userId: string } = req;
   const { id } = req.params;
 
@@ -136,7 +136,7 @@ export const getArticleHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(article);
 });
 
-export const getArticleHistoryHandler = catchErrors(async (req, res) => {
+export const getArticleHistoryController = catchErrors(async (req, res) => {
   const { userId }: { userId: string } = req;
   const { id } = req.params;
 
@@ -145,7 +145,7 @@ export const getArticleHistoryHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(articleHistory);
 });
 
-export const getHistoryItemHandler = catchErrors(async (req, res) => {
+export const getHistoryItemController = catchErrors(async (req, res) => {
   const { id } = req.params;
 
   // Pobranie historii artykułu
@@ -178,7 +178,7 @@ export const getHistoryItemHandler = catchErrors(async (req, res) => {
   return res.status(200).json({ ...historyItem.toObject(), changes: updatedChanges });
 });
 
-export const verifyArticleHandler = catchErrors(async (req, res) => {
+export const verifyArticleController = catchErrors(async (req, res) => {
   const { id } = req.params;
   const { isVerified } = req.body;
 
@@ -207,7 +207,7 @@ export const verifyArticleHandler = catchErrors(async (req, res) => {
   });
 });
 
-export const markAsFavouriteHandler = catchErrors(async (req, res) => {
+export const markAsFavouriteController = catchErrors(async (req, res) => {
   const { id } = req.params;
   const { userId }: { userId: string } = req;
 
@@ -232,7 +232,7 @@ export const markAsFavouriteHandler = catchErrors(async (req, res) => {
   });
 });
 
-export const getPopularArticlesHandler = catchErrors(async (req, res) => {
+export const getPopularArticlesController = catchErrors(async (req, res) => {
   const limit = parseInt(req.query.limit?.toString() || '20');
 
   const popularArticles = await ArticleModel.find({ isTrashed: false })
@@ -247,7 +247,7 @@ export const getPopularArticlesHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(popularArticles);
 });
 
-export const trashArticleHandler = catchErrors(async (req, res) => {
+export const trashArticleController = catchErrors(async (req, res) => {
   const { id } = req.params;
   const article = await ArticleModel.findById({ _id: id });
   appAssert(article, NOT_FOUND, 'Article not found');
@@ -270,7 +270,7 @@ export const trashArticleHandler = catchErrors(async (req, res) => {
   return res.status(OK).json({ message: 'Artykuł został usunięty' });
 });
 
-export const restoreArticleHandler = catchErrors(async (req, res) => {
+export const restoreArticleController = catchErrors(async (req, res) => {
   const { id } = req.params;
   const article = await ArticleModel.findById({ _id: id });
   appAssert(article, NOT_FOUND, 'Article not found');
@@ -293,7 +293,7 @@ export const restoreArticleHandler = catchErrors(async (req, res) => {
   return res.status(OK).json({ message: 'Artykuł został przywrócony z kosza' });
 });
 
-export const deleteArticleHandler = catchErrors(async (req, res) => {
+export const deleteArticleController = catchErrors(async (req, res) => {
   const { id } = req.params;
 
   // Znalezienie artykułu
@@ -311,7 +311,7 @@ export const deleteArticleHandler = catchErrors(async (req, res) => {
   return res.status(OK).json({ message: 'Artykuł i powiązana historia zostały usunięte.' });
 });
 
-export const updateArticleHandler = catchErrors(async (req, res) => {
+export const updateArticleController = catchErrors(async (req, res) => {
   const { id } = req.params;
   const { title, clientDescription, employeeDescription, tags, product } = req.body;
 
@@ -341,7 +341,7 @@ export const updateArticleHandler = catchErrors(async (req, res) => {
   res.status(OK).json({ message: 'Artykuł został zaktualizowany' });
 });
 
-export const getArticlesCreatedBySelectedUser = catchErrors(async (req, res) => {
+export const getArticlesCreatedByUserController = catchErrors(async (req, res) => {
   const { id: userId } = req.params;
   const { startDate, endDate } = req.query;
 
@@ -373,7 +373,7 @@ export const getArticlesCreatedBySelectedUser = catchErrors(async (req, res) => 
   return res.status(200).json(userArticles);
 });
 
-export const getArticlesHistoryByUser = catchErrors(async (req, res) => {
+export const getArticlesHistoryByUserController = catchErrors(async (req, res) => {
   const { id: userId } = req.params;
   const { startDate, endDate } = req.query;
 
