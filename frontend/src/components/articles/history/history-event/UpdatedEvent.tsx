@@ -1,6 +1,7 @@
 import { diff_match_patch } from "diff-match-patch";
 import ARTICLE_HISTORY_FIELD_TRANSLATIONS from "../../../../enums/articleHistoryFieldTranslations";
-import { dateFormater, getAvatarColor, getAvatarFallbackText } from "../../../../lib/utils";
+import { getAvatarColor, getAvatarFallbackText } from "@/utils/avatar";
+import { dateFormater } from "@/utils/date-formater";
 
 const UpdatedEvent = ({ historyItem }) => {
     if (!historyItem.changes?.length) return <div>Brak zmian.</div>;

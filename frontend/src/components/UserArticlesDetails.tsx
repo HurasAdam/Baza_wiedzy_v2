@@ -1,5 +1,5 @@
 import { articlesApi } from "@/lib/articlesApi";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "@/utils/format-date";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { MdArticle } from "react-icons/md";

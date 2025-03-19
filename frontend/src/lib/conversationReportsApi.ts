@@ -1,62 +1,57 @@
 import API from "@/config/api.client";
 
 const sendConversationReport = async ({ description, topic }) => {
-  return API.post("/conversation-report/add", { description, topic });
+    return API.post("/conversation-report/add", { description, topic });
 };
 
 const getCoversationReportStats = async (searchParams) => {
-  const queryParams = new URLSearchParams();
-  if (searchParams.startDate) {
-    queryParams.append("startDate", searchParams.startDate);
-  }
-  if (searchParams.endDate) {
-    queryParams.append("endDate", searchParams.endDate);
-  }
+    const queryParams = new URLSearchParams();
+    if (searchParams.startDate) {
+        queryParams.append("startDate", searchParams.startDate);
+    }
+    if (searchParams.endDate) {
+        queryParams.append("endDate", searchParams.endDate);
+    }
 
-
-
-  return API.get(`/user/statistics?${queryParams}`);
+    return API.get(`/user/statistics?${queryParams}`);
 };
 
-
-const getUserConversationReportStats = async({userId,searchParams}) =>{
-
-const queryParams = new URLSearchParams();
-if (searchParams.startDate) {
-  queryParams.append("startDate", searchParams.startDate);
-}
-if (searchParams.endDate) {
-  queryParams.append("endDate", searchParams.endDate);
-}
-if(searchParams.limit){
-  queryParams.append("limit",searchParams.limit);
-}
-if(searchParams.page){
-  queryParams.append("page",searchParams.page);
-}
-  return API.get(`/user/statistics/${userId}?${queryParams}`);
-}
-
+const getUserConversationReportStats = async ({ userId, searchParams }) => {
+    const queryParams = new URLSearchParams();
+    if (searchParams.startDate) {
+        queryParams.append("startDate", searchParams.startDate);
+    }
+    if (searchParams.endDate) {
+        queryParams.append("endDate", searchParams.endDate);
+    }
+    if (searchParams.limit) {
+        queryParams.append("limit", searchParams.limit);
+    }
+    if (searchParams.page) {
+        queryParams.append("page", searchParams.page);
+    }
+    return API.get(`/user/statistics/${userId}?${queryParams}`);
+};
 
 const getConversationReportValues = async (searchParams) => {
-  const queryParams = new URLSearchParams();
+    const queryParams = new URLSearchParams();
 
-  if (searchParams.startDate) {
-    queryParams.append("startDate", searchParams.startDate);
-  }
-  if (searchParams.endDate) {
-    queryParams.append("endDate", searchParams.endDate);
-  }
+    if (searchParams.startDate) {
+        queryParams.append("startDate", searchParams.startDate);
+    }
+    if (searchParams.endDate) {
+        queryParams.append("endDate", searchParams.endDate);
+    }
 
-  if (searchParams.limit) {
-    queryParams.append("limit", searchParams.limit);
-  }
-  return API.get(`/conversation-report?${queryParams}`);
+    if (searchParams.limit) {
+        queryParams.append("limit", searchParams.limit);
+    }
+    return API.get(`/conversation-report?${queryParams}`);
 };
 
 export const conversationReportApi = {
-  sendConversationReport,
-  getCoversationReportStats,
-  getConversationReportValues,
-  getUserConversationReportStats
+    sendConversationReport,
+    getCoversationReportStats,
+    getConversationReportValues,
+    getUserConversationReportStats,
 };

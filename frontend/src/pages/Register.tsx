@@ -12,7 +12,7 @@ const useRegister = () => {
 
     const { mutate } = useMutation({
         mutationFn: (obj) => {
-            return api.register(obj)
+            return api.register(obj);
         },
         onSuccess: () => {
             navigate(redirectUrl, {
@@ -21,22 +21,25 @@ const useRegister = () => {
         },
     });
 
-    return { register: mutate }
-}
+    return { register: mutate };
+};
 
 export const RegisterPage = () => {
     const { register } = useRegister();
 
     const onSave = (formData) => {
         register(formData);
-    }
+    };
 
     return (
         <div className="relative border w-full">
             <Link to="/login">
                 <Button
                     variant="ghost"
-                    className="text-slate-600 font-semibold inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm  transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 absolute right-4 top-4 md:right-8 md:top-8 ">Zaloguj</Button>
+                    className="text-slate-600 font-semibold inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm  transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 absolute right-4 top-4 md:right-8 md:top-8 "
+                >
+                    Zaloguj
+                </Button>
             </Link>
             <RegisterForm onSave={onSave} />
         </div>
