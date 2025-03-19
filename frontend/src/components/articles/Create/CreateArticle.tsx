@@ -1,11 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { FilePlus } from "lucide-react";
+
+import { useState } from "react";
+import { articlesApi } from "../../../lib/articlesApi";
 import { productsApi } from "../../../lib/productsApi";
 import { tagsApi } from "../../../lib/tagsApi";
 import ArticleForm from "../../forms/ArticleForm";
+import { useModal } from "../../modal/hooks/useModal";
+import { Modal } from "../../modal/Modal";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
+import ArticleModalDetails from "../views/SideBySideView/ArticleModalDetails";
+const CreateArticle = ({ onClose, isOpen }) => {
+    const {
+        openModal: openCreateArticleModal,
+        isOpen: isCreateArticleModalOpen,
+        closeModal: closeCreateArticleModal,
+    } = useModal();
 
-const CreateArticle = () => {
+    const [createdArticleId, setCreatedArticleId] = useState();
     const { data: tags = [] } = useQuery({
         queryKey: ["tags"],
         queryFn: () => {
@@ -27,6 +39,27 @@ const CreateArticle = () => {
         return { label: product.name, value: product._id };
     });
 
+    console.log("createdArticleId");
+    console.log(createdArticleId);
+    const { mutate } = useMutation({
+        mutationFn: ({ formData }) => {
+            return articlesApi.createArticle({ formData });
+        },
+        onSuccess: (data) => {
+            setCreatedArticleId(data?.data?._id);
+            openCreateArticleModal();
+        },
+    });
+
+    const onCloseModals = () => {
+        onClose();
+        closeCreateArticleModal();
+    };
+
+    const onSave = ({ formData }) => {
+        return mutate({ formData });
+    };
+
     return (
         <div className="px-20">
             <Card className=" mx-10 border-none ">
@@ -38,7 +71,14 @@ const CreateArticle = () => {
                     Wypełnij formularz, aby dodać nowy artykuł
                 </CardContent>
             </Card>
-            {tags?.tags ? <ArticleForm tags={formatedTags} products={formatedProducts} /> : <p>Loading tags...</p>}
+            {tags?.tags ? (
+                <ArticleForm onSave={onSave} tags={formatedTags} products={formatedProducts} />
+            ) : (
+                <p>Loading tags...</p>
+            )}
+            <Modal isOpen={isCreateArticleModalOpen} onClose={onCloseModals}>
+                <ArticleModalDetails articleId={createdArticleId} />
+            </Modal>
         </div>
     );
 };

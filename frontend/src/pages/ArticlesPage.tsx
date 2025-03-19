@@ -8,13 +8,18 @@ import { useFetchProducts } from "@/hooks/query/useFetchProducts";
 import { IArticle } from "@/types";
 import { Search, Star } from "lucide-react";
 import { type ChangeEventHandler } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 import { useModal } from "../components/modal/hooks/useModal";
 import { Modal } from "../components/modal/Modal";
 
 const ArticleList = () => {
     const [params] = useSearchParams();
     const { articles, isError, isLoading, error } = useFetchArticles(params);
+
+    const { state, setState } = useOutletContext();
+
+    console.log(state);
+    console.log(state);
 
     if (isError) {
         return (

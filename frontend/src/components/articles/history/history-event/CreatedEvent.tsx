@@ -1,6 +1,6 @@
-import { IMAGES } from "../../../../constants/images";
 import { getAvatarColor, getAvatarFallbackText } from "@/utils/avatar";
 import { dateFormater } from "@/utils/date-formater";
+import { IMAGES } from "../../../../constants/images";
 import { HistoryItem } from "../ArticleHistoryDetails";
 
 interface Props {
@@ -13,14 +13,13 @@ const CreatedEvent = ({ historyItem }: Props) => {
     const name = historyItem?.updatedBy?.name;
     const initials = getAvatarFallbackText(name);
     const avatarColor = getAvatarColor(name);
-    // Formatowanie daty
 
     return (
         <div className="history-details py-6 px-4 rounded-lg shadow-md bg-card relative overflow-hidden h-full">
-            {/* Górna część z informacjami */}
+            {/* UPPER SECTION*/}
 
             <div className="relative z-10 flex flex-col  py-5 px-3 min-h-full ">
-                {/* Tło z efektem glassmorphism */}
+                {/* BACKGROUND GLASMORPHISM EFFECT */}
                 <h3 className="text-2xl font-bold mb-5 z-10 text-foreground ">🚀 Artykuł utworzony</h3>
                 <div className="absolute inset-0 bg-background opacity-65 backdrop-blur-md rounded-lg "></div>
 
@@ -30,7 +29,7 @@ const CreatedEvent = ({ historyItem }: Props) => {
                     <div className="flex  mb-4 flex-col space-y-2">
                         <div className="flex items-center">
                             <div className="flex-shrink-0 ">
-                                {/* Ikona użytkownika */}
+                                {/* USER AVATAR */}
                                 <div
                                     className={`h-9 w-9 rounded-full  bg-card border flex items-center justify-center text-foreground ${avatarColor}`}
                                 >
@@ -56,7 +55,7 @@ const CreatedEvent = ({ historyItem }: Props) => {
                 </div>
             </div>
 
-            {/* Dolna część z obrazkiem tła */}
+            {/* BOTTOM SECTION */}
             <div className="absolute top-0 left-0 w-full h-full z-0">
                 <img src={IMAGES.createdImage} alt="Tło utworzenia" className="object-cover w-full h-full opacity-50" />
             </div>
