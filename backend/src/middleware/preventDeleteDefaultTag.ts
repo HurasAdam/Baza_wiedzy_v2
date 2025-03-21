@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { CONFLICT, NOT_FOUND } from "../constants/http";
-import TagModel from "../models/Tag.model";
+import { Request, Response, NextFunction } from "express";
+import { CONFLICT, NOT_FOUND } from "@/constants/http";
+import TagModel from "@/features/tag/tag.model";
 
 // Middleware sprawdzający, czy tag jest domyślny
 const preventDeleteDefaultTag = async (req: Request, res: Response, next: NextFunction) => {
