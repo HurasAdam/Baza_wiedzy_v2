@@ -7,7 +7,7 @@ const productController = ProductController();
 // prefix /products
 
 productRoutes.get("/", productController.find);
-productRoutes.get(":id", productController.findOne);
+productRoutes.get("/:id", productController.findOne);
 productRoutes.post("/", productController.create);
-productRoutes.put(":id", productController.update);
-productRoutes.delete(":id", productController.delete);
+productRoutes.put("/:id", productController.update);
+productRoutes.delete("/:id", productController.delete);

@@ -1,20 +1,19 @@
-import "dotenv/config";
-
-import express from "express";
-import cors from "cors";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import "dotenv/config";
+import express from "express";
 import connectDB from "./config/db";
 import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
-import errorHandler from "./middleware/errorHandlers";
-import authenticate from "./middleware/authenticate";
-import { authRoutes } from "./features/auth/auth.route";
-import { userRoutes } from "./features/user/user.route";
 import { articleRoutes } from "./features/article/article.route";
-import { tagRoutes } from "./features/tag/tag.route";
-import { conversationTopicRoutes } from "./features/conversation-topic/conversation-topic.route";
+import { authRoutes } from "./features/auth/auth.route";
 import { conversationReportRoutes } from "./features/conversation-report/conversation-report.route";
-import { productRoutes } from "./features/product/product.route";
+import { conversationTopicRoutes } from "./features/conversation-topic/conversation-topic.route";
 import { dashboardRoutes } from "./features/dashboard/dashboard.route";
+import { productRoutes } from "./features/product/product.route";
+import { tagRoutes } from "./features/tag/tag.route";
+import { userRoutes } from "./features/user/user.route";
+import authenticate from "./middleware/authenticate";
+import errorHandler from "./middleware/errorHandlers";
 
 const app = express();
 app.use(express.json());
