@@ -1,7 +1,7 @@
 import API from "@/config/api.client";
 
 const sendConversationReport = async ({ description, topic }) => {
-    return API.post("/conversation-report/add", { description, topic });
+    return API.post("/conversation-report", { description, topic });
 };
 
 const getCoversationReportStats = async (searchParams) => {
