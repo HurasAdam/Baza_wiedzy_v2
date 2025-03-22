@@ -5,19 +5,19 @@ const getAllProducts = () => {
 };
 
 const createProduct = (formData) => {
-    return API.post("/products/create", formData);
+    return API.post("/products", formData);
 };
 
 const deleteProduct = (id: string) => {
-    return API.delete(`/products/product/${id}/delete`);
+    return API.delete(`/products/${id}`);
 };
 
 const getProduct = (id: string) => {
-    return API.get(`/products/product/${id}`);
+    return API.get(`/products/${id}`);
 };
 
 const updateProduct = (productId: string, formData) => {
-    return API.put(`/products/product/${productId}/update`, formData);
+    return API.put(`/products/${productId}`, formData);
 };
 
 export const productsApi = {
