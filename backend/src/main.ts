@@ -9,7 +9,6 @@ import errorHandler from "./middleware/errorHandlers";
 import authenticate from "./middleware/authenticate";
 import { authRoutes } from "./features/auth/auth.route";
 import { userRoutes } from "./features/user/user.route";
-import { sessionRoutes } from "./features/session/session.route";
 import { articleRoutes } from "./features/article/article.route";
 import { tagRoutes } from "./features/tag/tag.route";
 import { conversationTopicRoutes } from "./features/conversation-topic/conversation-topic.route";
@@ -32,7 +31,6 @@ app.use("/auth", authRoutes);
 
 //#protected routes
 app.use("/user", authenticate, userRoutes);
-app.use("/sessions", authenticate, sessionRoutes);
 app.use("/articles", authenticate, articleRoutes);
 app.use("/tags", authenticate, tagRoutes);
 app.use("/products", authenticate, productRoutes);

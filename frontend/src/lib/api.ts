@@ -32,14 +32,6 @@ export const getUsers = async () => {
     return API.get("/user/users");
 };
 
-export const getSessions = async () => {
-    return API.get("/sessions");
-};
-
-export const deleteSession = async (id) => {
-    return API.delete(`/sessions/${id}`);
-};
-
 export const getDashboardStats = (searchParams) => {
     const queryParams = new URLSearchParams();
     queryParams.append("range", searchParams.range);
@@ -61,8 +53,6 @@ export const api = {
     resetPassword,
     getUser,
     logout,
-    getSessions,
-    deleteSession,
     getUsers,
     getUserDashboardStats,
     getDashboardStats,
