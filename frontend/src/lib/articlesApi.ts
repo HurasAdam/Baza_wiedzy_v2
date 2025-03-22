@@ -47,7 +47,7 @@ export const getAllTrashedArticles = async (searchParams) => {
 };
 
 export const createArticle = async ({ formData }) => {
-    return API.post("/articles/create", formData);
+    return API.post("/articles", formData);
 };
 
 export const getArticle = async ({ id }) => {
@@ -55,15 +55,15 @@ export const getArticle = async ({ id }) => {
 };
 
 export const getArticleHistory = async ({ id }) => {
-    return API.get(`/articles/article/${id}/history`);
+    return API.get(`/articles/${id}/history`);
 };
 
 export const verifyArticle = async ({ id, isVerified }) => {
-    return API.post(`/articles/article/${id}/verify`, { isVerified });
+    return API.post(`/articles/${id}/verify`, { isVerified });
 };
 
 export const markArticleAsFavourite = async ({ id }) => {
-    return API.post(`/articles/article/${id}/markAsFavourite`);
+    return API.post(`/articles/${id}/markAsFavourite`);
 };
 
 export const updateArticle = async ({ id, formData }) => {
@@ -71,19 +71,19 @@ export const updateArticle = async ({ id, formData }) => {
     console.log(id);
     console.log("formData");
     console.log(formData);
-    return API.put(`/articles/article/${id}/update`, formData);
+    return API.put(`/articles/${id}`, formData);
 };
 
 export const deleteArticle = async ({ id }) => {
-    return API.delete(`/articles/article/${id}/delete`);
+    return API.delete(`/articles/${id}`);
 };
 
 export const trashArticle = async ({ id }) => {
-    return API.put(`/articles/article/${id}/trash`);
+    return API.put(`/articles/${id}/trash`);
 };
 
 export const restoreArticle = async ({ id }) => {
-    return API.put(`/articles/article/${id}/restore`);
+    return API.put(`/articles/${id}/restore`);
 };
 
 export const getUsersArticleStats = async (searchParams) => {
@@ -139,7 +139,7 @@ const getArticlesHistoryByUser = async ({ userId, searchParams }) => {
     return API.get(`/articles/userHistory/${userId}?${queryParams}`);
 };
 const getArticleHistoryItem = async ({ id }: { id: string | null }) => {
-    return API.get(`articles/article/history/${id}`);
+    return API.get(`articles/history/${id}`);
 };
 
 export const articlesApi = {
