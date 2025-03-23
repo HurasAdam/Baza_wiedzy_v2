@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { LoginPage } from "./pages/Login";
 
@@ -7,28 +7,34 @@ import { RootLayout } from "./layouts/RootLayout";
 
 import { NotFoundPage } from "./pages/NotFoundPage";
 
-// import { HomePage } from "./pages/HomePage";
-// import { ArticlesPage } from "./pages/ArticlesPage";
-// import { StatisticsPage } from "./pages/StatisticsPage";
-// import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
-// import { FavoritesPage } from "./pages/FavoritesArticlesPage";
+import { ArticlesPage } from "./pages/ArticlesPage";
+import { FavoritesPage } from "./pages/FavoritesArticlesPage";
+import { HomePage } from "./pages/HomePage";
+import { StatisticsPage } from "./pages/StatisticsPage";
+import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
 
 import CreateArticle from "./components/articles/Create/CreateArticle";
 import useTheme from "./hooks/useTheme";
 
-const HomePage = lazy(() => import("./pages/HomePage").then((module) => ({ default: module.HomePage })));
-const ArticlesPage = lazy(() => import("./pages/ArticlesPage").then((module) => ({ default: module.ArticlesPage })));
-const StatisticsPage = lazy(() =>
-    import("./pages/StatisticsPage").then((module) => ({ default: module.StatisticsPage }))
-);
-const TopicsRegisterPage = lazy(() =>
-    import("./pages/TopicsRegisterPage").then((module) => ({ default: module.TopicsRegisterPage }))
-);
-const FavoritesPage = lazy(() =>
-    import("./pages/FavoritesArticlesPage").then((module) => ({ default: module.FavoritesPage }))
-);
+import { AdminLayout } from "./layouts/AdminLayout";
+import { RegisterPage } from "./pages/Register";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ProductsPage from "./pages/admin/ProductsPage";
+import TagsPage from "./pages/admin/TagsPage";
+import TopicsPage from "./pages/admin/TopicsPage";
+import UsersPage from "./pages/admin/UsersPage";
 
-const RegisterPage = lazy(() => import("./pages/Register").then((module) => ({ default: module.RegisterPage })));
+// const HomePage = lazy(() => import("./pages/HomePage").then((module) => ({ default: module.HomePage })));
+// const ArticlesPage = lazy(() => import("./pages/ArticlesPage").then((module) => ({ default: module.ArticlesPage })));
+// const StatisticsPage = lazy(() =>
+//     import("./pages/StatisticsPage").then((module) => ({ default: module.StatisticsPage }))
+// );
+// const TopicsRegisterPage = lazy(() =>
+//     import("./pages/TopicsRegisterPage").then((module) => ({ default: module.TopicsRegisterPage }))
+// );
+// const FavoritesPage = lazy(() =>
+//     import("./pages/FavoritesArticlesPage").then((module) => ({ default: module.FavoritesPage }))
+// );
 
 function App() {
     const { theme } = useTheme();
@@ -67,13 +73,14 @@ function App() {
                         <Route path="/register" element={<RegisterPage />} />
                     </Route>
 
-                    {/* <Route path="/admin" element={<AdminLayout />}>
-                    <Route index path="dashboard" element={<AdminDashboard />} /> 
-                <Route path="tags" element={<TagsPage />} /> 
-                   <Route path="products" element={<ProductsPage />} /> 
-                   <Route path="topics" element={<ConversationTopicsPage />} />
-                    <Route path="articles-removed" element={<TrashedArticlesPage />} /> 
-                </Route> */}
+                    <Route path="/admin" element={<AdminLayout />}>
+                        <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                        <Route path="dashboard" element={<AdminDashboard />} />
+                        <Route path="products" element={<ProductsPage />} />
+                        <Route path="topics" element={<TopicsPage />} />
+                        <Route path="tags" element={<TagsPage />} />
+                        <Route path="users" element={<UsersPage />} />
+                    </Route>
                 </Routes>
             </Suspense>
         </div>

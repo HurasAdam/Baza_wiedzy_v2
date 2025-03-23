@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { LoginForm } from "@/components/forms/LoginForm";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export const LoginPage = () => {
     return (

@@ -1,3 +1,21 @@
+export const formatStatusToEnum = (status: string): string => {
+    return status.toUpperCase().replace(/\s+/g, "_");
+};
+
+//THE UPDATED ONE BECAUSE OF THE FILTERS ->  Take Note ->
+export const transformOptions = (
+    options: string[],
+    iconMap?: Record<string, React.ComponentType<{ className?: string }>>
+) =>
+    options.map((value) => ({
+        label: value
+            .replace(/_/g, " ")
+            .toLowerCase()
+            .replace(/\b\w/g, (c) => c.toUpperCase()),
+        value: value,
+        icon: iconMap ? iconMap[value] : undefined,
+    }));
+
 export const getAvatarColor = (initials: string): string => {
     const colors = [
         "bg-red-500 text-white",
