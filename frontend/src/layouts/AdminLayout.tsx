@@ -1,85 +1,119 @@
-// import { useEffect } from "react";
-// import { Toaster } from "@/components/ui/toaster";
-// import {
-//   SidebarInset,
-//   SidebarProvider,
-// } from "@/components/ui/sidebar";
-// import { useAuth } from "@/hooks/useAuth";
-// import {
-//   Navigate,
-//   Outlet
-// } from "react-router-dom";
-// import { ADMIN_NAVBAR_OPTIONS } from "@/constants";
-// import { IMAGES } from "@/constants/images";
-// import { AdminSidebar } from "@/components/AdminSidebar";
-// import { toast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
+import { ComponentType, useEffect, useState } from "react";
+import { TiArrowBack } from "react-icons/ti";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import { cn } from "../utils/cn";
 
-// const AdminLayout = () => {
-//   const { user, isLoading } = useAuth();
+export const AdminLayout = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(true);
 
-//   useEffect(() => {
-//     if (user && user?.role === "admin") {
-//       toast({
-//         title: "Brak uprawnień",
-//         description:
-//           "Nie masz uprawnień, aby uzyskać dostęp do tego widoku. Proszę skontaktować się z administratorem.",
-//         variant: "info",
-//         duration: 3820,
-//       });
-//     }
-//   }, []);
+    const NavItems = [
+        { icon: LayoutDashboard, label: "Start", link: "/admin/dashboard" },
+        { icon: Package, label: "Produkty", link: "/admin/products" },
+        { icon: LayoutDashboard, label: "Tematy rozmów,", link: "/admin/topics" },
+        { icon: Tag, label: "Tagi", link: "/admin/tags" },
+        { icon: Users, label: "Użytkownicy", link: "/admin/users" },
+    ];
 
-//   if (isLoading) {
-//     return (
-//       <div className="flex items-center justify-center h-screen bg-neutral-200">
-//         Loading...
-//       </div>
-//     );
-//   }
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 1024) {
+                setSidebarOpen(false);
+            } else {
+                setSidebarOpen(true);
+            }
+        };
 
-//   if (!user) {
-//     return (
-//       <Navigate
-//         to="/login"
-//         replace
-//         state={{
-//           redirectUrl: window.location.pathname,
-//         }}
-//       />
-//     );
-//   }
+        window.addEventListener("resize", handleResize);
+        handleResize(); // Wywołaj raz na start
 
-//   if (user?.role !== "admin") {
-//     return (
-//       <Navigate
-//         to="/"
-//         replace
-//         state={{
-//           redirectUrl: window.location.pathname,
-//         }}
-//       />
-//     );
-//   }
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
-//   return (
-//     <SidebarProvider>
-//       <AdminSidebar
-//         image={IMAGES.Logo}
-//         title="Baza wiedzy"
-//         subtitle="Librus"
-//         extraText="Admin"
-//         options={ADMIN_NAVBAR_OPTIONS}
-//       />
-//       <SidebarInset className="bg-zinc-50 ">
-//         <div className="flex  items-center w-full justify-between sticky top-0  z-20 rounded-b"></div>
+    return (
+        <div className={cn("flex min-h-screen text-gray-900 dark:text-white bg-[#F3F4F6]")}>
+            {/* Sidebar */}
+            <aside
+                className={cn(
+                    "fixed inset-y-0 left-0 flex flex-col w-56 p-3 bg-[#18181B] dark:bg-[#1F1F1F] text-gray-300 shadow-sm border-r border-gray-700 transition-all duration-300",
+                    sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+                )}
+            >
+                <div className="flex justify-between items-center p-2">
+                    <h2 className="text-sm font-semibold tracking-normal text-gray-100">Admin</h2>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setSidebarOpen(false)}
+                        className="lg:hidden text-gray-400 hover:text-gray-100"
+                    >
+                        <Menu />
+                    </Button>
+                </div>
 
-//         <div className="px-4 py-7">
-//           <Outlet />
-//         </div>
-//         <Toaster />
-//       </SidebarInset>
-//     </SidebarProvider>
-//   );
-// };
+                <nav className="space-y-1">
+                    {NavItems.map(({ icon, label, link }) => {
+                        return <NavItem icon={icon} label={label} link={link} />;
+                    })}
+                </nav>
 
-// export default AdminLayout;
+                <div className="mt-auto space-y-2">
+                    <Link to="/">
+                        <Button
+                            variant="destructive"
+                            className="w-full text-sm shadow-none hover:bg-red-600 transition"
+                        >
+                            <TiArrowBack className="mr-2 w-4 h-4" /> Powrót
+                        </Button>
+                    </Link>
+                </div>
+            </aside>
+
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col lg:ml-56 transition-all">
+                {/* Navbar */}
+                <header className="h-12 flex items-center px-4 bg-white dark:bg-[#1F1F1F] border-b border-gray-700">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setSidebarOpen(!sidebarOpen)}
+                        className="lg:hidden text-gray-400 hover:text-gray-100"
+                    >
+                        <Menu />
+                    </Button>
+                    <h1 className="text-sm font-medium text-gray-800 dark:text-gray-300">Admin Dashboard</h1>
+                </header>
+
+                {/* Content */}
+                <main className="flex-1 p-6 bg-white dark:bg-[#121212] rounded-lg">
+                    <Outlet />
+                </main>
+            </div>
+        </div>
+    );
+};
+
+interface NavItemProps {
+    icon: ComponentType<{ className?: string }>;
+    label: string;
+    link: string;
+}
+
+const NavItem = ({ icon: Icon, label, link }: NavItemProps) => {
+    const location = useLocation();
+    const isActive = location.pathname === link;
+
+    return (
+        <Link
+            to={link}
+            className={cn(
+                "flex items-center px-3 py-2 rounded-md text-sm font-medium",
+                isActive ? "bg-[#27272A] text-white" : "text-gray-300 hover:bg-[#27272A]"
+            )}
+        >
+            <Icon className="mr-3 w-4 h-4" />
+            {label}
+        </Link>
+    );
+};
