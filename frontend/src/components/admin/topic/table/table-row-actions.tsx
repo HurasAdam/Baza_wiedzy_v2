@@ -12,7 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { TaskType } from "../../types/api.types";
+import { TaskType } from "../../../../types/api.types";
 
 interface DataTableRowActionsProps {
     row: Row<TaskType>;
@@ -63,18 +63,18 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem className="cursor-pointer">Otwórz</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuItem className="cursor-pointer">Zarządzaj</DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                        Edytuj
+                        <DropdownMenuShortcut>✏️</DropdownMenuShortcut>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
 
                     <DropdownMenuItem
                         className={`!text-destructive cursor-pointer ${taskId}`}
                         onClick={() => setOpenDialog(true)}
                     >
-                        Zablokuj dostęp
-                        <DropdownMenuShortcut>⌫</DropdownMenuShortcut>
+                        Usuń
+                        <DropdownMenuShortcut>🗑️</DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

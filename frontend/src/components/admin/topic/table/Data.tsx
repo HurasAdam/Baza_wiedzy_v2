@@ -13,8 +13,8 @@ import {
     View,
     Wrench,
 } from "lucide-react";
-import { AccountStatusEnum, RolesEnum, TaskPriorityEnum, TaskStatusEnum } from "../../constants/tableData";
-import { transformOptions } from "../../utils/avatar";
+import { AccountStatusEnum, RolesEnum, TaskPriorityEnum, TaskStatusEnum } from "../../../../constants/tableData";
+import { transformOptions } from "../../../../utils/avatar";
 const statusIcons = {
     [TaskStatusEnum.BACKLOG]: HelpCircle,
     [TaskStatusEnum.TODO]: Circle,

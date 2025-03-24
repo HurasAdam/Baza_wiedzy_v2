@@ -20,7 +20,7 @@ import {
 } from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
-import TableSkeleton from "../skeleton-loaders/table-skeleton";
+import TableSkeleton from "../../../skeleton-loaders/table-skeleton";
 import { DataTablePagination } from "./table-pagination";
 
 interface PaginationProps {

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
+import { Crown, LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
 import { ComponentType, useEffect, useState } from "react";
 import { TiArrowBack } from "react-icons/ti";
 import { Link, Outlet, useLocation } from "react-router-dom";
@@ -40,6 +40,16 @@ export const AdminLayout = () => {
                     sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
                 )}
             >
+                {/* Nagłówek panelu admina z tagline */}
+                <div className="px-2 pb-4 border-b border-gray-700 mb-4 text-center">
+                    <div>
+                        <span className="text-xs font-semibold text-orange-600 animate-pulse">Baza wiedzy</span>
+                    </div>
+                    <div className="flex items-center justify-center">
+                        <Crown className="w-6 h-6 text-white" />
+                        <span className="ml-2 text-lg font-bold text-white">Panel Admina</span>
+                    </div>
+                </div>
                 <div className="flex justify-between items-center p-2">
                     <h2 className="text-sm font-semibold tracking-normal text-gray-100">Admin</h2>
                     <Button
