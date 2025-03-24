@@ -18,15 +18,15 @@ export const transformOptions = (
 
 export const getAvatarColor = (initials: string): string => {
     const colors = [
-        "bg-red-500 text-white",
-        "bg-blue-500 text-white",
-        "bg-green-500 text-white",
-        "bg-yellow-500 text-black",
-        "bg-purple-500 text-white",
-        "bg-pink-500 text-white",
-        "bg-teal-500 text-white",
-        "bg-orange-500 text-black",
-        "bg-gray-500 text-white",
+        "bg-slate-600 text-white",
+        "bg-gray-600 text-white",
+        "bg-indigo-600 text-white",
+        "bg-teal-600 text-white",
+        "bg-blue-600 text-white",
+        "bg-green-600 text-white",
+        "bg-red-600 text-white",
+        "bg-amber-600 text-black", // Amber z ciemniejszym tekstem dla lepszej czytelności
+        "bg-purple-600 text-white",
     ];
 
     // Simple hash to map initials to a color index
