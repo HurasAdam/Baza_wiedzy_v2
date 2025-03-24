@@ -1,21 +1,16 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-// import useGetProjectsInWorkspaceQuery from "@/hooks/api/use-get-projects";
-// import useGetWorkspaceMembers from "@/hooks/api/use-get-workspace-members";
-import useTaskTableFilter from "@/hooks/use-task-table-filter";
-
-import { api } from "@/lib/api";
-
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { FC, useState } from "react";
 import { useParams } from "react-router-dom";
-
+import useTaskTableFilter from "../../../hooks/use-task-table-filter";
+import { conversationTopicApi } from "../../../lib/conversationTopicsApi";
+import { productsApi } from "../../../lib/productsApi";
 import { TaskType } from "../../../types/api.types";
 import { getAvatarColor, getAvatarFallbackText } from "../../../utils/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import { getColumns } from "./table/Columns";
-import { accountStatuses, roles } from "./table/Data";
 import { DataTable } from "./table/table";
 import { DataTableFacetedFilter } from "./table/table-faceted-filter";
 
@@ -29,7 +24,7 @@ interface DataTableFilterToolbarProps {
     setFilters: SetFilters;
 }
 
-const UserTable = () => {
+const TopicTable = () => {
     const param = useParams();
     const projectId = param.projectId as string;
 
@@ -41,15 +36,15 @@ const UserTable = () => {
     const columns = getColumns(projectId);
 
     const { data, isLoading } = useQuery({
-        queryKey: ["all-users", filters, pageNumber],
+        queryKey: ["all-topics", filters, pageNumber],
         queryFn: () => {
-            return api.getUsers();
+            return conversationTopicApi.getConversationTopics({ title: "", product: "" });
         },
 
         staleTime: 0,
     });
 
-    const users: TaskType[] = data || [];
+    const topics: TaskType[] = data || [];
 
     const handlePageChange = (page: number) => {
         setPageNumber(page);
@@ -64,7 +59,7 @@ const UserTable = () => {
         <div className="w-full relative">
             <DataTable
                 isLoading={isLoading}
-                data={users}
+                data={topics}
                 columns={columns}
                 onPageChange={handlePageChange}
                 onPageSizeChange={handlePageSizeChange}
@@ -89,6 +84,19 @@ const UserTable = () => {
 const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, projectId, filters, setFilters }) => {
     const data = [];
     const memberData = [];
+
+    const { data: allProducts = [] } = useQuery({
+        queryKey: ["all-products"],
+        queryFn: () => {
+            return productsApi.getAllProducts();
+        },
+    });
+    const products =
+        (allProducts &&
+            allProducts?.map((product) => {
+                return { label: product.name, value: product._id };
+            })) ||
+        [];
 
     const projects = data?.projects || [];
     const members = memberData?.members || [];
@@ -147,22 +155,12 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
             />
             {/* Status filter */}
             <DataTableFacetedFilter
-                title="Role"
+                title="Produkt"
                 multiSelect={false}
-                options={roles}
+                options={products}
                 disabled={isLoading}
                 selectedValues={filters.status?.split(",") || []}
                 onFilterChange={(values) => handleFilterChange("status", values)}
-            />
-
-            {/* Account status filter*/}
-            <DataTableFacetedFilter
-                title="Status"
-                multiSelect={false}
-                options={accountStatuses}
-                disabled={isLoading}
-                selectedValues={filters.priority?.split(",") || []}
-                onFilterChange={(values) => handleFilterChange("priority", values)}
             />
 
             {/* Assigned To filter */}
@@ -209,4 +207,4 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
     );
 };
 
-export default UserTable;
+export default TopicTable;

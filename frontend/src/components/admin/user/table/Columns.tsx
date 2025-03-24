@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
-import { UserType } from "../../types/api.types";
+import { UserType } from "../../../../types/api.types";
 
 import { CheckCircle, XCircle } from "lucide-react";
 import { DataTableColumnHeader } from "./table-column-header";

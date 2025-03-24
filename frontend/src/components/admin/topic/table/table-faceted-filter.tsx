@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "../../utils/cn";
+import { cn } from "../../../../utils/cn";
 
 interface DataTableFacetedFilterProps {
     title?: string;

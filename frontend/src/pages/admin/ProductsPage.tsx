@@ -1,44 +1,46 @@
-import { FileText } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { FileText, Package, Plus } from "lucide-react";
+import { useState } from "react";
+import ProductForm from "../../components/forms/ProductForm";
+import { Modal } from "../../components/modal/Modal";
+import { useModal } from "../../components/modal/hooks/useModal";
+import { Button } from "../../components/ui/button";
 import { BANNER_IMAGES } from "../../constants/productBanners";
-
-// Przykładowe dane produktów – w praktyce pobieraj je z API
-const products = [
-    {
-        _id: "679551bffe6eaaf040b605f5",
-        name: "Synergia",
-        labelColor: "#7B1FA2",
-        banner: "steps",
-        __v: 0,
-    },
-    {
-        _id: "679551c7fe6eaaf040b605fa",
-        name: "LibrusGO",
-        labelColor: "#F57C00",
-        banner: "blob",
-        __v: 0,
-    },
-    {
-        _id: "679551cffe6eaaf040b605ff",
-        name: "Biblioteka",
-        labelColor: "#C2185B",
-        banner: "biblioteka",
-        __v: 0,
-    },
-    {
-        _id: "679551eefe6eaaf040b60604",
-        name: "Aplikacja LIBRUS",
-        labelColor: "#D32F2F",
-        banner: "abstract3",
-        __v: 0,
-    },
-];
+import { productsApi } from "../../lib/productsApi";
 
 const ProductsPage = () => {
+    const { openModal, isOpen, closeModal } = useModal();
+    const [selectedProduct, setSelectedProduct] = useState<string>("");
+    const { openModal: openEditModal, isOpen: isEditModalOpen, closeModal: closeEditModal } = useModal();
+    const { data: products } = useQuery({
+        queryKey: ["all-products"],
+        queryFn: () => {
+            return productsApi.getAllProducts();
+        },
+    });
+
+    const editProducthandler = (productId: string) => {
+        setSelectedProduct(productId);
+        openEditModal();
+    };
+
     return (
-        <div className="p-6">
-            <h2 className="mb-6 text-2xl font-bold text-gray-800 dark:text-white">Lista Produktów IT</h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {products.map((product) => (
+        <div className="px-6 pb-6 pt-1 space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <h2 className="mb-6 text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-1">
+                    <Package />
+                    Lista Produktów
+                </h2>
+                <Button
+                    onClick={openModal}
+                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-slate-600 rounded-md hover:bg-slate-700 transition"
+                >
+                    <Plus className="w-4 h-4" /> Nowy produkt
+                </Button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {products?.map((product) => (
                     <div
                         key={product._id}
                         className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300"
@@ -70,14 +72,25 @@ const ProductsPage = () => {
                                 <button className="px-3 py-1 text-sm font-medium text-blue-600 hover:text-blue-800">
                                     Szczegóły
                                 </button>
-                                <button className="ml-2 px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-800">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => editProducthandler(product?._id)}
+                                    className="ml-2 px-3 py-1 text-sm font-medium text-gray-600 hover:text-foreground"
+                                >
                                     Edytuj
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
+            <Modal isOpen={isOpen} onClose={closeModal} height="md" width="sm">
+                <ProductForm onClose={closeModal} />
+            </Modal>
+            <Modal isOpen={isEditModalOpen} onClose={closeEditModal} height="md" width="sm">
+                <ProductForm onClose={closeModal} productId={selectedProduct} />
+            </Modal>
         </div>
     );
 };
