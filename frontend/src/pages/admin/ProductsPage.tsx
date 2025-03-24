@@ -25,17 +25,17 @@ const ProductsPage = () => {
     };
 
     return (
-        <div className="px-6 pb-6 pt-1 space-y-6">
+        <div className="px-6 pb-6  space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <h2 className="mb-6 text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-1">
                     <Package />
-                    Lista Produktów
+                    Produkty
                 </h2>
                 <Button
                     onClick={openModal}
                     className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-slate-600 rounded-md hover:bg-slate-700 transition"
                 >
-                    <Plus className="w-4 h-4" /> Nowy produkt
+                    <Plus className="w-4 h-4" /> Dodaj
                 </Button>
             </div>
 
@@ -43,7 +43,7 @@ const ProductsPage = () => {
                 {products?.map((product) => (
                     <div
                         key={product._id}
-                        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col hover:shadow-2xl transition-shadow duration-300"
+                        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col  transition-shadow duration-300"
                     >
                         {/* Banner produktu */}
                         <img

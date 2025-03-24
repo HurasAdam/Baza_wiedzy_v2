@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { UserType } from "../../../../types/api.types";
 
 import { CheckCircle, XCircle } from "lucide-react";
+import { getAvatarColor, getAvatarFallbackText } from "../../../../utils/avatar";
 import { DataTableColumnHeader } from "./table-column-header";
 import { DataTableRowActions } from "./table-row-actions";
 
@@ -14,18 +15,22 @@ export const getColumns = (projectId?: string): ColumnDef<UserType>[] => {
         {
             accessorKey: "name",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
-            cell: ({ row }) => (
-                <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src={row.original.profilePicture || ""} alt={row.original.name} />
-                        <AvatarFallback>{row.original.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col ">
-                        <span>{row.original.name}</span>
-                        <span>{row.original.surname}</span>
+            cell: ({ row }) => {
+                const avatarColor = getAvatarColor(row.original.name);
+                const initials = getAvatarFallbackText(row.original.name);
+                return (
+                    <div className="flex items-center gap-2">
+                        <Avatar className={`h-8 w-8 ${avatarColor}`}>
+                            <AvatarImage src={row.original.profilePicture || ""} alt={row.original.name} />
+                            <AvatarFallback className={`h-8 w-8 ${avatarColor}`}>{initials}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col ">
+                            <span>{row.original.name}</span>
+                            <span>{row.original.surname}</span>
+                        </div>
                     </div>
-                </div>
-            ),
+                );
+            },
         },
 
         {
