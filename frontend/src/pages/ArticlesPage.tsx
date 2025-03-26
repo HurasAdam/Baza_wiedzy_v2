@@ -77,7 +77,7 @@ const ArticleListItem = ({ article, className }: { article: IArticle; className?
     const { openModal, isOpen, closeModal } = useModal();
 
     return (
-        <div className="mb-4">
+        <div className="mb-3.5">
             <Card
                 onClick={openModal}
                 className={`p-4 shadow-md border text-foreground hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-emerald-700/65 "} ${className}`}
@@ -90,13 +90,13 @@ const ArticleListItem = ({ article, className }: { article: IArticle; className?
                         <Star className="h-6 w-6 text-gray-400" />
                     </button>
                 </div>
-                <div className="flex gap-1 items-center">
+                {/* <div className="flex gap-1 items-center">
                     <p className="text-xs text-card-foreground mt-2">Produkt:</p>
                     <p className="text-xs text-popover-foreground mt-2"> {article?.product?.name}</p>
-                </div>
-                <div className="mt-4 flex justify-end">
+                </div> */}
+                {/* <div className="mt-4 flex justify-end">
                     <p className="text-gray-500">Wyświetlenia: {article?.viewsCounter}</p>
-                </div>
+                </div> */}
             </Card>
             <Modal isOpen={isOpen} onClose={closeModal}>
                 <ArticleModalDetails articleId={article?._id} />
@@ -173,7 +173,7 @@ const ArticlesFilter = () => {
 
 export const ArticlesPage = () => {
     return (
-        <div className="text-foreground p-5 h-full flex w-full max-w-[1580px] mx-auto gap-6">
+        <div className="text-foreground p-5 h-full flex w-full max-w-[1540px] mx-auto gap-6">
             <ArticlesFilter />
             <div className="w-full">
                 <ArticleList />
