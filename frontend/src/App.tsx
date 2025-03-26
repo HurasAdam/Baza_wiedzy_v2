@@ -17,12 +17,12 @@ import CreateArticle from "./components/articles/Create/CreateArticle";
 import useTheme from "./hooks/useTheme";
 
 import { AdminLayout } from "./layouts/AdminLayout";
-import { RegisterPage } from "./pages/Register";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProductsPage from "./pages/admin/ProductsPage";
 import TagsPage from "./pages/admin/TagsPage";
 import TopicsPage from "./pages/admin/TopicsPage";
 import UsersPage from "./pages/admin/UsersPage";
+import { RegisterPage } from "./pages/Register";
 
 // const HomePage = lazy(() => import("./pages/HomePage").then((module) => ({ default: module.HomePage })));
 // const ArticlesPage = lazy(() => import("./pages/ArticlesPage").then((module) => ({ default: module.ArticlesPage })));

@@ -20,9 +20,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
 
     const { data: product } = useQuery({
         queryKey: ["product", productId],
-        queryFn: () => {
-            return productsApi.getProduct(productId);
-        },
+        queryFn: () => (productId ? productsApi.getProduct(productId) : Promise.resolve(null)),
         enabled: !!productId,
     });
 
