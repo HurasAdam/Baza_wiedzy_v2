@@ -35,7 +35,7 @@ const TagsPage = () => {
                 <TagTable />
             </div>
             <Modal isOpen={isOpen} onClose={closeModal} height="" width="sm">
-                <TagForm />
+                <TagForm onClose={closeModal} />
             </Modal>
         </div>
     );
