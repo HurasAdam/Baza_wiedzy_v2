@@ -12,7 +12,7 @@ import { newArticleSchema } from "./article.schema";
 import { createArticle as createArticleAction, getArticle, incrementArticleViews } from "./article.service";
 
 export const ArticleController = () => ({
-    createArticle: catchErrors(async (req, res) => {
+    create: catchErrors(async (req, res) => {
         const request = newArticleSchema.parse(req.body);
         const { userId } = req;
         const newArticle = await createArticleAction({ request, userId });
@@ -31,7 +31,7 @@ export const ArticleController = () => ({
         return res.status(OK).json({ message: "Dodano nowy artykuł", data: newArticle });
     }),
 
-    getLatestArticles: catchErrors(async (req, res) => {
+    findByLatest: catchErrors(async (req, res) => {
         const limit = parseInt(req.query.limit as string) || 4;
 
         const latestArticles = await ArticleModel.find({}, { title: 1, createdAt: 1 })
@@ -42,7 +42,7 @@ export const ArticleController = () => ({
         return res.status(OK).json(latestArticles);
     }),
 
-    getArticles: catchErrors(async (req, res) => {
+    findAll: catchErrors(async (req, res) => {
         const { userId } = req;
         const query = {
             ...constructSearchQuery(req.query),
@@ -85,7 +85,7 @@ export const ArticleController = () => ({
         return res.status(OK).json(responseObject);
     }),
 
-    getTrashedArticles: catchErrors(async (req, res) => {
+    findByTrash: catchErrors(async (req, res) => {
         const { userId } = req;
         const query = {
             ...constructSearchQuery(req.query),
@@ -135,7 +135,7 @@ export const ArticleController = () => ({
         return res.status(OK).json(responseObject);
     }),
 
-    getArticle: catchErrors(async (req, res) => {
+    findOne: catchErrors(async (req, res) => {
         const { userId }: { userId: string } = req;
         const { id } = req.params;
 
@@ -144,7 +144,7 @@ export const ArticleController = () => ({
         return res.status(OK).json(article);
     }),
 
-    getArticleHistory: catchErrors(async (req, res) => {
+    findOneHistory: catchErrors(async (req, res) => {
         const { userId }: { userId: string } = req;
         const { id } = req.params;
 
@@ -190,7 +190,7 @@ export const ArticleController = () => ({
         return res.status(200).json({ ...historyItem.toObject(), changes: updatedChanges });
     }),
 
-    verifyArticle: catchErrors(async (req, res) => {
+    verify: catchErrors(async (req, res) => {
         const { id } = req.params;
         const { isVerified } = req.body;
 
@@ -244,7 +244,7 @@ export const ArticleController = () => ({
         });
     }),
 
-    getPopularArticles: catchErrors(async (req, res) => {
+    findByPopular: catchErrors(async (req, res) => {
         const limit = parseInt(req.query.limit?.toString() || "20");
 
         const popularArticles = await ArticleModel.find({ isTrashed: false })
@@ -259,7 +259,7 @@ export const ArticleController = () => ({
         return res.status(OK).json(popularArticles);
     }),
 
-    trashArticle: catchErrors(async (req, res) => {
+    updateOneTrash: catchErrors(async (req, res) => {
         const { id } = req.params;
         const article = await ArticleModel.findById({ _id: id });
         appAssert(article, NOT_FOUND, "Article not found");
@@ -282,7 +282,7 @@ export const ArticleController = () => ({
         return res.status(OK).json({ message: "Artykuł został usunięty" });
     }),
 
-    restoreArticle: catchErrors(async (req, res) => {
+    updateOneRestore: catchErrors(async (req, res) => {
         const { id } = req.params;
         const article = await ArticleModel.findById({ _id: id });
         appAssert(article, NOT_FOUND, "Article not found");
@@ -305,7 +305,7 @@ export const ArticleController = () => ({
         return res.status(OK).json({ message: "Artykuł został przywrócony z kosza" });
     }),
 
-    deleteArticle: catchErrors(async (req, res) => {
+    deleteOne: catchErrors(async (req, res) => {
         const { id } = req.params;
 
         // Znalezienie artykułu
@@ -323,7 +323,7 @@ export const ArticleController = () => ({
         return res.status(OK).json({ message: "Artykuł i powiązana historia zostały usunięte." });
     }),
 
-    updateArticle: catchErrors(async (req, res) => {
+    updateOne: catchErrors(async (req, res) => {
         const { id } = req.params;
         const { title, clientDescription, employeeDescription, tags, product } = req.body;
 
