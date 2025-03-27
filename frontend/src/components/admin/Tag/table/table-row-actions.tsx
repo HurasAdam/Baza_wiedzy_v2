@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { tagsApi } from "../../../../lib/tagsApi";
+import { tagApi } from "@/lib/tag.api";
 import { TaskType } from "../../../../types/api.types";
 import { Alert } from "../../../alert/Alert";
 import { useAlert } from "../../../alert/hooks/useAlert";
@@ -35,7 +35,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
 
     const { mutate } = useMutation({
         mutationFn: () => {
-            return tagsApi.deleteTag(taskId);
+            return tagApi.remove(taskId);
         },
         onSuccess: () => {
             closeAlert();

@@ -10,7 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { IMAGES } from "../../../constants/images";
-import { api } from "../../../lib/api";
+import { userApi } from "@/lib/user.api";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 
 const membersOptions = [
@@ -41,9 +41,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
     const queryClient = useQueryClient();
 
     const { mutate, isPending } = useMutation({
-        mutationFn: () => {
-            return api.getUser();
-        },
+        mutationFn: userApi.findMe,
     });
 
     const formSchema = z.object({

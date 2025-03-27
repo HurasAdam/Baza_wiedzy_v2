@@ -5,7 +5,7 @@ import { IMAGES } from "@/constants/images";
 import { BANNER_IMAGES } from "@/constants/productBanners";
 import { toast } from "@/hooks/use-toast";
 import useCopyToClipboard from "@/hooks/useCopyToClipboard";
-import { articlesApi } from "@/lib/articlesApi";
+import { articleApi } from "@/lib/article.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { BiSolidCopy } from "react-icons/bi";
@@ -33,7 +33,7 @@ const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
     const { isOpen: isDeleteAlertOpen, openAlert: openDeleteAlert, closeAlert: closeDeleteAlert } = useAlert();
     const { data: article, isLoading } = useQuery({
         queryKey: ["article", articleId],
-        queryFn: () => articlesApi.getArticle({ id: articleId }),
+        queryFn: () => articleApi.getArticle({ id: articleId }),
     });
     const { copyToClipboard } = useCopyToClipboard();
     const queryClient = useQueryClient();
@@ -57,7 +57,7 @@ const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
 
     const { mutate } = useMutation({
         mutationFn: ({ id, isVerified }) => {
-            return articlesApi.verifyArticle({ id, isVerified });
+            return articleApi.verifyArticle({ id, isVerified });
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(["article", articleId]);
@@ -74,7 +74,7 @@ const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
 
     const { mutate: markAsFavouriteHandler } = useMutation({
         mutationFn: ({ id }) => {
-            return articlesApi.markArticleAsFavourite({ id });
+            return articleApi.markArticleAsFavourite({ id });
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(["article", articleId]);
@@ -89,7 +89,7 @@ const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
 
     const { mutate: deleteArticleMutation } = useMutation({
         mutationFn: ({ id }) => {
-            return articlesApi.trashArticle({ id });
+            return articleApi.trashArticle({ id });
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(["article", articleId]);

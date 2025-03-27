@@ -6,13 +6,15 @@ import TagForm from "../../components/forms/TagForm";
 import { useModal } from "../../components/modal/hooks/useModal";
 import { Modal } from "../../components/modal/Modal";
 import { Button } from "../../components/ui/button";
-import { tagsApi } from "../../lib/tagsApi";
+
+import { tagApi } from "../../lib/tag.api";
+
 const TagsPage = () => {
     const { openModal, isOpen, closeModal } = useModal();
     const { data: tags } = useQuery({
         queryKey: ["tags"],
         queryFn: () => {
-            return tagsApi.getAllTags();
+            return tagApi.findAll();
         },
     });
     return (

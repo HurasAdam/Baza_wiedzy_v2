@@ -9,7 +9,7 @@ const tagController = TagController();
 // prefix /tags
 
 tagRoutes.get("/", tagController.getTags);
-tagRoutes.get("/tag/:id", tagController.getSingleTag);
-tagRoutes.post("/create", tagController.createTag);
-tagRoutes.put("/tag/:id/update", tagController.updateTag);
-tagRoutes.delete("/tag/:id/delete", preventDeleteDefaultTag, tagController.deleteTag);
+tagRoutes.get("/:id", tagController.getSingleTag);
+tagRoutes.post("/", tagController.createTag);
+tagRoutes.put("/:id", tagController.updateTag);
+tagRoutes.delete("/:id", preventDeleteDefaultTag, tagController.deleteTag);

@@ -1,5 +1,5 @@
 import { BANNER_IMAGES } from "@/constants/productBanners";
-import { conversationReportApi } from "@/lib/conversationReportsApi";
+import { conversationReportApi } from "@/lib/conversation-report.api";
 import { ITopic } from "@/pages/CallRegister";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FC, useState } from "react";

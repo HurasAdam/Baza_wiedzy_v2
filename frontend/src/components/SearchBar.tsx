@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useModalContext } from "@/contexts/ModalContext";
 import useArticleFilters from "@/hooks/useArticleFilters";
-import { api } from "@/lib/api";
-import { tagsApi } from "@/lib/tagsApi";
+import { userApi } from "@/lib/user.api";
+import { tagApi } from "@/lib/tag.api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { HiMiniXMark } from "react-icons/hi2";
@@ -27,16 +27,12 @@ export function SearchBar({
 
     const { data } = useQuery({
         queryKey: ["tags"],
-        queryFn: () => {
-            return tagsApi.getAllTags();
-        },
+        queryFn: () => tagApi.findAll(),
     });
 
     const { data: authors } = useQuery({
         queryKey: ["authros"],
-        queryFn: () => {
-            return api.getUsers();
-        },
+        queryFn: () => userApi.findAll(),
     });
 
     const formatedAuthors = authors?.map((author) => {
