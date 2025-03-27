@@ -1,5 +1,5 @@
 import { useModalContext } from "@/contexts/ModalContext";
-import { articlesApi } from "@/lib/articlesApi";
+import { articleApi } from "@/lib/article.api";
 import { useQuery } from "@tanstack/react-query";
 import { diff_match_patch } from "diff-match-patch";
 import { useState } from "react";
@@ -18,14 +18,14 @@ const ArticleHistory = ({ articleId, showBackwardArrow = false, closeArticleHist
     const { data: history } = useQuery({
         queryKey: ["articleHistory", articleId],
         queryFn: () => {
-            return articlesApi.getArticleHistory({ id: articleId });
+            return articleApi.getArticleHistory({ id: articleId });
         },
     });
 
     const { data: historyItem, isLoading: isLoadingDetails } = useQuery({
         queryKey: ["historyItem", selectedItem],
         queryFn: () => {
-            return articlesApi.getArticleHistoryItem({ id: selectedItem });
+            return articleApi.getArticleHistoryItem({ id: selectedItem });
         },
         enabled: !!selectedItem,
     });

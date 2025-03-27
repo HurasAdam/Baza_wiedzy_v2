@@ -1,4 +1,4 @@
-import { notificationApi } from "@/lib/notificationApi";
+import { notificationApi } from "@/lib/notification.api";
 import { cn } from "@/utils/cn";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -23,11 +23,11 @@ const NotificationsPanel = () => {
 
     const { data: notifications } = useQuery({
         queryKey: ["notifications"],
-        queryFn: () => notificationApi.getUserNotifications(),
+        queryFn: () => notificationApi.findAll(),
     });
 
     const markAsRead = useMutation({
-        mutationFn: (id) => notificationApi.markAsRead(id),
+        mutationFn: (id) => notificationApi.updateAsRead(id),
         onSuccess: () => queryClient.invalidateQueries(["notifications"]),
     });
 

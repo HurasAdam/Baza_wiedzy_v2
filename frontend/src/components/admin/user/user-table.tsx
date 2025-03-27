@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 // import useGetWorkspaceMembers from "@/hooks/api/use-get-workspace-members";
 import useTaskTableFilter from "@/hooks/use-task-table-filter";
 
-import { api } from "@/lib/api";
+import { userApi } from "@/lib/user.api";
 
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
@@ -42,10 +42,7 @@ const UserTable = () => {
 
     const { data, isLoading } = useQuery({
         queryKey: ["all-users", filters, pageNumber],
-        queryFn: () => {
-            return api.getUsers();
-        },
-
+        queryFn: () => userApi.findAll(),
         staleTime: 0,
     });
 

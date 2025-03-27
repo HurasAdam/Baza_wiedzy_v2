@@ -1,6 +1,6 @@
 import { toast } from "@/hooks/use-toast";
-import { conversationTopicApi } from "@/lib/conversationTopicsApi";
-import { productsApi } from "@/lib/productsApi";
+import { conversationTopicApi } from "@/lib/conversation-topic.api";
+import { productApi } from "@/lib/product.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
     const { data, isPending } = useQuery({
         queryKey: ["products"],
         queryFn: () => {
-            return productsApi.getAllProducts();
+            return productApi.find();
         },
     });
 
@@ -35,7 +35,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
     const { data: conversationTopic } = useQuery({
         queryKey: ["conversationTopic", topicId],
         queryFn: () => {
-            return conversationTopicApi.getConversationTopic({ id: topicId });
+            return conversationTopicApi.findOne({ id: topicId });
         },
         enabled: !!topicId,
     });
@@ -66,7 +66,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
 
     const { mutate } = useMutation({
         mutationFn: (formData) => {
-            return conversationTopicApi.createConversationTopic(formData);
+            return conversationTopicApi.create(formData);
         },
         onSuccess: () => {
             onClose();
@@ -92,7 +92,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
 
     const { mutate: updateTopicMutation } = useMutation({
         mutationFn: (formData) => {
-            return conversationTopicApi.updateConversationTopic({ id: topicId, formData });
+            return conversationTopicApi.update({ id: topicId, formData });
         },
         onSuccess: () => {
             closeContentModal();

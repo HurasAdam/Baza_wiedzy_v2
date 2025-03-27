@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { productsApi } from "@/lib/productsApi";
+import { productApi } from "@/lib/product.api";
 
 export const useFetchProducts = () => {
     const { data, isError, error } = useQuery({
         queryKey: ["products"],
-        queryFn: productsApi.getAllProducts,
+        queryFn: productApi.find,
         staleTime: 1000 * 60 * 5,
-    })
+    });
 
-    return { products: data ?? [], isError, error }
-}
+    return { products: data ?? [], isError, error };
+};

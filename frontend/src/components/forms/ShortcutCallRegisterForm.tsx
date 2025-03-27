@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { IMAGES } from "@/constants/images";
 import { useDebounce } from "@/hooks/useDebounce";
-import { conversationTopicApi } from "@/lib/conversationTopicsApi";
-import { productsApi } from "@/lib/productsApi";
+import { conversationTopicApi } from "@/lib/conversation-topic.api";
+import { productApi } from "@/lib/product.api";
 import { ITopic } from "@/pages/CallRegister";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -30,7 +30,7 @@ export default function ShortcutCallRegisterForm({ setActualStep, setFullFormDat
     const { data: products } = useQuery({
         queryKey: ["products"],
         queryFn: () => {
-            return productsApi.getAllProducts();
+            return productApi.find();
         },
     });
 
@@ -41,7 +41,7 @@ export default function ShortcutCallRegisterForm({ setActualStep, setFullFormDat
     const { data: conversationTopics = [], isLoading: isConversationTopicsLoading } = useQuery({
         queryKey: ["conversationTopics"],
         queryFn: () => {
-            return conversationTopicApi.getConversationTopics(queryParams);
+            return conversationTopicApi.find(queryParams);
         },
     });
 

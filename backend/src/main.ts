@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use("/auth", authRoutes);
 
 //#protected routes
-app.use("/user", authenticate, userRoutes);
+app.use("/users", authenticate, userRoutes);
 app.use("/articles", authenticate, articleRoutes);
 app.use("/tags", authenticate, tagRoutes);
 app.use("/products", authenticate, productRoutes);

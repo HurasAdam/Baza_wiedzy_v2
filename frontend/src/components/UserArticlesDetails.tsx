@@ -1,4 +1,4 @@
-import { articlesApi } from "@/lib/articlesApi";
+import { articleApi } from "@/lib/article.api";
 import { formatDate } from "@/utils/format-date";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -10,7 +10,7 @@ const UserArticlesDetails = ({ userId, queryParams }) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [page, setPage] = useState(1);
 
-    const searchParams = {
+    const params = {
         ...queryParams,
         limit: 20,
         page,
@@ -19,7 +19,7 @@ const UserArticlesDetails = ({ userId, queryParams }) => {
     const { data: userArticles } = useQuery({
         queryKey: ["articlesCreatedByUser", userId, page],
         queryFn: () => {
-            return articlesApi.getArticlesCreatedByUser({ userId, searchParams: searchParams });
+            return articleApi.getArticlesCreatedByUser({ userId, params });
         },
     });
 

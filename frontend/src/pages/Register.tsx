@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { api } from "../lib/api";
+import { authApi } from "@/lib/auth.api";
 import { RegisterForm } from "@/components/RegisterForm";
 import { Button } from "@/components/ui/button";
 
@@ -11,9 +11,7 @@ const useRegister = () => {
     const redirectUrl = location.state?.redirectUrl || "/articles";
 
     const { mutate } = useMutation({
-        mutationFn: (obj) => {
-            return api.register(obj);
-        },
+        mutationFn: (obj) => authApi.register(obj),
         onSuccess: () => {
             navigate(redirectUrl, {
                 replace: true,

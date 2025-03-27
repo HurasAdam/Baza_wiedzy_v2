@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { USER_KEY } from "./keys";
-import { api } from "@/lib/api";
+import { authApi } from "@/lib/auth.api";
 import { LoginSchema } from "@/components/forms/LoginForm";
 
 // Po zmianie na backendzie dokonać podmiany w loginAction
@@ -10,7 +10,7 @@ export const useLogin = () => {
     const navigate = useNavigate();
 
     const { mutate, isError } = useMutation({
-        mutationFn: api.login,
+        mutationFn: authApi.login,
     });
 
     const loginAction = (data: LoginSchema) => {
@@ -18,7 +18,7 @@ export const useLogin = () => {
             onSuccess: (result) => {
                 // --- odkomentować
                 queryClient.setQueryData([USER_KEY], result.data);
-                navigate('/dashboard', { replace: true })
+                navigate("/dashboard", { replace: true });
                 // // --- usunąć
                 // api.getUser().then((user) => {
                 //     if (user) {
@@ -31,9 +31,9 @@ export const useLogin = () => {
                 //     navigate('/login', { replace: true })
                 // });
                 // // ====
-            }
-        })
-    }
+            },
+        });
+    };
 
     return { loginAction, isError };
-}
+};

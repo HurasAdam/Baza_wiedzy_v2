@@ -3,15 +3,14 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-
 import { toast } from "@/hooks/use-toast";
-import { tagsApi } from "@/lib/tagsApi";
+import { tagApi } from "@/lib/tag.api";
 import { Loader } from "lucide-react";
 import { IoIosAdd } from "react-icons/io";
 import { MdOutlineEdit } from "react-icons/md";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 interface ITagFormProps {
-    tagId?: string;
+    tagId: string;
 }
 
 const TagForm: React.FC<ITagFormProps> = ({ tagId }) => {
@@ -20,7 +19,7 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId }) => {
     const { data: tag } = useQuery({
         queryKey: ["conversationTopic", tagId],
         queryFn: () => {
-            return tagsApi.getTag({ id: tagId });
+            return tagApi.findOne(tagId);
         },
         enabled: !!tagId,
     });
@@ -33,10 +32,9 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId }) => {
 
     const { mutate } = useMutation({
         mutationFn: (formData) => {
-            return tagsApi.createTag(formData);
+            return tagApi.create(formData);
         },
         onSuccess: (data) => {
-            closeContentModal();
             queryClient.invalidateQueries(["tags"]);
             toast({
                 title: "Sukces",
@@ -73,10 +71,9 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId }) => {
 
     const { mutate: updateTagMutation, isPending } = useMutation({
         mutationFn: ({ id, formData }) => {
-            return tagsApi.updateTag({ id, formData });
+            return tagApi.updateOne({ id, formData });
         },
         onSuccess: () => {
-            closeContentModal();
             queryClient.invalidateQueries(["tags"]);
             toast({
                 title: "Sukces",

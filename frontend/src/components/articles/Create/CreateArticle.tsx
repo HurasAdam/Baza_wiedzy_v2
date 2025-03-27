@@ -2,9 +2,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { FilePlus } from "lucide-react";
 
 import { useState } from "react";
-import { articlesApi } from "../../../lib/articlesApi";
-import { productsApi } from "../../../lib/productsApi";
-import { tagsApi } from "../../../lib/tagsApi";
+import { articleApi } from "../../../lib/article.api";
+import { productApi } from "../../../lib/product.api";
+import { tagApi } from "../../../lib/tag.api";
 import ArticleForm from "../../forms/ArticleForm";
 import { useModal } from "../../modal/hooks/useModal";
 import { Modal } from "../../modal/Modal";
@@ -21,13 +21,13 @@ const CreateArticle = ({ onClose, isOpen }) => {
     const { data: tags = [] } = useQuery({
         queryKey: ["tags"],
         queryFn: () => {
-            return tagsApi.getAllTags();
+            return tagApi.findAll();
         },
     });
     const { data: products = [] } = useQuery({
         queryKey: ["products"],
         queryFn: () => {
-            return productsApi.getAllProducts();
+            return productApi.find();
         },
     });
 
@@ -43,7 +43,7 @@ const CreateArticle = ({ onClose, isOpen }) => {
     console.log(createdArticleId);
     const { mutate } = useMutation({
         mutationFn: ({ formData }) => {
-            return articlesApi.createArticle({ formData });
+            return articleApi.createArticle({ formData });
         },
         onSuccess: (data) => {
             setCreatedArticleId(data?.data?._id);

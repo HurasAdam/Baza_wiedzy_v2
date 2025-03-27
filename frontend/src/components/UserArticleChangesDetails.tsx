@@ -1,6 +1,6 @@
 import { IMAGES } from "@/constants/images";
 import ARTICLE_HISTORY_FIELD_TRANSLATIONS from "@/enums/articleHistoryFieldTranslations";
-import { articlesApi } from "@/lib/articlesApi";
+import { articleApi } from "@/lib/article.api";
 import { formatDate } from "@/utils/format-date";
 import { useQuery } from "@tanstack/react-query";
 import { diff_match_patch } from "diff-match-patch";
@@ -17,7 +17,7 @@ const UserArticleChangesDetails = ({ userId, queryParams }) => {
     const { data: userUpdatedArticles } = useQuery({
         queryKey: ["articlesUpdatedByUser", userId],
         queryFn: () => {
-            return articlesApi.getArticlesHistoryByUser({ userId, searchParams: queryParams });
+            return articleApi.getArticlesHistoryByUser({ userId, params: queryParams });
         },
     });
 

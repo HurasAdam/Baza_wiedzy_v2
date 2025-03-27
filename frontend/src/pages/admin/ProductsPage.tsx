@@ -6,7 +6,7 @@ import { Modal } from "../../components/modal/Modal";
 import { useModal } from "../../components/modal/hooks/useModal";
 import { Button } from "../../components/ui/button";
 import { BANNER_IMAGES } from "../../constants/productBanners";
-import { productsApi } from "../../lib/productsApi";
+import { productApi } from "../../lib/product.api";
 
 const ProductsPage = () => {
     const { openModal, isOpen, closeModal } = useModal();
@@ -15,7 +15,7 @@ const ProductsPage = () => {
     const { data: products } = useQuery({
         queryKey: ["all-products"],
         queryFn: () => {
-            return productsApi.getAllProducts();
+            return productApi.find();
         },
     });
 

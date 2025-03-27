@@ -3,8 +3,8 @@ import { X } from "lucide-react";
 import { FC, useState } from "react";
 import { useParams } from "react-router-dom";
 import useTaskTableFilter from "../../../hooks/use-task-table-filter";
-import { conversationTopicApi } from "../../../lib/conversationTopicsApi";
-import { productsApi } from "../../../lib/productsApi";
+import { conversationTopicApi } from "../../../lib/conversation-topic.api";
+import { productApi } from "../../../lib/product.api";
 import { TaskType } from "../../../types/api.types";
 import { getAvatarColor, getAvatarFallbackText } from "../../../utils/avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
@@ -38,7 +38,7 @@ const TopicTable = () => {
     const { data, isLoading } = useQuery({
         queryKey: ["all-topics", filters, pageNumber],
         queryFn: () => {
-            return conversationTopicApi.getConversationTopics({ title: "", product: "" });
+            return conversationTopicApi.find({ title: "", product: "" });
         },
 
         staleTime: 0,
@@ -88,7 +88,7 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
     const { data: allProducts = [] } = useQuery({
         queryKey: ["all-products"],
         queryFn: () => {
-            return productsApi.getAllProducts();
+            return productApi.find();
         },
     });
     const products =

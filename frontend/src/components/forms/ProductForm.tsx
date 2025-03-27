@@ -1,6 +1,6 @@
 import { BANNER_IMAGES } from "@/constants/productBanners";
 import { toast } from "@/hooks/use-toast";
-import { productsApi } from "@/lib/productsApi";
+import { productApi } from "@/lib/product.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -20,7 +20,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
 
     const { data: product } = useQuery({
         queryKey: ["product", productId],
-        queryFn: () => (productId ? productsApi.getProduct(productId) : Promise.resolve(null)),
+        queryFn: () => (productId ? productApi.findOne(productId) : Promise.resolve(null)),
         enabled: !!productId,
     });
 
@@ -52,7 +52,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
 
     const { mutate } = useMutation({
         mutationFn: (formData) => {
-            return productsApi.createProduct(formData);
+            return productApi.create(formData);
         },
         onSuccess: () => {
             onClose();
@@ -84,10 +84,10 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
 
     const { mutate: updateProductMutation } = useMutation({
         mutationFn: ({ productId, formData }) => {
-            return productsApi.updateProduct(productId, formData);
+            return productApi.updateOne(productId, formData);
         },
         onSuccess: () => {
-            closeContentModal();
+            // closeContentModal();
             queryClient.invalidateQueries("products");
             toast({
                 title: "Sukces",

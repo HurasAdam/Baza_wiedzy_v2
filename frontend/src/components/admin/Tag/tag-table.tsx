@@ -3,8 +3,8 @@ import { X } from "lucide-react";
 import { FC, useState } from "react";
 import { useParams } from "react-router-dom";
 import useTaskTableFilter from "../../../hooks/use-task-table-filter";
-import { productsApi } from "../../../lib/productsApi";
-import { tagsApi } from "../../../lib/tagsApi";
+import { productApi } from "@/lib/product.api";
+import { tagApi } from "@/lib/tag.api";
 import { TaskType } from "../../../types/api.types";
 import { getAvatarColor, getAvatarFallbackText } from "../../../utils/avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
@@ -37,7 +37,7 @@ const TagTable = () => {
     const { data, isLoading } = useQuery({
         queryKey: ["all-tags", filters, pageNumber],
         queryFn: () => {
-            return tagsApi.getAllTags();
+            return tagApi.findAll();
         },
 
         staleTime: 0,
@@ -87,7 +87,7 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
     const { data: allProducts = [] } = useQuery({
         queryKey: ["all-products"],
         queryFn: () => {
-            return productsApi.getAllProducts();
+            return productApi.find();
         },
     });
     const products =
