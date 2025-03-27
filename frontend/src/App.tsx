@@ -1,9 +1,8 @@
-import { Suspense } from "react";
+import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { LoginPage } from "./pages/Login";
-
 import { AuthLayout } from "./layouts/AuthLayout";
 import { RootLayout } from "./layouts/RootLayout";
+import { LoginPage } from "./pages/Login";
 
 import { NotFoundPage } from "./pages/NotFoundPage";
 
@@ -41,48 +40,47 @@ function App() {
 
     return (
         <div className="bg-background theme">
-            <Suspense fallback={<div>Loading...</div>}>
-                <Routes>
-                    <Route path="/" element={<RootLayout />}>
-                        <Route index element={<Navigate to="/dashboard" replace />} />
-                        <Route path="dashboard" element={<HomePage />} />
-                        <Route path="articles" element={<ArticlesPage />} />
-                        <Route path="statistics" element={<StatisticsPage />} />
-                        <Route path="call-register" element={<TopicsRegisterPage />} />
-                        <Route path="favourites" element={<FavoritesPage />} />
-                        <Route path="new-article" element={<CreateArticle />} />
+            <Routes>
+                <Route path="/" element={<RootLayout />}>
+                    <Route index element={<Navigate to="/dashboard" replace />} />
+                    <Route path="dashboard" element={<HomePage />} />
+                    <Route path="articles" element={<ArticlesPage />} />
+                    <Route path="statistics" element={<StatisticsPage />} />
+                    <Route path="call-register" element={<TopicsRegisterPage />} />
+                    <Route path="favourites" element={<FavoritesPage />} />
+                    <Route path="new-article" element={<CreateArticle />} />
 
-                        {/* <Route path="articles/new" element={<CreateArticle />} /> */}
-                        {/* <Route path="articles/favorite" element={<FavouritesPage />} /> */}
-                        {/* <Route path="articles/:id" element={<ArticleDetails />} /> */}
-                        {/* <Route path="call-register" element={<CallRegister />} /> */}
-                        {/* <Route path="settings" element={<Settings />} />  */}
+                    {/* <Route path="articles/new" element={<CreateArticle />} /> */}
+                    {/* <Route path="articles/favorite" element={<FavouritesPage />} /> */}
+                    {/* <Route path="articles/:id" element={<ArticleDetails />} /> */}
+                    {/* <Route path="call-register" element={<CallRegister />} /> */}
+                    {/* <Route path="settings" element={<Settings />} />  */}
 
-                        {/* <Route path="departments" element={<Deparments />}>
+                    {/* <Route path="departments" element={<Deparments />}>
                     <Route index element={<Navigate to="helpdesk" replace />} />
                     <Route index path="helpdesk" element={<HelpdeskPage />} />
                     <Route path="sales" element={<SalesPage />} />
                     <Route path="administration" element={<AdministrationPage />} />
                     <Route path="appointment" element={<AppointmentPage />} />
                     </Route> */}
-                        <Route path="*" element={<NotFoundPage />} />
-                    </Route>
+                    <Route path="*" element={<NotFoundPage />} />
+                </Route>
 
-                    <Route element={<AuthLayout />}>
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/register" element={<RegisterPage />} />
-                    </Route>
+                <Route element={<AuthLayout />}>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                </Route>
 
-                    <Route path="/admin" element={<AdminLayout />}>
-                        <Route index element={<Navigate to="/admin/dashboard" replace />} />
-                        <Route path="dashboard" element={<AdminDashboard />} />
-                        <Route path="products" element={<ProductsPage />} />
-                        <Route path="topics" element={<TopicsPage />} />
-                        <Route path="tags" element={<TagsPage />} />
-                        <Route path="users" element={<UsersPage />} />
-                    </Route>
-                </Routes>
-            </Suspense>
+                <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                    <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route path="products" element={<ProductsPage />} />
+                    <Route path="topics" element={<TopicsPage />} />
+                    <Route path="tags" element={<TagsPage />} />
+                    <Route path="users" element={<UsersPage />} />
+                </Route>
+            </Routes>
+            <Toaster toastOptions={{ duration: 3500 }} />;
         </div>
     );
 }

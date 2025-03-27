@@ -1,10 +1,10 @@
-import { toast } from "@/hooks/use-toast";
 import { conversationTopicApi } from "@/lib/conversation-topic.api";
 import { productApi } from "@/lib/product.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -70,7 +70,8 @@ const TopicForm = ({ topicId, onClose }: Props) => {
         },
         onSuccess: () => {
             onClose();
-            queryClient.invalidateQueries(["coversationTopics"]);
+            toast.success("Temat rozmowy został dodany pomyślnie.");
+            queryClient.invalidateQueries(["all-topics"]);
         },
         onError: (error) => {
             if (error?.status === 409) {

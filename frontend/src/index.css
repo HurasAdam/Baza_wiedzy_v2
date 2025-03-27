@@ -432,6 +432,13 @@
     margin-top: 20px;
 }
 
+.toast-progress-bar {
+    height: 4px;
+    background-color: green;
+    animation: progressAnimation 3s linear forwards;
+    margin-top: 4px;
+}
+
 /* EDITOR SYTLES */
 
 .article-details p {
@@ -444,6 +451,15 @@
 .article-details strong {
     font-weight: bold;
     color: #000;
+}
+
+@keyframes progressAnimation {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
 }
 
 .article-details h1 {

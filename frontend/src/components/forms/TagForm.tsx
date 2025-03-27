@@ -1,19 +1,20 @@
+import { tagApi } from "@/lib/tag.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader } from "lucide-react";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { toast } from "@/hooks/use-toast";
-import { tagApi } from "@/lib/tag.api";
-import { Loader } from "lucide-react";
+import toast from "react-hot-toast";
 import { IoIosAdd } from "react-icons/io";
 import { MdOutlineEdit } from "react-icons/md";
+import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Input } from "../ui/input";
 interface ITagFormProps {
     tagId: string;
+    onClose?: () => void;
 }
 
-const TagForm: React.FC<ITagFormProps> = ({ tagId }) => {
+const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
     const queryClient = useQueryClient();
 
     const { data: tag } = useQuery({
@@ -30,18 +31,14 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId }) => {
         },
     });
 
-    const { mutate } = useMutation({
+    const { mutate, isPending: isCreatePending } = useMutation({
         mutationFn: (formData) => {
             return tagApi.create(formData);
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(["tags"]);
-            toast({
-                title: "Sukces",
-                description: data?.message,
-                variant: "success",
-                duration: 3400,
-            });
+            toast.success("Tag został pomyślnie dodany.");
+            onClose();
         },
         onError: (error) => {
             if (error?.status === 409) {
@@ -74,13 +71,10 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId }) => {
             return tagApi.updateOne({ id, formData });
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["tags"]);
-            toast({
-                title: "Sukces",
-                description: "Tag został zaktualizowany pomyślnie",
-                variant: "success",
-                duration: 3400,
-            });
+            queryClient.invalidateQueries(["all-tags"]);
+
+            toast.success("Tag został zaktualizowany pomyślnie.");
+            onClose();
         },
         onError: (error) => {
             if (error?.status === 409) {
@@ -90,12 +84,8 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId }) => {
                 });
             } else {
                 // Obsługa innych błędów
-                toast({
-                    title: "Błąd",
-                    description: "Wystąpił błąd. Spróbuj ponownie.",
-                    variant: "destructive",
-                    duration: 3400,
-                });
+
+                toast.error("Wystąpił błąd podczas edycji tagu. Spróbuj ponownie.");
             }
         },
     });
@@ -155,7 +145,8 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId }) => {
                             type="submit"
                         >
                             {isPending && <Loader className="animate-spin" />}
-                            Utwórz tag
+                            {isCreatePending && <Loader className="animate-spin" />}
+                            {tagId ? "Zapisz" : "Utwórz"}
                         </Button>
                     </form>
                 </Form>

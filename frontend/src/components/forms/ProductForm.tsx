@@ -1,13 +1,13 @@
 import { BANNER_IMAGES } from "@/constants/productBanners";
-import { toast } from "@/hooks/use-toast";
 import { productApi } from "@/lib/product.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader } from "lucide-react";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { ColorPicker } from "../ColorPicker";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-
 interface IProductFormProps {
     productId?: string;
     onClose?: () => void;
@@ -36,9 +36,6 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
         },
     });
 
-    const xd = form.getValues();
-    console.log(xd);
-
     useEffect(() => {
         if (product) {
             form.reset({
@@ -50,19 +47,15 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
         }
     }, [product, form.reset]);
 
-    const { mutate } = useMutation({
+    const { mutate, isPending: isCreatePending } = useMutation({
         mutationFn: (formData) => {
             return productApi.create(formData);
         },
         onSuccess: () => {
             onClose();
+            toast.success("Produkt został pomyślnie dodany.");
+
             queryClient.invalidateQueries("products");
-            toast({
-                title: "Sukces",
-                description: "Dodano nowy produkt",
-                variant: "success",
-                duration: 3400,
-            });
         },
         onError: (error) => {
             if (error?.status === 409) {
@@ -71,30 +64,19 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
                     message: "Produkt o podanej nazwie już istnieje  (nazwa produktu musi być unikalna)", // Wiadomość dla użytkownika
                 });
             } else {
-                // Obsługa innych błędów
-                toast({
-                    title: "Błąd",
-                    description: "Wystąpił błąd. Spróbuj ponownie.",
-                    variant: "destructive",
-                    duration: 3400,
-                });
+                toast.error("Wystapił błąd podczas dodawania produktu, spróbuj ponownie poźniej");
             }
         },
     });
 
-    const { mutate: updateProductMutation } = useMutation({
+    const { mutate: updateProductMutation, isPending } = useMutation({
         mutationFn: ({ productId, formData }) => {
             return productApi.updateOne(productId, formData);
         },
         onSuccess: () => {
-            // closeContentModal();
-            queryClient.invalidateQueries("products");
-            toast({
-                title: "Sukces",
-                description: "Produkt został zaktualizowany",
-                variant: "success",
-                duration: 3400,
-            });
+            queryClient.invalidateQueries(["all-products"]);
+            onClose();
+            toast.success("Produkt został pomyślnie zaktualizowany.");
         },
         onError: (error) => {
             if (error?.status === 409) {
@@ -104,12 +86,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
                 });
             } else {
                 // Obsługa innych błędów
-                toast({
-                    title: "Błąd",
-                    description: "Wystąpił błąd. Spróbuj ponownie.",
-                    variant: "destructive",
-                    duration: 3400,
-                });
+                toast.error("Wystapił błąd podczas aktualizacji produktu, spróbuj ponownie poźniej");
             }
         },
     });
@@ -214,7 +191,12 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
                     Anuluj
                 </Button>
 
-                <Button type="submit">{productId ? "Aktualizuj" : "Dodaj produkt"}</Button>
+                <Button type="submit">
+                    {isCreatePending && <Loader className="animate-spin" />}
+                    {isPending && <Loader className="animate-spin" />}
+
+                    {productId ? "Aktualizuj" : "Dodaj produkt"}
+                </Button>
             </div>
         </form>
     );

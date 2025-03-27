@@ -89,7 +89,7 @@ const ProductsPage = () => {
                 <ProductForm onClose={closeModal} />
             </Modal>
             <Modal isOpen={isEditModalOpen} onClose={closeEditModal} height="md" width="sm">
-                <ProductForm onClose={closeModal} productId={selectedProduct} />
+                <ProductForm onClose={closeEditModal} productId={selectedProduct} />
             </Modal>
         </div>
     );
