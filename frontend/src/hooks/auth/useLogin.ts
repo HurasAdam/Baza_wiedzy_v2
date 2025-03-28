@@ -1,15 +1,15 @@
+import { LoginSchema } from "@/components/forms/LoginForm";
+import { authApi } from "@/lib/auth.api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { USER_KEY } from "./keys";
-import { authApi } from "@/lib/auth.api";
-import { LoginSchema } from "@/components/forms/LoginForm";
 
 // Po zmianie na backendzie dokonać podmiany w loginAction
 export const useLogin = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
-    const { mutate, isError } = useMutation({
+    const { mutate, isError, isPending } = useMutation({
         mutationFn: authApi.login,
     });
 
@@ -35,5 +35,5 @@ export const useLogin = () => {
         });
     };
 
-    return { loginAction, isError };
+    return { loginAction, isError, isPending };
 };
