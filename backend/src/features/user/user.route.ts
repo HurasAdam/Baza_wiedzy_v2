@@ -7,10 +7,11 @@ const userController = UserController();
 
 //prefix: /users
 
-userRoutes.get("/", userController.getUsersHandler);
-userRoutes.get("/:id", userController.getUserHandler);
-userRoutes.get("/favourites-articles", userController.getUserFavouriteArticlesHandler);
-userRoutes.get("/statistics", userController.getUsersWithReportCountHandler);
+userRoutes.get("/", userController.findAll);
+userRoutes.get("/me", userController.findMe);
+userRoutes.get("/favourites-articles", userController.findWithFavouriteArticles);
+userRoutes.get("/statistics", userController.findWithReportCount);
 // userRoutes.get("/statistics/:id", getUserConversationReports);
-userRoutes.get("/article-statistics", userController.getUsersWithArticleCountHandler);
-userRoutes.get("/change-statistics", userController.getUsersWithChangeCountHandler);
+userRoutes.get("/article-statistics", userController.findWithArticleCount);
+userRoutes.get("/change-statistics", userController.findWithChangeCount);
+userRoutes.get("/:id", userController.findOne);
