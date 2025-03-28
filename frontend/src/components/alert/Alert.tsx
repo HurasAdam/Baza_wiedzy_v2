@@ -1,3 +1,4 @@
+import { Loader } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
 import { ConfirmationCheckbox } from "../core/ConfirmationCheckbox";
 import {
@@ -17,9 +18,24 @@ interface Props {
     onCancel: () => void;
     onConfirm: () => void;
     requireConfirmation?: boolean;
+    type?: "warning" | "info";
+    isLoading: boolean;
 }
+const titleColors = {
+    warning: "text-rose-600",
 
-export function Alert({ isOpen, onCancel, onConfirm, children, requireConfirmation = false }: Props) {
+    info: "text-blue-600",
+    success: "text-green-600",
+};
+export function Alert({
+    isOpen,
+    onCancel,
+    onConfirm,
+    children,
+    requireConfirmation = false,
+    type = "warning",
+    isLoading,
+}: Props) {
     const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
@@ -36,8 +52,10 @@ export function Alert({ isOpen, onCancel, onConfirm, children, requireConfirmati
         <AlertDialog open={isOpen}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Czy jesteś pewien?</AlertDialogTitle>
-                    <AlertDialogDescription>{children}</AlertDialogDescription>
+                    <AlertDialogTitle className={`${titleColors[type]} text-lg font-bold`}>
+                        Czy na pewno chcesz kontynuować?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="pt-1.5 pb-0.5">{children}</AlertDialogDescription>
                 </AlertDialogHeader>
                 {requireConfirmation && (
                     <ConfirmationCheckbox
@@ -50,6 +68,7 @@ export function Alert({ isOpen, onCancel, onConfirm, children, requireConfirmati
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={onCancel}>Anuluj</AlertDialogCancel>
                     <AlertDialogAction onClick={onConfirm} disabled={requireConfirmation && !isChecked}>
+                        {isLoading && <Loader className="animate-spin" />}
                         Potwierdź
                     </AlertDialogAction>
                 </AlertDialogFooter>
