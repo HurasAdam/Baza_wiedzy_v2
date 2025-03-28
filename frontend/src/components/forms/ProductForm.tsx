@@ -53,7 +53,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
         },
         onSuccess: () => {
             onClose();
-            toast.success("Produkt został pomyślnie dodany.");
+            toast.success("Produkt został dodany pomyślnie .");
 
             queryClient.invalidateQueries("products");
         },
@@ -76,7 +76,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
         onSuccess: () => {
             queryClient.invalidateQueries(["all-products"]);
             onClose();
-            toast.success("Produkt został pomyślnie zaktualizowany.");
+            toast.success("Produkt został zaktualizowany pomyślnie .");
         },
         onError: (error) => {
             if (error?.status === 409) {

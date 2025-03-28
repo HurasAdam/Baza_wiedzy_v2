@@ -83,20 +83,20 @@ export const AdminLayout = () => {
             {/* Main Content */}
             <div className="flex-1 flex flex-col lg:ml-56 transition-all">
                 {/* Navbar */}
-                <header className="h-12 flex items-center px-4 bg-white dark:bg-[#1F1F1F] border-b border-gray-700">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="lg:hidden text-gray-400 hover:text-gray-100"
-                    >
-                        <Menu />
-                    </Button>
+                {/* <header className="h-12 flex items-center px-4 bg-white dark:bg-[#1F1F1F] border-b border-gray-700">
+         
                     <h1 className="text-sm font-medium text-gray-800 dark:text-gray-300">Admin Dashboard</h1>
-                </header>
-
+                </header> */}
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="lg:hidden text-gray-400 hover:text-gray-100"
+                >
+                    <Menu />
+                </Button>
                 {/* Content */}
-                <main className="flex-1 p-6 bg-white dark:bg-[#121212] rounded-lg">
+                <main className="flex-1 lg:px-10 px-3 py-8 bg-white dark:bg-[#121212] rounded-lg min-h-full">
                     <Outlet />
                 </main>
             </div>

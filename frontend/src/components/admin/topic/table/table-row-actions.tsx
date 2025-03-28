@@ -13,6 +13,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { TaskType } from "../../../../types/api.types";
+import TopicForm from "../../../forms/TopicForm";
+import { Modal } from "../../../modal/Modal";
+import { useModal } from "../../../modal/hooks/useModal";
 
 interface DataTableRowActionsProps {
     row: Row<TaskType>;
@@ -20,7 +23,7 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     const [openDeleteDialog, setOpenDialog] = useState(false);
-
+    const { openModal, isOpen, closeModal } = useModal();
     const taskId = row.original._id as string;
     const taskCode = row.original.taskCode;
 
@@ -63,7 +66,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem className="cursor-pointer">
+                    <DropdownMenuItem className="cursor-pointer" onClick={openModal}>
                         Edytuj
                         <DropdownMenuShortcut>✏️</DropdownMenuShortcut>
                     </DropdownMenuItem>
@@ -78,6 +81,9 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+            <Modal isOpen={isOpen} onClose={closeModal} height="" width="sm">
+                <TopicForm onClose={closeModal} topicId={taskId} />
+            </Modal>
 
             {/* <ConfirmDialog
                 isOpen={openDeleteDialog}

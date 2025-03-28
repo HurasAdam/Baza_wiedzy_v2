@@ -110,9 +110,9 @@ export function DataTable<TData, TValue>({
                     <TableSkeleton columns={6} rows={10} />
                 ) : (
                     <Table className=" ">
-                        <TableHeader className="bg-gray-200">
+                        <TableHeader className="">
                             {table.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id} className="border-b border-muted-foreground ">
+                                <TableRow key={headerGroup.id} className="border-b border-foreground ">
                                     {headerGroup.headers.map((header) => {
                                         return (
                                             <TableHead key={header.id} className="text-slate-500 ">
@@ -131,10 +131,10 @@ export function DataTable<TData, TValue>({
                                     <TableRow
                                         key={row.id}
                                         data-state={row.getIsSelected() && "selected"}
-                                        className="border-b border-foreground hover:bg-orange-100"
+                                        className="border-b border-foreground hover:bg-orange-100 "
                                     >
                                         {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
+                                            <TableCell className="px-3.5 py-1.5" key={cell.id}>
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                             </TableCell>
                                         ))}
