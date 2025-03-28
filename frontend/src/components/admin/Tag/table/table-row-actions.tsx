@@ -12,8 +12,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { tagApi } from "@/lib/tag.api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { TaskType } from "../../../../types/api.types";
 import { Alert } from "../../../alert/Alert";
 import { useAlert } from "../../../alert/hooks/useAlert";
@@ -33,7 +33,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     const taskId = row.original._id as string;
     const taskCode = row.original.taskCode;
 
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: () => {
             return tagApi.remove(taskId);
         },
@@ -104,12 +104,16 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             </Modal>
 
             <Alert
+                isLoading={isPending}
                 isOpen={isDeleteAlertOpen}
                 onCancel={closeAlert}
                 requireConfirmation={true}
                 onConfirm={handleDeleteTag}
             >
-                <div>OKERAJO</div>
+                <div className="flex gap-2 ">
+                    Jesteś pewien że chcesz usunąć produkt :
+                    <span className="text-rose-600 font-semibold ">{row.original.name}</span>
+                </div>
             </Alert>
             {/* <ConfirmDialog
                 isOpen={openDeleteDialog}

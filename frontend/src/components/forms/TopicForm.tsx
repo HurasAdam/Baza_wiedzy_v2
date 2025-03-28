@@ -54,7 +54,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
         },
         mode: "onSubmit",
     });
-
+    const { isDirty } = form.formState;
     useEffect(() => {
         if (conversationTopic) {
             form.reset({
@@ -96,7 +96,8 @@ const TopicForm = ({ topicId, onClose }: Props) => {
             return conversationTopicApi.update({ id: topicId, formData });
         },
         onSuccess: () => {
-            closeContentModal();
+            onClose();
+            toast.success("Temat rozmowy został zaktualizowany pomyślnie.");
             queryClient.invalidateQueries(["coversationTopics"]);
         },
         onError: (error) => {
@@ -140,10 +141,12 @@ const TopicForm = ({ topicId, onClose }: Props) => {
                             className="text-2xl tracking-[-0.16px] dark:text-[#fcfdffef] font-semibold mb-1.5
                text-center sm:text-left"
                         >
-                            Dodaj nowy temat rozmowy
+                            {topicId ? "Edytuj temat rozmowy" : " Dodaj nowy temat rozmowy"}
                         </h1>
                         <p className="text-muted-foreground text-lg leading-tight">
-                            Określ temat, który użytkownicy będą wybierać przy rejestrowaniu rozmów.
+                            {topicId
+                                ? "Zmień nazwę lub produkt przypisany do tematu rozmowy."
+                                : "     Określ temat, który użytkownicy będą wybierać przy rejestrowaniu rozmów."}
                         </p>
                     </div>
                     <Form {...form}>
@@ -213,12 +216,12 @@ const TopicForm = ({ topicId, onClose }: Props) => {
                             </div>
 
                             <Button
-                                disabled={isPending}
+                                disabled={isPending || !isDirty}
                                 className="w-full h-[40px] text-white font-semibold"
                                 type="submit"
                             >
                                 {isPending && <Loader className="animate-spin" />}
-                                Utwórz temat
+                                {topicId ? "Zapisz zmiany" : "Utwórz"}
                             </Button>
                         </form>
                     </Form>

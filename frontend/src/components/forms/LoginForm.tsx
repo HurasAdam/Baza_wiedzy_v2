@@ -3,6 +3,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/auth/useLogin";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -18,7 +19,7 @@ const loginSchema = z.object({
 export type LoginSchema = z.infer<typeof loginSchema>;
 
 export const LoginForm = () => {
-    const { loginAction, isError } = useLogin();
+    const { loginAction, isError, isPending } = useLogin();
 
     const form = useForm<LoginSchema>({
         resolver: zodResolver(loginSchema),
@@ -80,7 +81,8 @@ export const LoginForm = () => {
                     <span className="text-sm text-gray-500 hover:text-gray-700 hover:underline cursor-pointer">
                         Zapomniałeś hasła?
                     </span>
-                    <Button className="my-0.5" type="submit">
+                    <Button disabled={isPending} className="my-0.5 flex gap-0.5" type="submit">
+                        {isPending && <Loader className="animate-spin" />}
                         Zaloguj
                     </Button>
                 </div>
