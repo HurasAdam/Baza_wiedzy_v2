@@ -1,22 +1,24 @@
 import { useLogout } from "@/hooks/auth/useLogout";
 import useScrollY from "@/hooks/useScrollY";
 import clsx from "clsx";
-import { LogOut, Settings, User } from "lucide-react";
+import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoIosSearch, IoIosSettings } from "react-icons/io";
 import { IoNotifications } from "react-icons/io5";
 import { MdAssignmentAdd, MdPhoneInTalk } from "react-icons/md";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useUser } from "../hooks/auth/useUser";
+import { getAvatarColor, getAvatarFallbackText } from "../utils/avatar";
 import { Dropdown } from "./core/Dropdown";
 import { SideDrawer } from "./core/SideDrawer";
-import UserAvatar from "./core/UserAvatar";
 import ShortcutCallRegisterForm from "./forms/ShortcutCallRegisterForm";
 import { useModal } from "./modal/hooks/useModal";
 import { Modal } from "./modal/Modal";
 import NotificationsPanel from "./NotificationsPanel";
 import { SearchBar } from "./SearchBar";
 import SettingsContainer from "./SettingsContainer";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
 // export const useModalSettings = () => {
@@ -39,7 +41,7 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
     const { openModal: openSettingsModal, isOpen, closeModal } = useModal();
     const { openModal: openCallsModal, isOpen: isCallsModalOpen, closeModal: closeCallsModal } = useModal();
     const { openModal: openSearchModal, isOpen: isSearchModalOpen, closeModal: closeSearchModal } = useModal();
-
+    const { user } = useUser();
     const location = useLocation();
     const navigate = useNavigate();
     const path = location.pathname.split("/")[1];
@@ -76,6 +78,9 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
         { label: "Wyloguj się", icon: <LogOut />, actionHandler: logoutAction },
     ];
 
+    const avatarColor = getAvatarColor("a");
+    const initials = getAvatarFallbackText("a");
+
     const NavLinkItem: React.FC = ({ element }) => {
         const { link, label } = element;
         const isActive = path === link.split("/")[0];
@@ -95,7 +100,7 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
     return (
         <div
             className={clsx(
-                "flex justify-between     h-14  w-full items-center px-4 py-3 2xl:py-[2.5px] sticky z-40 top-0   ",
+                "flex justify-between sticky top-0 left-0   w-full items-center  z-40 py-1.5 ",
                 isScrolled ? " bg-card" : ""
             )}
         >
@@ -113,10 +118,10 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
   
         </div> */}
                 <div className=" flex justify-around w-full items-center space-x-3.5 "></div>
-                <div className="">
+                <div className="ml-4">
                     <button
                         onClick={openSearchModal}
-                        className="flex items-center gap-1 w-[240px] h-full rounded-xl  border border-gray-200 cursor-pointer hover:bg-indigo-50 hover:border-indigo-100 hover:text-slate-500 bg-slate-50 p-0.5 px-3 text-slate-400 text-[14px]"
+                        className="flex items-center gap-1 w-[240px] h-full rounded-md  border border-gray-200 cursor-pointer hover:bg-indigo-50 hover:border-indigo-100 hover:text-slate-500 bg-slate-50 p-0.5 px-3 text-slate-400 text-[14px]"
                     >
                         <IoIosSearch className="text-slate-500" />
                         wyszukaj artukuł...
@@ -130,7 +135,7 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
                         <TooltipTrigger asChild>
                             <button
                                 onClick={openCallsModal}
-                                className="bg-transparent group  hover:bg-primary transition-all px-2.5 py-1.5 rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
+                                className="bg-transparent group  hover:bg-primary transition-all px-2.5 py-1 rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
                             >
                                 <MdPhoneInTalk className="text-lg group-hover:text-secondary" />
                             </button>
@@ -146,7 +151,7 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
                         <TooltipTrigger asChild>
                             <div
                                 onClick={openCreateArticleModal}
-                                className="bg-transparent group  hover:bg-primary transition-all px-2.5 py-1.5 rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
+                                className="bg-transparent group  hover:bg-primary transition-all px-2.5 py-1 rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
                             >
                                 <MdAssignmentAdd className="text-lg group-hover:text-secondary" />
                             </div>
@@ -161,7 +166,7 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <button
-                                className="bg-transparent group hover:bg-primary  transition-all px-2.5 py-1.5  rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
+                                className="bg-transparent group hover:bg-primary  transition-all px-2.5 py-1  rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
                                 onClick={openDrawer}
                             >
                                 <IoNotifications className="text-lg group-hover:text-secondary " />
@@ -177,7 +182,7 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <button
-                                className="bg-transparent group hover:bg-primary   transition-all px-2.5 py-1.5  rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
+                                className="bg-transparent group hover:bg-primary   transition-all px-2.5 py-1  rounded-md flex items-center justify-center shadow-sm text-primary hover:scale-105"
                                 onClick={openSettingsModal}
                             >
                                 <IoIosSettings className="text-lg group-hover:text-secondary" />
@@ -189,17 +194,23 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
                     </Tooltip>
                 </TooltipProvider>
 
-                <Dropdown
-                    options={profileMenuOptions}
-                    triggerBtn={
-                        <div className="group hover:bg-primary-600 hover:text-white transition-all rounded-full">
-                            <UserAvatar />
-                        </div>
-                    }
-                />
                 <SideDrawer isOpen={isDrawerOpen} onClose={closeDrawer}>
                     <NotificationsPanel />
                 </SideDrawer>
+
+                <Dropdown
+                    position={{ align: "end", side: "bottom", sideOffset: 7, alignOffset: 0 }}
+                    options={profileMenuOptions}
+                    triggerBtn={
+                        <div className="group hover:bg-primary-600 hover:text-white transition-all rounded-full flex items-center cursor-pointer  bg-muted pr-0.5 pl-1.5 py-1 hover:brightness-110  ">
+                            <Avatar className={`h-6 w-6 bg-primary`}>
+                                <AvatarImage src={user || ""} alt={user} />
+                                <AvatarFallback className={`h-6 w-6 bg-primary`}>{initials}</AvatarFallback>
+                            </Avatar>
+                            <ChevronDown className="w-4 h-4 chevron-icon" />
+                        </div>
+                    }
+                />
             </div>
             <Modal isOpen={isOpen} onClose={closeModal}>
                 <SettingsContainer />

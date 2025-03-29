@@ -1,19 +1,25 @@
 import { useModal } from "@/components/modal/hooks/useModal";
 import { useLogout } from "@/hooks/auth/useLogout";
 import clsx from "clsx";
-import { Home, LogOut, Settings } from "lucide-react";
+import { Home, LogOut, Settings, User } from "lucide-react";
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa6";
 import { ImStatsBars2 } from "react-icons/im";
 import { PiArticleMediumFill } from "react-icons/pi";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { IMAGES } from "../constants/images";
+import { useUser } from "../hooks/auth/useUser";
+import { getAvatarColor, getAvatarFallbackText } from "../utils/avatar";
 import SettingsContainer from "./SettingsContainer";
+import { Dropdown } from "./core/Dropdown";
 import { Modal } from "./modal/Modal";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export const MySidebar = () => {
     const { logoutAction } = useLogout();
+    const { user } = useUser();
     const { isOpen, openModal, closeModal } = useModal();
-
+    const navigate = useNavigate();
     const primaryMenuItems = [
         { icon: <Home size={22} />, label: "Główna", link: "/dashboard" },
         { icon: <PiArticleMediumFill size={22} />, label: "Artykuły", link: "/articles" },
@@ -27,11 +33,36 @@ export const MySidebar = () => {
         { icon: <LogOut size={22} />, label: "Wyloguj", onClick: logoutAction },
     ];
 
+    const profileMenuOptions = [
+        {
+            label: "Profil",
+            icon: <User />,
+            actionHandler: () => console.log("profil"),
+        },
+        {
+            label: "Panel Admina",
+            icon: <User />,
+            actionHandler: () => navigate("/admin/dashboard"),
+        },
+        {
+            label: "Ustawienia",
+            icon: <Settings />,
+            actionHandler: () => console.log("ustawienia"),
+        },
+        { label: "Wyloguj się", icon: <LogOut />, actionHandler: logoutAction },
+    ];
+
+    const avatarColor = getAvatarColor("a");
+    const initials = getAvatarFallbackText("a");
+
     return (
-        <div className="min-w-24 h-full">
+        <div className="min-w-[88px] h-full  ">
             {/* Sidebar bez zmian kolorystycznych */}
-            <div className="w-24 fixed top-0 h-full py-12 flex flex-col text-foreground bg-transparent">
-                <div className="flex-1 overflow-auto flex flex-col gap-4 items-center">
+            <div className="w-[88px] fixed top-0 h-full py-2 flex flex-col text-foreground bg-transparent border-r border-muted/70 ">
+                <div className="mx-auto mb-9 bg-muted p-3.5 rounded-xl backdrop-blur-md">
+                    <img className="w-7 h-7" src={IMAGES.Logo} alt="" />
+                </div>
+                <div className="flex-1 overflow-auto flex flex-col gap-4 items-center ">
                     {primaryMenuItems.map((item, index) => (
                         <NavLink
                             key={index}
@@ -63,6 +94,18 @@ export const MySidebar = () => {
                             <div className="inline-block">{item.icon}</div>
                         </button>
                     ))}
+                    <Dropdown
+                        position={{ align: "end", side: "bottom", sideOffset: 1, alignOffset: 0 }}
+                        options={profileMenuOptions}
+                        triggerBtn={
+                            <div className="group hover:bg-primary-600 hover:text-white transition-all rounded-full ">
+                                <Avatar className={`h-8 w-8 bg-primary`}>
+                                    <AvatarImage src={user || ""} alt={user} />
+                                    <AvatarFallback className={`h-8 w-8 bg-primary`}>{initials}</AvatarFallback>
+                                </Avatar>
+                            </div>
+                        }
+                    />
                 </div>
             </div>
             <Modal isOpen={isOpen} onClose={closeModal}>
