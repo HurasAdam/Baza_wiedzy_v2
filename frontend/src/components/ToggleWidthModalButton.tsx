@@ -2,10 +2,9 @@ import clsx from "clsx";
 import { useModalSettings } from "../contexts/ModalSettingsContext";
 
 const modalWidthOptions = [
-    { value: "sm", label: "Mały", previewClass: "w-[50%]" },
+    { value: "sm", label: "Mały", previewClass: "w-[60%]" },
     { value: "md", label: "Średni", previewClass: "w-[60%]" },
     { value: "lg", label: "Duży", previewClass: "w-[70%]" },
-    { value: "xl", label: "Bardzo duży", previewClass: "w-[85%]" },
 ] as const;
 
 export const ToggleWidthModalButton = ({}) => {

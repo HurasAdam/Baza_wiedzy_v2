@@ -374,6 +374,11 @@
     animation: spin 1s linear infinite;
 }
 
+[data-state="open"] .chevron-icon {
+    transform: rotate(180deg);
+    transition: transform 0.2s;
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);

@@ -41,7 +41,7 @@ const ArticleList = () => {
 
     return (
         <>
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between mb-4 ">
                 <h1 className="text-2xl font-semibold">Artykuły</h1>
                 <SelectBox
                     value={params.get("sort") || "default"}
