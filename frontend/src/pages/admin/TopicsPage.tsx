@@ -8,8 +8,8 @@ import { Button } from "../../components/ui/button";
 const TopicsPage = () => {
     const { openModal, isOpen, closeModal } = useModal();
     return (
-        <div className="px-6 space-y-5">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div className="px-6 ">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <h2 className="mb-6 text-xl font-bold text-gray-800 dark:text-white flex items-center gap-1">
                     <TbReportSearch className="w-7 h-7" />
                     Tematy rozmów

@@ -110,12 +110,15 @@ export function DataTable<TData, TValue>({
                     <TableSkeleton columns={6} rows={10} />
                 ) : (
                     <Table className=" ">
-                        <TableHeader className="bg-gray-200">
+                        <TableHeader className="bg-gray-200 ">
                             {table.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id} className="border-b border-muted-foreground ">
+                                <TableRow key={headerGroup.id} className="border-b border-foreground ">
                                     {headerGroup.headers.map((header) => {
                                         return (
-                                            <TableHead key={header.id} className="text-slate-500 ">
+                                            <TableHead
+                                                key={header.id}
+                                                className="text-slate-500 bg-slate-100 rounded-t-lg h-fit py-1.5"
+                                            >
                                                 {header.isPlaceholder
                                                     ? null
                                                     : flexRender(header.column.columnDef.header, header.getContext())}

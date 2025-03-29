@@ -25,8 +25,8 @@ const ProductsPage = () => {
     };
 
     return (
-        <div className="px-6 pb-6  space-y-6">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div className="px-6 pb-6  ">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <h2 className="mb-6 text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-1">
                     <Package />
                     Produkty

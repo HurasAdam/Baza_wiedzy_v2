@@ -39,7 +39,7 @@ function App() {
     const { theme } = useTheme();
 
     return (
-        <div className="bg-background theme">
+        <div className="bg-background theme ">
             <Routes>
                 <Route path="/" element={<RootLayout />}>
                     <Route index element={<Navigate to="/dashboard" replace />} />
@@ -80,7 +80,7 @@ function App() {
                     <Route path="users" element={<UsersPage />} />
                 </Route>
             </Routes>
-            <Toaster toastOptions={{ duration: 3500 }} />;
+            <Toaster toastOptions={{ duration: 3500 }} />
         </div>
     );
 }

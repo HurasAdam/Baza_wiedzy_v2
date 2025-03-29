@@ -64,7 +64,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
         }
     }, [conversationTopic, form.reset]);
 
-    const { mutate } = useMutation({
+    const { mutate, isPending: isCreatePending } = useMutation({
         mutationFn: (formData) => {
             return conversationTopicApi.create(formData);
         },
@@ -91,7 +91,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
         },
     });
 
-    const { mutate: updateTopicMutation } = useMutation({
+    const { mutate: updateTopicMutation, isPending: isUpdatePending } = useMutation({
         mutationFn: (formData) => {
             return conversationTopicApi.update({ id: topicId, formData });
         },
@@ -216,11 +216,13 @@ const TopicForm = ({ topicId, onClose }: Props) => {
                             </div>
 
                             <Button
-                                disabled={isPending || !isDirty}
+                                disabled={isCreatePending || isUpdatePending || !isDirty}
                                 className="w-full h-[40px] text-white font-semibold"
                                 type="submit"
                             >
-                                {isPending && <Loader className="animate-spin" />}
+                                {isCreatePending && <Loader className="animate-spin" />}
+                                {isUpdatePending && <Loader className="animate-spin" />}
+
                                 {topicId ? "Zapisz zmiany" : "Utwórz"}
                             </Button>
                         </form>
