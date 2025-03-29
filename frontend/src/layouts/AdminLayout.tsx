@@ -32,7 +32,7 @@ export const AdminLayout = () => {
     }, []);
 
     return (
-        <div className={cn("flex min-h-screen text-gray-900 dark:text-white bg-[#F3F4F6]")}>
+        <div className={cn("flex  min-h-screen text-gray-900 dark:text-white bg-[#F3F4F6]")}>
             {/* Sidebar */}
             <aside
                 className={cn(
@@ -81,7 +81,7 @@ export const AdminLayout = () => {
             </aside>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col lg:ml-56 transition-all">
+            <div className="flex-1 flex flex-col lg:ml-56 transition-all min-h-screen">
                 {/* Navbar */}
                 {/* <header className="h-12 flex items-center px-4 bg-white dark:bg-[#1F1F1F] border-b border-gray-700">
          
@@ -96,7 +96,7 @@ export const AdminLayout = () => {
                     <Menu />
                 </Button>
                 {/* Content */}
-                <main className="flex-1 lg:px-10 px-3 py-8 bg-white dark:bg-[#121212] rounded-lg min-h-full">
+                <main className="flex-1 lg:px-10 px-3 py-8 bg-white dark:bg-[#121212] rounded-lg min-h-screen">
                     <Outlet />
                 </main>
             </div>

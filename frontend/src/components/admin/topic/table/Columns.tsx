@@ -23,7 +23,7 @@ export const getColumns = (projectId?: string): ColumnDef<UserType>[] => {
                 return (
                     <Badge
                         style={{ backgroundColor: product.labelColor }}
-                        className="w-fit text-xs border-none flex items-center gap-1 text-white"
+                        className="w-fit text-[10px] border-none flex items-center gap-1 text-white uppercase rounded-lg"
                     >
                         {product.name}
                     </Badge>

@@ -81,7 +81,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-            <Modal isOpen={isOpen} onClose={closeModal} height="" width="sm">
+            <Modal isOpen={isOpen} onClose={closeModal} height="md" width="sm">
                 <TopicForm onClose={closeModal} topicId={taskId} />
             </Modal>
 
