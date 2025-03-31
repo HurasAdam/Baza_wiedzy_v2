@@ -5,8 +5,8 @@ import { useLogin } from "@/hooks/auth/useLogin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { z } from "zod";
-
 const loginSchema = z.object({
     email: z.string().email({
         message: "Invalid email format.",
@@ -79,7 +79,7 @@ export const LoginForm = () => {
                         )}
                     />
                     <span className="text-sm text-gray-500 hover:text-gray-700 hover:underline cursor-pointer">
-                        Zapomniałeś hasła?
+                        <Link to="/password/forgot"> Zapomniałeś hasła?</Link>
                     </span>
                     <Button disabled={isPending} className="my-0.5 flex gap-0.5" type="submit">
                         {isPending && <Loader className="animate-spin" />}

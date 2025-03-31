@@ -2,7 +2,6 @@ import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthLayout } from "./layouts/AuthLayout";
 import { RootLayout } from "./layouts/RootLayout";
-import { LoginPage } from "./pages/Login";
 
 import { NotFoundPage } from "./pages/NotFoundPage";
 
@@ -22,7 +21,9 @@ import TagsPage from "./pages/admin/TagsPage";
 import TopicsPage from "./pages/admin/TopicsPage";
 import TrashedArticles from "./pages/admin/TrashedArticles";
 import UsersPage from "./pages/admin/UsersPage";
-import { RegisterPage } from "./pages/Register";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
+import { LoginPage } from "./pages/auth/Login";
+import { RegisterPage } from "./pages/auth/Register";
 
 // const HomePage = lazy(() => import("./pages/HomePage").then((module) => ({ default: module.HomePage })));
 // const ArticlesPage = lazy(() => import("./pages/ArticlesPage").then((module) => ({ default: module.ArticlesPage })));
@@ -70,6 +71,7 @@ function App() {
                 <Route element={<AuthLayout />}>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/password/forgot" element={<ForgotPasswordPage />} />
                 </Route>
 
                 <Route path="/admin" element={<AdminLayout />}>
