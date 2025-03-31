@@ -82,8 +82,8 @@ export function DataTable<TData, TValue>({
                 {filtersToolbar && <div className="flex-1"> {filtersToolbar}</div>}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto w-full lg:w-auto bg-foreground">
-                            Columns <ChevronDown />
+                        <Button variant="outline" className="ml-auto w-full lg:w-auto bg-card text-xs">
+                            Kolumny <ChevronDown />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-card" align="end">
@@ -105,20 +105,17 @@ export function DataTable<TData, TValue>({
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-            <div className="rounded-lg border border-foreground">
+            <div className="rounded-lg border ">
                 {isLoading ? (
                     <TableSkeleton columns={6} rows={10} />
                 ) : (
                     <Table className=" ">
-                        <TableHeader className="bg-gray-200">
+                        <TableHeader className="bg-muted">
                             {table.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id} className="border-b border-foreground  ">
+                                <TableRow key={headerGroup.id} className="border-b  ">
                                     {headerGroup.headers.map((header) => {
                                         return (
-                                            <TableHead
-                                                key={header.id}
-                                                className="text-slate-500 bg-slate-100 rounded-t-lg h-fit py-1.5"
-                                            >
+                                            <TableHead key={header.id} className="text-slate-500   h-fit py-0.5">
                                                 {header.isPlaceholder
                                                     ? null
                                                     : flexRender(header.column.columnDef.header, header.getContext())}
@@ -134,7 +131,7 @@ export function DataTable<TData, TValue>({
                                     <TableRow
                                         key={row.id}
                                         data-state={row.getIsSelected() && "selected"}
-                                        className="border-b border-foreground hover:bg-orange-100"
+                                        className="border-b text-foreground hover:bg-orange-100"
                                     >
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell key={cell.id} className="px-3.5 py-1.5">

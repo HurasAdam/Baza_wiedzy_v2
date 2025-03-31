@@ -8,7 +8,6 @@ const themes: Theme[] = [
     Theme.FALCON,
     Theme.PHOENIX,
     Theme.LINEAR,
-    Theme.ROSE,
     Theme.ONYX,
     Theme.LUXURE_DARK,
 ];

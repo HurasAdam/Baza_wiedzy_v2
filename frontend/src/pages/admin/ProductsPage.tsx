@@ -27,15 +27,15 @@ const ProductsPage = () => {
     return (
         <div className="px-6 pb-6  ">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                <h2 className="mb-6 text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-1">
+                <h2 className="mb-6 text-2xl font-bold text-foreground flex items-center gap-1">
                     <Package />
                     Produkty
                 </h2>
                 <Button
                     onClick={openModal}
-                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-slate-600 rounded-md hover:bg-slate-700 transition"
+                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary/80 transition"
                 >
-                    <Plus className="w-4 h-4" /> Dodaj
+                    <Plus className="w-4 h-4" /> Dodaj produkt
                 </Button>
             </div>
 
@@ -43,7 +43,7 @@ const ProductsPage = () => {
                 {products?.map((product) => (
                     <div
                         key={product._id}
-                        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col  transition-shadow duration-300"
+                        className="bg-card border border-muted  rounded-lg shadow-lg overflow-hidden flex flex-col  transition-shadow duration-300"
                     >
                         {/* Banner produktu */}
                         <img
@@ -53,7 +53,7 @@ const ProductsPage = () => {
                         />
                         {/* Treść kafelka */}
                         <div className="p-4 flex flex-col flex-1">
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{product.name}</h3>
+                            <h3 className="text-xl font-semibold text-foreground">{product.name}</h3>
                             <div className="mt-2 flex justify-between items-center">
                                 <span
                                     style={{ backgroundColor: product.labelColor }}
@@ -63,12 +63,12 @@ const ProductsPage = () => {
                                 </span>
                                 {/* Ikona + liczba artykułów */}
                                 <div className="flex items-center space-x-1">
-                                    <FileText className="w-4 h-4 text-gray-600" />
-                                    <span className="text-sm text-gray-800 dark:text-white">127</span>
+                                    <FileText className="w-4 h-4 text-foreground0" />
+                                    <span className="text-sm text-foreground">127</span>
                                 </div>
                             </div>
                             {/* Akcje – możesz dodać szczegóły, edycję, etc. */}
-                            <div className="mt-auto pt-4 flex justify-end border-t border-gray-200 dark:border-gray-700">
+                            <div className=" pt-4 flex justify-end border-t border-muted mt-1.5 dark:border-gray-700">
                                 <button className="px-3 py-1 text-sm font-medium text-blue-600 hover:text-blue-800">
                                     Szczegóły
                                 </button>

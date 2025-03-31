@@ -94,7 +94,7 @@
         --accent-foreground: 0 0% 100%;
         --destructive: 0 70% 45%;
         --destructive-foreground: 0 0% 98%;
-        --border: 220 15% 25%;
+        --border: 220 15% 19%;
         --input: 220 15% 25%;
 
         --chart-1: 220 70% 50%;
@@ -152,7 +152,7 @@
         --destructive-foreground: 0 0% 100%;
 
         /* Obramowania oraz pola wejściowe */
-        --border: 220 15% 10%;
+        --border: 220 15% 15%;
         --input: 220 15% 20%;
 
         /* Sidebar – styl bocznego panelu */
