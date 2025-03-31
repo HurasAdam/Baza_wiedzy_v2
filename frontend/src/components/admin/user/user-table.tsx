@@ -140,7 +140,7 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
                         keyword: e.target.value,
                     })
                 }
-                className="h-8 w-full lg:w-[250px] bg-inherit  "
+                className="h-8 w-full lg:w-[250px] bg-inherit border-border  "
             />
             {/* Status filter */}
             <DataTableFacetedFilter

@@ -20,6 +20,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProductsPage from "./pages/admin/ProductsPage";
 import TagsPage from "./pages/admin/TagsPage";
 import TopicsPage from "./pages/admin/TopicsPage";
+import TrashedArticles from "./pages/admin/TrashedArticles";
 import UsersPage from "./pages/admin/UsersPage";
 import { RegisterPage } from "./pages/Register";
 
@@ -78,6 +79,7 @@ function App() {
                     <Route path="topics" element={<TopicsPage />} />
                     <Route path="tags" element={<TagsPage />} />
                     <Route path="users" element={<UsersPage />} />
+                    <Route path="trashed-articles" element={<TrashedArticles />} />
                 </Route>
             </Routes>
             <Toaster toastOptions={{ duration: 3500 }} />

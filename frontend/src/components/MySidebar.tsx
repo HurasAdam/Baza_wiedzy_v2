@@ -58,7 +58,7 @@ export const MySidebar = () => {
     return (
         <div className="min-w-[88px] h-full  ">
             {/* Sidebar bez zmian kolorystycznych */}
-            <div className="w-[88px] fixed top-0 h-full py-2 flex flex-col text-foreground bg-transparent border-r border-muted/70 ">
+            <div className="w-[88px] fixed top-0 h-full py-2 flex flex-col text-foreground bg-transparent border-r ">
                 <div className="mx-auto mb-9 bg-muted p-3.5 rounded-xl backdrop-blur-md">
                     <img className="w-7 h-7" src={IMAGES.Logo} alt="" />
                 </div>

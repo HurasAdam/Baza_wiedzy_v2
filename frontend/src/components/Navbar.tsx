@@ -87,7 +87,7 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
         return (
             <Link
                 className={clsx(
-                    "px-3 py-2.5 rounded-xl border border-transparent  text-slate-600 text-sm font-semibold  hover:border hover:border-slate-400/90",
+                    "px-3 py-2.5 rounded-xl border border-transparent   text-slate-600 text-sm font-semibold  hover:border hover:border-slate-400/90",
                     isActive ? "bg-slate-600 text-white" : ""
                 )}
                 to={link}
@@ -100,7 +100,7 @@ const Navbar: React.FC = ({ notifications, openCreateArticleModal }) => {
     return (
         <div
             className={clsx(
-                "flex justify-between sticky top-0 left-0   w-full items-center  z-40 py-1.5 ",
+                "flex justify-between sticky top-0 left-0 px-5   w-full items-center  z-40 py-1.5 ",
                 isScrolled ? " bg-card" : ""
             )}
         >

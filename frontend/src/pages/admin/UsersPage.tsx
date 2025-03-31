@@ -12,7 +12,7 @@ const UsersPage = () => {
     return (
         <div className="px-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                <h2 className="mb-6 text-xl font-bold text-gray-800 dark:text-white flex items-center gap-1">
+                <h2 className="mb-6 text-xl font-bold text-foreground flex items-center gap-1">
                     <Users />
                     Użytkownicy
                 </h2>

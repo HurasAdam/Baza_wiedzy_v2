@@ -14,6 +14,7 @@ export const AdminLayout = () => {
         { icon: LayoutDashboard, label: "Tematy rozmów,", link: "/admin/topics" },
         { icon: Tag, label: "Tagi", link: "/admin/tags" },
         { icon: Users, label: "Użytkownicy", link: "/admin/users" },
+        { icon: Users, label: "Usunięte artykułu", link: "/admin/trashed-articles" },
     ];
 
     useEffect(() => {
@@ -32,11 +33,11 @@ export const AdminLayout = () => {
     }, []);
 
     return (
-        <div className={cn("flex  min-h-screen text-gray-900 dark:text-white bg-[#F3F4F6]")}>
+        <div className={cn("flex  min-h-screen text-foreground bg-background")}>
             {/* Sidebar */}
             <aside
                 className={cn(
-                    "fixed inset-y-0 left-0 flex flex-col w-56 p-3 bg-[#18181B] dark:bg-[#1F1F1F] text-gray-300 shadow-sm border-r border-gray-700 transition-all duration-300",
+                    "fixed inset-y-0 left-0 flex flex-col w-56 p-3 bg-card text-foreground shadow-sm border-r transition-all duration-300",
                     sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
                 )}
             >
@@ -46,17 +47,17 @@ export const AdminLayout = () => {
                         <span className="text-xs font-semibold text-orange-600 animate-pulse">Baza wiedzy</span>
                     </div>
                     <div className="flex items-center justify-center">
-                        <Crown className="w-6 h-6 text-white" />
-                        <span className="ml-2 text-lg font-bold text-white">Panel Admina</span>
+                        <Crown className="w-6 h-6 text-primary" />
+                        <span className="ml-2 text-lg font-bold text-foreground">Panel Admina</span>
                     </div>
                 </div>
                 <div className="flex justify-between items-center p-2">
-                    <h2 className="text-sm font-semibold tracking-normal text-gray-100">Admin</h2>
+                    <h2 className="text-sm font-semibold tracking-normal text-foreground">Admin</h2>
                     <Button
                         variant="ghost"
                         size="icon"
                         onClick={() => setSidebarOpen(false)}
-                        className="lg:hidden text-gray-400 hover:text-gray-100"
+                        className="lg:hidden text-foreground hover:text-gray-100"
                     >
                         <Menu />
                     </Button>
@@ -96,7 +97,7 @@ export const AdminLayout = () => {
                     <Menu />
                 </Button>
                 {/* Content */}
-                <main className="flex-1 lg:px-10 px-3 py-8 bg-white dark:bg-[#121212] rounded-lg min-h-screen">
+                <main className="flex-1 lg:px-10 px-3 py-8 bg-background  min-h-screen">
                     <Outlet />
                 </main>
             </div>
@@ -119,7 +120,7 @@ const NavItem = ({ icon: Icon, label, link }: NavItemProps) => {
             to={link}
             className={cn(
                 "flex items-center px-3 py-2 rounded-md text-sm font-medium",
-                isActive ? "bg-[#27272A] text-white" : "text-gray-300 hover:bg-[#27272A]"
+                isActive ? "bg-[#27272A] text-white" : "text-foreground hover:text-foreground/80"
             )}
         >
             <Icon className="mr-3 w-4 h-4" />
