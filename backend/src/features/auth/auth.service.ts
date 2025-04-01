@@ -1,15 +1,15 @@
 import { APP_ORIGIN } from "@/constants/env";
 import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, TOO_MANY_REQUESTS, UNAUTHORIZED } from "@/constants/http";
 import VerificationCodeType from "@/constants/verificationCodeTypes";
-import appAssert from "@/utils/appAssert";
-import { hashValue } from "@/utils/bcrypt";
-import { sendMail } from "@/utils/sendMail";
-import { ONE_DAY_IN_MS, fiveMinutesAgo, oneHourFromNow, oneYearFromNow, thirtyDaysFromNow } from "@/utils/date";
-import { getPasswordResetTemplate, getVerifyEmailTemplate } from "@/utils/emailTemplates";
-import { RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken } from "@/utils/jwt";
 import SessionModel from "@/features/session/session.model";
 import UserModel from "@/features/user/user.model";
 import VerificationCodeModel from "@/features/verification-code/verification-code.model";
+import appAssert from "@/utils/appAssert";
+import { hashValue } from "@/utils/bcrypt";
+import { ONE_DAY_IN_MS, fiveMinutesAgo, oneHourFromNow, oneYearFromNow, thirtyDaysFromNow } from "@/utils/date";
+import { getPasswordResetTemplate, getVerifyEmailTemplate } from "@/utils/emailTemplates";
+import { RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken } from "@/utils/jwt";
+import { sendMail } from "@/utils/sendMail";
 
 type CreateAccountParams = {
     name: string;
@@ -41,7 +41,7 @@ export const createAccount = async (data: CreateAccountParams) => {
 
     const url = `${APP_ORIGIN}/email/verify/${verificationCode._id}`;
 
-    // send verification email
+    //send verification email
     const { error } = await sendMail({
         to: user.email,
         ...getVerifyEmailTemplate(url),
@@ -192,15 +192,16 @@ export const sendPasswordResetEmail = async (email: string) => {
 
         const url = `${APP_ORIGIN}/password/reset?code=${verificationCode._id}&exp=${expiresAt.getTime()}`;
 
-        const { data, error } = await sendMail({
+        const result = await sendMail({
             to: email,
             ...getPasswordResetTemplate(url),
         });
+        console.log("NODEMAILER RETURN:", result);
 
-        appAssert(data?.id, INTERNAL_SERVER_ERROR, `${error?.name} - ${error?.message}`);
+        appAssert(result?.messageId, INTERNAL_SERVER_ERROR, "Błąd wysyłki e-maila");
         return {
             url,
-            emailId: data.id,
+            emailId: result.messageId,
         };
     } catch (error: any) {
         console.log("SendPasswordResetError:", error.message);
