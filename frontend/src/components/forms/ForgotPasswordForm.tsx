@@ -2,13 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // Schema for email validation
@@ -16,7 +16,11 @@ const formSchema = z.object({
     email: z.string().email({ message: "Niepoprawny adres email" }),
 });
 
-export default function ForgotPasswordForm() {
+interface Props {
+    onSave: (email: string) => void;
+    isPending: boolean;
+}
+export default function ForgotPasswordForm({ onSave, isPending }: Props) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -25,14 +29,15 @@ export default function ForgotPasswordForm() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        try {
-            // Assuming a function to send reset email
-            console.log(values);
-            toast.success("Password reset email sent. Please check your inbox.");
-        } catch (error) {
-            console.error("Error sending password reset email", error);
-            toast.error("Failed to send password reset email. Please try again.");
-        }
+        // try {
+        //     // Assuming a function to send reset email
+        //     console.log(values);
+        //     toast.success("Password reset email sent. Please check your inbox.");
+        // } catch (error) {
+        //     console.error("Error sending password reset email", error);
+        //     toast.error("Failed to send password reset email. Please try again.");
+        // }
+        onSave(values.email);
     }
 
     return (
@@ -67,7 +72,8 @@ export default function ForgotPasswordForm() {
                                     )}
                                 />
                                 <Button type="submit" className="w-full">
-                                    Wyślij link resetujący
+                                    {isPending && <Loader className="animate-spin" />}
+                                    Wyślij
                                 </Button>
                             </div>
                         </form>
