@@ -2,6 +2,8 @@ import { ObjectId } from "mongodb";
 import mongoose, { Schema } from "mongoose";
 import { compareValue, hashValue } from "@/utils/bcrypt";
 
+type UserWithoutPassword = Omit<UserDocument, "password">;
+
 export interface UserDocument extends mongoose.Document {
     _id: ObjectId;
     name: string;
@@ -15,7 +17,7 @@ export interface UserDocument extends mongoose.Document {
     updatedAt: Date;
     lastLogin: Date | null;
     comparePassword(val: string): Promise<boolean>;
-    omitPassword(): Pick<UserDocument, "_id" | "email" | "verified" | "createdAt" | "updatedAt" | "__v">;
+    omitPassword(): UserWithoutPassword;
     favourites: mongoose.Types.ObjectId[];
     role: string;
 }
