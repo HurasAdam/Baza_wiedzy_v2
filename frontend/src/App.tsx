@@ -24,6 +24,7 @@ import UsersPage from "./pages/admin/UsersPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import { LoginPage } from "./pages/auth/Login";
 import { RegisterPage } from "./pages/auth/Register";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 
 // const HomePage = lazy(() => import("./pages/HomePage").then((module) => ({ default: module.HomePage })));
 // const ArticlesPage = lazy(() => import("./pages/ArticlesPage").then((module) => ({ default: module.ArticlesPage })));
@@ -72,6 +73,7 @@ function App() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/password/forgot" element={<ForgotPasswordPage />} />
+                    <Route path="/password/reset" element={<ResetPasswordPage />} />
                 </Route>
 
                 <Route path="/admin" element={<AdminLayout />}>
