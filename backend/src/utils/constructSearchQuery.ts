@@ -1,29 +1,27 @@
-export const constructSearchQuery = (queryParams: any) => {
-  let constructedQuery: any = {};
+export const constructSearchQuery = (query: any) => {
+    const constructedQuery: any = {};
 
-  if (queryParams.title) {
-    constructedQuery.$or = [{ title: new RegExp(queryParams.title, "i") }];
-  }
-  if (queryParams.tags) {
-    constructedQuery.tags = {
-      $all: Array.isArray(queryParams.tags)
-        ? queryParams.tags
-        : [queryParams.tags],
-    };
-  }
+    if (query.title) {
+        constructedQuery.$or = [{ title: new RegExp(query.title, "i") }];
+    }
 
-  // Filtrowanie po produkcie
-  if (queryParams.product) {
-    constructedQuery.product = queryParams.product; // Bez $all, bo to pojedyncze ID
-  }
+    if (query.tags) {
+        constructedQuery.tags = {
+            $all: Array.isArray(query.tags) ? query.tags : [query.tags],
+        };
+    }
 
-  if (queryParams.author) {
-    constructedQuery.createdBy = queryParams.author;
-  }
+    if (query.product) {
+        constructedQuery.product = query.product;
+    }
 
-  if (queryParams.verified) {
-    constructedQuery.isVerified = queryParams.verified;
-  }
+    if (query.author) {
+        constructedQuery.createdBy = query.author;
+    }
 
-  return constructedQuery;
+    if (query.verified) {
+        constructedQuery.isVerified = query.verified;
+    }
+
+    return constructedQuery;
 };

@@ -17,7 +17,7 @@ export const ConversationTopicController = () => ({
     }),
 
     find: catchErrors(async (req, res) => {
-        const query = constructSearchQuery(req.query);
+        const query = constructSearchQuery(req.query as any);
         const conversationTopics = await ConversationTopicModel.find(query)
             .populate([{ path: "product", select: ["name", "labelColor", "banner", "-_id"] }])
             .sort("product.name");

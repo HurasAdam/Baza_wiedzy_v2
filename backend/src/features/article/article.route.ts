@@ -6,23 +6,19 @@ const articleController = ArticleController();
 
 // prefix /articles
 
-// articleRoutes.get("/",getSessionsHandler)
-articleRoutes.get("/", articleController.findAll);
-articleRoutes.get("/:id", articleController.findOne);
+articleRoutes.get("/", articleController.find);
+articleRoutes.get("/trashed", articleController.findTrash);
+articleRoutes.get("/trashed/:id", articleController.findOneTrash);
+articleRoutes.get("/history/:id", articleController.findHistoryOne);
 articleRoutes.get("/:id/history", articleController.findOneHistory);
-articleRoutes.get("/popular", articleController.findByPopular);
-articleRoutes.get("/latest", articleController.findByLatest);
-articleRoutes.get("/trashed", articleController.findByTrash);
-articleRoutes.get("/history/:id", articleController.getHistoryItem);
+articleRoutes.get("/:id", articleController.findOne);
 articleRoutes.post("/", articleController.create);
-articleRoutes.post("/:id/verify", articleController.verify);
-articleRoutes.post("/:id/markAsFavourite", articleController.markAsFavourite);
+articleRoutes.post("/:id/verify", articleController.toggleVerify);
+articleRoutes.post("/:id/markAsFavourite", articleController.toggleFavourite);
 articleRoutes.put("/:id", articleController.updateOne);
-articleRoutes.put("/:id/trash", articleController.updateOneTrash);
-articleRoutes.put("/:id/restore", articleController.updateOneRestore);
+articleRoutes.put("/:id/trash", articleController.updateOneAsTrash);
+articleRoutes.put("/:id/restore", articleController.updateOneAsRestore);
 articleRoutes.delete("/:id", articleController.deleteOne);
 
-articleRoutes.get("/userArticles/:id", articleController.getArticlesCreatedByUser);
-articleRoutes.get("/userHistory/:id", articleController.getArticlesHistoryByUser);
-
-// export default articleRoutes;
+articleRoutes.get("/userArticles/:id", articleController.findCreatedByUser);
+articleRoutes.get("/userHistory/:id", articleController.findHistoryByUser);
