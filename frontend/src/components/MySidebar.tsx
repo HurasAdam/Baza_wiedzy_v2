@@ -5,6 +5,7 @@ import { FaPhoneSquareAlt } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa6";
 import { ImStatsBars2 } from "react-icons/im";
 import { PiArticleMediumFill } from "react-icons/pi";
+import { MdFavorite } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { IMAGES } from "../constants/images";
 
@@ -13,9 +14,10 @@ export const MySidebar = () => {
     const primaryMenuItems = [
         { icon: <Home size={22} />, label: "Główna", link: "/dashboard" },
         { icon: <PiArticleMediumFill size={22} />, label: "Artykuły", link: "/articles" },
+        { icon: <MdFavorite size={22} />, label: "Ulubione", link: "/favourites" },
         { icon: <ImStatsBars2 size={22} />, label: "Statystyki", link: "/statistics" },
-        { icon: <FaPhoneSquareAlt size={22} />, label: "Strona 4", link: "/strona-4" },
-        { icon: <FaAddressBook size={22} />, label: "Strona 5", link: "/strona-5" },
+        { icon: <FaPhoneSquareAlt size={22} />, label: "Tematy", link: "/topics" },
+        { icon: <FaAddressBook size={22} />, label: "Działy", link: "/departments" },
     ];
 
     const utilityMenuItems = [{ icon: <LogOut size={22} />, label: "Wyloguj", onClick: logoutAction }];
