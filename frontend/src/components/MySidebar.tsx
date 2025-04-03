@@ -1,19 +1,15 @@
-import { useModal } from "@/components/modal/hooks/useModal";
 import { useLogout } from "@/hooks/auth/useLogout";
 import clsx from "clsx";
-import { Home, LogOut, Settings } from "lucide-react";
+import { Home, LogOut } from "lucide-react";
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa6";
 import { ImStatsBars2 } from "react-icons/im";
 import { PiArticleMediumFill } from "react-icons/pi";
 import { NavLink } from "react-router-dom";
 import { IMAGES } from "../constants/images";
-import SettingsContainer from "./SettingsContainer";
-import { Modal } from "./modal/Modal";
 
 export const MySidebar = () => {
     const { logoutAction } = useLogout();
-    const { isOpen, openModal, closeModal } = useModal();
     const primaryMenuItems = [
         { icon: <Home size={22} />, label: "Główna", link: "/dashboard" },
         { icon: <PiArticleMediumFill size={22} />, label: "Artykuły", link: "/articles" },
@@ -22,10 +18,7 @@ export const MySidebar = () => {
         { icon: <FaAddressBook size={22} />, label: "Strona 5", link: "/strona-5" },
     ];
 
-    const utilityMenuItems = [
-        { icon: <Settings size={22} />, label: "Ustawienia", onClick: openModal },
-        { icon: <LogOut size={22} />, label: "Wyloguj", onClick: logoutAction },
-    ];
+    const utilityMenuItems = [{ icon: <LogOut size={22} />, label: "Wyloguj", onClick: logoutAction }];
 
     return (
         <div className="min-w-[88px] h-full  ">
@@ -68,9 +61,6 @@ export const MySidebar = () => {
                     ))}
                 </div>
             </div>
-            <Modal isOpen={isOpen} onClose={closeModal}>
-                <SettingsContainer />
-            </Modal>
         </div>
     );
 };
