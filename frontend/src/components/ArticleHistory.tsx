@@ -1,4 +1,3 @@
-import { useModalContext } from "@/contexts/ModalContext";
 import { articleApi } from "@/lib/article.api";
 import { useQuery } from "@tanstack/react-query";
 import { diff_match_patch } from "diff-match-patch";
@@ -12,7 +11,6 @@ import ArticleHistoryDetails from "./articles/history/ArticleHistoryDetails";
 
 const ArticleHistory = ({ articleId, showBackwardArrow = false, closeArticleHistory, onBackward }) => {
     const [activeTab, setActiveTab] = useState("personalization");
-    const { openContentModal } = useModalContext();
     const [selectedItem, setSelectedItem] = useState(null);
     const [showArticleDetails, setShowArticleDetails] = useState(false);
     const { data: history } = useQuery({
@@ -107,14 +105,7 @@ const ArticleHistory = ({ articleId, showBackwardArrow = false, closeArticleHist
         setSelectedItem(selected);
     };
 
-    const closeArticleHistoryView = (articleId) => {
-        openContentModal({
-            description: "",
-            content: <ArticleDetailsInModal type="modal" articleId={articleId} />,
-            enableOutsideClickClose: true,
-            size: "xl",
-        });
-    };
+    const closeArticleHistoryView = (articleId) => {};
 
     return (
         <div className="flex w-full h-full pt-2">
