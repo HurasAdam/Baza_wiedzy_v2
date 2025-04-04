@@ -1,5 +1,4 @@
 import { MySidebar } from "@/components/MySidebar";
-import { ModalContextProvider } from "@/contexts/ModalContext";
 import { useCheckUser } from "@/hooks/auth/useCheckUser";
 import { useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
@@ -27,21 +26,19 @@ export const RootLayout = () => {
     }
 
     return (
-        <ModalContextProvider>
-            <div className="flex bg-card">
-                <MySidebar />
-                <div className="w-full">
-                    <div className="flex flex-1 flex-col gap-4 min-h-screen bg-background">
-                        <Navbar openCreateArticleModal={openCreateArticleModal} />
-                        <div className="overflow-hidden ">
-                            <Outlet context={{ state, setState }} />
-                        </div>
+        <div className="flex bg-card">
+            <MySidebar />
+            <div className="w-full">
+                <div className="flex flex-1 flex-col gap-4 min-h-screen bg-background">
+                    <Navbar openCreateArticleModal={openCreateArticleModal} />
+                    <div className="overflow-hidden ">
+                        <Outlet context={{ state, setState }} />
                     </div>
                 </div>
-                <Modal isOpen={isCreateArticleModalOpen} onClose={closeCreateArticleModal}>
-                    <CreateArticle onClose={closeCreateArticleModal} />
-                </Modal>
             </div>
-        </ModalContextProvider>
+            <Modal isOpen={isCreateArticleModalOpen} onClose={closeCreateArticleModal}>
+                <CreateArticle onClose={closeCreateArticleModal} />
+            </Modal>
+        </div>
     );
 };

@@ -16,10 +16,12 @@ import NotificationsPanel from "./NotificationsPanel";
 import { SearchBar } from "./SearchBar";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import SettingsContainer from "./SettingsContainer";
 
 const Navbar: React.FC = ({ openCreateArticleModal }) => {
     const { openModal: openCallsModal, isOpen: isCallsModalOpen, closeModal: closeCallsModal } = useModal();
     const { openModal: openSearchModal, isOpen: isSearchModalOpen, closeModal: closeSearchModal } = useModal();
+    const { openModal: openSettingsModal, isOpen: isSettingsModalOpen, closeModal: closeSettingsModal } = useModal();
     const user = useUser();
     const navigate = useNavigate();
 
@@ -49,7 +51,7 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
         {
             label: "Ustawienia",
             icon: <Settings />,
-            actionHandler: () => console.log("ustawienia"),
+            actionHandler: () => openSettingsModal(),
         },
         { label: "Wyloguj się", icon: <LogOut />, actionHandler: logoutAction },
     ];
@@ -140,6 +142,9 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                     }}
                     immediate={false}
                 />
+            </Modal>
+            <Modal isOpen={isSettingsModalOpen} onClose={closeSettingsModal}>
+                <SettingsContainer />
             </Modal>
         </div>
     );
