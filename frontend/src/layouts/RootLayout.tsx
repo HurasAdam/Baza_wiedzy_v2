@@ -28,10 +28,10 @@ export const RootLayout = () => {
 
     return (
         <ModalContextProvider>
-            <div className="flex min-h-full bg-card  ">
+            <div className="flex bg-card">
                 <MySidebar />
-                <div className="w-full ">
-                    <div className="flex flex-1 flex-col gap-4  pt-1  min-h-screen bg-background   ">
+                <div className="w-full">
+                    <div className="flex flex-1 flex-col gap-4 min-h-screen bg-background">
                         <Navbar openCreateArticleModal={openCreateArticleModal} />
                         <div className="overflow-hidden ">
                             <Outlet context={{ state, setState }} />

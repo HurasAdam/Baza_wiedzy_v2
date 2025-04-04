@@ -1,23 +1,15 @@
-import useTheme, { Theme } from "@/hooks/useTheme";
+import useTheme, { Theme, themes } from "@/hooks/useTheme";
 import clsx from "clsx";
 
-const themes: Theme[] = [
-    Theme.LIGHT,
-    Theme.SLATE,
-    Theme.DARK,
-    Theme.FALCON,
-    Theme.PHOENIX,
-    Theme.LINEAR,
-    Theme.ONYX,
-    Theme.LUXURE_DARK,
-];
+// const themesList: Theme[] = [themes.LIGHT, themes.DARK, themes.FALCON, themes.PHOENIX, themes.LINEAR];
+const themesList: Theme[] = Object.values(themes);
 
 export const ThemeToggleButton = () => {
     const { theme, changeTheme } = useTheme();
 
     return (
         <div className="flex flex-wrap gap-5">
-            {themes.map((th) => (
+            {themesList.map((th) => (
                 <div>
                     <div className="mb-1.5 px-1 text-center text-sm">{th}</div>
                     <button
@@ -68,24 +60,16 @@ const ThemePreview = ({ theme }: { theme: Theme }) => {
 // Style dla różnych części UI w miniaturce
 const getNavbarClass = (theme: Theme): string => {
     switch (theme) {
-        case Theme.LIGHT:
+        case themes.LIGHT:
             return "bg-white";
-        case Theme.SLATE:
-            return "bg-gray-700";
-        case Theme.DARK:
+        case themes.DARK:
             return "bg-[#212421]";
-        case Theme.FALCON:
+        case themes.FALCON:
             return "bg-[#1b2232]";
-        case Theme.PHOENIX:
+        case themes.PHOENIX:
             return "bg-[#181d25]";
-        case Theme.LINEAR:
+        case themes.LINEAR:
             return "bg-[#1c1f22]";
-        case Theme.ROSE:
-            return "bg-[#39222A]";
-        case Theme.ONYX:
-            return "bg-[#23252F]";
-        case Theme.LUXURE_DARK:
-            return "bg-[#17171c]";
         default:
             return "bg-gray-300";
     }
@@ -93,24 +77,16 @@ const getNavbarClass = (theme: Theme): string => {
 
 const getBgClass = (theme: Theme): string => {
     switch (theme) {
-        case Theme.LIGHT:
+        case themes.LIGHT:
             return "bg-neutral-200";
-        case Theme.SLATE:
-            return "bg-gray-800";
-        case Theme.DARK:
+        case themes.DARK:
             return "bg-[#1a1a1a]";
-        case Theme.FALCON:
+        case themes.FALCON:
             return "bg-[#121C21]";
-        case Theme.PHOENIX:
+        case themes.PHOENIX:
             return "bg-[#101318]";
-        case Theme.LINEAR:
+        case themes.LINEAR:
             return "bg-[#121416]";
-        case Theme.ROSE:
-            return "bg-[#301D23]";
-        case Theme.ONYX:
-            return "bg-[#1a1c23]";
-        case Theme.LUXURE_DARK:
-            return "bg-[#030304]";
         default:
             return "bg-gray-100";
     }
@@ -118,24 +94,16 @@ const getBgClass = (theme: Theme): string => {
 
 const getBtnClass = (theme: Theme): string => {
     switch (theme) {
-        case Theme.LIGHT:
+        case themes.LIGHT:
             return "border-none";
-        case Theme.SLATE:
-            return "border-none";
-        case Theme.DARK:
+        case themes.DARK:
             return "border-gray-700";
-        case Theme.FALCON:
+        case themes.FALCON:
             return "border-none";
-        case Theme.PHOENIX:
+        case themes.PHOENIX:
             return "border-none";
-        case Theme.LINEAR:
+        case themes.LINEAR:
             return "border-none";
-        case Theme.ROSE:
-            return "border-[#301D23]";
-        case Theme.ONYX:
-            return "border-none";
-        case Theme.LUXURE_DARK:
-            return "border-[#E8AB30;]";
         default:
             return "bg-gray-100";
     }

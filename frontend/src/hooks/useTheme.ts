@@ -1,43 +1,38 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export enum Theme {
-    LIGHT = "light",
-    SLATE = "slate",
-    DARK = "dark",
-    FALCON = "falcon",
-    PHOENIX = "phoenix",
-    LINEAR = "linear",
-    ROSE = "rose",
-    ONYX = "onyx",
-    LUXURE_DARK = "luxure-dark",
-    SUNRISE_LIGHT = "sunrise-light",
-}
+export const themes = {
+    LIGHT: "light",
+    DARK: "dark",
+    FALCON: "falcon",
+    PHOENIX: "phoenix",
+    LINEAR: "linear",
+} as const;
+
+export type Theme = (typeof themes)[keyof typeof themes];
+
+const validTheme = (value: string, obj: typeof themes): value is Theme => {
+    return value in obj;
+};
+
+const KEY_THEME = "theme";
 
 const useTheme = () => {
-    const [theme, setTheme] = useState(() => {
-        return localStorage.getItem("theme") || "light";
+    const [theme, setTheme] = useState<Theme>(() => {
+        const value = localStorage.getItem(KEY_THEME) || themes.LIGHT;
+
+        if (validTheme(value, themes)) {
+            return value;
+        }
+
+        return themes.LIGHT;
     });
 
-    useEffect(() => {
-        document.body.classList.remove(
-            "light",
-            "slate",
-            "dark",
-            "falcon",
-            "phoenix",
-            "linear",
-            "rose",
-            "cyberpunk",
-            "onyx",
-            "forest",
-            "luxure-dark"
-        );
-        document.body.classList.add(theme);
-        localStorage.setItem("theme", theme);
-    }, [theme]);
+    const changeTheme = (nextTheme: Theme) => {
+        document.body.classList.remove(theme);
+        document.body.classList.add(nextTheme);
+        localStorage.setItem(KEY_THEME, nextTheme);
 
-    const changeTheme = (newTheme: Theme) => {
-        setTheme(newTheme);
+        setTheme(nextTheme);
     };
 
     return { theme, changeTheme };
