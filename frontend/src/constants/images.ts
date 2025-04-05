@@ -1,4 +1,5 @@
 import Logo from "../../../frontend/public/logo.png";
+import Logo_one from "../../../frontend/public/logo_one.png";
 import data_placeholder from "../../../frontend/public/no-data-placeholder.png";
 import adminImage from "../../public/adminPanel-image.png";
 import approvedImage from "../../public/approved.png";
@@ -38,4 +39,5 @@ export const IMAGES = {
     approvedImage,
     notFoundImage,
     workspaceImage,
+    Logo_one,
 };

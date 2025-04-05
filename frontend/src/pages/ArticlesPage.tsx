@@ -80,7 +80,7 @@ const ArticleListItem = ({ article, className }: { article: IArticle; className?
         <div className="mb-3.5">
             <Card
                 onClick={openModal}
-                className={`p-4 shadow-md border text-foreground hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-emerald-700/65 "} ${className}`}
+                className={`p-4 shadow-md border text-foreground hover:shadow-lg transition relative ${article.isVerified && "border-r-8 border-r-primary/55 "} ${className}`}
             >
                 <div className="flex justify-between items-center">
                     <h3 className="text-base font-semibold truncate max-w-[90%] overflow-hidden text-foreground">
