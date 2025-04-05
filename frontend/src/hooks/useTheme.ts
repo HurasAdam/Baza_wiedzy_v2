@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const themes = {
     LIGHT: "light",
@@ -6,12 +6,14 @@ export const themes = {
     FALCON: "falcon",
     PHOENIX: "phoenix",
     LINEAR: "linear",
+    AURORA: "aurora",
+    FLOW: "flow",
 } as const;
 
 export type Theme = (typeof themes)[keyof typeof themes];
 
 const validTheme = (value: string, obj: typeof themes): value is Theme => {
-    return value in obj;
+    return Object.values(obj).includes(value as Theme);
 };
 
 const KEY_THEME = "theme";
@@ -26,6 +28,12 @@ const useTheme = () => {
 
         return themes.LIGHT;
     });
+
+    useEffect(() => {
+        const allThemes = Object.values(themes);
+        allThemes.forEach((t) => document.body.classList.remove(t));
+        document.body.classList.add(theme);
+    }, [theme]);
 
     const changeTheme = (nextTheme: Theme) => {
         document.body.classList.remove(theme);

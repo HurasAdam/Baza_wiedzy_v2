@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useState } from "react";
 import { RiSettings4Fill } from "react-icons/ri";
-import { ThemeToggleButton } from "./ToggleThemeButton";
+import ThemeSelector from "./ThemeSelector";
 import { ToggleWidthModalButton } from "./ToggleWidthModalButton";
 
 const SettingsContainer = () => {
@@ -61,7 +61,8 @@ const SettingsContainer = () => {
                             {/* Kolor tła */}
                             <div className="flex flex-col w-full">
                                 <label className="text-foreground mb-4 ">Motyw interfejsu</label>
-                                <ThemeToggleButton />
+
+                                <ThemeSelector />
                             </div>
                             {/* Kolor navbaru */}
                         </div>
