@@ -1,15 +1,13 @@
-import { LuHelpingHand } from "react-icons/lu";
-import { MdOutlineDashboard } from "react-icons/md";
-import { AiFillHome } from "react-icons/ai";
-import { SiPowerpages } from "react-icons/si";
-import { PiUsersFill } from "react-icons/pi";
-import { FaTrashCan } from "react-icons/fa6";
-import { IoStatsChart } from "react-icons/io5";
-import { IoArrowBackOutline } from "react-icons/io5";
-import { GoStarFill } from "react-icons/go";
-import { FaAddressBook } from "react-icons/fa";
-import { MdPhoneCallback } from "react-icons/md";
 import { NavMainItem } from "@/components/nav-main";
+import { AiFillHome } from "react-icons/ai";
+import { FaAddressBook } from "react-icons/fa";
+import { FaTrashCan } from "react-icons/fa6";
+import { GoStarFill } from "react-icons/go";
+import { IoArrowBackOutline, IoStatsChart } from "react-icons/io5";
+import { LuHelpingHand } from "react-icons/lu";
+import { MdOutlineDashboard, MdPhoneCallback } from "react-icons/md";
+import { PiUsersFill } from "react-icons/pi";
+import { SiPowerpages } from "react-icons/si";
 
 export const NAVBAR_OPTIONS = {
     user: {
@@ -69,7 +67,7 @@ export const NAVBAR_OPTIONS = {
             isActive: true,
         },
     ] as NavMainItem[],
-}
+};
 
 export const ADMIN_NAVBAR_OPTIONS = [
     {
@@ -97,7 +95,7 @@ export const ADMIN_NAVBAR_OPTIONS = [
         url: "/admin/articles-removed",
         icon: FaTrashCan,
     },
-]
+];
 
 export const ADMIN_NAVBAR_OPTIONS_SECONDARY = [
     {
@@ -106,4 +104,4 @@ export const ADMIN_NAVBAR_OPTIONS_SECONDARY = [
         icon: IoArrowBackOutline,
         isActive: true,
     },
-]
+];
