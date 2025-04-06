@@ -223,11 +223,11 @@
         --card: 24 9.8% 10%;
         --card-foreground: 0 0% 95%;
         --popover: 0 0% 9%;
-        --popover-foreground: 0 0% 95%;
+        --popover-foreground: 0 0% 94%;
         --primary: 142.1 70.6% 45.3%;
         --primary-foreground: 144.9 80.4% 10%;
         --secondary: 240 3.7% 15.9%;
-        --secondary-foreground: 0 0% 98%;
+        --secondary-foreground: 0 0% 89%;
         --muted: 0 0% 15%;
         --muted-foreground: 240 5% 64.9%;
         --accent: 12 6.5% 15.1%;
@@ -435,49 +435,48 @@
 }
 
 .article-details-in-modal strong {
-    font-weight: bold;
-    color: #000;
+    @apply font-bold text-foreground;
 }
 
 .article-details-in-modal h1 {
-    @apply text-5xl font-extrabold dark:text-white mb-6;
+    @apply text-5xl font-extrabold mb-6 text-foreground;
 }
 
 .article-details-in-modal h2 {
-    @apply text-4xl font-bold dark:text-white mb-6;
+    @apply text-4xl font-bold text-foreground mb-6;
 }
 
 .article-details-in-modal h3 {
-    @apply text-3xl font-semibold dark:text-white mb-6;
+    @apply text-3xl font-semibold text-foreground mb-6;
 }
 
 .article-details-in-modal h4 {
-    @apply text-2xl font-medium dark:text-white;
+    @apply text-2xl font-medium text-foreground;
 }
 
 .article-details-in-modal p {
-    @apply text-base font-normal text-gray-800 dark:text-white bg-neutral-100;
+    @apply text-base font-normal  text-foreground;
 }
 
 .article-details-in-modal ul,
 .article-details-in-modal ol {
-    @apply list-inside pl-4 my-6 bg-neutral-100 font-normal;
+    @apply list-inside pl-4 my-6 text-foreground  font-normal;
 }
 
 .article-details-in-modal ul {
-    @apply list-disc bg-neutral-100;
+    @apply list-disc text-foreground;
 }
 
 .article-details-in-modal ul li {
-    @apply my-3 bg-neutral-100;
+    @apply my-3 text-foreground;
 }
 
 .article-details-in-modal ol {
-    @apply list-decimal;
+    @apply list-decimal text-foreground;
 }
 
 .article-details-in-modal li {
-    @apply text-sm text-gray-700 dark:text-gray-300;
+    @apply text-sm text-foreground;
 }
 
 /* ARTICLE QUICK VIEW  */
@@ -485,32 +484,31 @@
     font-size: 1rem;
     line-height: 1.6;
     margin-bottom: 1rem;
-    color: #666;
+    color: #fff;
 }
 
 .articleDetails-quickView strong {
-    font-weight: bold;
-    color: #000;
+    @apply text-foreground mb-6 font-bold;
 }
 
 .articleDetails-quickView h1 {
-    @apply text-5xl font-extrabold dark:text-white mb-6;
+    @apply text-5xl font-extrabold text-foreground mb-6;
 }
 
 .articleDetails-quickView h2 {
-    @apply text-4xl font-bold dark:text-white mb-6;
+    @apply text-4xl font-bold text-foreground mb-6;
 }
 
 .articleDetails-quickView h3 {
-    @apply text-3xl font-semibold dark:text-white mb-6;
+    @apply text-3xl font-semibold text-foreground mb-6;
 }
 
 .articleDetails-quickView h4 {
-    @apply text-2xl font-medium dark:text-white;
+    @apply text-2xl font-medium text-foreground;
 }
 
 .articleDetails-quickView p {
-    @apply text-base text-gray-800 dark:text-white bg-transparent;
+    @apply text-base text-gray-800 text-foreground bg-transparent;
 }
 
 .articleDetails-quickView ul,
@@ -531,7 +529,7 @@
 }
 
 .articleDetails-quickViewli {
-    @apply text-sm text-gray-700 dark:text-gray-300;
+    @apply text-sm text-gray-700 text-foreground;
 }
 
 /* .articleDetails-quickView {
