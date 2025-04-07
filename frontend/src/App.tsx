@@ -86,7 +86,7 @@ function App() {
                     <Route path="trashed-articles" element={<TrashedArticles />} />
                 </Route>
             </Routes>
-            <Toaster toastOptions={{ duration: 3500 }} />
+            <Toaster toastOptions={{ duration: 3500, position: "bottom-right" }} />
         </div>
     );
 }

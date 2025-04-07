@@ -6,11 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { userApi } from "@/lib/user.api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { IMAGES } from "../../../constants/images";
-import { userApi } from "@/lib/user.api";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 
 const membersOptions = [
@@ -89,12 +89,12 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
             <div className="h-full px-10 py-10 flex-1">
                 <div className="mb-5">
                     <h1
-                        className="text-2xl tracking-[-0.16px] dark:text-[#fcfdffef] font-semibold mb-1.5
+                        className="text-2xl tracking-[-0.16px] text-primary-foreground font-semibold mb-1.5
            text-center sm:text-left"
                     >
                         Dodaj nowe konto pracownika
                     </h1>
-                    <p className="text-muted-foreground text-lg leading-tight">
+                    <p className="text-muted-foreground text-base leading-tight">
                         Wprowadź dane pracownika, aby utworzyć jego konto w systemie.
                     </p>
                 </div>
@@ -106,7 +106,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="dark:text-[#f1f7feb5] text-sm">Imię</FormLabel>
+                                        <FormLabel className="text-primary-foreground text-sm">Imię</FormLabel>
                                         <FormControl>
                                             <Input placeholder="wprowadź imię" className="!h-[48px]" {...field} />
                                         </FormControl>
@@ -121,7 +121,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
                                 name="surname"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="dark:text-[#f1f7feb5] text-sm">Nazwisko</FormLabel>
+                                        <FormLabel className="text-primary-foreground text-sm">Nazwisko</FormLabel>
                                         <FormControl>
                                             <Input placeholder="wprowadź nazwisko" className="!h-[48px]" {...field} />
                                         </FormControl>
@@ -136,7 +136,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="dark:text-[#f1f7feb5] text-sm">Email</FormLabel>
+                                        <FormLabel className="text-primary-foreground text-sm">Email</FormLabel>
                                         <FormControl>
                                             <Input
                                                 placeholder="wprowadź adres email"
@@ -158,7 +158,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
                                 name="role"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Rola</FormLabel>
+                                        <FormLabel className="text-primary-foreground">Rola</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger>
@@ -191,7 +191,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
 
                         <Button
                             disabled={isPending}
-                            className="w-full h-[40px]  text-white font-semibold"
+                            className="w-full h-[40px]  text-primary-foreground bg-primary/85  font-semibold"
                             type="submit"
                         >
                             {isPending && <Loader className="animate-spin" />}

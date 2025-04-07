@@ -1,5 +1,4 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
@@ -18,7 +17,7 @@ createRoot(root).render(
                     <App />
                 </NuqsAdapter>
             </ModalSettingsProvider>
-            <ReactQueryDevtools />
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryClientProvider>
     </BrowserRouter>
 );

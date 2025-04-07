@@ -132,7 +132,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-12  h-full ">
             <div className="space-y-1.5 relative ">
-                <label htmlFor="" className="text-sm text-gray-500">
+                <label htmlFor="" className="text-sm text-primary-foreground">
                     Nazwa produktu
                 </label>
 
@@ -150,7 +150,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
                 )}
             </div>
             <div className="flex items-center  ">
-                <label htmlFor="" className="text-sm text-gray-500">
+                <label htmlFor="" className="text-sm text-primary-foreground">
                     Kolor etykiety
                 </label>
                 <ColorPicker
@@ -163,7 +163,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
             </div>
 
             <div className="space-y-1.5">
-                <label htmlFor="banner" className="text-sm text-gray-500">
+                <label htmlFor="banner" className="text-sm text-primary-foreground">
                     Wybierz baner
                 </label>
                 <div className="grid grid-cols-4 gap-4">
@@ -184,14 +184,14 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
             <div className="flex justify-end gap-3 py-10">
                 <Button
                     variant="ghost"
-                    className="hover:bg-gray-200"
+                    className="text-primary-foreground"
                     // onClick={resetFiltersHandler}
                     type="button"
                 >
                     Anuluj
                 </Button>
 
-                <Button type="submit">
+                <Button type="submit" className="text-primary-foreground bg-primary/80">
                     {isCreatePending && <Loader className="animate-spin" />}
                     {isPending && <Loader className="animate-spin" />}
 

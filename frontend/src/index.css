@@ -11,9 +11,9 @@
         --popover: 0 0% 100%;
         --popover-foreground: 222.2 84% 4.9%;
         --primary: 220 60% 40%;
-        --primary-foreground: 210 40% 98%;
+        --primary-foreground: 222 15% 20%;
         --secondary: 210 40% 96.1%;
-        --secondary-foreground: 222.2 47.4% 11.2%;
+        --secondary-foreground: 220 13% 86%;
         --muted: 210 40% 96.1%;
         --muted-foreground: 215.4 16.3% 46.9%;
         --accent: 210 40% 96.1%;
@@ -47,9 +47,9 @@
         --popover: 222.2 84% 4.9%;
         --popover-foreground: 210 40% 98%;
         --primary: 217.2 91.2% 59.8%;
-        --primary-foreground: 222.2 47.4% 11.2%;
-        --secondary: 217.2 32.6% 17.5%;
-        --secondary-foreground: 210 40% 98%;
+        --primary-foreground: 210 40% 85%;
+        --secondary: 210 40% 91%;
+        --secondary-foreground: 220 15% 40%;
         --muted: 217.2 32.6% 17.5%;
         --muted-foreground: 215 20.2% 65.1%;
         --accent: 217.2 32.6% 17.5%;
@@ -83,9 +83,9 @@
         --popover: 220 15% 6%;
         --popover-foreground: 0 0% 95%;
         --primary: 220 70% 50%;
-        --primary-foreground: 210 20% 98%;
-        --secondary: 240 5% 15%;
-        --secondary-foreground: 0 0% 98%;
+        --primary-foreground: 210 20% 95%;
+        --foreground: 0 0% 84%;
+        --secondary-foreground: 220 5% 28%;
         --muted: 220 5% 15%;
         --muted-foreground: 240 10% 60%;
         --accent: 210 10% 15%;
@@ -119,9 +119,9 @@
         --popover: 0 0% 98%;
         --popover-foreground: 222.2 84% 4.9%;
         --primary: 220 90% 56%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 210 10% 20%;
-        --secondary-foreground: 0 0% 100%;
+        --primary-foreground: 222.2 15% 30%;
+        --secondary: 0 0% 92%;
+        --foreground: 222.2 84% 4.9%;
         --muted: 210 10% 95%;
         --muted-foreground: 222.2 84% 4.9%;
         --accent: 220 80% 50%;
@@ -155,9 +155,9 @@
         --popover: 220 15% 7%;
         --popover-foreground: 0 0% 95%;
         --primary: 30 90% 50%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 220 10% 20%;
-        --secondary-foreground: 0 0% 98%;
+        --primary-foreground: 0 0% 94.6%;
+        --secondary: 0 0% 91.8%;
+        --secondary-foreground: 220 10% 18%;
         --muted: 220 10% 15%;
         --muted-foreground: 0 0% 90%;
         --accent: 30 90% 50%;
@@ -190,9 +190,9 @@
         --popover: 20 14.3% 4.1%;
         --popover-foreground: 60 9.1% 97.8%;
         --primary: 24.6 85% 45%;
-        --primary-foreground: 60 9.1% 97.8%;
-        --secondary: 12 6.5% 15.1%;
-        --secondary-foreground: 60 9.1% 97.8%;
+        --primary-foreground: 60 10% 88%;
+        --secondary: 60 9.1% 97.8%;
+        --secondary-foreground: 88 2% 18%;
         --muted: 12 6.5% 15.1%;
         --muted-foreground: 24 5.4% 63.9%;
         --accent: 12 6.5% 15.1%;
@@ -225,9 +225,9 @@
         --popover: 0 0% 9%;
         --popover-foreground: 0 0% 94%;
         --primary: 142.1 70.6% 45.3%;
-        --primary-foreground: 144.9 80.4% 10%;
-        --secondary: 240 3.7% 15.9%;
-        --secondary-foreground: 0 0% 89%;
+        --primary-foreground: 0 0% 85.6%;
+        --secondary: 142.1 60% 92%;
+        --secondary-foreground: 0 0% 15%;
         --muted: 0 0% 15%;
         --muted-foreground: 240 5% 64.9%;
         --accent: 12 6.5% 15.1%;
@@ -435,48 +435,48 @@
 }
 
 .article-details-in-modal strong {
-    @apply font-bold text-foreground;
+    @apply font-bold text-primary-foreground;
 }
 
 .article-details-in-modal h1 {
-    @apply text-5xl font-extrabold mb-6 text-foreground;
+    @apply text-5xl font-extrabold mb-6 text-primary-foreground;
 }
 
 .article-details-in-modal h2 {
-    @apply text-4xl font-bold text-foreground mb-6;
+    @apply text-4xl font-bold text-primary-foreground mb-6;
 }
 
 .article-details-in-modal h3 {
-    @apply text-3xl font-semibold text-foreground mb-6;
+    @apply text-3xl font-semibold text-primary-foreground mb-6;
 }
 
 .article-details-in-modal h4 {
-    @apply text-2xl font-medium text-foreground;
+    @apply text-2xl font-medium text-primary-foreground;
 }
 
 .article-details-in-modal p {
-    @apply text-base font-normal  text-foreground;
+    @apply text-base font-normal  text-primary-foreground;
 }
 
 .article-details-in-modal ul,
 .article-details-in-modal ol {
-    @apply list-inside pl-4 my-6 text-foreground  font-normal;
+    @apply list-inside pl-4 my-6 text-primary-foreground  font-normal;
 }
 
 .article-details-in-modal ul {
-    @apply list-disc text-foreground;
+    @apply list-disc text-primary-foreground;
 }
 
 .article-details-in-modal ul li {
-    @apply my-3 text-foreground;
+    @apply my-3 text-primary-foreground;
 }
 
 .article-details-in-modal ol {
-    @apply list-decimal text-foreground;
+    @apply list-decimal text-primary-foreground;
 }
 
 .article-details-in-modal li {
-    @apply text-sm text-foreground;
+    @apply text-sm text-primary-foreground;
 }
 
 /* ARTICLE QUICK VIEW  */
