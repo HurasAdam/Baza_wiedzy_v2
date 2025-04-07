@@ -16,9 +16,10 @@ const TopicsPage = () => {
                 </h2>
                 <Button
                     onClick={openModal}
-                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-primary/75 rounded-md hover:bg-slate-700 transition"
+                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-primary-foreground bg-primary/80 rounded-md hover:bg-primary/90 transition group "
                 >
-                    <Plus className="w-4 h-4" /> Dodaj temat
+                    <Plus className="w-4 h-4 group-hover:bg-primary-foreground group-hover:text-primary group-hover:rounded-full group-hover:animate-spin" />{" "}
+                    Dodaj temat
                 </Button>
             </div>
             <div>

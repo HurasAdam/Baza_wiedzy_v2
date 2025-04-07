@@ -47,13 +47,7 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
                     message: "Tag o podanej nazwie już istnieje  (nazwa tagu musi być unikalna)", // Wiadomość dla użytkownika
                 });
             } else {
-                // Obsługa innych błędów
-                toast({
-                    title: "Błąd",
-                    description: "Wystąpił błąd. Spróbuj ponownie.",
-                    variant: "destructive",
-                    duration: 3400,
-                });
+                toast.error("Wystąpił błąd. Spróbuj ponownie.");
             }
         },
     });
@@ -102,7 +96,7 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
             <div className="h-full px-10 py-10">
                 <div className="mb-5 pb-2 border-b">
                     <h1
-                        className="text-xl tracking-[-0.16px] dark:text-[#fcfdffef] font-semibold mb-1
+                        className="text-xl tracking-[-0.16px] text-primary-foreground font-semibold mb-1
            text-center sm:text-left"
                     >
                         {tagId ? (
@@ -129,7 +123,7 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="dark:text-[#f1f7feb5] text-sm">Nazwa tagu</FormLabel>
+                                        <FormLabel className="text-primary-foreground  text-sm">Nazwa tagu</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Wpisz nazwę tagu" className="!h-[48px]" {...field} />
                                         </FormControl>
@@ -141,7 +135,7 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
 
                         <Button
                             disabled={isPending}
-                            className="flex place-self-end  h-[40px] text-white font-semibold"
+                            className="flex place-self-end  h-[40px] text-primary-foreground bg-primary/85 font-semibold"
                             type="submit"
                         >
                             {isPending && <Loader className="animate-spin" />}

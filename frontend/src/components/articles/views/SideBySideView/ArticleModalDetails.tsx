@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { TooltipProvider } from "@/components/ui/tooltip";
-
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     AlertTriangleIcon,
@@ -87,6 +86,10 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
             queryClient.invalidateQueries(["article", articleId]);
             closeVerifyAlert();
             closeUnverifyAlert();
+            const verifyMessage = isVerified
+                ? "Cofnięto weryfikację artykułu"
+                : "Artykuł został zweryfikowany pomyślnie";
+            toast.success(verifyMessage);
         },
     });
 
@@ -202,7 +205,7 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                             <Button
                                 key={idx}
                                 onClick={option.actionHandler}
-                                className="p-2 h-fit bg-primary/70 hover:bg-primary/85 gap-1.5"
+                                className="p-2 h-fit bg-primary/70 hover:bg-primary/85 gap-1.5 text-secondary"
                                 variant="outline"
                             >
                                 {option.icon}
@@ -242,7 +245,9 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
 
                         <div className="flex justify-between items-start my-4">
                             <div className="py-4 w-full">
-                                <h1 className="text-xl font-bold tracking-tight px-2">{title}</h1>
+                                <h1 className="text-xl font-bold tracking-tight px-2 text-primary-foreground">
+                                    {title}
+                                </h1>
                             </div>
                         </div>
                     </div>
@@ -281,7 +286,7 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                                 <CardContent>
                                     <div
                                         ref={articleReff}
-                                        className="article-details-in-modal text-secondary-foreground"
+                                        className="article-details-in-modal text-primary-foreground"
                                         dangerouslySetInnerHTML={{
                                             __html: clientDescription || "",
                                         }}
@@ -366,7 +371,11 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                                 </CardHeader>
                                 <CardContent className="flex flex-wrap gap-2">
                                     {tags.map((tag) => (
-                                        <Badge key={tag._id} variant="secondary">
+                                        <Badge
+                                            key={tag._id}
+                                            variant="secondary"
+                                            className="bg-secondary-foreground text-primary-foreground"
+                                        >
                                             {tag.name}
                                         </Badge>
                                     ))}

@@ -124,7 +124,7 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                         <div className="rounded-full flex items-center gap-2 cursor-pointer bg-muted p-1.5">
                             <Avatar className="h-6 w-6 bg-primary">
                                 <AvatarImage src={user} alt={user.name} />
-                                <AvatarFallback className="text-base font-sembibold bg-primary text-primary-foreground">
+                                <AvatarFallback className="text-base font-sembibold bg-primary text-secondary">
                                     {initials}
                                 </AvatarFallback>
                             </Avatar>
