@@ -112,7 +112,7 @@ export function DataTable<TData, TValue>({
                     <Table className="">
                         <TableHeader>
                             {table.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id} className="">
+                                <TableRow key={headerGroup.id} className="bg-muted/20">
                                     {headerGroup.headers.map((header) => {
                                         return (
                                             <TableHead key={header.id} className="text-slate-500  h-fit py-0.5 ">
@@ -131,7 +131,7 @@ export function DataTable<TData, TValue>({
                                     <TableRow
                                         key={row.id}
                                         data-state={row.getIsSelected() && "selected"}
-                                        className=" text-foreground hover:bg-card  bg-muted/20 "
+                                        className=" text-foreground hover:bg-card   "
                                     >
                                         {row.getVisibleCells().map((cell) => (
                                             <TableCell className="px-3.5 py-2 " key={cell.id}>

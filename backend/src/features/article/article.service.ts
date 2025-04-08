@@ -1,15 +1,15 @@
-import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND } from "@/constants/http";
 import EventType from "@/constants/articleEventTypes";
+import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import { constructSearchQuery } from "@/utils/constructSearchQuery";
-import ArticleModel from "./article.model";
-import { getArticleHistory, saveArticleChanges } from "../article-history/article-history.service";
-import type { SearchArticlesDto } from "./dto/search-articles.dto";
-import type { CreateArticleDto } from "./dto/create-article.dto";
-import { UserService } from "../user/user.service";
 import ArticleHistoryModel from "../article-history/article-history.model";
+import { getArticleHistory, saveArticleChanges } from "../article-history/article-history.service";
 import TagModel from "../tag/tag.model";
 import UserModel from "../user/user.model";
+import { UserService } from "../user/user.service";
+import ArticleModel from "./article.model";
+import type { CreateArticleDto } from "./dto/create-article.dto";
+import type { SearchArticlesDto } from "./dto/search-articles.dto";
 
 export const ArticleService = {
     async create(userId: string, payload: CreateArticleDto) {
@@ -84,8 +84,8 @@ export const ArticleService = {
 
         appAssert(article, NOT_FOUND, "Article not found");
 
-        const isFavourite = user.favourites.includes(article._id);
-
+        // const isFavourite = user.favourites.includes(article._id);
+        const isFavourite = user.favourites.some((f) => f._id.equals(article._id));
         article.viewsCounter = article.viewsCounter + 1;
         await article.save();
 

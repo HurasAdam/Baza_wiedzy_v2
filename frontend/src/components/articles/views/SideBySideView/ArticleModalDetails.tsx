@@ -19,7 +19,7 @@ import {
     UserIcon,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { FaEdit, FaHistory, FaRegCopy, FaRegStar, FaStar } from "react-icons/fa";
+import { FaEdit, FaHistory, FaRegStar, FaStar } from "react-icons/fa";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import { TiArrowBack } from "react-icons/ti";
@@ -80,7 +80,7 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
         }, 1000);
     };
 
-    const { mutate } = useMutation({
+    const { mutate, isPending: isVerifyPending } = useMutation({
         mutationFn: ({ id, isVerified }) => articleApi.verifyArticle({ id, isVerified }),
         onSuccess: () => {
             queryClient.invalidateQueries(["article", articleId]);
@@ -95,8 +95,10 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
 
     const { mutate: markAsFavouriteHandler } = useMutation({
         mutationFn: ({ id }) => articleApi.markArticleAsFavourite({ id }),
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries(["article", articleId]);
+
+            toast.success(data?.message);
         },
     });
 
@@ -338,8 +340,9 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                                     {/* ARTICLE ID SECTION */}
                                     {article?._id && (
                                         <div className="flex items-center gap-2">
-                                            <FaRegCopy className="w-4 h-4 text-muted-foreground" />
-                                            <span className=" text-sm">ID Artykułu:</span>
+                                            <div className="flex items-center justify-center">
+                                                <span className=" text-sm">ID</span>
+                                            </div>
                                             <span ref={articlePathRef} className="hidden" id="full-url">
                                                 {`http://localhost:3000/articles/${article?._id}`}
                                             </span>
@@ -507,6 +510,7 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                     />
                 </Modal>
                 <Alert
+                    isLoading={isVerifyPending}
                     isOpen={isVerifyAlertOpen}
                     onConfirm={() => onVerifyConfirm({ isVerified: true })}
                     onCancel={closeVerifyAlert}
@@ -517,6 +521,7 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                     </div>
                 </Alert>
                 <Alert
+                    isLoading={isVerifyPending}
                     requireConfirmation={true}
                     isOpen={isUnverifyAlertOpen}
                     onConfirm={() => onUnverifyConfirm({ isVerified: false })}

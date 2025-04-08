@@ -27,7 +27,7 @@ export const MySidebar = () => {
             {/* Sidebar bez zmian kolorystycznych */}
             <div className="w-[88px] fixed top-0 h-full py-2 flex flex-col text-foreground bg-sidebar border-r ">
                 <div className="mx-auto mb-9 bg-sidebar-accent p-2.5 rounded-xl backdrop-blur-md">
-                    <img className="w-6 h-6" src={IMAGES.Logo} alt="" />
+                    <img className="w-6 h-6" src={IMAGES.Logo} alt="logo" />
                 </div>
                 <div className="flex-1 overflow-auto flex flex-col gap-4 items-center ">
                     {primaryMenuItems.map((item, index) => (
