@@ -6,20 +6,21 @@ import { Input } from "@/components/ui/input";
 import { useFetchArticles } from "@/hooks/query/useFetchArticles";
 import { useFetchProducts } from "@/hooks/query/useFetchProducts";
 import { IArticle } from "@/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search, Star } from "lucide-react";
 import { type ChangeEventHandler } from "react";
+import toast from "react-hot-toast";
+import { FaStar } from "react-icons/fa";
 import { useOutletContext, useSearchParams } from "react-router-dom";
 import { useModal } from "../components/modal/hooks/useModal";
 import { Modal } from "../components/modal/Modal";
+import { articleApi } from "../lib/article.api";
 
 const ArticleList = () => {
     const [params] = useSearchParams();
     const { articles, isError, isLoading, error } = useFetchArticles(params);
 
     const { state, setState } = useOutletContext();
-
-    console.log(state);
-    console.log(state);
 
     if (isError) {
         return (
@@ -74,8 +75,24 @@ const ArticleList = () => {
 };
 
 const ArticleListItem = ({ article, className }: { article: IArticle; className?: string }) => {
-    const { openModal, isOpen, closeModal } = useModal();
+    const queryClient = useQueryClient();
+    const { mutate } = useMutation({
+        mutationFn: (id) => {
+            return articleApi.markArticleAsFavourite({ id });
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(["articles"]);
+            toast.success(data?.message || "coś poszło nie tak...");
+        },
+    });
 
+    const toggleFavouriteHandler = (e, { id }) => {
+        e.stopPropagation();
+        mutate(id);
+    };
+
+    const { openModal, isOpen, closeModal } = useModal();
+    const isFavourite = article?.isFavourite;
     return (
         <div className="mb-3.5">
             <Card
@@ -86,8 +103,17 @@ const ArticleListItem = ({ article, className }: { article: IArticle; className?
                     <h3 className="text-base font-semibold truncate max-w-[90%] overflow-hidden text-foreground">
                         {article.title.length > 110 ? `${article.title.slice(0, 110)}...` : article.title}
                     </h3>
-                    <button className="focus:outline-none">
-                        <Star className="h-6 w-6 text-gray-400" />
+                    <button
+                        className="focus:outline-none"
+                        onClick={(e) => {
+                            toggleFavouriteHandler(e, { id: article?._id });
+                        }}
+                    >
+                        {isFavourite ? (
+                            <FaStar className="h-6 w-6 text-gray-400" />
+                        ) : (
+                            <Star className="h-6 w-6 text-gray-400" />
+                        )}
                     </button>
                 </div>
                 {/* <div className="flex gap-1 items-center">

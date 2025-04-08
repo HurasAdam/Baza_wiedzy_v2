@@ -110,9 +110,9 @@ export function DataTable<TData, TValue>({
                     <TableSkeleton columns={6} rows={10} />
                 ) : (
                     <Table className=" ">
-                        <TableHeader className="bg-muted">
+                        <TableHeader>
                             {table.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id} className="border-b  ">
+                                <TableRow key={headerGroup.id} className="border-b bg-muted/20  ">
                                     {headerGroup.headers.map((header) => {
                                         return (
                                             <TableHead key={header.id} className="text-slate-500   h-fit py-0.5">

@@ -69,9 +69,13 @@ const ProductsPage = () => {
                             </div>
                             {/* Akcje – możesz dodać szczegóły, edycję, etc. */}
                             <div className=" pt-4 flex justify-end border-t border-muted mt-1.5 dark:border-gray-700">
-                                <button className="px-3 py-1 text-sm font-medium text-blue-600 hover:text-blue-800">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="ml-2 px-3 py-1 text-sm font-medium text-primary-foreground  hover:text-foreground"
+                                >
                                     Szczegóły
-                                </button>
+                                </Button>
                                 <Button
                                     variant="ghost"
                                     size="sm"
