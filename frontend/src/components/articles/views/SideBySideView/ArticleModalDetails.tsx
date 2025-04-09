@@ -39,6 +39,7 @@ import ArticleHistory from "../../../ArticleHistory";
 import { useModal } from "../../../modal/hooks/useModal";
 import { Modal } from "../../../modal/Modal";
 import { Button } from "../../../ui/button";
+import EditArticle from "../../Edit/EditArticle";
 import ArticleCommentsDetails from "./ArticleCommentsDetails";
 
 export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
@@ -288,7 +289,7 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                                 <CardContent>
                                     <div
                                         ref={articleReff}
-                                        className="article-details-in-modal text-primary-foreground"
+                                        className="article-details-in-modal text-primary-foreground "
                                         dangerouslySetInnerHTML={{
                                             __html: clientDescription || "",
                                         }}
@@ -495,7 +496,7 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                     <ArticleHistory articleId={article?._id} showBackwardArrow={false} onBackward={closeModal} />
                 </Modal>
                 <Modal isOpen={isEditArticleModalOpen} onClose={closeEditArticleModal} closeOnOutsideClick={false}>
-                    <div>EDIT</div>
+                    <EditArticle articleId={articleId} />
                 </Modal>
                 <Modal
                     width="sm"
