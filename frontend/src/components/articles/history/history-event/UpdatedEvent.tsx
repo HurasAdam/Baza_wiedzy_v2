@@ -1,7 +1,7 @@
-import { diff_match_patch } from "diff-match-patch";
-import ARTICLE_HISTORY_FIELD_TRANSLATIONS from "../../../../enums/articleHistoryFieldTranslations";
 import { getAvatarColor, getAvatarFallbackText } from "@/utils/avatar";
 import { dateFormater } from "@/utils/date-formater";
+import { diff_match_patch } from "diff-match-patch";
+import ARTICLE_HISTORY_FIELD_TRANSLATIONS from "../../../../enums/articleHistoryFieldTranslations";
 
 const UpdatedEvent = ({ historyItem }) => {
     if (!historyItem.changes?.length) return <div>Brak zmian.</div>;
@@ -59,18 +59,24 @@ const UpdatedEvent = ({ historyItem }) => {
             {historyItem.changes.map((change, index) => {
                 const { leftText, rightText } = highlightChanges(change.oldValue, change.newValue);
                 return (
-                    <div key={index} className="relative mb-8 p-6 rounded-2xl border bg-black/15 shadow-lg">
+                    <div key={index} className="relative mb-8 p-6 rounded-2xl border bg-black/15 shadow-lg ">
                         <h4 className="text-lg font-semibold text-foreground">
                             🛠️ Zmienione pole: {ARTICLE_HISTORY_FIELD_TRANSLATIONS[change.field]}
                         </h4>
                         <div className="flex flex-col md:flex-row gap-6 mt-4">
                             <div className="w-full md:w-1/2 border border-white/20 p-4 rounded-xl bg-white/10 backdrop-blur-md shadow-md">
                                 <h5 className="font-medium text-foreground">Przed zmianą:</h5>
-                                <div className="text-foreground mt-2" dangerouslySetInnerHTML={{ __html: leftText }} />
+                                <div
+                                    className="text-foreground mt-2 break-all"
+                                    dangerouslySetInnerHTML={{ __html: leftText }}
+                                />
                             </div>
                             <div className="w-full md:w-1/2 border border-white/20 p-4 rounded-xl bg-white/10 backdrop-blur-md shadow-md">
                                 <h5 className="font-medium text-foreground">Po zmianie:</h5>
-                                <div className="text-foreground mt-2" dangerouslySetInnerHTML={{ __html: rightText }} />
+                                <div
+                                    className="text-foreground mt-2 break-all"
+                                    dangerouslySetInnerHTML={{ __html: rightText }}
+                                />
                             </div>
                         </div>
                     </div>
