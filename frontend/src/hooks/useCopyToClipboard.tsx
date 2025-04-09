@@ -1,28 +1,41 @@
 export default function useCopyToClipboard() {
-  const copyToClipboard = async (element, callback) => {
-    try {
-      const html = element.current;
-      if (!html) {
-        console.error("Nie znaleziono elementu do kopiowania.");
-        return;
-      }
+    // Funkcja do sanitizacji HTML
+    const sanitizeHTML = (htmlString) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, "text/html");
 
-      console.log("html.innerHTML:", html.innerHTML);
+        doc.querySelectorAll("*").forEach((el) => {
+            el.removeAttribute("style");
+        });
+        return doc.body.innerHTML;
+    };
 
-      const blob = new Blob([html.innerHTML], { type: "text/html" });
+    const copyToClipboard = async (element, callback) => {
+        try {
+            const html = element.current;
+            if (!html) {
+                console.error("Nie znaleziono elementu do kopiowania.");
+                return;
+            }
 
-      const clipboardItem = new ClipboardItem({
-        "text/html": blob,
-        "text/plain": new Blob([html.textContent], { type: "text/plain" }),
-      });
+            const rawHTML = html.innerHTML;
 
-      await navigator.clipboard.write([clipboardItem]);
+            const sanitizedHTML = sanitizeHTML(rawHTML);
 
-      callback(); // Sukces
-    } catch (error) {
-      console.error("Wystąpił błąd podczas kopiowania:", error);
-    }
-  };
+            const blob = new Blob([sanitizedHTML], { type: "text/html" });
 
-  return { copyToClipboard };
+            const clipboardItem = new ClipboardItem({
+                "text/html": blob,
+                "text/plain": new Blob([html.textContent], { type: "text/plain" }),
+            });
+
+            await navigator.clipboard.write([clipboardItem]);
+
+            callback();
+        } catch (error) {
+            console.error("Wystąpił błąd podczas kopiowania:", error);
+        }
+    };
+
+    return { copyToClipboard };
 }

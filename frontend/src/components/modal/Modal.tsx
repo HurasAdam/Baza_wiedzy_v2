@@ -1,12 +1,13 @@
 import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { useModalSettings } from "@/contexts/ModalSettingsContext";
 import clsx from "clsx";
+import React from "react";
 import type { ModalProps } from "./types";
 
 const typesWidthModal = {
-    sm: "sm:max-w-[480px] md:max-w-[600px] lg:max-w-[640px] xl:max-w-[700px] 2xl:max-w-[920px] p-0",
-    md: "sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] xl:max-w-[1000px] 2xl:max-w-[1080px] p-0 ",
-    lg: "sm:max-w-[800px] md:max-w-[1000px] lg:max-w-[1100px] xl:max-w-[1200px] 2xl:max-w-[1300px] p-0",
+    sm: "sm:max-w-[98%] md:max-w-[84%] lg:max-w-[75%px] xl:max-w-[65%] 2xl:max-w-[980px] p-0",
+    md: "sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] xl:max-w-[1000px] 2xl:max-w-[1120px] p-0 ",
+    lg: "sm:max-w-[800px] md:max-w-[1000px] lg:max-w-[1100px] xl:max-w-[1200px] 2xl:max-w-[1320px] p-0",
 } as const;
 
 const modalHeightes = {
@@ -31,7 +32,13 @@ export const Modal = ({ isOpen, children, onClose, width, height = "lg", closeOn
                 }}
                 className={clsx("filter-none scrollbar-custom bg-card w-full", widthValue, heightValue)}
             >
-                <div className=" overflow-auto scrollbar-custom">{children}</div>
+                <div className=" overflow-auto scrollbar-custom">
+                    {/* Przekazujemy propsy width i height do children */}
+                    {React.cloneElement(children as React.ReactElement, {
+                        modalWidth,
+                        onClose,
+                    })}
+                </div>
             </DialogContent>
             <DialogOverlay />
         </Dialog>

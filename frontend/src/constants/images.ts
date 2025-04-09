@@ -7,6 +7,7 @@ import aprovedImage from "../../public/aproved.png";
 import blobImage from "../../public/blob.png";
 import circleImage from "../../public/circle.png";
 import createdImage from "../../public/created.png";
+import editArticleImage from "../../public/edit-article.png";
 import findArticleImage from "../../public/findArticle.png";
 import historyLogImage from "../../public/historyLog.png";
 import loginImage from "../../public/loginImage.png";
@@ -40,4 +41,5 @@ export const IMAGES = {
     notFoundImage,
     workspaceImage,
     Logo_one,
+    editArticleImage,
 };

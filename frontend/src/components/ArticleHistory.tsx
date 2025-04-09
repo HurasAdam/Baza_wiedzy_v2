@@ -142,7 +142,7 @@ const ArticleHistory = ({ articleId, showBackwardArrow = false, closeArticleHist
                 </ul>
             </div>
             {/* Treść zakładki - prawa część */}
-            <div className="flex-1 p-4 px-5 bg-background w-full h-full">
+            <div className="flex-1 p-4 px-5 bg-background w-full h-full overflow-y-auto scrollbar-custom">
                 <div className="flex-1 flex flex-col h-full">
                     {selectedItem && !isLoadingDetails && historyItem ? (
                         <ArticleHistoryDetails historyItem={historyItem} />

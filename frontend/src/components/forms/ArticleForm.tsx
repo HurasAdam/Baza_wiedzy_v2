@@ -3,15 +3,15 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/utils/cn";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown, CloudUpload, Paperclip } from "lucide-react";
+import { Check, ChevronsUpDown, CloudUpload, Loader, Paperclip } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import Editor from "../editor/Editor";
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from "../ui/file-input";
 import MultipleSelector from "../ui/multi-select";
 
@@ -64,9 +64,10 @@ interface Props {
     tags: Tag[];
     products: Product[];
     onSave: ({ formData }) => void;
+    isLoading: boolean;
 }
 
-const ArticleForm = ({ tags, products, onSave }: Props) => {
+const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
     const [files, setFiles] = useState<File[] | null>(null);
 
     const dropZoneConfig = {
@@ -77,24 +78,19 @@ const ArticleForm = ({ tags, products, onSave }: Props) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: "",
-            product: "",
-            tags: [],
-            clientDescription: "",
-            employeeDescription: "",
+            title: article ? article?.title : "",
+            product: article ? article?.product?._id : "",
+            tags: article ? article.tags.map((tag) => ({ label: tag.name, value: tag._id })) : [],
+            clientDescription: article ? article?.clientDescription : "",
+            employeeDescription: article ? article?.employeeDescription : "",
             file: [],
         },
     });
-
+    console.log(form.getValues());
     function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             const finalFormData = { ...values, tags: values.tags.map((tag) => tag.value) };
             onSave({ formData: finalFormData });
-            toast(
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-                </pre>
-            );
         } catch (error) {
             console.error("Form submission error", error);
             toast.error("Failed to submit the form. Please try again.");
@@ -103,7 +99,7 @@ const ArticleForm = ({ tags, products, onSave }: Props) => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl mx-auto py-10">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8  mx-auto py-10 ">
                 <FormField
                     control={form.control}
                     name="title"
@@ -172,7 +168,9 @@ const ArticleForm = ({ tags, products, onSave }: Props) => {
                                     </Command>
                                 </PopoverContent>
                             </Popover>
-                            <FormDescription>Wybierz produkt, do którego zostanie przypisany artykuł.</FormDescription>
+                            <FormDescription className="text-sm">
+                                Wybierz produkt, do którego zostanie przypisany artykuł.
+                            </FormDescription>
                             <FormMessage className="text-xs" />
                         </FormItem>
                     )}
@@ -193,7 +191,7 @@ const ArticleForm = ({ tags, products, onSave }: Props) => {
                                     onChange={(selected) => field.onChange(selected.map((item) => item))}
                                 />
                             </FormControl>
-                            <FormDescription>
+                            <FormDescription className="text-sm">
                                 Wybierz jeden lub więcej tagów, które najlepiej opisują temat artykułu.
                             </FormDescription>
                             <FormMessage className="text-xs" />
@@ -201,7 +199,7 @@ const ArticleForm = ({ tags, products, onSave }: Props) => {
                     )}
                 />
 
-                <FormField
+                {/* <FormField
                     control={form.control}
                     name="clientDescription"
                     render={({ field }) => (
@@ -217,7 +215,29 @@ const ArticleForm = ({ tags, products, onSave }: Props) => {
                             <FormMessage className="text-xs" />
                         </FormItem>
                     )}
+                /> */}
+
+                <FormField
+                    control={form.control}
+                    name="clientDescription"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Odpowiedź dla klienta</FormLabel>
+                            <FormControl>
+                                <Editor
+                                    value={field.value} // provide current value
+                                    onChange={field.onChange} // use form onChange handler
+                                />
+                            </FormControl>
+                            <FormDescription className="text-sm">
+                                Wpisz treść odpowiedzi, która zostanie przekazana klientowi. Upewnij się, że jest jasna
+                                i zawiera wszystkie istotne informacje.
+                            </FormDescription>
+                            <FormMessage className="text-xs" />
+                        </FormItem>
+                    )}
                 />
+
                 <FormField
                     control={form.control}
                     name="employeeDescription"
@@ -225,7 +245,7 @@ const ArticleForm = ({ tags, products, onSave }: Props) => {
                         <FormItem>
                             <FormLabel>Uwagi</FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Placeholder" className="resize-none" {...field} />
+                                <Textarea placeholder="Placeholder" className="resize-none min-h-[120px]" {...field} />
                             </FormControl>
                             <FormDescription>
                                 {" "}
@@ -289,7 +309,7 @@ const ArticleForm = ({ tags, products, onSave }: Props) => {
                         </FormItem>
                     )}
                 />
-                <FormField
+                {/* <FormField
                     control={form.control}
                     name="name_9554331714"
                     render={({ field }) => (
@@ -305,8 +325,13 @@ const ArticleForm = ({ tags, products, onSave }: Props) => {
                             </FormControl>
                         </FormItem>
                     )}
-                />
-                <Button type="submit">Utwórz</Button>
+                /> */}
+                <div className="flex justify-end">
+                    <Button type="submit" className="bg-primary/85 hover:bg-primary/90">
+                        {article ? "Zapisz" : "Utwórz"}
+                        {isLoading && <Loader className="animate-spin " />}
+                    </Button>
+                </div>
             </form>
         </Form>
     );

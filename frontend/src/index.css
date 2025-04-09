@@ -427,6 +427,10 @@
 
 /* ARTILCE DETAILS FULL SCREEN STYLES */
 
+.article-details-in-modal {
+    @apply break-all;
+}
+
 .article-details-in-modal p {
     font-size: 1rem;
     line-height: 1.6;
@@ -479,57 +483,36 @@
     @apply text-sm text-primary-foreground;
 }
 
-/* ARTICLE QUICK VIEW  */
-.articleDetails-quickView p {
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-    color: #fff;
+/* RICH TEXT EDITOR  */
+.quill .ql-container {
+    @apply border-border rounded-b-lg;
 }
 
-.articleDetails-quickView strong {
-    @apply text-foreground mb-6 font-bold;
+.ql-formats .ql-header {
+    @apply text-primary-foreground;
 }
 
-.articleDetails-quickView h1 {
-    @apply text-5xl font-extrabold text-foreground mb-6;
+.ql-editor {
+    @apply min-h-[385px] max-h-[385px] bg-background text-xs text-primary-foreground;
 }
 
-.articleDetails-quickView h2 {
-    @apply text-4xl font-bold text-foreground mb-6;
+.ql-toolbar .ql-picker.ql-expanded .ql-picker-options {
+    @apply bg-background text-primary-foreground rounded   border-border;
 }
 
-.articleDetails-quickView h3 {
-    @apply text-3xl font-semibold text-foreground mb-6;
+.ql-toolbar.ql-snow {
+    @apply border-border text-primary-foreground  bg-background rounded-t-lg;
 }
 
-.articleDetails-quickView h4 {
-    @apply text-2xl font-medium text-foreground;
+/* Style dla przycisków i etykiet w pickerze */
+.ql-toolbar button,
+.ql-toolbar .ql-picker-label .ql-toolbar .ql-picker-item {
+    @apply text-primary-foreground;
 }
 
-.articleDetails-quickView p {
-    @apply text-base text-gray-800 text-foreground bg-transparent;
-}
-
-.articleDetails-quickView ul,
-.articleDetails-quickView ol {
-    @apply list-inside pl-4 my-6 bg-transparent;
-}
-
-.articleDetails-quickView ul {
-    @apply list-disc bg-transparent;
-}
-
-.articleDetails-quickView ul li {
-    @apply my-3 bg-transparent;
-}
-
-.articleDetails-quickView ol {
-    @apply list-decimal;
-}
-
-.articleDetails-quickViewli {
-    @apply text-sm text-gray-700 text-foreground;
+/* Dodatkowo jeśli chcesz wymusić kolor stroke (np. przy liniach) */
+.ql-toolbar svg .ql-stroke {
+    stroke: currentColor;
 }
 
 /* .articleDetails-quickView {
