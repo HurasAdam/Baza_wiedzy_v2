@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FilePlus } from "lucide-react";
+import { FilePlus, Loader } from "lucide-react";
 
 import clsx from "clsx";
 import { useState } from "react";
@@ -62,6 +62,27 @@ const EditArticle = ({ articleId, onClose, isOpen, modalWidth }) => {
             queryClient.invalidateQueries("article", article?._id);
             toast.success("Artykuł został pomyślnie zaktualizowany");
         },
+        onError: (error) => {
+            let errorMessage = "Wystąpił nieoczekiwany problem podczas próby aktualizacji artykułu.";
+            console.log(error, "ERROR!");
+            if (error?.status === 400) {
+                errorMessage =
+                    "Błąd w danych formularza. Proszę sprawdzić, czy wszystkie pola są poprawnie wypełnione.";
+            } else if (error?.status === 404) {
+                errorMessage = "Nie znaleziono artykułu do edycji. Proszę spróbować ponownie później.";
+            } else if (error?.status === 500) {
+                errorMessage = "Wystąpił problem z serwerem. Proszę spróbować później.";
+            }
+
+            toast.error(
+                <div>
+                    <strong>Aktualizacja artykułu nie powiodła się!</strong>
+                    <br />
+                    <span>{errorMessage}</span>
+                    <br />
+                </div>
+            );
+        },
     });
 
     const onCloseModals = () => {
@@ -105,6 +126,13 @@ const EditArticle = ({ articleId, onClose, isOpen, modalWidth }) => {
                     Wypełnij formularz, aby dodać nowy artykuł
                 </CardContent>
             </Card>
+
+            {isPending && (
+                <div className="absolute inset-0 bg-background/40 backdrop-blur- flex items-center justify-center z-50">
+                    <Loader className="animate-spin w-8 h-8 text-primary" />
+                </div>
+            )}
+
             {tags?.tags ? (
                 <ArticleForm
                     onSave={onSave}

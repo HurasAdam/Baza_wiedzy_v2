@@ -52,7 +52,7 @@ export const RootLayout = () => {
                     </div>
                 </div>
             </div>
-            <Modal isOpen={isCreateArticleModalOpen} onClose={closeCreateArticleModal}>
+            <Modal isOpen={isCreateArticleModalOpen} onClose={closeCreateArticleModal} closeOnOutsideClick={false}>
                 <CreateArticle onClose={closeCreateArticleModal} />
             </Modal>
         </div>
