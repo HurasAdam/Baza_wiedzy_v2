@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { FilePlus } from "lucide-react";
+import { FilePlus, Loader } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { IMAGES } from "../../../constants/images";
 import { articleApi } from "../../../lib/article.api";
 import { productApi } from "../../../lib/product.api";
@@ -28,13 +29,13 @@ const CreateArticle = ({ onClose, isOpen, modalWidth }: Props) => {
     } = useModal();
 
     const [createdArticleId, setCreatedArticleId] = useState();
-    const { data: tags = [] } = useQuery({
+    const { data: tags = [], isLoading: isTagsLoading } = useQuery({
         queryKey: ["tags"],
         queryFn: () => {
             return tagApi.findAll();
         },
     });
-    const { data: products = [] } = useQuery({
+    const { data: products = [], isLoading: isProductsLoading } = useQuery({
         queryKey: ["products"],
         queryFn: () => {
             return productApi.find();
@@ -49,15 +50,16 @@ const CreateArticle = ({ onClose, isOpen, modalWidth }: Props) => {
         return { label: product.name, value: product._id };
     });
 
-    console.log("createdArticleId");
-    console.log(createdArticleId);
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: ({ formData }) => {
             return articleApi.createArticle({ formData });
         },
         onSuccess: (data) => {
             setCreatedArticleId(data?.data?._id);
             openCreateArticleModal();
+        },
+        onError: () => {
+            toast.error("Wystąpił nieoczekiwany błąd podczas próby dodania artykułu.");
         },
     });
 
@@ -81,6 +83,7 @@ const CreateArticle = ({ onClose, isOpen, modalWidth }: Props) => {
                 return "px-12";
         }
     };
+    const isDataLoading = isTagsLoading || isProductsLoading;
     return (
         <div className={clsx(getModalPadding())}>
             <Card className="border-none shadow-lg bg-background/55 rounded-lg">
@@ -100,10 +103,20 @@ const CreateArticle = ({ onClose, isOpen, modalWidth }: Props) => {
                     Wypełnij formularz, aby dodać nowy artykuł
                 </CardContent>
             </Card>
-            {tags?.tags ? (
-                <ArticleForm onSave={onSave} tags={formatedTags} products={formatedProducts} />
+            {isPending && (
+                <div className="absolute inset-0 bg-background/40 backdrop-blur- flex items-center justify-center z-50">
+                    <Loader className="animate-spin w-8 h-8 text-primary" />
+                </div>
+            )}
+
+            {isDataLoading ? (
+                // Spinner wyświetlający się, gdy dane jeszcze się ładują
+                <div className="absolute inset-0 bg-background/40 backdrop-blur- flex items-center justify-center z-50">
+                    <Loader className="animate-spin w-8 h-8 text-primary" />
+                </div>
             ) : (
-                <p>Loading tags...</p>
+                // Formularz wyświetlający się po załadowaniu danych
+                <ArticleForm onSave={onSave} tags={formatedTags} products={formatedProducts} isLoading={isPending} />
             )}
             <Modal isOpen={isCreateArticleModalOpen} onClose={onCloseModals}>
                 <ArticleModalDetails articleId={createdArticleId} />

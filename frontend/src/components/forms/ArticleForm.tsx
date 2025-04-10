@@ -38,8 +38,11 @@ const formSchema = z.object({
             })
         )
         .nonempty({ message: "Wybierz przynajmniej jeden tag." }),
-    clientDescription: z.string().min(6).max(9000),
-    employeeDescription: z.string().min(6).max(9000),
+    clientDescription: z
+        .string()
+        .min(6, { message: "Treść artykułu musi zawierać co najmniej 6 znaków." })
+        .max(9000, { message: "Treść artykułu nie może przekraczać 9000 znaków." }),
+    employeeDescription: z.string().min(6, { message: "Treść uwag musi zawierać co najmniej 6 znaków." }).max(9000),
     file: z.array(fileSchema).max(5, { message: "Maksymalnie 5 plików można przesłać." }).optional(),
 });
 
@@ -86,7 +89,9 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
             file: [],
         },
     });
-    console.log(form.getValues());
+
+    const { isDirty } = form.formState;
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             const finalFormData = { ...values, tags: values.tags.map((tag) => tag.value) };
@@ -97,6 +102,13 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
         }
     }
 
+    const RequiredLabel = ({ children }: { children: React.ReactNode }) => (
+        <span>
+            {children}
+            <span className="text-primary ml-0.5">*</span>
+        </span>
+    );
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8  mx-auto py-10 ">
@@ -105,7 +117,9 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                     name="title"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Tytuł</FormLabel>
+                            <FormLabel>
+                                <RequiredLabel> Tytuł</RequiredLabel>
+                            </FormLabel>
                             <FormControl>
                                 <Input placeholder="Wprowadź tytuł artykułu" type="text" {...field} />
                             </FormControl>
@@ -119,7 +133,9 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                     name="product"
                     render={({ field }) => (
                         <FormItem className="flex flex-col">
-                            <FormLabel>Produkt</FormLabel>
+                            <FormLabel className="w-fit">
+                                <RequiredLabel>Produkt</RequiredLabel>
+                            </FormLabel>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <FormControl>
@@ -127,7 +143,7 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                                             variant="outline"
                                             role="combobox"
                                             className={cn(
-                                                "w-[200px] justify-between",
+                                                "w-[240px] justify-between",
                                                 !field.value && "text-muted-foreground"
                                             )}
                                         >
@@ -138,7 +154,12 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                                         </Button>
                                     </FormControl>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-[200px] p-0">
+                                <PopoverContent
+                                    onWheelCapture={(e) => {
+                                        e.stopPropagation();
+                                    }}
+                                    className="w-[240px] p-0"
+                                >
                                     <Command>
                                         <CommandInput placeholder="Search language..." />
                                         <CommandList>
@@ -180,7 +201,9 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                     name="tags"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Tag</FormLabel>
+                            <FormLabel>
+                                <RequiredLabel>Tag</RequiredLabel>
+                            </FormLabel>
                             <FormControl>
                                 <MultipleSelector
                                     placeholder="Wybierz tag"
@@ -199,30 +222,14 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                     )}
                 />
 
-                {/* <FormField
-                    control={form.control}
-                    name="clientDescription"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Odpowiedź dla klienta</FormLabel>
-                            <FormControl>
-                                <Textarea placeholder="Placeholder" className="resize-none" rows={16} {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                Wpisz treść odpowiedzi, która zostanie przekazana klientowi. Upewnij się, że jest jasna
-                                i zawiera wszystkie istotne informacje..
-                            </FormDescription>
-                            <FormMessage className="text-xs" />
-                        </FormItem>
-                    )}
-                /> */}
-
                 <FormField
                     control={form.control}
                     name="clientDescription"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Odpowiedź dla klienta</FormLabel>
+                            <FormLabel>
+                                <RequiredLabel>Odpowiedź dla klienta</RequiredLabel>
+                            </FormLabel>
                             <FormControl>
                                 <Editor
                                     value={field.value} // provide current value
@@ -243,7 +250,9 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                     name="employeeDescription"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Uwagi</FormLabel>
+                            <FormLabel>
+                                <RequiredLabel>Uwagi</RequiredLabel>
+                            </FormLabel>
                             <FormControl>
                                 <Textarea placeholder="Placeholder" className="resize-none min-h-[120px]" {...field} />
                             </FormControl>
@@ -326,10 +335,13 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                         </FormItem>
                     )}
                 /> */}
-                <div className="flex justify-end">
-                    <Button type="submit" className="bg-primary/85 hover:bg-primary/90">
-                        {article ? "Zapisz" : "Utwórz"}
+                <div className="flex justify-between">
+                    <p className="text-xs text-muted-foreground italic">
+                        Pola oznaczone <span className="text-primary">*</span> są wymagane.
+                    </p>
+                    <Button disabled={article && !isDirty} type="submit" className="bg-primary/70 hover:bg-primary/90">
                         {isLoading && <Loader className="animate-spin " />}
+                        {article ? "Zapisz" : "Utwórz"}
                     </Button>
                 </div>
             </form>
