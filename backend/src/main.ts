@@ -33,13 +33,13 @@ app.use(cookieParser());
 app.use("/auth", authRoutes);
 
 //#protected routes
-app.use("/users", authenticate, userRoutes);
-app.use("/articles", authenticate, articleRoutes);
-app.use("/tags", authenticate, tagRoutes);
-app.use("/products", authenticate, productRoutes);
-app.use("/conversation-topics", authenticate, conversationTopicRoutes);
-app.use("/conversation-report", authenticate, conversationReportRoutes);
-app.use("/dashboard", authenticate, dashboardRoutes);
+app.use("/users", authenticate(), userRoutes);
+app.use("/articles", authenticate(), articleRoutes);
+app.use("/tags", authenticate(), tagRoutes);
+app.use("/products", authenticate(), productRoutes);
+app.use("/conversation-topics", authenticate(), conversationTopicRoutes);
+app.use("/conversation-report", authenticate(), conversationReportRoutes);
+app.use("/dashboard", authenticate(), dashboardRoutes);
 
 app.use(errorHandler);
 
