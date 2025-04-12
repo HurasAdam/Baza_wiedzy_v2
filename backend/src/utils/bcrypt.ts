@@ -1,10 +1,9 @@
-import bcrypt,{hash,compare} from "bcrypt";
+import { compareSync, hashSync } from "bcrypt";
 
-export const hashValue = async (val: string, saltRounds?: number) =>{
-   return bcrypt.hash(val, saltRounds || 10);
-}
-  
+export const hashValue = (val: string, saltRounds: number = 10) => {
+    return hashSync(val, saltRounds);
+};
 
-export const compareValue = async(value:string, hashedValue:string)=>{
-return bcrypt.compare(value, hashedValue).catch(()=> false);
-}
+export const compareValue = (value: string, hashedValue: string) => {
+    return compareSync(value, hashedValue);
+};

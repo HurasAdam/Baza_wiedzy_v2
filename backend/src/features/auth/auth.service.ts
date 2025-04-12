@@ -81,7 +81,7 @@ export const loginUser = async ({ email, password, userAgent }: LoginParams) => 
     const user = await UserModel.findOne({ email });
     appAssert(user, UNAUTHORIZED, "Invalid email or password");
 
-    const isValid = await user.comparePassword(password);
+    const isValid = user.comparePassword(password);
     appAssert(isValid, UNAUTHORIZED, "Invalid email or password");
 
     const userId = user._id;
@@ -223,7 +223,7 @@ export const resetPassword = async ({ verificationCode, password }: ResetPasswor
     appAssert(validCode, NOT_FOUND, "Invalid or expired verification code");
 
     const updatedUser = await UserModel.findByIdAndUpdate(validCode.userId, {
-        password: await hashValue(password),
+        password: hashValue(password),
     });
     appAssert(updatedUser, INTERNAL_SERVER_ERROR, "Failed to reset password");
 
