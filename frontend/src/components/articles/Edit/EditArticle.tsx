@@ -13,7 +13,7 @@ import { useModal } from "../../modal/hooks/useModal";
 import { Modal } from "../../modal/Modal";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import { ComponentPaddings } from "../Create/CreateArticle";
-import ArticleModalDetails from "../views/SideBySideView/ArticleModalDetails";
+import ArticleModalDetails from "../views/feedView/ArticleModalDetails";
 const EditArticle = ({ articleId, onClose, isOpen, modalWidth }) => {
     const queryClient = useQueryClient();
     const {

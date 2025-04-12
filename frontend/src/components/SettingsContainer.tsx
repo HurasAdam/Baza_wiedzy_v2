@@ -3,6 +3,7 @@ import { useState } from "react";
 import { RiSettings4Fill } from "react-icons/ri";
 import ThemeSelector from "./ThemeSelector";
 import { ToggleWidthModalButton } from "./ToggleWidthModalButton";
+import ViewPreferenceSelector from "./ViewPreferenceSelector";
 
 const SettingsContainer = () => {
     const [activeTab, setActiveTab] = useState("personalization");
@@ -70,6 +71,9 @@ const SettingsContainer = () => {
                         <div className="flex flex-col gap-2 ">
                             <label className="text-foreground mb-2  border-b  pb-3">Rozmiar okna modalnego</label>
                             <ToggleWidthModalButton />
+                        </div>
+                        <div>
+                            <ViewPreferenceSelector />
                         </div>
                     </div>
                 )}

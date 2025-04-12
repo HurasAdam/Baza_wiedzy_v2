@@ -327,19 +327,18 @@
 }
 
 /* Zawijanie tekstu w edytorze */
-.ql-editor {
+/* .ql-editor {
     color: #444;
     width: 100% !important;
-    /* Zapewnia, że edytor wewnętrzny zajmuje pełną szerokość */
+
     word-wrap: break-word !important;
-    /* Wymusza zawijanie słów */
+
     white-space: normal !important;
-    /* Zapewnia normalne zawijanie tekstu */
+
     overflow-wrap: break-word;
-    /* Alternatywa dla break-word */
+
     word-break: break-word;
-    /* Wymusza łamanie słów */
-}
+} */
 
 /* Zabezpieczenie przed przekroczeniem szerokości kontenera */
 .ql-editor p {
@@ -493,7 +492,7 @@
 }
 
 .ql-editor {
-    @apply min-h-[385px] max-h-[385px] bg-background text-xs text-primary-foreground;
+    @apply min-h-[390px] max-h-[600px] bg-background text-xs text-primary-foreground;
 }
 
 .ql-toolbar .ql-picker.ql-expanded .ql-picker-options {
