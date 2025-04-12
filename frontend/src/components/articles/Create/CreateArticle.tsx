@@ -11,7 +11,7 @@ import ArticleForm from "../../forms/ArticleForm";
 import { useModal } from "../../modal/hooks/useModal";
 import { Modal } from "../../modal/Modal";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import ArticleModalDetails from "../views/SideBySideView/ArticleModalDetails";
+import ArticleModalDetails from "../views/feedView/ArticleModalDetails";
 
 export type ComponentPaddings = "px-16 py-4" | "px-20 py-6" | "px-24 py-8" | "px-12";
 
