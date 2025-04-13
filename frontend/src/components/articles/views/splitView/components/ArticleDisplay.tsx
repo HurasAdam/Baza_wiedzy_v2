@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertTriangleIcon, CheckCircleIcon, Clock, MoreVertical, Trash2 } from "lucide-react";
+import { AlertTriangleIcon, CheckCircleIcon, Clock, EyeIcon, MoreVertical, Trash2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaRegStar, FaStar } from "react-icons/fa";
@@ -15,7 +15,6 @@ import { useAlert } from "../../../../alert/hooks/useAlert";
 import ArticleHistory from "../../../../ArticleHistory";
 import { useModal } from "../../../../modal/hooks/useModal";
 import { Modal } from "../../../../modal/Modal";
-import { Avatar, AvatarImage } from "../../../../ui/avatar";
 import { Button } from "../../../../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../ui/dropdown-menu";
 import { Popover, PopoverTrigger } from "../../../../ui/popover";
@@ -59,14 +58,12 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
 
     const { mutate, isPending: isVerifyPending } = useMutation({
         mutationFn: ({ id, isVerified }) => articleApi.verifyArticle({ id, isVerified }),
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries(["article", article?._id]);
             closeVerifyAlert();
             closeUnverifyAlert();
-            const verifyMessage = isVerified
-                ? "Cofnięto weryfikację artykułu"
-                : "Artykuł został zweryfikowany pomyślnie";
-            toast.success(verifyMessage);
+
+            toast.success(data?.message || "Operacja zakończona sukcesem");
         },
     });
 
@@ -130,8 +127,45 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
 
     if (isLoading) {
         return (
-            <div className="flex-1 flex items-center justify-center p-6">
-                <div className="animate-pulse text-muted-foreground">Ładowanie artykułu...</div>
+            <div className="flex h-full flex-col">
+                <div className="flex items-center p-2">
+                    <div className="flex items-center gap-2"></div>
+
+                    <Separator orientation="vertical" className="mx-2 h-6" />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" disabled={!mail}>
+                                <MoreVertical className="h-4 w-4" />
+                                <span className="sr-only">More</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem>Mark as unread</DropdownMenuItem>
+                            <DropdownMenuItem>Star thread</DropdownMenuItem>
+                            <DropdownMenuItem>Add label</DropdownMenuItem>
+                            <DropdownMenuItem>Mute thread</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+                <Separator />
+                <div className="flex flex-1 flex-col ">
+                    <div className="flex-1 px-4 py-6 overflow-y-auto max-h-full ">
+                        <div className="flex flex-col items-center justify-center h-full text-center border border-border rounded-2xl shadow-lg p-6">
+                            <div className="relative w-16 h-16 mb-6 animate-spin-slow">
+                                {/* Obracający się pierścień */}
+                                <div className="absolute inset-0 rounded-full border-4 border-primary/30 border-t-primary-foreground  border-b-primary animate-spin-slow" />
+
+                                {/* Static inner glow */}
+                                <div className="absolute inset-4 rounded-full bg-primary/10 backdrop-blur-md shadow-inner" />
+
+                                {/* Centralna kulka jako core-logo */}
+                                <div className="absolute top-1/2 left-1/2 w-5 h-5 bg-primary rounded-full shadow-xl -translate-x-1/2 -translate-y-1/2 border border-white/10 " />
+                            </div>
+                            <h2 className="text-xl font-semibold text-foreground mb-2">Łoadowanie...</h2>
+                            <p className="text-sm text-muted-foreground max-w-md">Trwa ładowanie, danych..</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -171,7 +205,14 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                                     <span className="sr-only">Info</span>
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>Więcej szczegółów</TooltipContent>
+                            <TooltipContent>
+                                <div className="flex flex-col">
+                                    <h1 className=""> Więcej szczegółów</h1>
+                                    <span className="text-xs">A</span>
+                                    <span>B</span>
+                                    <span>C</span>
+                                </div>
+                            </TooltipContent>
                         </Tooltip>
 
                         <Tooltip>
@@ -253,30 +294,41 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                     </Tooltip>
                 </div>
                 <Separator />
-                <div className="flex flex-1 flex-col ">
-                    <div className="flex flex-col items-start p-4">
-                        <div className="w-full  py-6 rounded-lg mb-3" style={{ backgroundImage: `url(${bannerURL})` }}>
-                            <div className="flex items-start gap-4 text-sm">
-                                <Avatar>
-                                    <AvatarImage alt={mail.name} />
-                                    {/* <AvatarFallback>
-                                        {mail.name
-                                            .split(" ")
-                                            .map((chunk) => chunk[0])
-                                            .join("")}
-                                    </AvatarFallback> */}
-                                </Avatar>
-                                <div className="grid gap-1">
-                                    <div className="font-semibold">{article?.product?.name}</div>
+                <div className="flex flex-1 flex-col">
+                    <div className="flex flex-col items-start px-6 mt-3.5 mb-3">
+                        {/* Banner z tłem oraz overlayem licznika */}
+                        <div
+                            className="w-full py-6 px-4 rounded-2xl mb-4 relative overflow-hidden shadow-lg"
+                            style={{
+                                backgroundImage: `url(${bannerURL})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                            }}
+                        >
+                            <div className="absolute inset-0 bg-background opacity-15"></div>
 
-                                    <div className="line-clamp-1 text-xs">
+                            {/* Overlay licznika z efektem glassmorphism */}
+                            <div className="absolute top-4 right-4 px-3 py-1 rounded-full flex items-center gap-1 backdrop-blur-md bg-muted">
+                                <EyeIcon className="w-5 h-5 text-primary" />
+                                <span className="text-xs font-semibold text-primary">{article?.viewsCounter || 0}</span>
+                            </div>
+
+                            {/* Zawartość banneru */}
+                            <div className="flex items-center gap-4 p-4">
+                                <div className="flex flex-col gap-1">
+                                    <div
+                                        className={`text-md font-bold text-[var(--foreground)] text-center px-2 py-1 rounded-md w-fit z-40`}
+                                    >
+                                        {article?.product?.name}
+                                    </div>
+                                    <div className="flex items-center gap-1 text-xs">
                                         {article?.isVerified ? (
-                                            <span className="flex items-center gap-1 text-xs text-green-400 font-medium">
+                                            <span className="flex items-center gap-1 text-green-400 font-medium">
                                                 <CheckCircleIcon className="w-4 h-4" />
                                                 Zweryfikowany
                                             </span>
                                         ) : (
-                                            <span className="flex items-center gap-1 text-xs text-yellow-400 font-medium">
+                                            <span className="flex items-center gap-1 text-yellow-400 font-medium">
                                                 <AlertTriangleIcon className="w-4 h-4" />
                                                 Wymaga weryfikacji
                                             </span>
@@ -285,19 +337,17 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                                 </div>
                             </div>
                         </div>
-                        <div className="grid gap-1">
-                            <div className="font-semibold px-12">{article?.title}</div>
 
-                            <div className="line-clamp-1 text-xs"></div>
+                        {/* Tytuł artykułu i metadane */}
+                        <div className="w-full px-4">
+                            <h1 className="text-xl font-bold mb-2 text-foreground">{article?.title}</h1>
                         </div>
-                        {/* {article?.createdAt && (
-                                <div className="ml-auto text-xs text-muted-foreground ">
-                                    {format(new Date(article.createdAt), "PPpp")}
-                                </div>
-                            )} */}
                     </div>
+
                     <Separator />
-                    <div className="flex-1 whitespace-pre-wrap px-3 text-sm overflow-y-auto max-h-[calc(100vh-280px)]">
+
+                    {/* Treść artykułu */}
+                    <div className="flex-1 whitespace-pre-wrap px-4 text-base text-[var(--foreground)] overflow-y-auto max-h-[calc(100vh-355px)]">
                         <ArticleDetailsX articleId={article?._id} />
                     </div>
                 </div>
@@ -390,36 +440,7 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                 </div>
                 <Separator />
                 <div className="flex flex-1 flex-col ">
-                    <div className="flex flex-col items-start p-4">
-                        <div className="w-full  py-6 rounded-lg" style={{ backgroundImage: `url(${bannerURL})` }}>
-                            <div className="flex items-start gap-4 text-sm">
-                                <Avatar>
-                                    <AvatarImage alt={mail.name} />
-                                    {/* <AvatarFallback>
-                                        {mail.name
-                                            .split(" ")
-                                            .map((chunk) => chunk[0])
-                                            .join("")}
-                                    </AvatarFallback> */}
-                                </Avatar>
-
-                                <div className="grid gap-1">
-                                    <div className="font-semibold">{article?.product?.name}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="grid gap-1">
-                            <div className="font-semibold px-12">{article?.title}</div>
-
-                            <div className="line-clamp-1 text-xs"></div>
-                        </div>
-                        {/* {article?.createdAt && (
-                                <div className="ml-auto text-xs text-muted-foreground ">
-                                    {format(new Date(article.createdAt), "PPpp")}
-                                </div>
-                            )} */}
-                    </div>
-                    <div className="flex-1 px-4 py-6 overflow-y-auto max-h-[calc(100vh-280px)]">
+                    <div className="flex-1 px-4 py-6 overflow-y-auto max-h-full ">
                         <div className="flex flex-col items-center justify-center h-full text-center border border-border rounded-2xl shadow-lg p-6">
                             <div className="relative w-16 h-16 mb-6">
                                 {/* Obracający się pierścień */}

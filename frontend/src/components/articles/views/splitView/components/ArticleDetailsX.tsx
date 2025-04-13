@@ -135,7 +135,7 @@ export const ArticleDetailsX = ({ articleId }: { articleId: string }) => {
                 {/* Nagłówek */}
                 <ScrollArea className="col-span-2 pr-4 h-fit">
                     {/* MAIN GRID - 2 COLUMNS */}
-                    <div className="grid grid-cols-1 gap-6 h-full my-4">
+                    <div className="grid grid-cols-1 gap-6 h-full my-[15px]">
                         <div>
                             {/* LEFT COLUMN */}
                             <Card className="bg-background min-h-[580px]">
