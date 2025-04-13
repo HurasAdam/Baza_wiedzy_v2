@@ -147,16 +147,47 @@ const ArticleHistory = ({ articleId, showBackwardArrow = false, closeArticleHist
                     {selectedItem && !isLoadingDetails && historyItem ? (
                         <ArticleHistoryDetails historyItem={historyItem} />
                     ) : isLoadingDetails ? (
-                        <div>Ładowanie szczegółów...</div>
-                    ) : (
-                        <div className="flex-1 p-4 px-5 bg-background w-full h-full flex justify-center items-center">
-                            <div className="text-center">
-                                <div className="w-16 h-16 rounded-full bg-gray-300 animate-pulse mx-auto mb-4"></div>
-                                <h3 className="text-xl font-semibold text-foreground/85">Wybierz element z listy</h3>
-                                <p className="text-sm text-foreground/75 mt-2">
-                                    Aby zobaczyć szczegóły historii, kliknij w jedną z pozycji po lewej stronie.
-                                </p>
+                        <div className="flex-1 px-4 py-6 overflow-y-auto max-h-full">
+                            <div className="flex flex-col items-center justify-center h-full text-center  rounded-2xl shadow-lg p-6">
+                                <div className="relative w-16 h-16 mb-6  animate-spin-slow">
+                                    {/* Obracający się pierścień */}
+                                    <div className="absolute inset-0 rounded-full border-4 border-primary/30 border-t-primary-foreground  border-b-primary  animate-spin-slow" />
+
+                                    {/* Static inner glow */}
+                                    <div className="absolute inset-4 rounded-full bg-primary/10 backdrop-blur-md shadow-inner  animate-spin-slow" />
+
+                                    {/* Centralna kulka jako core-logo */}
+                                    <div className="absolute top-1/2 left-1/2 w-5 h-5 bg-primary rounded-full shadow-xl -translate-x-1/2 -translate-y-1/2 border border-white/10  animate-pulse" />
+                                </div>
+                                <h2 className="text-2xl font-semibold text-foreground mb-2">Ładowanie...</h2>
+                                <p className="text-sm text-muted-foreground max-w-md">Trwa pobieranie danych...</p>
                             </div>
+                        </div>
+                    ) : (
+                        // <div className="flex-1 p-4 px-5 bg-background w-full h-full flex justify-center items-center">
+                        //     <div className="text-center">
+                        //         <div className="w-16 h-16 rounded-full bg-gray-300 animate-pulse mx-auto mb-4"></div>
+                        //         <h3 className="text-xl font-semibold text-foreground/85">Wybierz element z listy</h3>
+                        //         <p className="text-sm text-foreground/75 mt-2">
+                        //             Aby zobaczyć szczegóły historii, kliknij w jedną z pozycji po lewej stronie.
+                        //         </p>
+                        //     </div>
+                        // </div>
+                        <div className="flex flex-col items-center justify-center h-full text-center border border-border rounded-2xl shadow-lg p-6">
+                            <div className="relative w-16 h-16 mb-6">
+                                {/* Obracający się pierścień */}
+                                <div className="absolute inset-0 rounded-full border-4 border-primary/30 border-t-primary-foreground  border-b-primary" />
+
+                                {/* Static inner glow */}
+                                <div className="absolute inset-4 rounded-full bg-primary/10 backdrop-blur-md shadow-inner" />
+
+                                {/* Centralna kulka jako core-logo */}
+                                <div className="absolute top-1/2 left-1/2 w-5 h-5 bg-primary rounded-full shadow-xl -translate-x-1/2 -translate-y-1/2 border border-white/10" />
+                            </div>
+                            <h2 className="text-xl font-semibold text-foreground/85">Wybierz element z listy</h2>
+                            <p className="text-sm text-foreground/75 mt-2">
+                                Aby zobaczyć szczegóły historii, kliknij w jedną z pozycji po lewej stronie.
+                            </p>
                         </div>
                     )}
                 </div>

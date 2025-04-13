@@ -4,8 +4,8 @@ export const searchDto = z.object({
     limit: z
         .string()
         .optional()
-        .default("15")
-        .transform((v) => parseInt(v) || 15),
+        .default("25")
+        .transform((v) => parseInt(v) || 25),
 
     page: z
         .string()

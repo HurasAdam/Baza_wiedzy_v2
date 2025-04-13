@@ -1,70 +1,75 @@
 "use client";
 
 import { LucideIcon } from "lucide-react";
-
 import { Link } from "react-router-dom";
 import { cn } from "../../../../../utils/cn";
 import { buttonVariants } from "../../../../ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../../../ui/tooltip";
+import { Tooltip, TooltipTrigger } from "../../../../ui/tooltip";
 
 interface NavProps {
     isCollapsed: boolean;
+    className?: string;
     links: {
-        title: string;
-        label?: string;
+        name: string; // Nazwa wyświetlana w pełnym widoku
+        label?: string; // Przykładowo liczba wiadomości lub etykieta
         icon: LucideIcon;
-        variant: "default" | "ghost";
+        variant?: "default" | "ghost";
+        isActive?: boolean;
     }[];
 }
 
-export function Nav({ links, isCollapsed }: NavProps) {
+export function Nav({ links, isCollapsed, className }: NavProps) {
     return (
-        <div data-collapsed={isCollapsed} className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2">
-            <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
+        <div
+            data-collapsed={isCollapsed}
+            className={cn(
+                "flex flex-col gap-3 py-2 transition-all duration-200",
+                isCollapsed ? "py-2" : "px-2",
+                className
+            )}
+        >
+            <nav className="grid gap-2 px-2 ">
                 {links?.map((link, index) =>
                     isCollapsed ? (
                         <Tooltip key={index} delayDuration={0}>
                             <TooltipTrigger asChild>
                                 <Link
-                                    to={"/"}
+                                    to="/"
+                                    aria-label={link.name}
                                     className={cn(
-                                        buttonVariants({ variant: link.variant, size: "icon" }),
-                                        "h-9 w-9",
-                                        link.variant === "default" &&
-                                            "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                                        // Użycie wariantu ikony
+                                        buttonVariants({ variant: link.variant || "ghost", size: "icon" }),
+                                        "h-10 w-10 flex items-center justify-center rounded-full transition-colors duration-200 ",
+                                        // Podświetlenie ikony przy hoverze
+                                        "hover:bg-primary hover:text-white"
                                     )}
                                 >
-                                    {link.icon && <link.icon className="h-4 w-4" />}
-                                    <span className="sr-only">{link?.name}</span>
+                                    {link.icon && <link.icon className="h-5 w-5" />}
                                 </Link>
                             </TooltipTrigger>
-                            <TooltipContent side="right" className="flex items-center gap-4">
-                                {/* {link.title}
-                                {link.label && <span className="ml-auto text-muted-foreground">{link.label}</span>} */}
-                            </TooltipContent>
                         </Tooltip>
                     ) : (
                         <Link
                             key={index}
-                            to={"/"}
+                            to=""
                             className={cn(
-                                link.variant === "default" &&
-                                    "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                                "justify-start"
+                                "flex items-center justify-between gap-3 px-3 py-2 rounded-lg  transition-all duration-200 border bg-muted/30   ",
+                                // Stan aktywny – wyraźny kolor i cień
+                                link.isActive
+                                    ? "bg-primary text-primary-foreground shadow-md border-transparent"
+                                    : " text-primary-foreground  hover:bg-muted hover:text-primary",
+                                // Dla wariantu domyślnego podkreślamy typografię
+                                link.variant === "default" && "font-medium"
                             )}
                         >
-                            {link.icon && <link.icon className="mr-2 h-4 w-4" />}
-                            {link?.name}
-                            {link.label && (
-                                <span
-                                    className={cn(
-                                        "ml-auto",
-                                        link.variant === "default" && "text-background dark:text-white"
-                                    )}
-                                >
-                                    {link?.name}
-                                </span>
-                            )}
+                            <div className="flex items-center gap-3">
+                                {link.icon && <link.icon className="h-6 w-6" />}
+                                <span className="text-xs">{link.name}</span>
+                            </div>
+
+                            <span className="flex items-center justify-center rounded-full bg-card px-2 py-0.5 text-xs font-medium">
+                                {index}
+                            </span>
                         </Link>
                     )
                 )}
