@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import mongoose, { Schema } from "mongoose";
 import { compareValue, hashValue } from "@/utils/bcrypt";
 
-type UserWithoutPassword = Omit<UserDocument, "password">;
+export type UserWithoutPassword = Omit<UserDocument, "password">;
 
 export interface UserDocument extends mongoose.Document {
     _id: ObjectId;
@@ -16,10 +16,11 @@ export interface UserDocument extends mongoose.Document {
     createdAt: Date;
     updatedAt: Date;
     lastLogin: Date | null;
-    comparePassword(val: string): Promise<boolean>;
-    omitPassword(): UserWithoutPassword;
     favourites: mongoose.Types.ObjectId[];
     role: string;
+
+    comparePassword(val: string): boolean;
+    omitPassword(): UserWithoutPassword;
 }
 
 const userSchema = new Schema<UserDocument>(
@@ -44,17 +45,16 @@ userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) {
         return next();
     }
-    this.password = await hashValue(this.password);
+    this.password = hashValue(this.password);
     next();
 });
 
-userSchema.methods.comparePassword = async function (value: string) {
+userSchema.methods.comparePassword = function (value: string) {
     return compareValue(value, this.password);
 };
 
 userSchema.methods.omitPassword = function () {
-    const user = this.toObject();
-    delete user.password;
+    const { password, ...user } = this.toObject();
     return user;
 };
 

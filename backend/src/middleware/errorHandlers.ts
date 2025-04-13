@@ -23,8 +23,9 @@ const handleAppError = (res: Response, error: AppError) => {
     });
 };
 
-const errorHandler: ErrorRequestHandler = async (error, req, res, next) => {
-    console.log(`PATH: ${req.path}`, error);
+const errorHandler: ErrorRequestHandler = async (error: Error, req, res, next) => {
+    console.log("-----");
+    console.log("Error:", error.stack);
 
     if (req.path === "REFRESH_PATH") {
         clearAuthCookies(res);

@@ -1,7 +1,9 @@
-import cookieParser from "cookie-parser";
-import cors from "cors";
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import helmet from "helmet";
 import connectDB from "./config/db";
 import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 import { articleRoutes } from "./features/article/article.route";
@@ -17,6 +19,8 @@ import errorHandler from "./middleware/errorHandlers";
 
 const app = express();
 app.use(express.json());
+app.use(morgan("dev"));
+app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 app.use(
     cors({
@@ -29,13 +33,13 @@ app.use(cookieParser());
 app.use("/auth", authRoutes);
 
 //#protected routes
-app.use("/users", authenticate, userRoutes);
-app.use("/articles", authenticate, articleRoutes);
-app.use("/tags", authenticate, tagRoutes);
-app.use("/products", authenticate, productRoutes);
-app.use("/conversation-topics", authenticate, conversationTopicRoutes);
-app.use("/conversation-report", authenticate, conversationReportRoutes);
-app.use("/dashboard", authenticate, dashboardRoutes);
+app.use("/users", authenticate(), userRoutes);
+app.use("/articles", authenticate(), articleRoutes);
+app.use("/tags", authenticate(), tagRoutes);
+app.use("/products", authenticate(), productRoutes);
+app.use("/conversation-topics", authenticate(), conversationTopicRoutes);
+app.use("/conversation-report", authenticate(), conversationReportRoutes);
+app.use("/dashboard", authenticate(), dashboardRoutes);
 
 app.use(errorHandler);
 
