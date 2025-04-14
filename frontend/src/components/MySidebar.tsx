@@ -7,10 +7,12 @@ import { ImStatsBars2 } from "react-icons/im";
 import { MdFavorite } from "react-icons/md";
 import { PiArticleMediumFill } from "react-icons/pi";
 import { NavLink } from "react-router-dom";
-import { IMAGES } from "../constants/images";
+import { Alert } from "./alert/Alert";
+import { useAlert } from "./alert/hooks/useAlert";
 
 export const MySidebar = () => {
     const { logoutAction } = useLogout();
+    const { openAlert: openLogoutAlert, isOpen: isLogoutAlertOpen, closeAlert: closeLogoutAlert } = useAlert();
     const primaryMenuItems = [
         { icon: <Home size={21} />, label: "Główna", link: "/dashboard" },
         { icon: <PiArticleMediumFill size={22} />, label: "Artykuły", link: "/articles" },
@@ -20,14 +22,28 @@ export const MySidebar = () => {
         { icon: <FaAddressBook size={21} />, label: "Działy", link: "/departments" },
     ];
 
-    const utilityMenuItems = [{ icon: <LogOut size={21} />, label: "Wyloguj", onClick: logoutAction }];
+    const logoutHandler = () => {
+        openLogoutAlert();
+    };
+
+    const utilityMenuItems = [{ icon: <LogOut size={21} />, label: "Wyloguj", onClick: logoutHandler }];
 
     return (
         <div className="min-w-[88px] h-full  ">
             {/* Sidebar bez zmian kolorystycznych */}
             <div className="w-[88px] fixed top-0 h-full py-2 flex flex-col text-foreground bg-sidebar border-r ">
-                <div className="mx-auto mb-9 bg-sidebar-accent p-2.5 rounded-xl backdrop-blur-md">
-                    <img className="w-6 h-6" src={IMAGES.Logo} alt="logo" />
+                <div className="mx-auto mb-9 bg-sidebar-accent p-1.5 rounded-xl backdrop-blur-md">
+                    {/* <img className="w-6 h-6" src={IMAGES.Logo} alt="logo" /> */}
+                    <div className="relative w-8 h-8">
+                        {/* Obracający się pierścień */}
+                        <div className="absolute inset-0 rounded-full border-4 border-primary/30 border-t-primary-foreground  border-b-primary animate-spin-ultra-slow " />
+
+                        {/* Static inner glow */}
+                        <div className="absolute inset-4 rounded-full bg-primary/10 backdrop-blur-md shadow-inner " />
+
+                        {/* Centralna kulka jako core-logo */}
+                        <div className="absolute top-1/2 left-1/2 w-4 h-4 bg-primary rounded-full shadow-xl -translate-x-1/2 -translate-y-1/2 border border-white/10 " />
+                    </div>
                 </div>
                 <div className="flex-1 overflow-auto flex flex-col gap-4 items-center ">
                     {primaryMenuItems.map((item, index) => (
@@ -38,7 +54,7 @@ export const MySidebar = () => {
                                 clsx(
                                     "group block text-center transition-all duration-300 p-2 text-sidebar-foreground ",
                                     {
-                                        "  text-sidebar-primary": isActive, // lekkie powiększenie aktywnego elementu
+                                        "  text-sidebar-primary brightness-95": isActive, // lekkie powiększenie aktywnego elementu
                                     }
                                 )
                             }
@@ -53,6 +69,7 @@ export const MySidebar = () => {
                         </NavLink>
                     ))}
                 </div>
+
                 <div className="text-center pt-2 flex flex-col items-center gap-6">
                     {utilityMenuItems.map((item, index) => (
                         <button
@@ -66,6 +83,9 @@ export const MySidebar = () => {
                     ))}
                 </div>
             </div>
+            <Alert type="info" isOpen={isLogoutAlertOpen} onCancel={closeLogoutAlert} onConfirm={logoutAction}>
+                <div>Czy na pewno chcesz się wylogować?</div>
+            </Alert>
         </div>
     );
 };
