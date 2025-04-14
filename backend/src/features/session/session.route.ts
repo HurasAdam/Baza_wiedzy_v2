@@ -6,4 +6,4 @@ const sessionController = SessionController();
 
 // prefix /sessions
 sessionRoutes.get("/", sessionController.find);
-sessionRoutes.delete("/:id", sessionController.delete);
+sessionRoutes.delete("/:id", sessionController.deleteOne);
