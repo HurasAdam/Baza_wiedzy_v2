@@ -68,7 +68,7 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                     onClick={openSearchModal}
                     className="bg-input flex items-center gap-1 h-full rounded-md border border-border w-[240px] cursor-pointer     p-1 px-3 text-slate-400"
                 >
-                    <IoIosSearch size={19} className="text-sidebar-foreground" />
+                    <IoIosSearch size={18.5} className="text-sidebar-foreground" />
                     <p className="max-sm:hidden pr-[3rem] text-sidebar-foreground text-sm ">wyszukaj artukuł...</p>
                 </button>
                 <TooltipProvider delayDuration={300}>
@@ -76,9 +76,9 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                         <TooltipTrigger asChild>
                             <button
                                 onClick={openCallsModal}
-                                className="bg-transparent group hover:bg-primary transition-all px-2.5 py-2 rounded-xl flex items-center justify-center text-primary"
+                                className="bg-transparent group hover:bg-primary/80   0 transition-all px-2.5 py-2 rounded-xl flex items-center justify-center text-primary"
                             >
-                                <MdPhoneInTalk size={19} className="group-hover:text-secondary" />
+                                <MdPhoneInTalk size={18.5} className="group-hover:text-secondary text-primary/95" />
                             </button>
                         </TooltipTrigger>
                         <TooltipContent className="text-base">Odnotuj temat rozmowy</TooltipContent>
@@ -88,12 +88,12 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                 <TooltipProvider delayDuration={300}>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <div
+                            <button
                                 onClick={openCreateArticleModal}
-                                className="bg-transparent group hover:bg-primary transition-all px-2.5 py-2 rounded-xl flex items-center justify-center text-primary"
+                                className="bg-transparent group hover:bg-primary/80  transition-all px-2.5 py-2 rounded-lg flex items-center justify-center text-primary"
                             >
-                                <MdAssignmentAdd size={19} className="group-hover:text-secondary" />
-                            </div>
+                                <MdAssignmentAdd size={18.5} className="group-hover:text-secondary text-primary/95" />
+                            </button>
                         </TooltipTrigger>
                         <TooltipContent className="text-base">Dodaj artykuł</TooltipContent>
                     </Tooltip>
@@ -103,10 +103,10 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <button
-                                className="bg-transparent group hover:bg-primary transition-all px-2.5 py-2 rounded-xl flex items-center justify-center text-primary"
+                                className="bg-transparent group hover:bg-primary/80  transition-all px-2.5 py-2 rounded-xl flex items-center justify-center text-primary"
                                 onClick={openDrawer}
                             >
-                                <IoNotifications size={19} className="group-hover:text-secondary " />
+                                <IoNotifications size={18} className="group-hover:text-secondary text-primary/95 " />
                             </button>
                         </TooltipTrigger>
                         <TooltipContent className="text-base">Powiadomienia</TooltipContent>
@@ -121,7 +121,7 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                     position={{ align: "end", side: "bottom", sideOffset: 7, alignOffset: 0 }}
                     options={profileMenuOptions}
                     triggerBtn={
-                        <div className="rounded-full flex items-center gap-2 cursor-pointer bg-muted p-1.5">
+                        <div className="rounded-full flex items-center gap-2 cursor-pointer bg-muted/90 p-1.5 hover:bg-muted">
                             <Avatar className="h-6 w-6 bg-primary">
                                 <AvatarImage src={user} alt={user.name} />
                                 <AvatarFallback className="text-base font-sembibold bg-primary text-secondary">
