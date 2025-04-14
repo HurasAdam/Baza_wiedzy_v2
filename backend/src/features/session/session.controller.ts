@@ -1,45 +1,17 @@
-import { z } from "zod";
-import { NOT_FOUND, OK } from "@/constants/http";
-import SessionModel from "./session.model";
-import appAssert from "@/utils/appAssert";
+import { OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
+import { sessionIdDto } from "./dto/session-id.dto";
+import { SessionService } from "./session.service";
 
-export const SessionController = () => ({
-    find: catchErrors(async (req, res) => {
-        const sessions = await SessionModel.find(
-            {
-                userId: req.userId,
-                expiresAt: { $gt: Date.now() },
-            },
-            {
-                _id: 1,
-                userAgent: 1,
-                createdAt: 1,
-            },
-            {
-                sort: { createdAt: -1 },
-            }
-        );
-
-        return res.status(OK).json(
-            // mark the current session
-            sessions.map((session) => ({
-                ...session.toObject(),
-                ...(session.id === req.sessionId && {
-                    isCurrent: true,
-                }),
-            }))
-        );
+export const SessionController = (sessionService = SessionService) => ({
+    find: catchErrors(async ({ user, sessionId }, res) => {
+        const result = await sessionService.find(user.id, sessionId);
+        return res.status(OK).json(result);
     }),
 
-    delete: catchErrors(async (req, res) => {
-        const sessionId = z.string().parse(req.params.id);
-        const deleted = await SessionModel.findOneAndDelete({
-            _id: sessionId,
-            userId: req.userId,
-        });
-        appAssert(deleted, NOT_FOUND, "Session not found");
-
+    deleteOne: catchErrors(async ({ user, params }, res) => {
+        const sessionId = sessionIdDto.parse(params.id);
+        await sessionService.deleteOne(user.id, sessionId);
         return res.status(OK).json({ message: "Session removed" });
     }),
 });
