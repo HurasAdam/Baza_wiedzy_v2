@@ -74,10 +74,12 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
             return productApi.updateOne(productId, formData);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["all-products"]);
+            queryClient.invalidateQueries(["product"], productId);
+
             onClose();
             toast.success("Produkt został zaktualizowany pomyślnie .");
         },
+
         onError: (error) => {
             if (error?.status === 409) {
                 // Jeśli kod błędu to 409, ustaw błąd w polu "name"

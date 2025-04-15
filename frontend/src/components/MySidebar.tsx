@@ -14,12 +14,12 @@ export const MySidebar = () => {
     const { logoutAction } = useLogout();
     const { openAlert: openLogoutAlert, isOpen: isLogoutAlertOpen, closeAlert: closeLogoutAlert } = useAlert();
     const primaryMenuItems = [
-        { icon: <Home size={21} />, label: "Główna", link: "/dashboard" },
-        { icon: <PiArticleMediumFill size={22} />, label: "Artykuły", link: "/articles" },
-        { icon: <MdFavorite size={21} />, label: "Ulubione", link: "/favourites" },
-        { icon: <ImStatsBars2 size={21} />, label: "Statystyki", link: "/statistics" },
-        { icon: <FaPhoneSquareAlt size={21} />, label: "Tematy", link: "/topics" },
-        { icon: <FaAddressBook size={21} />, label: "Działy", link: "/departments" },
+        { icon: <Home size={22} />, label: "Start", link: "/dashboard" },
+        { icon: <PiArticleMediumFill size={21} />, label: "Artykuły", link: "/articles" },
+        { icon: <MdFavorite size={22} />, label: "Ulubione", link: "/favourites" },
+        { icon: <ImStatsBars2 size={22} />, label: "Statystyki", link: "/statistics" },
+        { icon: <FaPhoneSquareAlt size={22} />, label: "Tematy", link: "/topics" },
+        { icon: <FaAddressBook size={22} />, label: "Działy", link: "/departments" },
     ];
 
     const logoutHandler = () => {
@@ -50,22 +50,36 @@ export const MySidebar = () => {
                         <NavLink
                             key={index}
                             to={item.link}
-                            className={({ isActive }) =>
-                                clsx(
-                                    "group block text-center transition-all duration-300 p-2 text-sidebar-foreground ",
-                                    {
-                                        "  text-sidebar-primary brightness-95": isActive, // lekkie powiększenie aktywnego elementu
-                                    }
-                                )
-                            }
+                            // Klasa dla całego linku – możesz tu ustawić styl ogólny
+                            className="group flex items-center  gap-1.5  text-center transition-all duration-300 p-2  flex-col"
                         >
-                            <div
-                                className="inline-block transition-transform duration-300 ease-in-out
-                                           group-hover:scale-110 group-hover:drop-shadow-md"
-                            >
-                                {item.icon}
-                            </div>
-                            <span className="block text-xs mt-1">{item.label}</span>
+                            {({ isActive }) => (
+                                <>
+                                    <div
+                                        className={clsx(
+                                            "inline-block transition-transform duration-300 ease-in-out group-hover:scale-110 group-hover:drop-shadow-md",
+                                            {
+                                                // Na przykład możesz zmienić również styl ikony, jeśli chcesz
+                                            }
+                                        )}
+                                    >
+                                        <span
+                                            className={clsx("transition-colors duration-300", {
+                                                "text-sidebar-primary/85": isActive, // domyślna klasa
+                                            })}
+                                        >
+                                            {item.icon}
+                                        </span>
+                                    </div>
+                                    <span
+                                        className={clsx("transition-colors duration-300 text-[11px] font-semibold", {
+                                            "text-sidebar-primary/85": isActive, // domyślna klasa
+                                        })}
+                                    >
+                                        {item.label}
+                                    </span>
+                                </>
+                            )}
                         </NavLink>
                     ))}
                 </div>
