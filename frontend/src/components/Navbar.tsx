@@ -4,9 +4,10 @@ import { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoNotifications } from "react-icons/io5";
 import { MdAssignmentAdd, MdPhoneInTalk } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/auth/useUser";
 import { getAvatarFallbackText } from "../utils/avatar";
+import { getPageTitle } from "../utils/route-mapper";
 import { Dropdown } from "./core/Dropdown";
 import { SideDrawer } from "./core/SideDrawer";
 import ShortcutCallRegisterForm from "./forms/ShortcutCallRegisterForm";
@@ -15,6 +16,7 @@ import { Modal } from "./modal/Modal";
 import NotificationsPanel from "./NotificationsPanel";
 import SettingsContainer from "./SettingsContainer";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Popover, PopoverTrigger } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
 const Navbar: React.FC = ({ openCreateArticleModal }) => {
@@ -23,6 +25,8 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
     const { openModal: openSettingsModal, isOpen: isSettingsModalOpen, closeModal: closeSettingsModal } = useModal();
     const user = useUser();
     const navigate = useNavigate();
+    const location = useLocation();
+    const { title, icon: Icon } = getPageTitle(location.pathname);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -59,8 +63,10 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
 
     return (
         <div className="flex justify-between sticky top-0 left-0 items-center z-40 px-5 py-2.5 h-[56px] bg-background border-b">
-            <div>
-                <span className="text-base font-semibold text-foreground">Baza wiedzy</span>
+            <div className="rounded-md py-1 ml-6">
+                <div className="flex items-center gap-1.5 text-xs  font-semibold text-primary-foreground">
+                    <Icon className="w-5 h-5 text-foreground" /> {title}
+                </div>
             </div>
 
             <div className="flex gap-4 items-center">
@@ -81,7 +87,7 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                                 <MdPhoneInTalk size={18.5} className="group-hover:text-secondary text-primary/95" />
                             </button>
                         </TooltipTrigger>
-                        <TooltipContent className="text-base">Odnotuj temat rozmowy</TooltipContent>
+                        <TooltipContent>Odnotuj temat rozmowy</TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
 
@@ -95,21 +101,28 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                                 <MdAssignmentAdd size={18.5} className="group-hover:text-secondary text-primary/95" />
                             </button>
                         </TooltipTrigger>
-                        <TooltipContent className="text-base">Dodaj artykuł</TooltipContent>
+                        <TooltipContent>Dodaj artykuł</TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
 
                 <TooltipProvider delayDuration={300}>
                     <Tooltip>
-                        <TooltipTrigger asChild>
-                            <button
-                                className="bg-transparent group hover:bg-primary/80  transition-all px-2.5 py-2 rounded-xl flex items-center justify-center text-primary"
-                                onClick={openDrawer}
-                            >
-                                <IoNotifications size={18} className="group-hover:text-secondary text-primary/95 " />
-                            </button>
-                        </TooltipTrigger>
-                        <TooltipContent className="text-base">Powiadomienia</TooltipContent>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <TooltipTrigger asChild>
+                                    <button
+                                        className="bg-transparent group hover:bg-primary/80  transition-all px-2.5 py-2 rounded-xl flex items-center justify-center text-primary"
+                                        onClick={openDrawer}
+                                    >
+                                        <IoNotifications
+                                            size={18}
+                                            className="group-hover:text-secondary text-primary/95 "
+                                        />
+                                    </button>
+                                </TooltipTrigger>
+                            </PopoverTrigger>
+                        </Popover>
+                        <TooltipContent>Powiadomienia</TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
 

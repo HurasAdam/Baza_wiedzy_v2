@@ -54,6 +54,7 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
         queryFn: () => {
             return articleApi.getArticle({ id: selectedArticle });
         },
+        refetchOnWindowFocus: false,
     });
 
     const { mutate, isPending: isVerifyPending } = useMutation({
