@@ -1,7 +1,7 @@
 import { Home } from "lucide-react";
 import { ComponentType } from "react";
-import { FaAddressBook, FaPhoneSquareAlt } from "react-icons/fa";
-import { MdArticle, MdBarChart, MdDashboard, MdFavorite } from "react-icons/md";
+import { FaAddressBook, FaPhoneSquareAlt, FaStar } from "react-icons/fa";
+import { MdArticle, MdBarChart, MdDashboard } from "react-icons/md";
 import { PiArticleMediumFill } from "react-icons/pi";
 
 const pageMeta: Record<string, { title: string; icon: ComponentType<{ size?: number }> }> = {
@@ -9,7 +9,7 @@ const pageMeta: Record<string, { title: string; icon: ComponentType<{ size?: num
     "/articles": { title: "Baza artykułów", icon: PiArticleMediumFill },
     "/statistics": { title: "Statystyki", icon: MdBarChart },
     "/topics": { title: "Rejestr rozmów", icon: FaPhoneSquareAlt },
-    "/favourites": { title: "Ulubione", icon: MdFavorite },
+    "/favourites": { title: "Moje ulubione", icon: FaStar },
     "/departments": { title: "Lista działów", icon: FaAddressBook },
 };
 

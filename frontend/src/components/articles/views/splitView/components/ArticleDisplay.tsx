@@ -224,7 +224,7 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                                     <span className="sr-only">Move to junk</span>
                                 </Button>
                             </TooltipTrigger>
-                            <TooltipContent>Move to junk</TooltipContent>
+                            <TooltipContent>Uwagi</TooltipContent>
                         </Tooltip>
 
                         <Separator orientation="vertical" className="mx-1 h-6" />
@@ -243,6 +243,15 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                         </Tooltip>
                     </div>
                     <div className="ml-auto flex items-center gap-2">
+                    <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button onClick={editArticleHandler} variant="ghost" size="icon">
+                                    <MdModeEdit className="h-4 w-4" />
+                                    <span className="sr-only">Forward</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Edytuj</TooltipContent>
+                        </Tooltip>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button
@@ -264,15 +273,7 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                             <TooltipContent>{article?.isVerified ? "Cofnij weryfikację" : "Zweryfikuj"}</TooltipContent>
                         </Tooltip>
 
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button onClick={editArticleHandler} variant="ghost" size="icon">
-                                    <MdModeEdit className="h-4 w-4" />
-                                    <span className="sr-only">Forward</span>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Edytuj</TooltipContent>
-                        </Tooltip>
+                 
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button onClick={deleteArticleHandler} variant="ghost" size="icon">
@@ -283,16 +284,8 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                             <TooltipContent>Usuń</TooltipContent>
                         </Tooltip>
                     </div>
-                    <Separator orientation="vertical" className="mx-2 h-6" />
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button onClick={deleteArticleHandler} variant="ghost" size="icon">
-                                <Trash2 className="h-4 w-4" />
-                                <span className="sr-only">Usuń</span>
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>Usuń</TooltipContent>
-                    </Tooltip>
+               
+               
                 </div>
                 <Separator />
                 <div className="flex flex-1 flex-col">
