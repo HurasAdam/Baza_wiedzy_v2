@@ -1,9 +1,13 @@
+import { LayoutDashboard } from "lucide-react";
+
 const AdminDashboard = () => {
+
+
     return (
-        <div className="p-6 space-y-6">
+        <div className="px-6 pb-6 space-y-6">
             {/* Nagłówek i przycisk do raportowania */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <h2 className="text-2xl font-semibold text-foreground dark:text-white">Helpdesk Dashboard</h2>
+                <h2 className="text-2xl font-semibold text-foreground dark:text-white flex items-center gap-1.5 mb-6 "><LayoutDashboard/>Dashboard</h2>
                 <button className="px-4 py-2 mt-4 md:mt-0 text-sm font-medium text-foreground bg-green-700 rounded-md hover:bg-green-600 transition">
                     Pobierz raport
                 </button>

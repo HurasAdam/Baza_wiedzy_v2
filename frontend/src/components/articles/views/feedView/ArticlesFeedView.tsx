@@ -11,16 +11,45 @@ import { Search, Star } from "lucide-react";
 import { type ChangeEventHandler } from "react";
 import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import { Link, useOutletContext, useSearchParams } from "react-router-dom";
 import { articleApi } from "../../../../lib/article.api";
 import { useModal } from "../../../modal/hooks/useModal";
 import { Modal } from "../../../modal/Modal";
+import { IMAGES } from "@/constants/images";
 
 const ArticleList = () => {
-    const [params] = useSearchParams();
+    const [params,setParams] = useSearchParams();
     const { articles, isError, isLoading, error } = useFetchArticles(params);
-
+  
     const { state, setState } = useOutletContext();
+
+    const resetFilterHandler = () => {
+        setParams();
+    };
+
+
+if(isLoading){
+    return(
+        <div className="relative h-full w-full">
+        <div className=" flex h-full items-center justify-center">
+        <div className="flex flex-col items-center justify-center h-full text-center  w-full rounded-2xl shadow-lg p-6">
+                    <div className="relative w-16 h-16 mb-6 animate-spin-slow">
+                        {/* Obracający się pierścień */}
+                        <div className="absolute inset-0 rounded-full border-4 border-primary/30 border-t-primary-foreground  border-b-primary animate-spin-slow" />
+
+                        {/* Static inner glow */}
+                        <div className="absolute inset-4 rounded-full bg-primary/10 backdrop-blur-md shadow-inner" />
+
+                        {/* Centralna kulka jako core-logo */}
+                        <div className="absolute top-1/2 left-1/2 w-5 h-5 bg-primary rounded-full shadow-xl -translate-x-1/2 -translate-y-1/2 border border-white/10 " />
+                    </div>
+                    <h2 className="text-xl font-semibold text-foreground mb-2">Łoadowanie...</h2>
+                    <p className="text-sm text-muted-foreground max-w-md">Trwa ładowanie, danych..</p>
+                </div>
+        </div>
+    </div>
+    )
+}
 
     if (isError) {
         return (
@@ -32,18 +61,36 @@ const ArticleList = () => {
     }
 
     if (!isLoading && articles.data.length === 0) {
+
         return (
-            <>
-                <h1 className="text-2xl font-semibold">Artykuły</h1>
-                <div className="m-5">Nie znaleziono artykułów</div>
-            </>
+            <div className="flex p-5 h-full max-w-[1540px] mx-auto gap-6 min-h-[calc(100vh-120px)] justify-center items-center">
+                <div className="text-center space-y-6 flex flex-col items-center justify-center p-10 rounded-lg  w-full max-w-[500px] ">
+                    <img
+                        src={IMAGES.findArticleImage}  
+                        alt="Brak wyników"
+                        className="w-32 h-auto mx-auto mb-4"
+                    />
+                    <h2 className="text-lg font-semibold text-primary-foreground/90">
+                        Wygląda na to, że nie znaleźliśmy żadnych artykułów spełniających kryteria wyszukiwania.
+                    </h2>
+                    <p className="text-sm text-gray-500">
+                        Spróbuj zmienić filtr lub wróć do głównej listy artykułów, aby znaleźć coś interesującego.
+                    </p>
+                    <Button
+                       onClick={resetFilterHandler}
+                        className="mt-4 text-primary-600 hover:text-primary-800 font-medium text-sm bg-primary/80"
+                    >
+                        Zresetuj filtry
+                    </Button>
+                </div>
+            </div>
         );
     }
 
     return (
         <>
-            <div className="flex justify-between mb-4 ">
-                <h1 className="text-2xl font-semibold">Artykuły</h1>
+            <div className="flex justify-between mb-3.5 ">
+                <h1 className="text-xl font-semibold">Artykuły</h1>
                 <SelectBox
                     value={params.get("sort") || "default"}
                     onChange={() => void 0}
@@ -74,7 +121,7 @@ const ArticleList = () => {
     );
 };
 
-const ArticleListItem = ({ article, className }: { article: IArticle; className?: string }) => {
+export const ArticleListItem = ({ article, className }: { article: IArticle; className?: string }) => {
     const queryClient = useQueryClient();
     const { mutate } = useMutation({
         mutationFn: (id) => {
@@ -190,7 +237,7 @@ export const ArticlesFilter = () => {
                 </div>
             </div>
 
-            <Button className="w-full mt-3" onClick={resetFilterHandler}>
+            <Button className="w-full mt-3 bg-primary/70" onClick={resetFilterHandler}>
                 Wyczyść filtry
             </Button>
         </div>
@@ -199,7 +246,7 @@ export const ArticlesFilter = () => {
 
 export const ArticlesFeedView = () => {
     return (
-        <div className="text-foreground p-5 h-full flex w-full max-w-[1540px] mx-auto gap-6">
+        <div className="text-foreground p-5 min-h-[calc(100vh-190px)]  flex w-full max-w-[1540px] mx-auto gap-6 ">
             <ArticlesFilter />
             <div className="w-full">
                 <ArticleList />

@@ -18,6 +18,7 @@ interface AccountSwitcherProps {
 export function AccountSwitcher({ isCollapsed, accounts, products }: AccountSwitcherProps) {
     const [selectedAccount, setSelectedAccount] = React.useState<string>(accounts[0].email);
 
+    console.log("WYBRANO",selectedAccount)
     return (
         <Select defaultValue={selectedAccount} onValueChange={setSelectedAccount}>
             <SelectTrigger
@@ -28,10 +29,10 @@ export function AccountSwitcher({ isCollapsed, accounts, products }: AccountSwit
                 )}
                 aria-label="Select account"
             >
-                <SelectValue placeholder="Select an account">
+                <SelectValue placeholder="Wybierz produkt">
                     {accounts.find((account) => account.email === selectedAccount)?.icon}
                     <span className={cn("ml-2", isCollapsed && "hidden")}>
-                        {accounts.find((account) => account.email === selectedAccount)?.label}
+                        {products?.find((product) => product?._id === selectedAccount)?._id}
                     </span>
                 </SelectValue>
             </SelectTrigger>
@@ -46,6 +47,7 @@ export function AccountSwitcher({ isCollapsed, accounts, products }: AccountSwit
                 ))} */}
                 {products?.map((product) => {
                     const bannerURL = BANNER_IMAGES?.[product.banner]; // albo ścieżka np. `/banners/${product.banner}.png`
+                    console.log(product,"PRODUKT")
                     return (
                         <SelectItem value={product?.name}>
                             <div className="flex items-center gap-3 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0 [&_svg]:text-foreground">
