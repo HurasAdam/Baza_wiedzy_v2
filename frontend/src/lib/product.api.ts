@@ -3,8 +3,8 @@ import { crurl } from "@/utils/crurl";
 
 const baseUrl = "/products";
 
-const find = () => {
-    return api.get(baseUrl);
+const find = (params: URLSearchParams) => {
+    return api.get(baseUrl, { params });
 };
 
 const create = (data) => {

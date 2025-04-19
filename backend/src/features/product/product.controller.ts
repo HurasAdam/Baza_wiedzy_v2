@@ -1,11 +1,12 @@
 import { CONFLICT, NOT_FOUND, OK } from "@/constants/http";
 import ProductModel from "./product.model";
-import { createProduct, deleteProduct, getSingleProduct } from "./product.service";
+import { createProduct, deleteProduct, getSingleProduct, ProductService } from "./product.service";
 import appAssert from "@/utils/appAssert";
 import catchErrors from "@/utils/catchErrors";
 import { newProductSchema } from "./product.schema";
+import { searchProductsDto } from "./dto/search-products.dto";
 
-export const ProductController = () => ({
+export const ProductController = (productService = ProductService) => ({
     create: catchErrors(async (req, res) => {
         const request = newProductSchema.parse(req.body);
         const { userId } = req;
@@ -21,9 +22,10 @@ export const ProductController = () => ({
         return res.status(OK).json(conversationTproduct);
     }),
 
-    find: catchErrors(async (req, res) => {
-        const tags = await ProductModel.find({}).select(["-createdBy"]);
-        return res.status(OK).json(tags);
+    find: catchErrors(async ({ query }, res) => {
+        const payload = searchProductsDto.parse(query);
+        const products = await productService.find(payload);
+        return res.status(OK).json(products);
     }),
 
     findOne: catchErrors(async (req, res) => {
