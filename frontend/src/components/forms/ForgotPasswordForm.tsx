@@ -71,7 +71,7 @@ export default function ForgotPasswordForm({ onSave, isPending }: Props) {
                                         </FormItem>
                                     )}
                                 />
-                                <Button type="submit" className="w-full">
+                                <Button type="submit" className="w-full bg-primary/80">
                                     {isPending && <Loader className="animate-spin" />}
                                     Wyślij
                                 </Button>

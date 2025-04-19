@@ -1,6 +1,6 @@
 import { useLogout } from "@/hooks/auth/useLogout";
 import clsx from "clsx";
-import { Home, LogOut } from "lucide-react";
+import { Home } from "lucide-react";
 import { FaPhoneSquareAlt, FaStar } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa6";
 import { ImStatsBars2 } from "react-icons/im";
@@ -8,15 +8,16 @@ import { PiArticleMediumFill } from "react-icons/pi";
 import { NavLink } from "react-router-dom";
 import { Alert } from "./alert/Alert";
 import { useAlert } from "./alert/hooks/useAlert";
-import { HiOutlineWrenchScrewdriver } from "react-icons/hi2";
+import { HiOutlineLogout } from "react-icons/hi";
 import BugReportForm from "./forms/BugReportForm";
 import { Modal } from "./modal/Modal";
 import { useModal } from "./modal/hooks/useModal";
 import { FaBug } from "react-icons/fa";
+import { HiOutlineLogin } from "react-icons/hi";
 export const MySidebar = () => {
     const { logoutAction } = useLogout();
     const { openAlert: openLogoutAlert, isOpen: isLogoutAlertOpen, closeAlert: closeLogoutAlert } = useAlert();
-    const {isOpen,closeModal,openModal} = useModal();
+    const { isOpen, closeModal, openModal } = useModal();
     const primaryMenuItems = [
         { icon: <Home size={22} />, label: "Start", link: "/dashboard" },
         { icon: <PiArticleMediumFill size={21} />, label: "Artykuły", link: "/articles" },
@@ -31,9 +32,8 @@ export const MySidebar = () => {
     };
 
     const utilityMenuItems = [
-        { icon: <FaBug  size={15} className="hover:text-rose-500"/>, label: "Wyloguj", onClick: openModal },
-        { icon: <LogOut size={21} />, label: "Wyloguj", onClick: logoutHandler }
-   
+        { icon: <FaBug size={15} className="hover:text-rose-500" />, label: "Wyloguj", onClick: openModal },
+        { icon: <HiOutlineLogout size={22} />, label: "Wyloguj", onClick: logoutHandler },
     ];
 
     return (
@@ -109,7 +109,7 @@ export const MySidebar = () => {
                 <div>Czy na pewno chcesz się wylogować?</div>
             </Alert>
             <Modal isOpen={isOpen} onClose={closeModal}>
-                <BugReportForm/>
+                <BugReportForm />
             </Modal>
         </div>
     );

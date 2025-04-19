@@ -81,7 +81,7 @@ export const LoginForm = () => {
                     <span className="text-sm text-gray-500 hover:text-gray-700 hover:underline cursor-pointer">
                         <Link to="/password/forgot"> Zapomniałeś hasła?</Link>
                     </span>
-                    <Button disabled={isPending} className="my-0.5 flex gap-0.5" type="submit">
+                    <Button disabled={isPending} className="my-0.5 flex gap-0.5 bg-primary/80" type="submit">
                         {isPending && <Loader className="animate-spin" />}
                         Zaloguj
                     </Button>

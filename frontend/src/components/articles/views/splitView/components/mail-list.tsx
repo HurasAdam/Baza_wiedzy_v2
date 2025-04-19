@@ -17,7 +17,7 @@ export function MailList({ items, selectedArticle, setSelectedArticle }: MailLis
                     <button
                         key={item._id}
                         className={cn(
-                            "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-card/35 bg-muted/10",
+                            "flex flex-col items-start gap-2 rounded-lg border px-1.5 py-1.5 text-left text-sm transition-all hover:bg-card  text-primary-foreground",
 
                             selectedArticle === item?._id && "border-primary/60 bg-primary/30 hover:bg-primary/30 h",
                             item?.isVerified && "border-r-primary border-r-4"
@@ -29,7 +29,7 @@ export function MailList({ items, selectedArticle, setSelectedArticle }: MailLis
                     >
                         <div className="flex w-full  gap-1">
                             <div className="flex items-center"></div>
-                            <div className="text-xs font-medium">{item?.title}</div>
+                            <div className="text-sm ">{item?.title}</div>
                         </div>
                     </button>
                 ))}
