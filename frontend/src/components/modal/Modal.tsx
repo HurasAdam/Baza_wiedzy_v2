@@ -5,9 +5,9 @@ import React from "react";
 import type { ModalProps } from "./types";
 
 const typesWidthModal = {
-    sm: "sm:max-w-[98%] md:max-w-[84%] lg:max-w-[75%px] xl:max-w-[65%] 2xl:max-w-[980px] p-0",
-    md: "sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] xl:max-w-[1000px] 2xl:max-w-[1120px] p-0 ",
-    lg: "sm:max-w-[800px] md:max-w-[1000px] lg:max-w-[1100px] xl:max-w-[1200px] 2xl:max-w-[1320px] p-0",
+    sm: "sm:max-w-[98%] md:max-w-[84%] lg:max-w-[75%px] xl:max-w-[65%] 2xl:max-w-[1050px] p-0",
+    md: "sm:max-w-[600px] md:max-w-[800px] lg:max-w-[900px] xl:max-w-[1000px] 2xl:max-w-[1190px] p-0 ",
+    lg: "sm:max-w-[800px] md:max-w-[1000px] lg:max-w-[1100px] xl:max-w-[1200px] 2xl:max-w-[1400px] p-0",
 } as const;
 
 const modalHeightes = {

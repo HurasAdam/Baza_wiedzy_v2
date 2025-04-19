@@ -43,7 +43,7 @@ const ForgotPasswordPage = () => {
             ) : (
                 <div className="w-full max-w-md bg-background shadow-lg rounded-b-xl overflow-hidden">
                     {/* Nagłówek z gradientowym tłem i ikoną */}
-                    <div className="bg-primary py-6 flex flex-col items-center rounded-t-xl">
+                    <div className="bg-primary/80 py-6 flex flex-col items-center rounded-t-xl">
                         <div className="bg-white p-3 rounded-full shadow-md">
                             <AiOutlineLock className="text-blue-600 h-10 w-10" />
                         </div>
