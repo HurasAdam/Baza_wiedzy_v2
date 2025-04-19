@@ -88,7 +88,7 @@ const ProductsPage = () => {
                                     </span>
                                     <div className="flex items-center space-x-1">
                                         <FileText className="w-4 h-4 text-foreground0" />
-                                        <span className="text-sm text-foreground">127</span>
+                                        <span className="text-sm text-foreground">{product?.articlesCount}</span>
                                     </div>
                                 </div>
                                 <div className="pt-4 flex justify-end border-t border-muted mt-1.5 dark:border-gray-700">
