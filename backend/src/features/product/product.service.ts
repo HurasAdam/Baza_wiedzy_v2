@@ -27,7 +27,34 @@ export const ProductService = {
             querydb.name = new RegExp(name, "i");
         }
 
-        const products = await ProductModel.find(querydb).select(["-createdBy"]);
+        // Agregacja, aby dodać liczbę artykułów przypisanych do każdego produktu
+        const products = await ProductModel.aggregate([
+            {
+                $match: querydb, // filtrujemy po nazwie
+            },
+            {
+                $lookup: {
+                    from: "articles", // odnosimy się do kolekcji "articles"
+                    localField: "_id", // pole, które łączy produkty i artykuły
+                    foreignField: "product", // pole w artykule, które wskazuje na produkt
+                    as: "articles", // alias dla wyników join
+                },
+            },
+            {
+                $addFields: {
+                    articlesCount: { $size: "$articles" }, // dodajemy pole articlesCount z liczbą artykułów
+                },
+            },
+            {
+                $project: {
+                    name: 1, // Zwracamy tylko nazwę produktu
+                    labelColor: 1, // Zwracamy labelColor
+                    banner: 1, // Zwracamy banner
+                    articlesCount: 1, // Zwracamy liczbę artykułów
+                },
+            },
+        ]);
+
         return products;
     },
 };
