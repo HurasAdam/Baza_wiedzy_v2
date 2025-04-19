@@ -4,6 +4,8 @@ import ConversationTopicModel from "@/features/conversation-topic/conversation-t
 import ProductModel from "./product.model";
 import TagModel from "@/features/tag/tag.model";
 import appAssert from "@/utils/appAssert";
+import { SearchProductsDto } from "./dto/search-products.dto";
+import { constructSearchQuery } from "@/utils/constructSearchQuery";
 
 interface CreateProductRequest {
     name: string;
@@ -15,6 +17,20 @@ interface CreateProductParams {
     request: CreateProductRequest;
     userId: string; // userId to string
 }
+
+export const ProductService = {
+    async find(query: SearchProductsDto) {
+        const querydb: any = {};
+
+        const name = query.name?.trim();
+        if (name) {
+            querydb.name = new RegExp(name, "i");
+        }
+
+        const products = await ProductModel.find(querydb).select(["-createdBy"]);
+        return products;
+    },
+};
 
 export const createProduct = async ({ request, userId }: CreateProductParams) => {
     const { name, labelColor, banner } = request;
