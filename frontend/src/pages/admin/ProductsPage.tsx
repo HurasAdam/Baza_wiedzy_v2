@@ -7,15 +7,17 @@ import { useModal } from "../../components/modal/hooks/useModal";
 import { Button } from "../../components/ui/button";
 import { BANNER_IMAGES } from "../../constants/productBanners";
 import { productApi } from "../../lib/product.api";
+import { Input } from "@/components/ui/input";
 
 const ProductsPage = () => {
+    const [name, setFilterParams] = useState("");
     const { openModal, isOpen, closeModal } = useModal();
     const [selectedProduct, setSelectedProduct] = useState<string>("");
     const { openModal: openEditModal, isOpen: isEditModalOpen, closeModal: closeEditModal } = useModal();
-    const { data: products } = useQuery({
-        queryKey: ["all-products"],
+    const { data: products = [] } = useQuery({
+        queryKey: ["all-products", name],
         queryFn: () => {
-            return productApi.find();
+            return productApi.find({ name });
         },
     });
 
@@ -27,10 +29,19 @@ const ProductsPage = () => {
     return (
         <div className="px-6 pb-6  ">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                <h2 className="mb-6 text-2xl font-bold text-foreground flex items-center gap-1">
-                    <Package />
-                    Produkty
-                </h2>
+                <div className="flex flex-col">
+                    <h2 className="mb-6 text-2xl font-bold text-foreground flex items-center gap-1">
+                        <Package />
+                        Produkty
+                    </h2>
+                    <Input
+                        value={name}
+                        onChange={(e) => setFilterParams(e.target.value)}
+                        placeholder="Znajdz produkt..."
+                        className="h-8 w-full lg:w-[250px] bg-inherit  "
+                    />
+                </div>
+
                 <Button
                     onClick={openModal}
                     className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-primary/75 rounded-md hover:bg-primary/80 transition"
