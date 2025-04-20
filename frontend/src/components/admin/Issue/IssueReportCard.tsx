@@ -10,7 +10,7 @@ interface Props {
     report: IReport;
 }
 
-const IssueReportCard = ({ report }: Props) => {
+const IssueReportCard = ({ report, onClick }: Props) => {
     const getStatusLabel = (status: IReport["status"]) => {
         switch (status) {
             case "pending":
@@ -31,13 +31,14 @@ const IssueReportCard = ({ report }: Props) => {
 
     return (
         <Card
+            onClick={() => onClick(report?._id)}
             key={report._id}
             className="cursor-pointer transition-transform duration-200 hover:shadow-lg bg-card/60  rounded-lg overflow-hidden hover:bg-card"
         >
             <CardHeader className="p-4">
                 <div className="flex justify-between mb-3">
                     <span className="text-xs font-medium text-muted-foreground">{date}</span>
-                    {isUnread && <div className="w-3 h-3 rounded-full bg-primary animate-pulse-custom"></div>}
+                    {isUnread && <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse-custom"></div>}
                 </div>
                 <div className="flex justify-between items-start">
                     <div>

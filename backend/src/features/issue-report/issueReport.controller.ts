@@ -16,4 +16,10 @@ export const IssueReportController = (issueReportService = IssueReportService) =
         const IssueReports = await issueReportService.find(userId, payload);
         return res.status(OK).json(IssueReports);
     }),
+
+    findOne: catchErrors(async ({ userId, params }, res) => {
+        const issueReport = await issueReportService.findOne(params.id);
+        await issueReportService.markAsRead(issueReport?._id.toString());
+        return res.status(OK).json(issueReport);
+    }),
 });
