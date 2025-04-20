@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "react-hot-toast";
-import { Bug, CloudUpload, Loader, Paperclip } from "lucide-react";
+import { CloudUpload, Lightbulb, Loader, Paperclip } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -18,7 +18,7 @@ interface Props {
     isLoading?: boolean;
 }
 
-const BugReportForm = ({ onSend, isLoading }: Props) => {
+const FeatureReportForm = ({ onSend, isLoading }: Props) => {
     const allowedFormats = ["image/svg+xml", "image/png", "image/jpeg", "image/gif"];
     const fileSchema = z
         .instanceof(File)
@@ -50,7 +50,7 @@ const BugReportForm = ({ onSend, isLoading }: Props) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            type: "bug",
+            type: "proposal",
             title: "",
             description: "",
             category: "",
@@ -85,7 +85,7 @@ const BugReportForm = ({ onSend, isLoading }: Props) => {
                 className="space-y-5  w-full  mx-auto py-2 px-7 h-fit   rounded-lg bg-background"
             >
                 <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Bug className="text-red-500" /> Zgłoś błąd
+                    <Lightbulb className="text-amber-500" /> Zgłoś propozycje
                 </h2>
 
                 <FormField
@@ -94,12 +94,12 @@ const BugReportForm = ({ onSend, isLoading }: Props) => {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>
-                                <RequiredLabel>Tytuł błędu</RequiredLabel>
+                                <RequiredLabel>Tytuł propozycji</RequiredLabel>
                             </FormLabel>
                             <FormControl>
-                                <Input placeholder="Wprowadź tytuł błędu" type="text" {...field} />
+                                <Input placeholder="Wprowadź tytuł propozycji" type="text" {...field} />
                             </FormControl>
-                            <FormDescription className="text-xs mx-1.5"> Wprowadź tytuł błędu.</FormDescription>
+                            <FormDescription className="text-xs mx-1.5"> Wprowadź tytuł propozycji.</FormDescription>
                             <FormMessage className="text-xs" />
                         </FormItem>
                     )}
@@ -110,7 +110,7 @@ const BugReportForm = ({ onSend, isLoading }: Props) => {
                     name="category"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Kategoria błędu</FormLabel>
+                            <FormLabel>Kategoria propozycji</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                     <SelectTrigger>
@@ -132,7 +132,7 @@ const BugReportForm = ({ onSend, isLoading }: Props) => {
                                 </SelectContent>
                             </Select>
                             <FormDescription className="text-xs mx-1.5">
-                                Wybierz kategorie, do której odnosi się zgłaszany błąd.
+                                Wybierz kategorie, do której odnosi się zgłaszana propozycja.
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
@@ -145,13 +145,17 @@ const BugReportForm = ({ onSend, isLoading }: Props) => {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>
-                                <RequiredLabel>Opis błędu</RequiredLabel>
+                                <RequiredLabel>Opis propozycji</RequiredLabel>
                             </FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Opis błędu" className="resize-none min-h-[120px]" {...field} />
+                                <Textarea
+                                    placeholder="Opisz propozycję"
+                                    className="resize-none min-h-[120px]"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormDescription className="text-xs mx-1.5">
-                                Opisz zgłaszany błąd, oraz ewentualne kroki w celu odtworzenia go.
+                                Opisz zgłaszaną propozycję, oraz uzasadnij jej wdrożenie.
                             </FormDescription>
                             <FormMessage className="text-xs" />
                         </FormItem>
@@ -222,4 +226,4 @@ const BugReportForm = ({ onSend, isLoading }: Props) => {
     );
 };
 
-export default BugReportForm;
+export default FeatureReportForm;

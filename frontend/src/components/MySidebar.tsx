@@ -14,6 +14,10 @@ import { Modal } from "./modal/Modal";
 import { useModal } from "./modal/hooks/useModal";
 import { FaBug } from "react-icons/fa";
 import { HiOutlineLogin } from "react-icons/hi";
+import ReportSelector from "./ReportSelector";
+import ReportContent from "./ReportContent";
+import { MdReport } from "react-icons/md";
+import { TbMessageReportFilled } from "react-icons/tb";
 export const MySidebar = () => {
     const { logoutAction } = useLogout();
     const { openAlert: openLogoutAlert, isOpen: isLogoutAlertOpen, closeAlert: closeLogoutAlert } = useAlert();
@@ -32,7 +36,11 @@ export const MySidebar = () => {
     };
 
     const utilityMenuItems = [
-        { icon: <FaBug size={15} className="hover:text-rose-500" />, label: "Wyloguj", onClick: openModal },
+        {
+            icon: <TbMessageReportFilled size={20} className="hover:text-rose-500" />,
+            label: "Wyloguj",
+            onClick: openModal,
+        },
         { icon: <HiOutlineLogout size={22} />, label: "Wyloguj", onClick: logoutHandler },
     ];
 
@@ -108,8 +116,8 @@ export const MySidebar = () => {
             <Alert type="info" isOpen={isLogoutAlertOpen} onCancel={closeLogoutAlert} onConfirm={logoutAction}>
                 <div>Czy na pewno chcesz się wylogować?</div>
             </Alert>
-            <Modal isOpen={isOpen} onClose={closeModal}>
-                <BugReportForm />
+            <Modal closeOnOutsideClick={false} width="sm" isOpen={isOpen} onClose={closeModal}>
+                <ReportContent onClose={closeModal} />
             </Modal>
         </div>
     );
