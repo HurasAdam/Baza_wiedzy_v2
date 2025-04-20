@@ -26,7 +26,7 @@ const issueReportSchema = new Schema(
         },
         category: {
             type: String,
-            enum: ["Interfejs(UI)", "Backend", "Wydajność", "Inne"],
+            enum: ["Interfejs (UI)", "Backend", "Wydajność", "Inne"],
             required: true,
         },
     },

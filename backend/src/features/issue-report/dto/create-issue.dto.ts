@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const validCategories = ["Interfejs(UI)", "Backend", "Wydajność", "Inne"] as const;
+const validCategories = ["Interfejs (UI)", "Backend", "Wydajność", "Inne"] as const;
 const validStatuses = ["nowe", "w trakcie", "rozwiązane"] as const;
 
 export const createIssueDto = z.object({

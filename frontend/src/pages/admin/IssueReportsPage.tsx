@@ -1,4 +1,7 @@
 import IssueReportCard from "@/components/admin/Issue/IssueReportCard";
+import IssueReportDetails from "@/components/admin/Issue/IssueReportDetails";
+import { useModal } from "@/components/modal/hooks/useModal";
+import { Modal } from "@/components/modal/Modal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +12,7 @@ import { issueReportApi } from "@/lib/issue-report.api";
 import { useQuery } from "@tanstack/react-query";
 
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import { TbMessageReportFilled } from "react-icons/tb";
 
 export interface IReport {
@@ -25,12 +29,19 @@ export interface IReport {
 }
 
 const IssueReportsPage = () => {
-    const { data: issueReports } = useQuery({
+    const { data: issueReports = [] } = useQuery({
         queryKey: ["allIssues"],
         queryFn: () => {
             return issueReportApi.find();
         },
     });
+
+    const { closeModal, openModal, isOpen } = useModal();
+    const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
+    const showReportDetailsHandler = (id: string) => {
+        setSelectedReportId(id);
+        openModal();
+    };
 
     return (
         <div className="px-6 pb-6">
@@ -50,9 +61,12 @@ const IssueReportsPage = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 {issueReports?.map((report: IReport) => {
-                    return <IssueReportCard report={report} />;
+                    return <IssueReportCard report={report} onClick={showReportDetailsHandler} />;
                 })}
             </div>
+            <Modal width="sm" isOpen={isOpen} onClose={closeModal}>
+                <IssueReportDetails id={selectedReportId} />
+            </Modal>
         </div>
     );
 };

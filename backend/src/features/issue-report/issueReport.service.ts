@@ -1,4 +1,4 @@
-import { CONFLICT } from "@/constants/http";
+import { CONFLICT, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import IssueReportModel from "./issue-report.model";
 import { CreateIssueDto } from "./dto/create-issue.dto";
@@ -22,5 +22,13 @@ export const IssueReportService = {
         });
 
         return issueReports;
+    },
+    async findOne(issueReportId) {
+        const issueReport = await IssueReportModel.findById({ _id: issueReportId }).populate({
+            path: "createdBy",
+            select: "name surname email",
+        });
+        appAssert(issueReport, NOT_FOUND, "Issue report not found");
+        return issueReport;
     },
 };
