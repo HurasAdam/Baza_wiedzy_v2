@@ -1,11 +1,11 @@
 import { issueReportApi } from "@/lib/issue-report.api";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import Spinner from "@/components/core/Spinner";
 import { User, CalendarClock, Tag, AlertCircle, ClipboardList } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import React from "react";
+import React, { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getAvatarFallbackText } from "@/utils/avatar";
@@ -17,6 +17,8 @@ const statusColor = {
 };
 
 const IssueReportDetails = ({ id }: { id: string }) => {
+    const queryClient = useQueryClient();
+
     const {
         data: issueReport,
         isLoading,
@@ -25,6 +27,15 @@ const IssueReportDetails = ({ id }: { id: string }) => {
         queryKey: ["issueReport", id],
         queryFn: () => issueReportApi.findOne(id),
     });
+
+    useEffect(() => {
+        if (issueReport) {
+            // Zaktualizuj cache dla konkretnego zgłoszenia
+            queryClient.setQueryData(["allIssues"], (oldData: any) => {
+                return oldData.map((item: any) => (item._id === id ? { ...item, isUnread: false } : item));
+            });
+        }
+    }, [issueReport, id, queryClient]);
 
     const initials = getAvatarFallbackText(issueReport?.createdBy?.name);
 
