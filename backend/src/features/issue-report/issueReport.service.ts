@@ -55,4 +55,12 @@ export const IssueReportService = {
             throw error;
         }
     },
+
+    async findMyReports(userId: string) {
+        const issueReports = await IssueReportModel.find({ createdBy: userId }).populate({
+            path: "createdBy",
+            select: "name surname email",
+        });
+        return issueReports;
+    },
 };
