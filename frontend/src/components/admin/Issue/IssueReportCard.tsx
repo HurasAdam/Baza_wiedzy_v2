@@ -10,7 +10,7 @@ interface Props {
     report: IReport;
 }
 
-const IssueReportCard = ({ report }: Props) => {
+const IssueReportCard = ({ report, onClick }: Props) => {
     const getStatusLabel = (status: IReport["status"]) => {
         switch (status) {
             case "pending":
@@ -31,6 +31,7 @@ const IssueReportCard = ({ report }: Props) => {
 
     return (
         <Card
+            onClick={() => onClick(report?._id)}
             key={report._id}
             className="cursor-pointer transition-transform duration-200 hover:shadow-lg bg-card/60  rounded-lg overflow-hidden hover:bg-card"
         >

@@ -11,7 +11,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from "../ui/file-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
-const validCategories = ["Interfejs (UI)", "Backend", "Wydajność", "Inne"] as const;
+const validCategories = ["Interfejs(UI)", "Backend", "Wydajność", "Inne"] as const;
 
 interface Props {
     onSend: (formData) => void;
