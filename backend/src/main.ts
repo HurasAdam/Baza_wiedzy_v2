@@ -16,6 +16,7 @@ import { tagRoutes } from "./features/tag/tag.route";
 import { userRoutes } from "./features/user/user.route";
 import authenticate from "./middleware/authenticate";
 import errorHandler from "./middleware/errorHandlers";
+import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
 
 const app = express();
 app.use(express.json());
@@ -40,6 +41,7 @@ app.use("/products", authenticate, productRoutes);
 app.use("/conversation-topics", authenticate, conversationTopicRoutes);
 app.use("/conversation-report", authenticate, conversationReportRoutes);
 app.use("/dashboard", authenticate, dashboardRoutes);
+app.use("/issue-report", authenticate, IssueReportRoutes);
 
 app.use(errorHandler);
 
