@@ -18,11 +18,18 @@ import SettingsContainer from "./SettingsContainer";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Popover, PopoverTrigger } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { TbMessageReportFilled } from "react-icons/tb";
+import MyIssueReports from "./IssueReports/MyIssueReports";
 
 const Navbar: React.FC = ({ openCreateArticleModal }) => {
     const { openModal: openCallsModal, isOpen: isCallsModalOpen, closeModal: closeCallsModal } = useModal();
     const { openModal: openSearchModal, isOpen: isSearchModalOpen, closeModal: closeSearchModal } = useModal();
     const { openModal: openSettingsModal, isOpen: isSettingsModalOpen, closeModal: closeSettingsModal } = useModal();
+    const {
+        openModal: openMyIssueReportsModal,
+        isOpen: isMyIssueReportModalOpen,
+        closeModal: closeMyIssueReportsModal,
+    } = useModal();
     const user = useUser();
     const navigate = useNavigate();
     const location = useLocation();
@@ -55,6 +62,11 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
             label: "Ustawienia",
             icon: <Settings />,
             actionHandler: () => openSettingsModal(),
+        },
+        {
+            label: "Moje zgłoszenia",
+            icon: <TbMessageReportFilled />,
+            actionHandler: () => openMyIssueReportsModal(),
         },
         { label: "Wyloguj się", icon: <LogOut />, actionHandler: logoutAction },
     ];
@@ -153,6 +165,14 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
             </Modal>
             <Modal isOpen={isSettingsModalOpen} onClose={closeSettingsModal}>
                 <SettingsContainer />
+            </Modal>
+            <Modal
+                closeOnOutsideClick={false}
+                width="md"
+                isOpen={isMyIssueReportModalOpen}
+                onClose={closeMyIssueReportsModal}
+            >
+                <MyIssueReports />
             </Modal>
         </div>
     );
