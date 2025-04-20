@@ -1,7 +1,7 @@
 import { CONFLICT } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import IssueReportModel from "./issue-report.model";
-import { CreateIssueDto } from "./dto/createIssue.dto";
+import { CreateIssueDto } from "./dto/create-issue.dto";
 
 export const IssueReportService = {
     async create(userId: string, payload: CreateIssueDto) {
@@ -14,5 +14,13 @@ export const IssueReportService = {
         });
 
         return { data: Issue, message: "Zgłoszenie zostało wysłane" };
+    },
+    async find(userId, payload) {
+        const issueReports = await IssueReportModel.find({}).select(["-createdBy"]).populate({
+            path: "createdBy",
+            select: "name surname email",
+        });
+
+        return issueReports;
     },
 };

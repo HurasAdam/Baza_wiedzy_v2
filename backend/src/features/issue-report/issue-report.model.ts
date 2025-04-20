@@ -1,16 +1,19 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 const issueReportSchema = new Schema(
     {
         title: { type: String, required: true },
         description: { type: String, required: true },
-        user: { type: Schema.Types.ObjectId, ref: "User" },
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
         status: {
             type: String,
             enum: ["pending", "in-progress", "resolved"],
             default: "pending",
         },
-        isNew: {
+        isUnread: {
             type: Boolean,
             default: true,
         },

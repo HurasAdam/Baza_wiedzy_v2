@@ -107,10 +107,6 @@ export const saveArticleChanges = async ({
         if (changes.length === 0) return;
     }
 
-    console.log("articleBeforeChanges");
-    console.log(articleBeforeChanges);
-    console.log("updatedArticle");
-    console.log(updatedArticle);
     // Zapisujemy historię zmian
     const historyEntry = new ArticleHistoryModel({
         articleId: articleId,

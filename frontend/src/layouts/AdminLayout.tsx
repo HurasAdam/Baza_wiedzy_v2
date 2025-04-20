@@ -4,6 +4,7 @@ import { ComponentType, useEffect, useState } from "react";
 import { TiArrowBack } from "react-icons/ti";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { cn } from "../utils/cn";
+import { TbMessageReportFilled } from "react-icons/tb";
 
 export const AdminLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -15,6 +16,7 @@ export const AdminLayout = () => {
         { icon: Tag, label: "Tagi", link: "/admin/tags" },
         { icon: Users, label: "Użytkownicy", link: "/admin/users" },
         { icon: Users, label: "Usunięte artykułu", link: "/admin/trashed-articles" },
+        { icon: TbMessageReportFilled, label: "Zgłoszenia i sugestie", link: "/admin/issues" },
     ];
 
     useEffect(() => {
@@ -63,7 +65,7 @@ export const AdminLayout = () => {
                     </Button>
                 </div>
 
-                <nav className="space-y-1">
+                <nav className="space-y-1.5">
                     {NavItems.map(({ icon, label, link }) => {
                         return <NavItem icon={icon} label={label} link={link} />;
                     })}

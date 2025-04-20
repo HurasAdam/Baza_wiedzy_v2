@@ -29,18 +29,8 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import { LoginPage } from "./pages/auth/Login";
 import { RegisterPage } from "./pages/auth/Register";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
+import IssueReportsPage from "./pages/admin/IssueReportsPage";
 
-// const HomePage = lazy(() => import("./pages/HomePage").then((module) => ({ default: module.HomePage })));
-// const ArticlesPage = lazy(() => import("./pages/ArticlesPage").then((module) => ({ default: module.ArticlesPage })));
-// const StatisticsPage = lazy(() =>
-//     import("./pages/StatisticsPage").then((module) => ({ default: module.StatisticsPage }))
-// );
-// const TopicsRegisterPage = lazy(() =>
-//     import("./pages/TopicsRegisterPage").then((module) => ({ default: module.TopicsRegisterPage }))
-// );
-// const FavoritesPage = lazy(() =>
-//     import("./pages/FavoritesArticlesPage").then((module) => ({ default: module.FavoritesPage }))
-// );
 const Test = () => {
     const { id } = useParams();
     const { data: article, isError } = useQuery({
@@ -111,6 +101,7 @@ function App() {
                     <Route path="tags" element={<TagsPage />} />
                     <Route path="users" element={<UsersPage />} />
                     <Route path="trashed-articles" element={<TrashedArticles />} />
+                    <Route path="issues" element={<IssueReportsPage />} />
                 </Route>
             </Routes>
             <Toaster toastOptions={{ duration: 3500, position: "bottom-right" }} />
