@@ -38,7 +38,7 @@ const IssueReportCard = ({ report, onClick }: Props) => {
             <CardHeader className="p-4">
                 <div className="flex justify-between mb-3">
                     <span className="text-xs font-medium text-muted-foreground">{date}</span>
-                    {isUnread && <div className="w-3 h-3 rounded-full bg-primary animate-pulse-custom"></div>}
+                    {isUnread && <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse-custom"></div>}
                 </div>
                 <div className="flex justify-between items-start">
                     <div>
