@@ -13,7 +13,7 @@ const IssueReportCardSkeleton = () => {
                 </div>
 
                 {/* Tytuł */}
-                <div className="space-y-2 min-h-20 max-h-20">
+                <div className="space-y-2 min-h-[83px] max-h-20">
                     <div className="h-4 w-11/12 bg-muted-foreground/20 rounded" />
                     <div className="h-4 w-9/12 bg-muted-foreground/20 rounded" />
                 </div>
