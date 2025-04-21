@@ -6,4 +6,5 @@ const issueReportController = IssueReportController();
 export const IssueReportRoutes = Router();
 IssueReportRoutes.post("/", issueReportController.create);
 IssueReportRoutes.get("/", issueReportController.find);
+IssueReportRoutes.get("/mine", issueReportController.findMyReports);
 IssueReportRoutes.get("/:id", issueReportController.findOne);

@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 const ReportSelector = ({ onSelect }: { onSelect: (type: "bug" | "proposal") => void }) => (
     <div className="flex flex-col items-center  h-full p-8  py-32 bg-background ">
-        <h2 className="text-3xl font-bold text-primar-foreground mb-6 ">Wybierz rodzaj zgłoszenia</h2>
+        <h2 className="text-3xl font-bold text-primar-foreground mt-5  ">Wybierz rodzaj zgłoszenia</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-7 w-full max-w-3xl  h-full items-center">
             {/* Kafelek zgłoszenia błędu */}
             <Card
