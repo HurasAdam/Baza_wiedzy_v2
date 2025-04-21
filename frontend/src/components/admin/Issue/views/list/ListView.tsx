@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IssueReportCardSkeleton } from "./IssueReportCardSkeleton";
 import EmptyState from "@/components/EmptyState";
 import { Switch } from "@/components/ui/switch";
+import { FiX } from "react-icons/fi";
 
 export interface IReport {
     _id: string;
@@ -49,7 +50,7 @@ const ListView = () => {
         setSelectedReportId(id);
         openModal();
     };
-
+    const hasNonInputFilters = Boolean(type) || isUnread;
     if (isError) return <div className="text-red-500">Wystąpił błąd podczas ładowania zgłoszeń.</div>;
 
     return (
@@ -62,12 +63,23 @@ const ListView = () => {
                             Zgłoszenia
                         </h2>
                         <div className="flex gap-4 items-center">
-                            <Input
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Szukaj po tytule..."
-                                className="h-9 lg:w-[300px] text-sm"
-                            />
+                            <div className="relative w-full lg:w-[300px]">
+                                <Input
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    placeholder="Szukaj po tytule..."
+                                    className="h-9 w-full pr-10 text-sm rounded-lg border border-border focus:ring-1 focus:ring-primary transition"
+                                />
+                                {title && (
+                                    <button
+                                        aria-label="Wyczyść wyszukiwanie"
+                                        onClick={() => setTitle("")}
+                                        className="absolute inset-y-1.5 right-2 flex items-center justify-center w-6 h-6 bg-muted/50 hover:bg-muted rounded-full transition"
+                                    >
+                                        <FiX className="w-4 h-4 text-muted-foreground" />
+                                    </button>
+                                )}
+                            </div>
                             <div className="inline-flex items-center justify-center rounded-md bg-background border border-border p-1 space-x-1">
                                 {[
                                     { label: "Wszystkie", value: null },
@@ -78,11 +90,11 @@ const ListView = () => {
                                         key={label}
                                         onClick={() => setType(value)}
                                         className={`px-4 py-1.5 text-sm rounded-md transition-all font-medium 
-              ${
-                  type === value
-                      ? "bg-primary/55 text-white shadow-sm"
-                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
-              }`}
+                     ${
+                         type === value
+                             ? "bg-primary/55 text-white shadow-sm"
+                             : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                     }`}
                                     >
                                         {label}
                                     </button>
@@ -94,6 +106,20 @@ const ListView = () => {
                                     Tylko nowe zgłoszenia
                                 </label>
                             </div>
+                            {/* Przycisk Resetowania Wszystkich Filtrów */}
+                            {hasNonInputFilters && (
+                                <button
+                                    onClick={() => {
+                                        setType(null);
+                                        setIsUndread(false);
+                                        setTitle("");
+                                    }}
+                                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent border border-border px-3 py-1.5 rounded-md transition-all ease-in-out duration-200 hover:scale-105"
+                                >
+                                    <FiX className="w-4 h-4" />
+                                    <span>Wyczyść filtry</span>
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>

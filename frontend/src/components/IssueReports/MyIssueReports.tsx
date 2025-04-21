@@ -78,6 +78,7 @@ const MyIssueReports = () => {
                         key={report._id}
                         report={report}
                         onClick={showReportDetailsHandler}
+                        hideIsReadStatus={true}
                     />
                 ))}
             </div>
