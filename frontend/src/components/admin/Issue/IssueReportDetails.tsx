@@ -32,7 +32,7 @@ const IssueReportDetails = ({ id }: { id: string }) => {
         if (issueReport) {
             // Zaktualizuj cache dla konkretnego zgłoszenia
             queryClient.setQueryData(["allIssues"], (oldData: any) => {
-                return oldData.map((item: any) => (item._id === id ? { ...item, isUnread: false } : item));
+                return oldData?.map((item: any) => (item._id === id ? { ...item, isUnread: false } : item));
             });
         }
     }, [issueReport, id, queryClient]);
