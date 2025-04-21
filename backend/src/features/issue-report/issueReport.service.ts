@@ -33,10 +33,13 @@ export const IssueReportService = {
             querydb.isUnread = true;
         }
 
-        const issueReports = await IssueReportModel.find(querydb).select(["-createdBy"]).populate({
-            path: "createdBy",
-            select: "name surname email",
-        });
+        const issueReports = await IssueReportModel.find(querydb)
+            .select(["-createdBy"])
+            .populate({
+                path: "createdBy",
+                select: "name surname email",
+            })
+            .sort({ createdAt: -1 });
 
         return issueReports;
     },
@@ -83,10 +86,12 @@ export const IssueReportService = {
 
         console.log(querydb, "QUERY DB");
 
-        const issueReports = await IssueReportModel.find(querydb).populate({
-            path: "createdBy",
-            select: "name surname email",
-        });
+        const issueReports = await IssueReportModel.find(querydb)
+            .populate({
+                path: "createdBy",
+                select: "name surname email",
+            })
+            .sort({ createdAt: -1 });
         return issueReports;
     },
 };
