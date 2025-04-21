@@ -15,8 +15,15 @@ export const IssueReportService = {
 
         return { data: Issue, message: "Zgłoszenie zostało wysłane" };
     },
-    async find(userId, payload) {
-        const issueReports = await IssueReportModel.find({}).select(["-createdBy"]).populate({
+    async find(userId, query) {
+        const querydb: any = {};
+
+        const title = query.title?.trim();
+        if (title) {
+            querydb.title = new RegExp(title, "i");
+        }
+
+        const issueReports = await IssueReportModel.find(querydb).select(["-createdBy"]).populate({
             path: "createdBy",
             select: "name surname email",
         });
@@ -56,8 +63,18 @@ export const IssueReportService = {
         }
     },
 
-    async findMyReports(userId: string) {
-        const issueReports = await IssueReportModel.find({ createdBy: userId }).populate({
+    async findMyReports(userId: string, query) {
+        const querydb: any = {
+            createdBy: userId,
+        };
+
+        if (query?.type) {
+            querydb.type = query.type;
+        }
+
+        console.log(querydb, "QUERY DB");
+
+        const issueReports = await IssueReportModel.find(querydb).populate({
             path: "createdBy",
             select: "name surname email",
         });
