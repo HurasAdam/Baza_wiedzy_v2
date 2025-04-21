@@ -5,7 +5,7 @@ export const searchIssuesDto = searchDto.extend({
     title: z.string().optional(),
     type: z.string().optional(),
     category: z.string().optional(),
-    isNew: z.string().optional(),
+    isUnread: z.string().optional(),
     verified: z.string().optional(),
 });
 

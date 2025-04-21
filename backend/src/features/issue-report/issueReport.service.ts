@@ -19,8 +19,18 @@ export const IssueReportService = {
         const querydb: any = {};
 
         const title = query.title?.trim();
+        const type = query.type?.trim();
+
         if (title) {
             querydb.title = new RegExp(title, "i");
+        }
+
+        if (type) {
+            querydb.type = type;
+        }
+
+        if (query.isUnread === true || query.isUnread === "true") {
+            querydb.isUnread = true;
         }
 
         const issueReports = await IssueReportModel.find(querydb).select(["-createdBy"]).populate({
@@ -46,7 +56,6 @@ export const IssueReportService = {
             const issueReport = await IssueReportModel.findById(issueReportId).session(session);
             appAssert(issueReport, NOT_FOUND, "Issue report not found");
 
-            // Jeśli jest nieprzeczytane, zmieniamy flagę
             if (issueReport.isUnread) {
                 issueReport.isUnread = false;
                 await issueReport.save({ session });

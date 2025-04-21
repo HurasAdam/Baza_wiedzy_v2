@@ -10,6 +10,8 @@ import { useModal } from "@/components/modal/hooks/useModal";
 import { useQuery } from "@tanstack/react-query";
 import IssueReportCardSkeleton from "./IssueReportCardSkeleton";
 import EmptyState from "@/components/EmptyState";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 
 export interface IReport {
     _id: string;
@@ -26,15 +28,17 @@ export interface IReport {
 
 const GridView = () => {
     const [title, setTitle] = useState("");
+    const [type, setType] = useState<string | null>(null);
+    const [isUnread, setIsUndread] = useState(false);
     // Ładowanie zgłoszeń
     const {
         data: issueReports = [],
         isLoading,
         isError,
     } = useQuery({
-        queryKey: ["allIssues", title],
+        queryKey: ["allIssues", title, type, isUnread],
         queryFn: () => {
-            return issueReportApi.find({ title });
+            return issueReportApi.find({ title, type, isUnread });
         },
     });
 
@@ -57,12 +61,40 @@ const GridView = () => {
                             <TbMessageReportFilled className="w-5.5 h-5.5" />
                             Zgłoszenia
                         </h2>
-                        <Input
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Znajdź zgłoszenie"
-                            className="h-8 w-full lg:w-[250px] bg-inherit"
-                        />
+                        <div className="flex gap-4 items-center">
+                            <Input
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Szukaj po tytule..."
+                                className="h-9 lg:w-[300px] text-sm"
+                            />
+                            <div className="inline-flex items-center justify-center rounded-md bg-background border border-border p-1 space-x-1">
+                                {[
+                                    { label: "Wszystkie", value: null },
+                                    { label: "Błąd", value: "bug" },
+                                    { label: "Propozycja", value: "proposal" },
+                                ].map(({ label, value }) => (
+                                    <button
+                                        key={label}
+                                        onClick={() => setType(value)}
+                                        className={`px-4 py-1.5 text-sm rounded-md transition-all font-medium 
+              ${
+                  type === value
+                      ? "bg-primary/55 text-white shadow-sm"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
+              }`}
+                                    >
+                                        {label}
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Switch id="new-reports-toggle" checked={isUnread} onCheckedChange={setIsUndread} />
+                                <label htmlFor="new-reports-toggle" className="text-sm text-muted-foreground">
+                                    Tylko nowe zgłoszenia
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -72,12 +104,16 @@ const GridView = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 {isLoading ? (
                     // Skeleton loader
-                    Array.from({ length: 5 }).map((_, idx) => <IssueReportCardSkeleton key={idx} />)
+                    Array.from({ length: 8 }).map((_, idx) => <IssueReportCardSkeleton key={idx} />)
                 ) : issueReports.length === 0 ? (
                     // Empty State - Brak zgłoszeń
                     <EmptyState
                         icon={<TbMessageReportFilled className="w-10 h-10 text-muted" />}
-                        onReset={() => setTitle("")}
+                        onReset={() => {
+                            setTitle("");
+                            setIsUndread(false);
+                            setType("");
+                        }}
                         resetLabel="Wyczyść filtry"
                         description="Nie znaleziono zgłoszeń spełniających wybrane kryteria wyszukiwania."
                     />
