@@ -63,7 +63,7 @@ const IssueReportCard = ({ report, onClick }: Props) => {
             <Separator className="my-2" />
             <CardFooter className="p-4 pt-0 flex justify-between items-center">
                 <Badge
-                    className={`flex items-center space-x-1 uppercase text-xs px-2 py-1 ${isBug ? "bg-rose-600/80" : "bg-amber-600/80"}`}
+                    className={`flex items-center space-x-1 uppercase text-[10px] px-2 py-1 ${isBug ? "bg-rose-600/80" : "bg-amber-600/80"}`}
                 >
                     {isBug ? <Bug size={16} /> : <Lightbulb size={16} />}
                     <span>{isBug ? "Błąd" : "Propozycja"}</span>
