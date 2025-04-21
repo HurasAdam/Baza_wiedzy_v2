@@ -10,7 +10,7 @@ const issueReportSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ["pending", "in-progress", "resolved"],
+            enum: ["pending", "in-progress", "resolved", "rejected"],
             default: "pending",
         },
         isUnread: {
