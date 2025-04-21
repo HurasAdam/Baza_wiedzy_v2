@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { issueReportApi } from "@/lib/issue-report.api";
-import { IssueReportCard } from "./IssueReportCard";
+import { IssueReportCard } from "../admin/Issue/views/list/IssueReportCard";
 import { Loader } from "lucide-react";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { TbMessageReportFilled } from "react-icons/tb";
+import { Modal } from "../modal/Modal";
+import IssueReportDetails from "../admin/Issue/IssueReportDetails";
+import { useModal } from "../modal/hooks/useModal";
 
 const MyIssueReports = () => {
     const [filter, setFilter] = useState<"all" | "pending" | "resolved" | "rejected">("all");
@@ -17,6 +20,13 @@ const MyIssueReports = () => {
         queryKey: ["myIssueReports"],
         queryFn: issueReportApi.findMyIssueReports,
     });
+    const { closeModal, openModal, isOpen } = useModal();
+
+    const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
+    const showReportDetailsHandler = (id: string) => {
+        setSelectedReportId(id);
+        openModal();
+    };
 
     const filteredReports = myIssueReports?.filter((report) => filter === "all" || report.status === filter);
 
@@ -61,8 +71,18 @@ const MyIssueReports = () => {
             {/* Scrollowanie tylko w obszarze zgłoszeń */}
             <div className="overflow-y-auto h-[calc(100vh-175px)] scrollbar-custom px-10 space-y-3">
                 {/* Tutaj wstawiamy zgłoszenia */}
-                {filteredReports?.map((report) => <IssueReportCard key={report._id} report={report} />)}
+                {filteredReports?.map((report) => (
+                    <IssueReportCard
+                        hideStatus={true}
+                        key={report._id}
+                        report={report}
+                        onClick={showReportDetailsHandler}
+                    />
+                ))}
             </div>
+            <Modal width="sm" isOpen={isOpen} onClose={closeModal}>
+                {selectedReportId && <IssueReportDetails id={selectedReportId} />}
+            </Modal>
         </div>
     );
 };

@@ -4,25 +4,28 @@ import { Separator } from "@/components/ui/separator";
 import { IReport } from "@/pages/admin/IssueReportsPage";
 
 import { format } from "date-fns";
-import { Bug, Lightbulb } from "lucide-react";
+import { Bug, CheckCircle, Clock, Lightbulb, XCircle } from "lucide-react";
 
 interface Props {
     report: IReport;
+    onClick: (id: string) => void;
 }
 
 const IssueReportCard = ({ report, onClick }: Props) => {
-    const getStatusLabel = (status: IReport["status"]) => {
+    const getStatusLabel = (status: string) => {
         switch (status) {
             case "pending":
                 return "Oczekujące";
-            case "in-progress":
-                return "W trakcie";
             case "resolved":
-                return "Rozwiązane";
+                return "Zrealizowane ";
+            case "rejected":
+                return "Odrzucone";
             default:
                 return status;
         }
     };
+
+    console.log(report);
 
     const date = format(new Date(report.createdAt), "dd MMM yyyy");
     const isBug = report.type === "bug";
@@ -37,7 +40,13 @@ const IssueReportCard = ({ report, onClick }: Props) => {
         >
             <CardHeader className="p-4">
                 <div className="flex justify-between mb-3">
-                    <span className="text-xs font-medium text-muted-foreground">{date}</span>
+                    <span className="text-xs text-primary-foreground/80 font-medium">
+                        {new Date(report.createdAt).toLocaleDateString("pl-PL", {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric",
+                        })}
+                    </span>
                     {isUnread && <div className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse-custom"></div>}
                 </div>
                 <div className="flex justify-between items-start">
@@ -60,9 +69,21 @@ const IssueReportCard = ({ report, onClick }: Props) => {
                     <span>{isBug ? "Błąd" : "Propozycja"}</span>
                 </Badge>
 
-                <Badge variant="outline" className="text-xs">
-                    {statusLabel}
-                </Badge>
+                <span
+                    className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full
+    ${
+        report.status === "pending"
+            ? "bg-yellow-100 text-yellow-800"
+            : report.status === "resolved"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+    }`}
+                >
+                    {report.status === "pending" && <Clock className="w-4 h-4 text-amber-900" />}
+                    {report.status === "resolved" && <CheckCircle className="w-3.5 h-3.5 text-teal-700" />}
+                    {report.status === "rejected" && <XCircle className="w-3.5 h-3.5" />}
+                    {getStatusLabel(report.status)}
+                </span>
             </CardFooter>
         </Card>
     );
