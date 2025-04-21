@@ -22,6 +22,8 @@ export const Modal = ({ isOpen, children, onClose, width, height = "lg", closeOn
     const heightValue = modalHeightes[height];
     const widthValue = typesWidthModal[width ?? modalWidth];
 
+    const content = React.isValidElement(children) ? React.cloneElement(children, { modalWidth, onClose }) : children;
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent
@@ -32,13 +34,7 @@ export const Modal = ({ isOpen, children, onClose, width, height = "lg", closeOn
                 }}
                 className={clsx("filter-none scrollbar-custom bg-card w-full", widthValue, heightValue)}
             >
-                <div className=" overflow-auto scrollbar-custom">
-                    {/* Przekazujemy propsy width i height do children */}
-                    {React.cloneElement(children as React.ReactElement, {
-                        modalWidth,
-                        onClose,
-                    })}
-                </div>
+                <div className=" overflow-auto scrollbar-custom">{content}</div>
             </DialogContent>
             <DialogOverlay />
         </Dialog>

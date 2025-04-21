@@ -30,6 +30,7 @@ import { LoginPage } from "./pages/auth/Login";
 import { RegisterPage } from "./pages/auth/Register";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import IssueReportsPage from "./pages/admin/IssueReportsPage";
+import IssueReportsLayout from "./components/admin/Issue/IssueReportsLayout";
 
 const Test = () => {
     const { id } = useParams();
@@ -101,7 +102,7 @@ function App() {
                     <Route path="tags" element={<TagsPage />} />
                     <Route path="users" element={<UsersPage />} />
                     <Route path="trashed-articles" element={<TrashedArticles />} />
-                    <Route path="issues" element={<IssueReportsPage />} />
+                    <Route path="issues" element={<IssueReportsLayout />} />
                 </Route>
             </Routes>
             <Toaster toastOptions={{ duration: 3500, position: "bottom-right" }} />

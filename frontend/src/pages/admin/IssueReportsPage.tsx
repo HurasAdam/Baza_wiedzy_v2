@@ -1,4 +1,4 @@
-import IssueReportCard from "@/components/admin/Issue/IssueReportCard";
+import IssueReportCard from "@/components/admin/Issue/views/grid/IssueReportCard";
 import IssueReportDetails from "@/components/admin/Issue/IssueReportDetails";
 import { useModal } from "@/components/modal/hooks/useModal";
 import { Modal } from "@/components/modal/Modal";
