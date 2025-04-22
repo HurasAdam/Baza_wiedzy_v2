@@ -17,6 +17,7 @@ import { userRoutes } from "./features/user/user.route";
 import authenticate from "./middleware/authenticate";
 import errorHandler from "./middleware/errorHandlers";
 import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
+import { adminRoutes } from "./features/admin/admin.route";
 
 const app = express();
 app.use(express.json());
@@ -35,6 +36,7 @@ app.use("/auth", authRoutes);
 
 //#protected routes
 app.use("/users", authenticate, userRoutes);
+app.use("/admin", authenticate, adminRoutes);
 app.use("/articles", authenticate, articleRoutes);
 app.use("/tags", authenticate, tagRoutes);
 app.use("/products", authenticate, productRoutes);

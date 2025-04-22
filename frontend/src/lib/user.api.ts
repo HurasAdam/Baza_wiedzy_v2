@@ -11,14 +11,16 @@ const findAll = () => {
     return api.get(baseUrl);
 };
 
-
-const findAllFavouriteArticles = ()=>{
-    return api.get(crurl(baseUrl,"favourites-articles"));
-}
+const findAllFavouriteArticles = () => {
+    return api.get(crurl(baseUrl, "favourites-articles"));
+};
+const changePassword = (formData) => {
+    return api.post(`${baseUrl}/change-password`, formData);
+};
 
 export const userApi = {
     findMe,
     findAll,
-    findAllFavouriteArticles
+    findAllFavouriteArticles,
+    changePassword,
 };
-

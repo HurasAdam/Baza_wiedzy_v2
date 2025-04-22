@@ -2,6 +2,7 @@ import { OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
 import { UserService } from "./user.service";
 import { findUsersWithDto } from "./dto/find-users-with.dto";
+import { changeUserPasswordDto } from "./dto/change-user-password.dto";
 
 export const UserController = (userService = UserService) => ({
     findMe: catchErrors(async ({ userId }, res) => {
@@ -40,5 +41,11 @@ export const UserController = (userService = UserService) => ({
         const payload = findUsersWithDto.parse(query);
         const result = await userService.findWithChangeCount(payload);
         return res.status(OK).json(result);
+    }),
+    changePassword: catchErrors(async ({ userId, body }, res) => {
+        console.log(body, "BODY");
+        const payload = changeUserPasswordDto.parse(body);
+        const { message } = await userService.changePassword(userId, payload);
+        res.status(OK).json(message);
     }),
 });

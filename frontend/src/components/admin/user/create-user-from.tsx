@@ -12,6 +12,8 @@ import { Loader } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { IMAGES } from "../../../constants/images";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
+import { adminApi } from "@/lib/admin.api";
+import toast from "react-hot-toast";
 
 const membersOptions = [
     { value: "admin", label: "Admin" },
@@ -41,14 +43,24 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
     const queryClient = useQueryClient();
 
     const { mutate, isPending } = useMutation({
-        mutationFn: userApi.findMe,
+        mutationFn: (formData) => {
+            return adminApi.createUserAccount(formData);
+        },
+        onSuccess: () => {
+            toast.success("Konto zostało utworzone");
+        },
+        onError: ({ status }) => {
+            if (status === 409) {
+                return toast.error("Rejestracja nie powiodła się – adres e-mail jest już w użyciu");
+            }
+        },
     });
 
     const formSchema = z.object({
         name: z.string().trim().min(2, { message: "Imię musi zawierać co najmniej 2 znaki" }),
         surname: z.string().trim().min(2, { message: "Nazwisko musi zawierać co najmniej 2 znaki" }),
         email: z.string().nonempty({ message: "Email jest wymagany" }).email({ message: "Podaj poprawny adres email" }),
-        role: z.enum(["admin", "lider", "pracownik", "gość"], {
+        role: z.enum(["admin", "editor", "viewer", "moderator"], {
             errorMap: () => ({ message: "Wybierz rolę" }),
         }),
     });
@@ -64,24 +76,8 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        // if (isPending) return;
-        // mutate(values, {
-        //     onSuccess: (data) => {
-        //         queryClient.resetQueries({
-        //             queryKey: ["userWorkspaces"],
-        //         });
-        //         const workspace = data.workspace;
-        //         onClose();
-        //         navigate(`/workspace/${workspace._id}`);
-        //     },
-        //     onError: (error) => {
-        //         toast({
-        //             title: "Error",
-        //             description: error.message,
-        //             variant: "destructive",
-        //         });
-        //     },
-        // });
+        console.log(values, "ADMIN PANEL WARTOSCI");
+        mutate(values);
     };
 
     return (

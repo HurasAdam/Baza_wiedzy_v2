@@ -31,6 +31,8 @@ import { RegisterPage } from "./pages/auth/Register";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 import IssueReportsPage from "./pages/admin/IssueReportsPage";
 import IssueReportsLayout from "./components/admin/Issue/IssueReportsLayout";
+import { OnboardingLayout } from "./layouts/OnboardingLayout ";
+import OnboardingPage from "./components/OnboardingPage";
 
 const Test = () => {
     const { id } = useParams();
@@ -92,6 +94,9 @@ function App() {
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/password/forgot" element={<ForgotPasswordPage />} />
                     <Route path="/password/reset" element={<ResetPasswordPage />} />
+                </Route>
+                <Route path="/onboarding" element={<OnboardingLayout />}>
+                    <Route path="change-password" element={<OnboardingPage />} />
                 </Route>
 
                 <Route path="/admin" element={<AdminLayout />}>
