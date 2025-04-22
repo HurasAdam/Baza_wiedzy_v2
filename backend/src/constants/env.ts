@@ -18,3 +18,4 @@ export const EMAIL_SENDER = getEnv("EMAIL_SENDER");
 export const EMAIL_SERVICE = getEnv("EMAIL_SERVICE");
 export const EMAIL_SERVICE_HOST = getEnv("EMAIL_SERVICE_HOST");
 export const EMAIL_SENDER_PASSWORD = getEnv("EMAIL_SENDER_PASSWORD");
+export const DEFAULT_TEMP_PASSWORD = getEnv("DEFAULT_TEMP_PASSWORD");

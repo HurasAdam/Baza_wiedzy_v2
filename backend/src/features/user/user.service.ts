@@ -1,12 +1,36 @@
-import { NOT_FOUND } from "@/constants/http";
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import UserModel from "./user.model";
 import ConversationReportModel from "../conversation-report/conversation-report.model";
 import ArticleModel from "../article/article.model";
 import ArticleHistoryModel from "../article-history/article-history.model";
 import type { FindUsersWithDto } from "./dto/find-users-with.dto";
+import { compareValue, hashValue } from "@/utils/bcrypt";
+import mongoose from "mongoose";
 
 export const UserService = {
+    async changePassword(userId, payload) {
+        const user = await UserModel.findById(userId);
+        appAssert(user, NOT_FOUND, "User not found");
+        const isSamePassword = compareValue(payload.password, user.password);
+        appAssert(!isSamePassword, BAD_REQUEST, "New password cannot be the same as the current password");
+
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            userId,
+            {
+                password: hashValue(payload.password),
+                mustChangePassword: false,
+            },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            throw new Error("Failed to change password");
+        }
+
+        return { message: "Password has been changed successfully" };
+    },
+
     async findOne(id: string) {
         const user = await UserModel.findById(id);
         appAssert(user, NOT_FOUND, "User not found");
@@ -27,8 +51,6 @@ export const UserService = {
     },
 
     async findWithReportCount(query: FindUsersWithDto) {
-        console.log(query);
-
         const { startDate, endDate } = query;
         const dateFilter: any = {};
 

@@ -15,3 +15,4 @@ userRoutes.get("/statistics", userController.findWithReportCount);
 userRoutes.get("/article-statistics", userController.findWithArticleCount);
 userRoutes.get("/change-statistics", userController.findWithChangeCount);
 userRoutes.get("/:id", userController.findOne);
+userRoutes.post("/change-password", userController.changePassword);
