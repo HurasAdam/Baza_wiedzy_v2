@@ -12,6 +12,7 @@ export interface UserDocument extends mongoose.Document {
     isActive: boolean;
     profilePicture?: string | null;
     password: string;
+    mustChangePassword: boolean;
     verified: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -29,6 +30,7 @@ const userSchema = new Schema<UserDocument>(
         surname: { type: String, required: true, trim: true },
         email: { type: String, unique: true, required: true, trim: true, lowercase: true },
         password: { type: String, required: true },
+        mustChangePassword: { type: Boolean, default: true },
         verified: { type: Boolean, required: true, default: false },
         profilePicture: { type: String, default: null },
         isActive: { type: Boolean, default: true },
