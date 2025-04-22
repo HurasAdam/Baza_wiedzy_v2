@@ -27,7 +27,7 @@ const authenticate = catchErrors(async (req: Request, res: Response, next: NextF
     }
 
     const user = await UserService.findOne(payload.userId.toString());
-    console.log({ user });
+
     req.user = user;
     next();
 });

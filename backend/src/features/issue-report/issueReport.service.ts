@@ -84,8 +84,6 @@ export const IssueReportService = {
             querydb.type = query.type;
         }
 
-        console.log(querydb, "QUERY DB");
-
         const issueReports = await IssueReportModel.find(querydb)
             .populate({
                 path: "createdBy",
