@@ -44,9 +44,9 @@ export function DataTablePagination<TData>({
             <div className="flex flex-col lg:flex-row lg:items-center space-y-2 lg:space-x-8 lg:space-y-0">
                 {/* Rows Per Page Selector */}
                 <div className="flex items-center space-x-2">
-                    <p className="text-sm font-medium">Rows per page</p>
+                    <p className="text-sm font-medium text-primary-foreground">Rows per page</p>
                     <Select value={`${pageSize}`} onValueChange={(value) => handlePageSizeChange(Number(value))}>
-                        <SelectTrigger className="h-8 w-[70px] bg-foreground">
+                        <SelectTrigger className="h-8 w-[70px] bg-background">
                             <SelectValue placeholder={`${pageSize}`} />
                         </SelectTrigger>
                         <SelectContent side="top">
@@ -61,7 +61,7 @@ export function DataTablePagination<TData>({
 
                 {/* Page Info */}
                 <div className="flex items-center">
-                    <div className="flex lg:w-[100px] items-center justify-center text-sm font-medium ">
+                    <div className="flex lg:w-[100px] items-center justify-center text-sm font-medium text-primary-foreground">
                         Page {pageIndex + 1} of {pageCount}
                     </div>
 
@@ -69,7 +69,7 @@ export function DataTablePagination<TData>({
                     <div className="flex items-center space-x-2 ">
                         <Button
                             variant="outline"
-                            className="hidden h-8 w-8 p-0 lg:flex bg-foreground"
+                            className="hidden h-8 w-8 p-0 lg:flex bg-background"
                             onClick={() => handlePageChange(0)}
                             disabled={pageIndex === 0}
                         >
@@ -78,7 +78,7 @@ export function DataTablePagination<TData>({
                         </Button>
                         <Button
                             variant="outline"
-                            className="bg-foreground"
+                            className="bg-background"
                             onClick={() => handlePageChange(pageIndex - 1)}
                             disabled={pageIndex === 0}
                         >
@@ -87,7 +87,7 @@ export function DataTablePagination<TData>({
                         </Button>
                         <Button
                             variant="outline"
-                            className="bg-foreground"
+                            className="bg-background"
                             onClick={() => handlePageChange(pageIndex + 1)}
                             disabled={pageIndex >= pageCount - 1}
                         >
@@ -97,7 +97,7 @@ export function DataTablePagination<TData>({
                         </Button>
                         <Button
                             variant="outline"
-                            className="hidden h-8 w-8 p-0 lg:flex bg-foreground"
+                            className="hidden h-8 w-8 p-0 lg:flex bg-background"
                             onClick={() => handlePageChange(pageCount - 1)}
                             disabled={pageIndex >= pageCount - 1}
                         >
