@@ -13,8 +13,8 @@ import { DataTableRowActions } from "./table-row-actions";
 export const getColumns = (projectId?: string): ColumnDef<UserType>[] => {
     const columns: ColumnDef<UserType>[] = [
         {
-            accessorKey: "name",
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+            accessorKey: "Imie i naziwsko",
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Imię i nazwisko" />,
             cell: ({ row }) => {
                 const avatarColor = getAvatarColor(row.original.name);
                 const initials = getAvatarFallbackText(row.original.name);
@@ -34,34 +34,49 @@ export const getColumns = (projectId?: string): ColumnDef<UserType>[] => {
         },
 
         {
-            accessorKey: "role",
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Role" />,
-            cell: ({ row }) => <span>{row.original.role}</span>,
-        },
-        {
-            accessorKey: "lastLogin",
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Last Login" />,
-            cell: ({ row }) => <span>{row.original.lastLogin ? row.original.lastLogin : "N/A"}</span>,
+            accessorKey: "Rola",
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Rola" />,
+            cell: ({ row }) => (
+                <span className="uppercase text-xs font-medium text-primary-foreground">{row.original.role}</span>
+            ),
         },
         {
             accessorKey: "isActive",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
             cell: ({ row }) => {
                 const isActive = row.original.isActive;
+
+                // pełne wypełnienie vs outline
+                const baseClasses =
+                    "inline-flex items-center gap-1 text-xs font-medium rounded-lg px-2 py-1 border transition-colors duration-150";
+                const activeClasses = "bg-emerald-700/70 border-transparent text-white hover:bg-emerald-700/80";
+                const frozenClasses = "bg-rose-700 border-transparent text-white hover:bg-gray-100";
+
                 return (
                     <Badge
-                        variant={isActive ? "success" : "outline"}
-                        className={`${isActive ? "bg-emerald-100" : "bg-rose-400"} w-fit text-xs border-none flex items-center gap-1`}
+                        // opcjonalnie możesz usunąć `variant` i zawsze bazować na klasach
+                        className={`${baseClasses} ${isActive ? activeClasses : frozenClasses}`}
                     >
                         {isActive ? (
-                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            <>
+                                <CheckCircle className="h-4 w-4" />
+                                Aktywne
+                            </>
                         ) : (
-                            <XCircle className="h-4 w-4 text-red-600" />
+                            <>
+                                <XCircle className="h-4 w-4" />
+                                Zamrożone
+                            </>
                         )}
-                        {isActive ? "Aktywne" : "Nieaktywne"}
                     </Badge>
                 );
             },
+        },
+
+        {
+            accessorKey: "Ostatnie logowanie",
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Ostatnie logowanie" />,
+            cell: ({ row }) => <span>{row.original.lastLogin ? row.original.lastLogin : "N/A"}</span>,
         },
 
         {
