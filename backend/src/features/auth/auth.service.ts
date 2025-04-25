@@ -1,5 +1,12 @@
 import { APP_ORIGIN } from "@/constants/env";
-import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND, TOO_MANY_REQUESTS, UNAUTHORIZED } from "@/constants/http";
+import {
+    CONFLICT,
+    FORBIDDEN,
+    INTERNAL_SERVER_ERROR,
+    NOT_FOUND,
+    TOO_MANY_REQUESTS,
+    UNAUTHORIZED,
+} from "@/constants/http";
 import VerificationCodeType from "@/constants/verificationCodeTypes";
 import SessionModel from "@/features/session/session.model";
 import UserModel from "@/features/user/user.model";
@@ -83,6 +90,9 @@ export const loginUser = async ({ email, password, userAgent }: LoginParams) => 
 
     const isValid = user.comparePassword(password);
     appAssert(isValid, UNAUTHORIZED, "Invalid email or password");
+    appAssert(user.isActive, FORBIDDEN, "Account is disabled. Contact support.");
+    user.lastLogin = new Date();
+    await user.save();
 
     const userId = user._id;
     const session = await SessionModel.create({

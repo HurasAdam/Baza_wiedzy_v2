@@ -3,13 +3,14 @@ import { authApi } from "@/lib/auth.api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { USER_KEY } from "./keys";
+import toast from "react-hot-toast";
 
 // Po zmianie na backendzie dokonać podmiany w loginAction
 export const useLogin = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
-    const { mutate, isError, isPending } = useMutation({
+    const { mutate, isError, isPending, error } = useMutation({
         mutationFn: authApi.login,
     });
 
@@ -32,8 +33,14 @@ export const useLogin = () => {
                 // });
                 // // ====
             },
+            onError: ({ status }) => {
+                if (status === 403) {
+                    return toast.error("Twoje konto zostało wyłączone. Skontaktuj się z administratorem");
+                }
+                return toast.error("E-mail lub hasło są nieprawidłowe");
+            },
         });
     };
 
-    return { loginAction, isError, isPending };
+    return { loginAction, isError, isPending, error };
 };
