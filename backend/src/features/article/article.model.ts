@@ -12,6 +12,7 @@ const articleSchema = new Schema(
         viewsCounter: { type: Number, default: 0 },
         isTrashed: { type: Boolean, default: false },
         product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
+        category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     },
     {
         timestamps: true,
