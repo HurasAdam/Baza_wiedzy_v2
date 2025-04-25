@@ -44,7 +44,7 @@ const IssueReportsPage = () => {
         setSelectedReportId(id);
         openModal();
     };
-    console.log("TITLE", name);
+
     return (
         <div className="px-6 pb-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
