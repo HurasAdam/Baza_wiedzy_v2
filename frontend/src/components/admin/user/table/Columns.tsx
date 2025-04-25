@@ -65,7 +65,7 @@ export const getColumns = (projectId?: string): ColumnDef<UserType>[] => {
                         ) : (
                             <>
                                 <XCircle className="h-4 w-4" />
-                                Zamrożone
+                                Nieaktywne
                             </>
                         )}
                     </Badge>
