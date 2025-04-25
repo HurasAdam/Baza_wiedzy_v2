@@ -1,4 +1,4 @@
-import { CONFLICT } from "@/constants/http";
+import { CONFLICT, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 
 import UserModel from "../user/user.model";
@@ -24,5 +24,26 @@ export const AdminService = {
             user: user.omitPassword(),
             message: "Account has been created successfully",
         };
+    },
+    async disableUserAccount(params: string) {
+        const user = await UserModel.findById(params);
+        appAssert(user, NOT_FOUND, "User not found");
+
+        if (user.isActive) {
+            user.isActive = false;
+            await user.save();
+        }
+        return { message: "User account has been disabled" };
+    },
+
+    async enableUserAccount(params: string) {
+        const user = await UserModel.findById(params);
+        appAssert(user, NOT_FOUND, "User not found");
+
+        if (!user.isActive) {
+            user.isActive = true;
+            await user.save();
+        }
+        return { message: "User account has been enabled" };
     },
 };

@@ -1,5 +1,5 @@
 import { Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { AlertTriangle, CheckCircle, MoreHorizontal, XCircle } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -13,44 +13,92 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { TaskType } from "../../../../types/api.types";
+import { Alert } from "@/components/alert/Alert";
+import { useAlert } from "@/components/alert/hooks/useAlert";
+import { is } from "date-fns/locale";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { adminApi } from "@/lib/admin.api";
+import toast from "react-hot-toast";
 
 interface DataTableRowActionsProps {
     row: Row<TaskType>;
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-    const [openDeleteDialog, setOpenDialog] = useState(false);
-
+    const queryClient = useQueryClient();
+    const { isOpen, openAlert, closeAlert } = useAlert();
+    const userId = row.original._id;
     const taskId = row.original._id as string;
-    const taskCode = row.original.taskCode;
+    const isEnabled = row.original.isActive;
 
-    const handleConfirm = () => {
-        // mutate(
-        //     {
-        //         workspaceId,
-        //         taskId,
-        //     },
-        //     {
-        //         onSuccess: (data) => {
-        //             queryClient.invalidateQueries({
-        //                 queryKey: ["all-tasks", workspaceId],
-        //             });
-        //             toast({
-        //                 title: "Success",
-        //                 description: data.message,
-        //                 variant: "success",
-        //             });
-        //             setTimeout(() => setOpenDialog(false), 100);
-        //         },
-        //         onError: (error) => {
-        //             toast({
-        //                 title: "Error",
-        //                 description: error.message,
-        //                 variant: "destructive",
-        //             });
-        //         },
-        //     }
-        // );
+    const name = row.original.name;
+    const surname = row.original.surname;
+
+    const { mutate: disableUserAccountMutation, isLoading } = useMutation({
+        mutationFn: (id) => {
+            return adminApi.disableUserAccount(id);
+        },
+        onSuccess: () => {
+            toast.success(`Konto użytkownika ${name} ${surname} zostało wyłączone `);
+            closeAlert();
+            queryClient.invalidateQueries(["all-users"]);
+        },
+        onError: ({ status }) => {
+            // const status = error.response?.status;
+            if (status === 400) {
+                closeAlert();
+                return toast.error("Wystąpił błąd - Nieprawidłowy identyfikator użytkownika");
+            }
+            if (status === 404) {
+                closeAlert();
+                return toast.error("Wystąpił błąd - Nie znaleziono użytkownika");
+            }
+            closeAlert();
+            toast.error("Coś poszło nie tak. Spróbuj ponownie.");
+        },
+    });
+
+    const { mutate: enableUserAccountMutation } = useMutation({
+        mutationFn: (id) => {
+            return adminApi.enableUserAccount(id);
+        },
+        onSuccess: () => {
+            toast.success(`Konto użytkownika ${name} ${surname} zostało włączone `);
+            closeAlert();
+            queryClient.invalidateQueries(["all-users"]);
+        },
+        onError: ({ status }) => {
+            if (status === 400) {
+                closeAlert();
+                return toast.error("Wystąpił błąd - Nieprawidłowy identyfikator użytkownika");
+            }
+            if (status === 404) {
+                closeAlert();
+                return toast.error("Wystąpił błąd - Nie znaleziono użytkownika");
+            }
+            closeAlert();
+            toast.error("Coś poszło nie tak. Spróbuj ponownie.");
+        },
+    });
+
+    const onDisableConfirm = (id) => {
+        disableUserAccountMutation(id);
+    };
+
+    const onEnableConfirm = (id) => {
+        enableUserAccountMutation(id);
+    };
+
+    const onConfirmHandler = (id) => {
+        if (isEnabled) {
+            return onDisableConfirm(id);
+        } else {
+            return onEnableConfirm(id);
+        }
+    };
+
+    const openDeleteAlert = () => {
+        openAlert();
     };
 
     return (
@@ -70,11 +118,17 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     <DropdownMenuSeparator />
 
                     <DropdownMenuItem
-                        className={`!text-destructive cursor-pointer ${taskId}`}
-                        onClick={() => setOpenDialog(true)}
+                        className={`${isEnabled ? "text-rose-600" : "text-green-600"} cursor-pointer ${taskId}`}
+                        onClick={openDeleteAlert}
                     >
-                        Zablokuj dostęp
-                        <DropdownMenuShortcut>⌫</DropdownMenuShortcut>
+                        {isEnabled ? "Wyłącz konto" : "Włącz konto"}
+                        <DropdownMenuShortcut>
+                            {isEnabled ? (
+                                <XCircle className="w-4 h-4 text-rose-600" />
+                            ) : (
+                                <CheckCircle className="w-4 h-4 text-green-600" />
+                            )}
+                        </DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -89,6 +143,38 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                 confirmText="Delete"
                 cancelText="Cancel"
             /> */}
+            <Alert
+                isOpen={isOpen}
+                onCancel={closeAlert}
+                onConfirm={() => onConfirmHandler(userId)}
+                isLoading={isLoading}
+            >
+                {isEnabled ? (
+                    <div className="flex items-center  space-x-3">
+                        <AlertTriangle className="w-5 h-5 mt-1 text-rose-600" />
+                        <p className="text-sm text-primary-foreground dark:text-gray-200">
+                            Czy na pewno chcesz <span className="font-semibold text-rose-600">wyłączyć</span> konto
+                            użytkownika&nbsp;
+                            <span className="font-semibold text-primary">
+                                {name} {surname}
+                            </span>{" "}
+                            ?
+                        </p>
+                    </div>
+                ) : (
+                    <div className="flex items-center  space-x-3">
+                        <AlertTriangle className="w-5 h-5 mt-1 text-rose-600" />
+                        <p className="text-sm text-primary-foreground dark:text-gray-200">
+                            Czy na pewno chcesz <span className="font-semibold text-green-600">Włączyć</span> konto
+                            użytkownika&nbsp;
+                            <span className="font-semibold text-primary ">
+                                {name} {surname}
+                            </span>{" "}
+                            ?
+                        </p>
+                    </div>
+                )}
+            </Alert>
         </>
     );
 }
