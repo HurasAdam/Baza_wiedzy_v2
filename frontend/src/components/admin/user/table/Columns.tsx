@@ -9,6 +9,7 @@ import { CheckCircle, XCircle } from "lucide-react";
 import { getAvatarColor, getAvatarFallbackText } from "../../../../utils/avatar";
 import { DataTableColumnHeader } from "./table-column-header";
 import { DataTableRowActions } from "./table-row-actions";
+import { formatDate } from "@/utils/format-date";
 
 export const getColumns = (projectId?: string): ColumnDef<UserType>[] => {
     const columns: ColumnDef<UserType>[] = [
@@ -76,7 +77,7 @@ export const getColumns = (projectId?: string): ColumnDef<UserType>[] => {
         {
             accessorKey: "Ostatnie logowanie",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Ostatnie logowanie" />,
-            cell: ({ row }) => <span>{row.original.lastLogin ? row.original.lastLogin : "N/A"}</span>,
+            cell: ({ row }) => <span>{row.original.lastLogin ? formatDate(row.original.lastLogin) : "N/A"}</span>,
         },
 
         {

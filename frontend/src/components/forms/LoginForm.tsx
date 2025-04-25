@@ -19,7 +19,7 @@ const loginSchema = z.object({
 export type LoginSchema = z.infer<typeof loginSchema>;
 
 export const LoginForm = () => {
-    const { loginAction, isError, isPending } = useLogin();
+    const { loginAction, isError, isPending, error } = useLogin();
 
     const form = useForm<LoginSchema>({
         resolver: zodResolver(loginSchema),
@@ -28,6 +28,8 @@ export const LoginForm = () => {
             password: "",
         },
     });
+
+    console.log(error?.status, "ERROR321");
 
     return (
         <Form {...form}>
@@ -43,9 +45,17 @@ export const LoginForm = () => {
                 </div>
 
                 {isError && (
-                    <div className="text-orange-600 text-sm font-semibold text-center">
-                        E-mail lub hasło są nieprawidłowe
-                    </div>
+                    <>
+                        {error?.status === 403 ? (
+                            <div className="text-red-600 text-sm font-semibold text-center">
+                                Twoje konto zostało wyłączone. Skontaktuj się z administratorem.
+                            </div>
+                        ) : (
+                            <div className="text-orange-600 text-sm font-semibold text-center">
+                                E-mail lub hasło są nieprawidłowe
+                            </div>
+                        )}
+                    </>
                 )}
 
                 <div className="flex flex-col gap-y-6">
