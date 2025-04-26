@@ -16,10 +16,14 @@ export const CategoryController = (categoryService = CategoryService) => ({
         const category = await categoryService.findOne(params.id);
         return res.status(OK).json(category);
     }),
-
-    create: catchErrors(async ({ user, body }, res) => {
+    findByProduct: catchErrors(async ({ params, query }, res) => {
+        const payload = searchCategoriesDto.parse(query);
+        const categories = await categoryService.findByProduct(params.id, payload);
+        return res.status(OK).json(categories);
+    }),
+    create: catchErrors(async ({ userId, body, params }, res) => {
         const payload = createCategoryDto.parse(body);
-        const category = await categoryService.create(user.id, payload);
+        const category = await categoryService.create(userId, payload, params.id);
         return res.status(OK).json(category);
     }),
 
