@@ -8,6 +8,7 @@ const categoryController = CategoryController();
 
 categoryRoutes.get("/", categoryController.find);
 categoryRoutes.get("/:id", categoryController.findOne);
-categoryRoutes.post("/", categoryController.create);
+categoryRoutes.get("/product/:id", categoryController.findByProduct);
+categoryRoutes.post("/:id/create", categoryController.create);
 categoryRoutes.put("/:id", categoryController.updateOne);
 categoryRoutes.delete("/:id", categoryController.deleteOne);

@@ -5,6 +5,7 @@ import ArticleModel from "../article/article.model";
 import type { SearchCategoriesDto } from "./dto/search-categories.dto";
 import type { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
+import ProductModel from "../product/product.model";
 
 export const CategoryService = {
     async find(query: SearchCategoriesDto) {
@@ -23,11 +24,29 @@ export const CategoryService = {
 
         return category;
     },
+    async findByProduct(productId: string, query: SearchCategoriesDto) {
+        const { limit, page, sortAt, sortBy, name } = query;
+        const skip = (page - 1) * limit;
 
-    async create(userId: string, payload: CreateCategoryDto) {
+        const filter: any = { productId };
+        if (name?.trim()) {
+            filter.name = new RegExp(name.trim(), "i");
+        }
+
+        return await CategoryModel.find(filter)
+            .limit(limit)
+            .skip(skip)
+            .sort([[sortBy, sortAt]]);
+    },
+
+    async create(userId: string, payload: CreateCategoryDto, productId: string) {
+        const product = await ProductModel.findById(productId);
+        appAssert(product, NOT_FOUND, "Product not found");
         return await CategoryModel.create({
             ...payload,
             createdBy: userId,
+            productId,
+            updatedBy: userId,
         });
     },
 
