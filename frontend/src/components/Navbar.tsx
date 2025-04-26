@@ -1,5 +1,5 @@
 import { useLogout } from "@/hooks/auth/useLogout";
-import { ChevronDown, LogOut, Settings, User } from "lucide-react";
+import { ChevronDown, LayoutDashboard, LogOut, Settings, User } from "lucide-react";
 import { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoNotifications } from "react-icons/io5";
@@ -53,20 +53,21 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
             icon: <User />,
             actionHandler: () => console.log("profil"),
         },
+
+        {
+            label: "Moje zgłoszenia",
+            icon: <TbMessageReportFilled />,
+            actionHandler: () => openMyIssueReportsModal(),
+        },
         {
             label: "Panel Admina",
-            icon: <User />,
+            icon: <LayoutDashboard />,
             actionHandler: () => navigate("/admin/dashboard"),
         },
         {
             label: "Ustawienia",
             icon: <Settings />,
             actionHandler: () => openSettingsModal(),
-        },
-        {
-            label: "Moje zgłoszenia",
-            icon: <TbMessageReportFilled />,
-            actionHandler: () => openMyIssueReportsModal(),
         },
         { label: "Wyloguj się", icon: <LogOut />, actionHandler: logoutAction },
     ];
