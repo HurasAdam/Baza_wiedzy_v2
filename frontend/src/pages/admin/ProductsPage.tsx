@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import ProductCardSkeleton from "@/components/admin/Product/ProductCardSkeleton";
 import { IProduct } from "@/types";
 import EmptyState from "@/components/EmptyState";
+import ProductEditContainer from "@/components/admin/Product/ProductEditContainer";
 
 const SKELETON_COUNT = 6;
 
@@ -117,8 +118,8 @@ const ProductsPage = () => {
             <Modal isOpen={isOpen} onClose={closeModal} height="md" width="sm">
                 <ProductForm onClose={closeModal} />
             </Modal>
-            <Modal isOpen={isEditModalOpen} onClose={closeEditModal} height="md" width="sm">
-                <ProductForm onClose={closeEditModal} productId={selectedProduct} />
+            <Modal isOpen={isEditModalOpen} onClose={closeEditModal} height="lg" width="md">
+                <ProductEditContainer onClose={closeEditModal} productId={selectedProduct} />
             </Modal>
         </div>
     );

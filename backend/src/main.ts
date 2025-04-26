@@ -18,6 +18,7 @@ import authenticate from "./middleware/authenticate";
 import errorHandler from "./middleware/errorHandlers";
 import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
 import { adminRoutes } from "./features/admin/admin.route";
+import { categoryRoutes } from "./features/category/category.route";
 
 const app = express();
 app.use(express.json());
@@ -39,6 +40,7 @@ app.use("/users", authenticate, userRoutes);
 app.use("/admin", authenticate, adminRoutes);
 app.use("/articles", authenticate, articleRoutes);
 app.use("/tags", authenticate, tagRoutes);
+app.use("/categories", authenticate, categoryRoutes);
 app.use("/products", authenticate, productRoutes);
 app.use("/conversation-topics", authenticate, conversationTopicRoutes);
 app.use("/conversation-report", authenticate, conversationReportRoutes);
