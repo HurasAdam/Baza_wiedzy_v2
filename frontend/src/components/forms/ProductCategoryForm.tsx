@@ -97,7 +97,7 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }) => {
     }
 
     return (
-        <div className="w-full h-auto max-w-full">
+        <div className="w-full  max-w-full bg-background h-full">
             <div className="h-full px-10 py-10">
                 <div className="mb-5 pb-2 border-b">
                     <h1
