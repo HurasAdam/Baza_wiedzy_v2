@@ -12,6 +12,7 @@ import ProductCardSkeleton from "@/components/admin/Product/ProductCardSkeleton"
 import { IProduct } from "@/types";
 import EmptyState from "@/components/EmptyState";
 import ProductEditContainer from "@/components/admin/Product/ProductEditContainer";
+import { FiX } from "react-icons/fi";
 
 const SKELETON_COUNT = 6;
 
@@ -39,12 +40,23 @@ const ProductsPage = () => {
                         <Package />
                         Produkty
                     </h2>
-                    <Input
-                        value={name}
-                        onChange={(e) => setFilterParams(e.target.value)}
-                        placeholder="Znajdź produkt..."
-                        className="h-8 w-full lg:w-[250px] bg-inherit"
-                    />
+                    <div className="relative w-full lg:w-[300px]">
+                        <Input
+                            value={name}
+                            onChange={(e) => setFilterParams(e.target.value)}
+                            placeholder="Znajdź kategorie..."
+                            className="h-8 w-full lg:w-[250px] bg-inherit"
+                        />
+                        {name && (
+                            <button
+                                onClick={() => setFilterParams("")}
+                                aria-label="Wyczyść wyszukiwanie"
+                                className="absolute inset-y-1 right-14 flex items-center justify-center w-6 h-6 bg-muted/50 hover:bg-muted rounded-full transition"
+                            >
+                                <FiX className="w-4 h-4 text-muted-foreground" />
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 <Button
@@ -115,10 +127,10 @@ const ProductsPage = () => {
                 )}
             </div>
 
-            <Modal isOpen={isOpen} onClose={closeModal} height="md" width="sm">
+            <Modal closeOnOutsideClick={false} isOpen={isOpen} onClose={closeModal} height="md" width="sm">
                 <ProductForm onClose={closeModal} />
             </Modal>
-            <Modal isOpen={isEditModalOpen} onClose={closeEditModal} height="lg" width="md">
+            <Modal closeOnOutsideClick={false} isOpen={isEditModalOpen} onClose={closeEditModal} height="lg" width="md">
                 <ProductEditContainer onClose={closeEditModal} productId={selectedProduct} />
             </Modal>
         </div>
