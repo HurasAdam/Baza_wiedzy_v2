@@ -10,6 +10,8 @@ import { dateFormater } from "@/utils/date-formater";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FolderPlus, Plus } from "lucide-react";
 import { useState } from "react";
+import ProductCategoryCardSkeleton from "./ProductCategoryCardSkeleton";
+import { FiX } from "react-icons/fi";
 
 const ProductEditCategories = ({ productId }: { productId?: string }) => {
     const [name, setFilterParams] = useState("");
@@ -35,7 +37,7 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
         <div className="overflow-auto p-4 space-y-8">
             <div className="flex flex-col space-y-1.5">
                 <div className="flex justify-between">
-                    <h2 className="text-xl font-bold mb-4">Kategorie produktu</h2>
+                    <h2 className="text-xl font-bold mb-4 text-primary-foreground">Kategorie produktu</h2>
                     <Button
                         onClick={openCreateCategory}
                         className=" text-xs flex gap-1.5  md:mt-0 font-medium text-primary-foreground bg-primary/80 rounded-md hover:bg-primary/90 transition group"
@@ -45,17 +47,31 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
                     </Button>
                 </div>
 
-                <div className="flex justify-between">
+                <div className="relative w-full lg:w-[300px]">
                     <Input
                         value={name}
                         onChange={(e) => setFilterParams(e.target.value)}
                         placeholder="Znajdź kategorie..."
                         className="h-8 w-full lg:w-[250px] bg-inherit"
                     />
+                    {name && (
+                        <button
+                            aria-label="Wyczyść wyszukiwanie"
+                            onClick={resetFilter}
+                            className="absolute inset-y-1 right-14 flex items-center justify-center w-6 h-6 bg-muted/50 hover:bg-muted rounded-full transition"
+                        >
+                            <FiX className="w-4 h-4 text-muted-foreground" />
+                        </button>
+                    )}
                 </div>
             </div>
             {isLoading ? (
-                <p className="text-gray-600">Ładowanie kategorii...</p>
+                <div className="grid grid-cols-1 gap-4">
+                    {/* Wyświetlanie szkieletów podczas ładowania */}
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                        <ProductCategoryCardSkeleton key={idx} />
+                    ))}
+                </div>
             ) : categories.length === 0 ? (
                 name.trim() === "" ? (
                     <div>
@@ -80,7 +96,7 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
             ) : (
                 <div className="grid grid-cols-1 gap-4">
                     {categories?.map((cat) => (
-                        <Card key={cat._id} className="bg-card/60 border border-border">
+                        <Card key={cat._id} className="bg-card/60 border border-border hover:bg-card/90">
                             <CardHeader className="p-4 flex flex-row justify-between">
                                 <div className=" space-y-1">
                                     <div className="text-xs text-gray-500">{dateFormater(cat?.createdAt)}</div>

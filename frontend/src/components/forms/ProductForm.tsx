@@ -132,7 +132,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
     ];
 
     return (
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-12  h-full ">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-12 bg-background h-full ">
             <div className="space-y-1.5 relative ">
                 <label htmlFor="" className="text-sm text-primary-foreground">
                     Nazwa produktu
