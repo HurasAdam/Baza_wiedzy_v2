@@ -23,12 +23,14 @@ export const useFetchArticles = (params?: URLSearchParams, options = {}) => {
         error,
     } = useQuery({
         queryKey: ["articles", stringifiedParams || "all"],
-        queryFn: ({ queryKey }) => {
-            const [_key, stringParams] = queryKey;
-            const parsedParams = new URLSearchParams(stringParams !== "all" ? (stringParams as string) : "");
+        queryFn: ({ queryKey: [_key, stringParams] }) => {
+            const parsedParams =
+                stringParams && stringParams !== "all"
+                    ? new URLSearchParams(stringParams as string)
+                    : new URLSearchParams();
             return articleApi.getAllArticles(parsedParams);
         },
-        staleTime: 1000 * 60 * 5,
+        staleTime: 1000 * 60 * 5, // cache 5 minut
         ...options,
     });
 

@@ -48,6 +48,7 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }) => {
                 form.setError("name", {
                     message: "Produkt posiada już kategorie o podanej nazwie", // Wiadomość dla użytkownika
                 });
+                toast.error("Produkt posiada już kategorie o podanej nazwie");
             } else if (error?.status === 404) {
                 toast.error("Wystąpił błąd - Nie znalezniono produktu.");
             } else {

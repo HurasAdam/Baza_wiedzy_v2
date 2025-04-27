@@ -14,6 +14,8 @@ import * as z from "zod";
 import Editor from "../editor/Editor";
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from "../ui/file-input";
 import MultipleSelector from "../ui/multi-select";
+import { useQuery } from "@tanstack/react-query";
+import { productCategoryApi } from "@/lib/product-category.api";
 
 const allowedFormats = ["image/svg+xml", "image/png", "image/jpeg", "image/gif"];
 
@@ -30,6 +32,7 @@ const formSchema = z.object({
         .min(3, { message: "Tytuł musi mieć co najmniej 3 znaki." })
         .max(90, { message: "Tytuł nie może przekraczać 90 znaków." }),
     product: z.string().min(1, { message: "Wybierz produkt" }),
+    category: z.string().min(1, { message: "Wybierz kategorie" }),
     tags: z
         .array(
             z.object({
@@ -87,7 +90,24 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
             clientDescription: article ? article?.clientDescription : "",
             employeeDescription: article ? article?.employeeDescription : "",
             file: [],
+            category: article ? article?.category : "",
         },
+    });
+    const xd = form.getValues();
+    console.log("WARTOSCI FORMULARZA", xd);
+
+    const selectedProduct = form.watch("product");
+    const selectedCategory = form.watch("category");
+    const { data: categories, isLoading: categoriesLoading } = useQuery({
+        queryKey: ["categories-by-product", selectedProduct], // Zapytanie jest zależne od wybranego produktu
+        queryFn: () => {
+            return productCategoryApi.findByProduct({}, selectedProduct);
+        },
+        enabled: !!selectedProduct,
+    });
+
+    const formatedCategories = categories?.map((category) => {
+        return { label: category.name, value: category._id };
     });
 
     const { isDirty } = form.formState;
@@ -128,11 +148,12 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                         </FormItem>
                     )}
                 />
+
                 <FormField
                     control={form.control}
                     name="product"
                     render={({ field }) => (
-                        <FormItem className="flex flex-col">
+                        <FormItem className="flex flex-col w-full">
                             <FormLabel className="w-fit">
                                 <RequiredLabel>Produkt</RequiredLabel>
                             </FormLabel>
@@ -143,22 +164,21 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                                             variant="outline"
                                             role="combobox"
                                             className={cn(
-                                                "w-[240px] justify-between",
+                                                "w-full justify-between",
                                                 !field.value && "text-muted-foreground"
                                             )}
                                         >
                                             {field.value
                                                 ? products.find((language) => language.value === field.value)?.label
-                                                : "Wybierz produkt"}
+                                                : "Wybierz kategorie"}
                                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                         </Button>
                                     </FormControl>
                                 </PopoverTrigger>
+
                                 <PopoverContent
-                                    onWheelCapture={(e) => {
-                                        e.stopPropagation();
-                                    }}
-                                    className="w-[240px] p-0"
+                                    onWheelCapture={(e) => e.stopPropagation()}
+                                    className="w-[--radix-popover-trigger-width] p-0"
                                 >
                                     <Command>
                                         <CommandInput placeholder="Search language..." />
@@ -170,13 +190,13 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                                                         value={language.label}
                                                         key={language.value}
                                                         onSelect={() => {
-                                                            form.setValue("product", language.value);
+                                                            field.onChange(language.value);
                                                         }}
                                                     >
                                                         <Check
                                                             className={cn(
                                                                 "mr-2 h-4 w-4",
-                                                                language.value === field.value
+                                                                language.value === selectedProduct
                                                                     ? "opacity-100"
                                                                     : "opacity-0"
                                                             )}
@@ -196,6 +216,86 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
                         </FormItem>
                     )}
                 />
+
+                <FormField
+                    control={form.control}
+                    name="category"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-col w-full">
+                            <FormLabel className="w-fit">
+                                <RequiredLabel>Kategoria</RequiredLabel>
+                            </FormLabel>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <FormControl>
+                                        <Button
+                                            disabled={!selectedProduct}
+                                            variant="outline"
+                                            role="combobox"
+                                            className={cn(
+                                                "w-full justify-between",
+                                                !field.value && "text-muted-foreground"
+                                            )}
+                                        >
+                                            {field.value
+                                                ? formatedCategories?.find((language) => language.value === field.value)
+                                                      ?.label
+                                                : "Wybierz produkt"}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </FormControl>
+                                </PopoverTrigger>
+
+                                <PopoverContent
+                                    onWheelCapture={(e) => e.stopPropagation()}
+                                    className="w-[--radix-popover-trigger-width] p-0"
+                                >
+                                    {categoriesLoading ? (
+                                        <div>Ładowanie kategorii...</div>
+                                    ) : formatedCategories && formatedCategories.length > 0 ? (
+                                        <Command>
+                                            <CommandInput placeholder="Wyszukaj kategorię..." />
+                                            <CommandList>
+                                                <CommandEmpty>Nie znaleziono kategorii.</CommandEmpty>
+                                                <CommandGroup>
+                                                    {formatedCategories.map((category) => (
+                                                        <CommandItem
+                                                            value={category.value}
+                                                            key={category.value}
+                                                            onSelect={() => {
+                                                                field.onChange(category.value);
+                                                            }}
+                                                        >
+                                                            <Check
+                                                                className={cn(
+                                                                    "mr-2 h-4 w-4",
+                                                                    category.value === selectedCategory
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0"
+                                                                )}
+                                                            />
+                                                            {category.label}
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
+                                            </CommandList>
+                                        </Command>
+                                    ) : (
+                                        <div className="p-3 text-sm text-primary-foreground/80">
+                                            Obecnie brak kategorii dostępnych dla tego produktu. Wybierz inny produkt,
+                                            aby zobaczyć dostępne kategorie.
+                                        </div>
+                                    )}
+                                </PopoverContent>
+                            </Popover>
+                            <FormDescription className="text-sm">
+                                Wybierz produkt, do którego zostanie przypisany artykuł.
+                            </FormDescription>
+                            <FormMessage className="text-xs" />
+                        </FormItem>
+                    )}
+                />
+
                 <FormField
                     control={form.control}
                     name="tags"
