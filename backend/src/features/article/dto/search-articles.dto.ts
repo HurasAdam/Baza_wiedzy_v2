@@ -10,6 +10,8 @@ export const searchArticlesDto = searchDto.extend({
 
     author: z.string().optional(),
 
+    category: z.string().optional(),
+
     verified: z.string().optional(),
 });
 
