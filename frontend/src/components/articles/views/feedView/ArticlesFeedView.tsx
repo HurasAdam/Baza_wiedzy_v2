@@ -26,6 +26,8 @@ import { BANNER_IMAGES } from "@/constants/productBanners";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { productCategoryApi } from "@/lib/product-category.api";
+import { AnimatePresence, motion } from "framer-motion";
+import EmptyState from "@/components/EmptyState";
 
 const ArticleList = () => {
     const [params, setParams] = useSearchParams();
@@ -74,22 +76,8 @@ const ArticleList = () => {
 
     if (!isLoading && articles.data.length === 0) {
         return (
-            <div className="flex p-5 h-full max-w-[1540px] mx-auto gap-6 min-h-[calc(100vh-120px)] justify-center items-center">
-                <div className="text-center space-y-6 flex flex-col items-center justify-center p-10 rounded-lg  w-full max-w-[500px] ">
-                    <img src={IMAGES.findArticleImage} alt="Brak wyników" className="w-32 h-auto mx-auto mb-4" />
-                    <h2 className="text-lg font-semibold text-primary-foreground/90">
-                        Wygląda na to, że nie znaleźliśmy żadnych artykułów spełniających kryteria wyszukiwania.
-                    </h2>
-                    <p className="text-sm text-gray-500">
-                        Spróbuj zmienić filtr lub wróć do głównej listy artykułów, aby znaleźć coś interesującego.
-                    </p>
-                    <Button
-                        onClick={resetFilterHandler}
-                        className="mt-4 text-primary-600 hover:text-primary-800 font-medium text-sm bg-primary/80"
-                    >
-                        Zresetuj filtry
-                    </Button>
-                </div>
+            <div>
+                <EmptyState onReset={() => {}} />
             </div>
         );
     }
@@ -241,6 +229,17 @@ export const ArticlesFilter = () => {
             return prev;
         });
     };
+    const listVariants: Variants = {
+        hidden: { opacity: 0, y: -20 },
+        show: { opacity: 1, y: 0, transition: { staggerChildren: 0.05 } },
+        exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+    };
+
+    // Item variants simplified: only opacity
+    const itemVariants: Variants = {
+        hidden: { opacity: 0 },
+        show: { opacity: 1, transition: { duration: 0.3 } },
+    };
 
     const resetFilterHandler = () => {
         setParams(); // Resetowanie wszystkich parametrów URL
@@ -323,20 +322,6 @@ export const ArticlesFilter = () => {
                             </Popover>
                         </div>
 
-                        <div className="inline-flex items-center justify-center rounded-md bg-background border border-border p-1 space-x-1">
-                            {[
-                                { label: "Wszystkie", value: null },
-                                { label: "Błąd", value: "bug" },
-                                { label: "Propozycja", value: "proposal" },
-                            ].map(({ label, value }) => (
-                                <button
-                                    key={label}
-                                    className={`px-4 py-1.5 text-sm rounded-md transition-all font-medium ${"bg-primary/55 text-white shadow-sm"}`}
-                                >
-                                    {label}
-                                </button>
-                            ))}
-                        </div>
                         <div className="flex items-center gap-2">
                             <Switch id="new-reports-toggle" />
                             <label htmlFor="new-reports-toggle" className="text-sm text-muted-foreground">
@@ -344,23 +329,45 @@ export const ArticlesFilter = () => {
                             </label>
                         </div>
                     </div>
-                    {selectedProduct && (
-                        <div className="inline-flex items-center  rounded-md bg-background border border-border p-1 space-x-1">
-                            {categories?.map((category) => (
-                                <button
-                                    key={category?._id}
-                                    onClick={() => categoryHandler(category._id)}
-                                    className={`px-4 py-1.5 text-sm rounded-md transition-all font-medium ${
-                                        selectedCategory === category._id
-                                            ? "bg-primary/55 text-white shadow-sm"
-                                            : "bg-muted text-muted-foreground"
-                                    }`}
-                                >
-                                    {category?.name}
-                                </button>
-                            ))}
-                        </div>
-                    )}
+                    {/* Animated Category Buttons on Product Change */}
+                    <AnimatePresence mode="wait">
+                        {selectedProduct && (
+                            <motion.div
+                                key={selectedProduct}
+                                initial="hidden"
+                                animate="show"
+                                exit="exit"
+                                variants={listVariants}
+                                className="inline-flex items-center rounded-md bg-[hsl(var(--background))]  p-1 space-x-1 overflow-x-auto py-3"
+                            >
+                                {categoriesLoading
+                                    ? Array.from({ length: 3 }).map((_, idx) => (
+                                          <motion.div
+                                              key={idx}
+                                              className="h-8 w-20 bg-[hsl(var(--muted))] rounded-md animate-pulse"
+                                          />
+                                      ))
+                                    : categories.map((cat) => (
+                                          <motion.button
+                                              key={cat._id}
+                                              onClick={() => categoryHandler(cat._id)}
+                                              variants={itemVariants}
+                                              whileTap={{ scale: 0.95 }}
+                                              className={`flex items-center px-4 py-1.5 border text-sm rounded-md font-medium whitespace-nowrap transition-all hover:opacity-80 ${
+                                                  selectedCategory === cat._id
+                                                      ? "bg-primary/80 text-primary-foreground shadow-md border-primary"
+                                                      : "bg-transparent border text-[hsl(var(--muted-foreground))]"
+                                              }`}
+                                          >
+                                              {selectedCategory === cat._id && (
+                                                  <Check className="mr-1 w-4 h-4 text-[hsl(var(--primary-foreground))]" />
+                                              )}
+                                              {cat.name}
+                                          </motion.button>
+                                      ))}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
         </div>

@@ -13,7 +13,7 @@ interface EmptyStateProps {
 const EmptyState = ({
     icon,
     title = "Brak wyników",
-    description = "Nie znaleziono wyników pasujących do podanego wyszukiwania.",
+    description = "Nie znaleziono wyników spełniających krteria wybranego wyszukiwania.",
     onReset,
     resetLabel = "Wyczyść filtry",
 }: EmptyStateProps) => {
