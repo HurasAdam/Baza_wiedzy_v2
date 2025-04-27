@@ -16,6 +16,9 @@ export const createArticleDto = z.object({
     product: z.string().refine((value) => {
         return Types.ObjectId.isValid(value);
     }),
+    category: z.string().refine((value) => {
+        return Types.ObjectId.isValid(value);
+    }),
 });
 
 export type CreateArticleDto = z.infer<typeof createArticleDto>;

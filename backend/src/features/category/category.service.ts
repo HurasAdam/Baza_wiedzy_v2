@@ -42,6 +42,13 @@ export const CategoryService = {
     async create(userId: string, payload: CreateCategoryDto, productId: string) {
         const product = await ProductModel.findById(productId);
         appAssert(product, NOT_FOUND, "Product not found");
+
+        const existingCategory = await CategoryModel.findOne({
+            name: payload.name.trim(),
+            productId,
+        });
+        appAssert(!existingCategory, 409, "Category with this name already exists for this product");
+
         return await CategoryModel.create({
             ...payload,
             createdBy: userId,

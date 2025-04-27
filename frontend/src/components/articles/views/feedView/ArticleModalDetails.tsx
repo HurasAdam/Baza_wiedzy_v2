@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
     AlertTriangleIcon,
@@ -400,9 +400,26 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                                             <div className="flex items-center gap-2">
                                                 <CheckCircleIcon className="w-4 h-4 text-green-400" />
                                                 <span className="flex items-center gap-2.5">
-                                                    <span className="text-sm text-green-500"> Zweryfikowany</span>{" "}
-                                                    <span className="text-xs">
-                                                        przez: {verifiedBy.name} {verifiedBy.surname}
+                                                    <span className="text-sm text-green-500">Zweryfikowany</span>
+                                                    <span className="text-xs flex items-center">
+                                                        przez:
+                                                        {!verifiedBy.isActive && (
+                                                            <Tooltip>
+                                                                <TooltipTrigger asChild>
+                                                                    <AlertTriangleIcon className="w-5 h-5 text-amber-500 ml-1 animate-pulse-custom cursor-help" />
+                                                                </TooltipTrigger>
+                                                                <TooltipContent
+                                                                    side="bottom"
+                                                                    align="center"
+                                                                    className="w-fit p-2.5"
+                                                                >
+                                                                    Użytkownik usunięty
+                                                                </TooltipContent>
+                                                            </Tooltip>
+                                                        )}
+                                                        <span className="mx-1">
+                                                            {verifiedBy.name} {verifiedBy.surname}
+                                                        </span>
                                                     </span>
                                                 </span>
                                             </div>

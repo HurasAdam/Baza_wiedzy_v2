@@ -15,6 +15,10 @@ export const constructSearchQuery = (query: any) => {
         constructedQuery.product = query.product;
     }
 
+    if (query.category) {
+        constructedQuery.category = query.category;
+    }
+
     if (query.author) {
         constructedQuery.createdBy = query.author;
     }
