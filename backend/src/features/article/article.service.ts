@@ -48,6 +48,7 @@ export const ArticleService = {
                 { path: "tags", select: ["name", "shortname"] },
                 { path: "createdBy", select: ["name", "surname"] },
                 { path: "product", select: ["name", "labelColor", "banner"] },
+                { path: "category", select: ["name"] },
             ])
             .skip(skip)
             .limit(limit)
@@ -77,7 +78,7 @@ export const ArticleService = {
             .populate([
                 { path: "tags", select: ["name"] },
                 { path: "createdBy", select: ["name", "surname"] },
-                { path: "verifiedBy", select: ["name", "surname"] },
+                { path: "verifiedBy", select: ["name", "surname", "isActive"] },
                 { path: "product", select: ["name", "labelColor", "banner"] },
             ])
             .where({ isTrashed: findTrashed });
@@ -86,8 +87,8 @@ export const ArticleService = {
 
         // const isFavourite = user.favourites.includes(article._id);
         const isFavourite = user.favourites.some((f) => f._id.equals(article._id));
-        article.viewsCounter = article.viewsCounter + 1;
-        await article.save();
+        // article.viewsCounter = article.viewsCounter + 1;
+        // await article.save();
 
         return {
             ...article.toObject(),
@@ -227,7 +228,7 @@ export const ArticleService = {
     },
 
     async updateOne(userId: string, articleId: string, body: any) {
-        const { title, clientDescription, employeeDescription, tags, product } = body;
+        const { title, clientDescription, employeeDescription, tags, product, category } = body;
 
         const article = await ArticleModel.findById({ _id: articleId });
 
@@ -240,6 +241,7 @@ export const ArticleService = {
         article.employeeDescription = employeeDescription || article.employeeDescription;
         article.tags = tags || article.tags;
         article.product = product || article.product;
+        article.category = category || article.category;
 
         const updatedArticle = await article.save();
         const updatedArticleObject = updatedArticle.toObject();
