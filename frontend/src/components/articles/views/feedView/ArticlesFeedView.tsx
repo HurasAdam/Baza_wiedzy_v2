@@ -7,8 +7,8 @@ import { useFetchArticles } from "@/hooks/query/useFetchArticles";
 import { useFetchProducts } from "@/hooks/query/useFetchProducts";
 import { IArticle } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Search, Star } from "lucide-react";
-import { useState, type ChangeEventHandler } from "react";
+import { Check, ChevronsUpDown, Search, Star } from "lucide-react";
+import { useEffect, useState, type ChangeEventHandler } from "react";
 import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
 import { Link, useOutletContext, useSearchParams } from "react-router-dom";
@@ -23,13 +23,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/utils/cn";
 import { productApi } from "@/lib/product.api";
 import { BANNER_IMAGES } from "@/constants/productBanners";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { productCategoryApi } from "@/lib/product-category.api";
 
 const ArticleList = () => {
     const [params, setParams] = useSearchParams();
     const hasProduct = params.get("product");
     const hasCategory = params.get("category");
-    const queryParams = hasProduct && hasCategory ? params : undefined;
-    const { articles, isError, isLoading, error } = useFetchArticles(queryParams);
+    const queryParams = hasProduct ? params : undefined;
+    const { articles, isError, isLoading, error } = useFetchArticles(params);
 
     const { state, setState } = useOutletContext();
 
@@ -93,8 +96,7 @@ const ArticleList = () => {
 
     return (
         <>
-            <div className="flex justify-between mb-3.5 ">
-                <h1 className="text-xl font-semibold">Artykuły</h1>
+            {/* <div className="flex justify-between mb-3.5 ">
                 <SelectBox
                     value={params.get("sort") || "default"}
                     onChange={() => void 0}
@@ -113,7 +115,7 @@ const ArticleList = () => {
                         },
                     ]}
                 />
-            </div>
+            </div> */}
             {articles.data?.map((article: IArticle, i: number) => (
                 <ArticleListItem
                     key={i}
@@ -197,34 +199,52 @@ export const ArticleListItem = ({ article, className }: { article: IArticle; cla
 };
 
 export const ArticlesFilter = () => {
-    const [selectedProduct, setSelectedProduct] = useState("");
-    console.log("WYRANO PRODUKT", selectedProduct);
     const [params, setParams] = useSearchParams();
+    const selectedProduct = params.get("product") || "";
+    const selectedCategory = params.get("category") || "";
+    const [searchTitle, setSearchTitle] = useState(params.get("title") || "");
     const { products } = useFetchProducts();
 
-    const titleParamHandler: ChangeEventHandler<HTMLInputElement> = (event) => {
-        const value = event.currentTarget.value;
-
-        setParams((prev) => {
-            if (value.trim() === "") {
-                prev.delete("title");
-            } else {
-                prev.set("title", value);
-            }
-
-            return prev;
-        });
-    };
+    const { data: categories, isLoading: categoriesLoading } = useQuery({
+        queryKey: ["categories-by-product", selectedProduct], // Zapytanie jest zależne od wybranego produktu
+        queryFn: () => {
+            return productCategoryApi.findByProduct({}, selectedProduct);
+        },
+        enabled: !!selectedProduct,
+    });
 
     const productHandler = (product: string) => {
         setParams((prev) => {
             prev.set("product", product);
+            prev.delete("category");
+            return prev;
+        });
+    };
+    const categoryHandler = (categoryId: string) => {
+        setParams((prev) => {
+            prev.set("category", categoryId);
+            return prev;
+        });
+        setSelectedCategory(categoryId);
+    };
+
+    const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setSearchTitle(value);
+
+        setParams((prev) => {
+            if (value) {
+                prev.set("title", value);
+            } else {
+                prev.delete("title");
+            }
             return prev;
         });
     };
 
     const resetFilterHandler = () => {
-        setParams();
+        setParams(); // Resetowanie wszystkich parametrów URL
+        setSelectedProduct(""); // Resetowanie wybranego produktu
     };
 
     return (
@@ -238,67 +258,69 @@ export const ArticlesFilter = () => {
                     <div className="flex gap-4 items-center">
                         <div className="relative w-full lg:w-[300px]">
                             <Input
-                                // onChange={(e) => setTitle(e.target.value)}
+                                onChange={titleHandler}
                                 placeholder="Szukaj po tytule..."
                                 className="h-9 w-full pr-10 text-sm rounded-lg border border-border focus:ring-1 focus:ring-primary transition"
                             />
-                            {/* {title && (
-                            <button
-                                aria-label="Wyczyść wyszukiwanie"
-                                onClick={() => setTitle("")}
-                                className="absolute inset-y-1.5 right-2 flex items-center justify-center w-6 h-6 bg-muted/50 hover:bg-muted rounded-full transition"
-                            >
-                                <FiX className="w-4 h-4 text-muted-foreground" />
-                            </button>
-                        )} */}
                         </div>
 
                         <div>
-                            <Select defaultValue={params.get("product") || ""} onValueChange={productHandler}>
-                                <SelectTrigger
-                                    className={cn(
-                                        "flex items-center gap-2 [&>span]:line-clamp-1 [&>span]:flex [&>span]:w-full [&>span]:items-center [&>span]:gap-1 [&>span]:truncate [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0"
-                                    )}
-                                    aria-label="Select account"
-                                >
-                                    <SelectValue placeholder="Wybierz produkt">
-                                        {/* {accounts.find((account) => account.email === selectedAccount)?.icon}
-            <span className={cn("ml-2", isCollapsed && "hidden")}>
-                {products?.find((product) => product?._id === selectedAccount)?._id}
-            </span> */}
-                                    </SelectValue>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {/* {accounts.map((account) => (
-            <SelectItem key={account.email} value={account.email}>
-                <div className="flex items-center gap-3 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0 [&_svg]:text-foreground">
-                    {account.icon}
-                    {account.email}
-                </div>
-            </SelectItem>
-        ))} */}
-                                    {products?.map((product) => {
-                                        const bannerURL = BANNER_IMAGES?.[product.banner]; // albo ścieżka np. `/banners/${product.banner}.png`
-                                        console.log(product, "PRODUKT");
-                                        return (
-                                            <SelectItem value={product?.name}>
-                                                <div className="flex items-center gap-3 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0 [&_svg]:text-foreground">
-                                                    <span
-                                                        className="h-6 w-6 rounded-md"
-                                                        style={{
-                                                            backgroundImage: `url(${bannerURL})`,
-                                                            backgroundSize: "cover",
-                                                            backgroundPosition: "center",
-                                                        }}
-                                                    ></span>
-                                                    {product.name}
-                                                    {/* {account.email} */}
-                                                </div>
-                                            </SelectItem>
-                                        );
-                                    })}
-                                </SelectContent>
-                            </Select>
+                            <Popover>
+                                <PopoverTrigger asChild className="w-full">
+                                    <Button
+                                        variant="outline"
+                                        role="combobox"
+                                        className="w-full justify-between w-[280px]"
+                                    >
+                                        {selectedProduct
+                                            ? products.find((product) => product._id === selectedProduct)?.name // Wyświetlanie nazwy produktu
+                                            : "Wybierz produkt"}
+                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                </PopoverTrigger>
+
+                                <PopoverContent onWheelCapture={(e) => e.stopPropagation()} className="w-[280px] p-0">
+                                    <Command>
+                                        <CommandInput placeholder="Wyszukaj produkt..." />
+                                        <CommandList className="scrollbar-custom">
+                                            <CommandEmpty>Nie znaleziono produktu.</CommandEmpty>
+                                            <CommandGroup>
+                                                {products?.map((product) => {
+                                                    const bannerURL = BANNER_IMAGES?.[product.banner]; // Ścieżka do banera
+                                                    return (
+                                                        <CommandItem
+                                                            value={product.name}
+                                                            key={product._id}
+                                                            onSelect={() => {
+                                                                productHandler(product._id); // Ustawienie ID produktu i aktualizacja URL
+                                                            }}
+                                                        >
+                                                            <Check
+                                                                className={`mr-2 h-4 w-4 ${
+                                                                    product._id === selectedProduct
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0"
+                                                                }`}
+                                                            />
+                                                            <div className="flex items-center gap-3">
+                                                                <span
+                                                                    className="h-6 w-6 rounded-md"
+                                                                    style={{
+                                                                        backgroundImage: `url(${bannerURL})`,
+                                                                        backgroundSize: "cover",
+                                                                        backgroundPosition: "center",
+                                                                    }}
+                                                                ></span>
+                                                                {product.name}
+                                                            </div>
+                                                        </CommandItem>
+                                                    );
+                                                })}
+                                            </CommandGroup>
+                                        </CommandList>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
                         </div>
 
                         <div className="inline-flex items-center justify-center rounded-md bg-background border border-border p-1 space-x-1">
@@ -309,8 +331,7 @@ export const ArticlesFilter = () => {
                             ].map(({ label, value }) => (
                                 <button
                                     key={label}
-                                    className={`px-4 py-1.5 text-sm rounded-md transition-all font-medium 
-             ${"bg-primary/55 text-white shadow-sm"}`}
+                                    className={`px-4 py-1.5 text-sm rounded-md transition-all font-medium ${"bg-primary/55 text-white shadow-sm"}`}
                                 >
                                     {label}
                                 </button>
@@ -322,21 +343,24 @@ export const ArticlesFilter = () => {
                                 Tylko nowe zgłoszenia
                             </label>
                         </div>
-                        {/* Przycisk Resetowania Wszystkich Filtrów */}
-                        {/* {hasNonInputFilters && (
-                        <button
-                            onClick={() => {
-                                setType(null);
-                                setIsUndread(false);
-                                setTitle("");
-                            }}
-                            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground hover:bg-accent border border-border px-3 py-1.5 rounded-md transition-all ease-in-out duration-200 hover:scale-105"
-                        >
-                            <FiX className="w-4 h-4" />
-                            <span>Wyczyść filtry</span>
-                        </button>
-                    )} */}
                     </div>
+                    {selectedProduct && (
+                        <div className="inline-flex items-center  rounded-md bg-background border border-border p-1 space-x-1">
+                            {categories?.map((category) => (
+                                <button
+                                    key={category?._id}
+                                    onClick={() => categoryHandler(category._id)}
+                                    className={`px-4 py-1.5 text-sm rounded-md transition-all font-medium ${
+                                        selectedCategory === category._id
+                                            ? "bg-primary/55 text-white shadow-sm"
+                                            : "bg-muted text-muted-foreground"
+                                    }`}
+                                >
+                                    {category?.name}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
