@@ -44,9 +44,9 @@ const ArticleList = () => {
 
     if (isLoading) {
         return (
-            <div className="relative h-full w-full">
+            <div className="relative h-full w-full  p-40">
                 <div className=" flex h-full items-center justify-center">
-                    <div className="flex flex-col items-center justify-center h-full text-center  w-full rounded-2xl shadow-lg p-6">
+                    <div className="flex flex-col items-center justify-center h-full text-center  w-full rounded-2xl  p-6">
                         <div className="relative w-16 h-16 mb-6 animate-spin-slow">
                             {/* Obracający się pierścień */}
                             <div className="absolute inset-0 rounded-full border-4 border-primary/30 border-t-primary-foreground  border-b-primary animate-spin-slow" />
@@ -57,8 +57,8 @@ const ArticleList = () => {
                             {/* Centralna kulka jako core-logo */}
                             <div className="absolute top-1/2 left-1/2 w-5 h-5 bg-primary rounded-full shadow-xl -translate-x-1/2 -translate-y-1/2 border border-white/10 " />
                         </div>
-                        <h2 className="text-xl font-semibold text-foreground mb-2">Łoadowanie...</h2>
-                        <p className="text-sm text-muted-foreground max-w-md">Trwa ładowanie, danych..</p>
+
+                        <p className="text-base text-muted-foreground max-w-md">Łoadowanie...</p>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@ const ArticleList = () => {
     if (!isLoading && articles.data.length === 0) {
         return (
             <div>
-                <EmptyState onReset={() => {}} />
+                <EmptyState onReset={() => setParams({})} />
             </div>
         );
     }
@@ -190,7 +190,7 @@ export const ArticlesFilter = () => {
     const [params, setParams] = useSearchParams();
     const selectedProduct = params.get("product") || "";
     const selectedCategory = params.get("category") || "";
-    const [searchTitle, setSearchTitle] = useState(params.get("title") || "");
+    const titleParam = params.get("title") || "";
     const { products } = useFetchProducts();
 
     const { data: categories, isLoading: categoriesLoading } = useQuery({
@@ -218,17 +218,13 @@ export const ArticlesFilter = () => {
 
     const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        setSearchTitle(value);
-
         setParams((prev) => {
-            if (value) {
-                prev.set("title", value);
-            } else {
-                prev.delete("title");
-            }
+            if (value) prev.set("title", value);
+            else prev.delete("title");
             return prev;
         });
     };
+
     const listVariants: Variants = {
         hidden: { opacity: 0, y: -20 },
         show: { opacity: 1, y: 0, transition: { staggerChildren: 0.05 } },
@@ -250,13 +246,14 @@ export const ArticlesFilter = () => {
         <div className="flex items-center justify-between">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                 <div className="flex flex-col">
-                    <h2 className="mb-6 text-2xl font-bold text-foreground flex items-center gap-1">
-                        <PiArticleMediumFill className="w-5.5 h-5.5" />
+                    <h2 className="mb-6 text-[23px] font-bold text-foreground flex items-center gap-1.5">
+                        <PiArticleMediumFill className="w-6 h-6" />
                         Baza artykułów
                     </h2>
                     <div className="flex gap-4 items-center">
                         <div className="relative w-full lg:w-[300px]">
                             <Input
+                                value={titleParam}
                                 onChange={titleHandler}
                                 placeholder="Szukaj po tytule..."
                                 className="h-9 w-full pr-10 text-sm rounded-lg border border-border focus:ring-1 focus:ring-primary transition"
@@ -338,7 +335,7 @@ export const ArticlesFilter = () => {
                                 animate="show"
                                 exit="exit"
                                 variants={listVariants}
-                                className="inline-flex items-center rounded-md bg-[hsl(var(--background))]  p-1 space-x-1 overflow-x-auto py-3"
+                                className="inline-flex items-center rounded-md bg-[hsl(var(--background))]  p-1 space-x-1 overflow-x-auto pt-3  "
                             >
                                 {categoriesLoading
                                     ? Array.from({ length: 3 }).map((_, idx) => (
@@ -366,6 +363,16 @@ export const ArticlesFilter = () => {
                                           </motion.button>
                                       ))}
                             </motion.div>
+                        )}
+                        {!selectedProduct && (
+                            <motion.div
+                                key={selectedProduct}
+                                initial="hidden"
+                                animate="show"
+                                exit="exit"
+                                variants={listVariants}
+                                className="inline-flex items-center rounded-md bg-[hsl(var(--background))]  p-1 space-x-1 overflow-x-auto py-6"
+                            ></motion.div>
                         )}
                     </AnimatePresence>
                 </div>
