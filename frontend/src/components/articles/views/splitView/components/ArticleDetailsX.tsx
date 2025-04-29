@@ -11,6 +11,7 @@ import useCopyToClipboard from "../../../../../hooks/useCopyToClipboard";
 import { useAlert } from "../../../../alert/hooks/useAlert";
 import { useModal } from "../../../../modal/hooks/useModal";
 import { Button } from "../../../../ui/button";
+import { articleApi } from "@/lib/article.api";
 
 export const ArticleDetailsX = ({ articleId }: { articleId: string }) => {
     const { copyToClipboard } = useCopyToClipboard();
@@ -31,6 +32,8 @@ export const ArticleDetailsX = ({ articleId }: { articleId: string }) => {
     const { isOpen: isVerifyAlertOpen, openAlert: openVerifyAlert, closeAlert: closeVerifyAlert } = useAlert();
     const { isOpen: isUnverifyAlertOpen, openAlert: openUnverifyAlrty, closeAlert: closeUnverifyAlert } = useAlert();
     const { isOpen: isDeleteAlertOpen, openAlert: openDeleteAlert, closeAlert: closeDeleteAlert } = useAlert();
+
+    console.log(articleId, "BOOM");
 
     const { data: article } = useQuery({
         queryKey: ["article", articleId],
