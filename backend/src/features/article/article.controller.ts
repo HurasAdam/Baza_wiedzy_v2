@@ -17,7 +17,7 @@ export const ArticleController = (articleService = ArticleService) => ({
         return res.status(OK).json(articles);
     }),
 
-    findTrash: catchErrors(async ({ userId, query }, res) => {
+    findTrashed: catchErrors(async ({ userId, query }, res) => {
         const payload = searchArticlesDto.parse(query);
         const articles = await articleService.find(userId, payload, true);
         return res.status(OK).json(articles);
@@ -28,7 +28,7 @@ export const ArticleController = (articleService = ArticleService) => ({
         return res.status(OK).json(article);
     }),
 
-    findOneTrash: catchErrors(async ({ userId, params }, res) => {
+    findOneTrashed: catchErrors(async ({ userId, params }, res) => {
         const article = await articleService.findOne(userId, params.id, true);
         return res.status(OK).json(article);
     }),

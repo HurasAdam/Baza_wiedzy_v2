@@ -7,8 +7,8 @@ const articleController = ArticleController();
 // prefix /articles
 
 articleRoutes.get("/", articleController.find);
-articleRoutes.get("/trashed", articleController.findTrash);
-articleRoutes.get("/trashed/:id", articleController.findOneTrash);
+articleRoutes.get("/trashed", articleController.findTrashed);
+articleRoutes.get("/trashed/:id", articleController.findOneTrashed);
 articleRoutes.get("/history/:id", articleController.findHistoryOne);
 articleRoutes.get("/:id/history", articleController.findOneHistory);
 articleRoutes.get("/:id", articleController.findOne);

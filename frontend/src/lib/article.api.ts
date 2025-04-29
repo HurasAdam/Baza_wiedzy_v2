@@ -15,7 +15,7 @@ export const getPopularArticles = (params: URLSearchParams) => {
     return api.get(crurl(baseUrl, "popular"), { params });
 };
 
-export const getAllTrashedArticles = (params: URLSearchParams) => {
+export const findTrashed = (params: URLSearchParams) => {
     return api.get(crurl(baseUrl, "trashed"), { params });
 };
 
@@ -87,7 +87,7 @@ export const articleApi = {
     deleteArticle,
     updateArticle,
     trashArticle,
-    getAllTrashedArticles,
+    findTrashed,
     getArticleHistory,
     restoreArticle,
     getUsersArticleStats,
