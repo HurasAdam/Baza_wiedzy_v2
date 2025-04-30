@@ -46,4 +46,14 @@ export const AdminService = {
         }
         return { message: "User account has been enabled" };
     },
+
+    async resetUserPassword(params: string) {
+        const user = await UserModel.findById(params);
+        appAssert(user, NOT_FOUND, "User not found");
+
+        user.password = DEFAULT_TEMP_PASSWORD;
+        user.mustChangePassword = true;
+        await user.save();
+        return { message: "User password has been reset to default" };
+    },
 };
