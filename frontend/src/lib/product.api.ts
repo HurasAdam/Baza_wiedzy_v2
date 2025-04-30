@@ -3,7 +3,7 @@ import { crurl } from "@/utils/crurl";
 
 const baseUrl = "/products";
 
-const find = (params: URLSearchParams) => {
+const find = (params?: URLSearchParams) => {
     return api.get(baseUrl, { params });
 };
 

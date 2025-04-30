@@ -20,4 +20,9 @@ export const AdminController = (adminService = AdminService) => ({
         const { message } = await adminService.enableUserAccount(payload.id);
         return res.status(OK).json({ message });
     }),
+    resetUserPassword: catchErrors(async ({ params }, res) => {
+        const payload = userIdParamsDto.parse(params);
+        const { message } = await adminService.resetUserPassword(payload.id);
+        return res.status(OK).json(message);
+    }),
 });

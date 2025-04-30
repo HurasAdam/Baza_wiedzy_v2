@@ -213,7 +213,6 @@ export const ArticlesFilter = () => {
             prev.set("category", categoryId);
             return prev;
         });
-        setSelectedCategory(categoryId);
     };
 
     const titleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
