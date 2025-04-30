@@ -8,15 +8,20 @@ const createUserAccount = (formData) => {
     return api.post(crurl(baseUrl, "create-account"), formData);
 };
 
-const disableUserAccount = (id) => {
+const disableUserAccount = (id: string) => {
     return api.post(crurl(baseUrl, `users/${id}/disable`));
 };
-const enableUserAccount = (id) => {
+const enableUserAccount = (id: string) => {
     return api.post(crurl(baseUrl, `users/${id}/enable`));
+};
+
+const resetUserPassword = (id: string) => {
+    return api.post(crurl(baseUrl, `users/${id}/reset-password`));
 };
 
 export const adminApi = {
     createUserAccount,
     disableUserAccount,
     enableUserAccount,
+    resetUserPassword,
 };
