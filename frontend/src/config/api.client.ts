@@ -14,7 +14,14 @@ TokenRefreshClient.interceptors.response.use((response) => response.data);
 const API = axios.create(options);
 
 API.interceptors.response.use(
-    (response) => response.data,
+    (response) => {
+        // jeśli status 204, zwracamy minimalny obiekt z samym status
+        if (response.status === 204) {
+            return { status: response.status };
+        }
+        // w pozostałych przypadkach zwracamy .data jak dotychczas
+        return response.data;
+    },
     async (error) => {
         const { config, response } = error;
         const { status, data } = response || {};
