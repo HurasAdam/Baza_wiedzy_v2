@@ -14,6 +14,7 @@ import ProductCategoryCardSkeleton from "./ProductCategoryCardSkeleton";
 import { FiX } from "react-icons/fi";
 
 const ProductEditCategories = ({ productId }: { productId?: string }) => {
+    const [categoryId, setCategoryId] = useState("");
     const [name, setFilterParams] = useState("");
     const {
         openModal: openCreateCategoryModal,
@@ -21,8 +22,18 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
         closeModal: closeCreateCategoryModal,
     } = useModal();
 
+    const {
+        openModal: openEditCategoryModal,
+        isOpen: isEditCategoryModalOpen,
+        closeModal: closeEditCategoryModal,
+    } = useModal();
+
     const openCreateCategory = () => {
         openCreateCategoryModal();
+    };
+    const openEditCategory = (id: string) => {
+        openEditCategoryModal();
+        setCategoryId(id);
     };
 
     const { data: categories, isLoading } = useQuery({
@@ -103,7 +114,7 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
                                     <h3 className="text-base font-medium text-primary-foreground ">{cat?.name}</h3>
                                 </div>
                                 <div className="space-x-3.5">
-                                    <Button className="" variant="outline">
+                                    <Button onClick={() => openEditCategory(cat?._id)} className="" variant="outline">
                                         Edytuj
                                     </Button>
                                     <Button variant="ghost">Usuń</Button>
@@ -115,6 +126,9 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
             )}
             <Modal isOpen={isCreateCategoryModalOpen} onClose={closeCreateCategoryModal} height="sm" width="sm">
                 <ProductCategoryForm productId={productId} />
+            </Modal>
+            <Modal isOpen={isEditCategoryModalOpen} onClose={closeEditCategoryModal} height="sm" width="sm">
+                <ProductCategoryForm productId={productId} categoryId={categoryId} />
             </Modal>
         </div>
     );

@@ -10,18 +10,19 @@ import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { productCategoryApi } from "@/lib/product-category.api";
-interface ProductCategoryForm {
-    tagId: string;
+interface Props {
+    productId: string;
     onClose?: () => void;
+    categoryId?: string;
 }
 
-const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }) => {
+const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }: Props) => {
     const queryClient = useQueryClient();
 
     const { data: tag } = useQuery({
         queryKey: ["conversationTopic", categoryId],
         queryFn: () => {
-            return tagApi.findOne(categoryId);
+            return productCategoryApi.findOne(categoryId);
         },
         enabled: !!categoryId,
     });
@@ -67,19 +68,19 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }) => {
 
     const { mutate: updateTagMutation, isPending } = useMutation({
         mutationFn: ({ id, formData }) => {
-            return tagApi.updateOne({ id, formData });
+            return productCategoryApi.updateOne(id, formData);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["all-tags"]);
+            queryClient.invalidateQueries(["all-product-categories"]);
 
-            toast.success("Tag został zaktualizowany pomyślnie.");
+            toast.success("Kategoria została zaktualizowana.");
             onClose();
         },
         onError: (error) => {
             if (error?.status === 409) {
                 // Jeśli kod błędu to 409, ustaw błąd w polu "name"
                 form.setError("name", {
-                    message: "Tag o podanej nazwie już istnieje  (nazwa tagu musi być unikalna)", // Wiadomość dla użytkownika
+                    message: "Kategoria o podanej nazwie już istnieje  (nazwa kategorii musi być unikalna)", // Wiadomość dla użytkownika
                 });
             } else {
                 // Obsługa innych błędów
@@ -107,7 +108,7 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }) => {
                     >
                         {categoryId ? (
                             <span className="flex items-center gap-1.5">
-                                <MdOutlineEdit className="h-6 w-6 " /> Edytuj tag{" "}
+                                <MdOutlineEdit className="h-6 w-6 " /> Edytuj kategorie{" "}
                             </span>
                         ) : (
                             <span className="flex items-center gap-1.5">
@@ -117,7 +118,7 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }) => {
                     </h1>
                     <p className="text-muted-foreground text-sm leading-tight">
                         {categoryId
-                            ? "Zmień nazwę istniejącego tagu, który jest używany do organizacji artykułów."
+                            ? "Zmień nazwę istniejącej kategorii, która jest używana do organizacji artykułów."
                             : "Utwórz nową kategorię, która pomoże w organizacji artykułów i ułatwi użytkownikom wyszukiwanie treści."}
                     </p>
                 </div>
