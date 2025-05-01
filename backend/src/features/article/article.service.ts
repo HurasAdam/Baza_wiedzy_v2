@@ -85,10 +85,7 @@ export const ArticleService = {
 
         appAssert(article, NOT_FOUND, "Article not found");
 
-        // const isFavourite = user.favourites.includes(article._id);
         const isFavourite = user.favourites.some((f) => f._id.equals(article._id));
-        // article.viewsCounter = article.viewsCounter + 1;
-        // await article.save();
 
         return {
             ...article.toObject(),
@@ -102,18 +99,15 @@ export const ArticleService = {
     },
 
     async findHistoryOne(articleHistoryId: string) {
-        // Pobranie historii artykułu. Pobieramy tylko imię i nazwisko
         const historyItem = await ArticleHistoryModel.findById(articleHistoryId).populate("updatedBy", "name surname");
 
         if (!historyItem) {
             throw Error("Historia nie znaleziona");
         }
 
-        // Sprawdzenie, czy w historii są zmiany dla pola "tags"
         const updatedChanges = await Promise.all(
             historyItem.changes.map(async (change) => {
                 if (change.field === "tags") {
-                    // Pobranie nazw tagów
                     const oldTags = await TagModel.find({ _id: { $in: JSON.parse(change.oldValue || "[]") } }).select(
                         "name"
                     );
@@ -123,8 +117,8 @@ export const ArticleService = {
 
                     return {
                         ...change.toObject(),
-                        oldValue: oldTags.map((tag) => tag.name), // Zamiana ID na nazwę
-                        newValue: newTags.map((tag) => tag.name), // Zamiana ID na nazwę
+                        oldValue: oldTags.map((tag) => tag.name),
+                        newValue: newTags.map((tag) => tag.name),
                     };
                 }
                 return change;
@@ -151,7 +145,7 @@ export const ArticleService = {
                 articleId: articleId,
                 articleBeforeChanges: article, // Artykuł przed zmianą
                 updatedArticle: updatedAritlceObj, // Artykuł po zmianie
-                updatedBy: userId, // Id użytkownika, który dokonał zmiany
+                updatedBy: userId,
                 eventType: isVerified ? EventType.verified : EventType.Unverified,
             });
         }
@@ -258,7 +252,6 @@ export const ArticleService = {
     async findCreatedByUser(userId: string, query: any) {
         const { startDate, endDate } = query;
 
-        // Typ obiektu filter
         const filter: {
             createdBy: string;
             isTrashed: boolean;
@@ -274,10 +267,10 @@ export const ArticleService = {
         if (startDate || endDate) {
             filter.createdAt = {};
             if (startDate) {
-                filter.createdAt.$gte = new Date(startDate.toString()); // Data większa lub równa
+                filter.createdAt.$gte = new Date(startDate.toString());
             }
             if (endDate) {
-                filter.createdAt.$lte = new Date(endDate.toString()); // Data mniejsza lub równa
+                filter.createdAt.$lte = new Date(endDate.toString());
             }
         }
 
@@ -288,7 +281,6 @@ export const ArticleService = {
     async findHistoryByUser(userId: string, query: any) {
         const { startDate, endDate } = query;
 
-        // Tworzymy podstawowy filtr
         const filter: {
             updatedBy: string;
             updatedAt?: {
@@ -300,10 +292,9 @@ export const ArticleService = {
         } = {
             updatedBy: userId,
             eventType: "updated",
-            articleId: { $ne: null }, // Wyklucz historię bez powiązanego artykułu
+            articleId: { $ne: null },
         };
 
-        // Dodajemy filtr dat, jeśli są podane
         if (startDate || endDate) {
             filter.updatedAt = {};
             if (startDate) {
@@ -314,16 +305,15 @@ export const ArticleService = {
             }
         }
 
-        // Zapytanie do bazy danych
         const userHistory = await ArticleHistoryModel.find(filter)
             .populate({
-                path: "articleId", // Powiązanie z artykułem
-                select: ["title", "isTrashed"], // Pobierz tylko potrzebne pola
-                match: { isTrashed: false }, // Wyklucz artykuły, które są w koszu
+                path: "articleId",
+                select: ["title", "isTrashed"],
+                match: { isTrashed: false },
             })
             .populate({
-                path: "updatedBy", // Powiązanie z użytkownikiem
-                select: "name surname", // Pobierz imię i nazwisko użytkownika
+                path: "updatedBy",
+                select: "name surname",
             })
             .exec();
 
