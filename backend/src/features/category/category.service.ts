@@ -1,4 +1,4 @@
-import { NOT_FOUND } from "@/constants/http";
+import { CONFLICT, NOT_FOUND } from "@/constants/http";
 import CategoryModel from "./category.model";
 import appAssert from "@/utils/appAssert";
 import ArticleModel from "../article/article.model";
@@ -6,6 +6,7 @@ import type { SearchCategoriesDto } from "./dto/search-categories.dto";
 import type { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import ProductModel from "../product/product.model";
+import { Types } from "mongoose";
 
 export const CategoryService = {
     async find(query: SearchCategoriesDto) {
@@ -19,7 +20,9 @@ export const CategoryService = {
     },
 
     async findOne(id: string) {
-        const category = await CategoryModel.findById(id);
+        const category = await CategoryModel.findById(id)
+            .populate("createdBy", "name surname")
+            .populate("updatedBy", "name surname");
         appAssert(category, NOT_FOUND, "Category not found");
 
         return category;
@@ -47,7 +50,7 @@ export const CategoryService = {
             name: payload.name.trim(),
             productId,
         });
-        appAssert(!existingCategory, 409, "Category with this name already exists for this product");
+        appAssert(!existingCategory, CONFLICT, "Category with this name already exists for this product");
 
         return await CategoryModel.create({
             ...payload,
@@ -58,11 +61,25 @@ export const CategoryService = {
     },
 
     async updateOne(userId: string, categoryId: string, payload: UpdateCategoryDto) {
-        const category = await CategoryModel.findByIdAndUpdate(categoryId, {
-            ...payload,
-            updatedBy: userId,
-        });
+        // 1) Verify the category exists
+        const category = await CategoryModel.findById(categoryId);
         appAssert(category, NOT_FOUND, "Category not found");
+
+        // 2) Check uniqueness of the new name (excluding our own record)
+
+        const existingCategory = await CategoryModel.findOne({
+            _id: { $ne: categoryId },
+            productId: category.productId,
+            name: payload.name,
+        });
+        appAssert(!existingCategory, CONFLICT, "Category with this name already exists for this product");
+
+        category.name = payload.name || category?.name;
+        category.updatedAt = new Date();
+        category.updatedBy = new Types.ObjectId(userId);
+        await category.save();
+
+        return category;
     },
 
     async deleteOne(categoryId: string) {
