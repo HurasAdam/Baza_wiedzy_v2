@@ -3,6 +3,7 @@ import catchErrors from "@/utils/catchErrors";
 import { createUserAccountDto } from "./dto/create-user-account.dto";
 import { AdminService } from "./admin.service";
 import { userIdParamsDto } from "./dto/user-id-params-.dto";
+import { searchProductsDto } from "../product/dto/search-products.dto";
 
 export const AdminController = (adminService = AdminService) => ({
     createUserAccount: catchErrors(async ({ userId, body }, res) => {
@@ -24,5 +25,11 @@ export const AdminController = (adminService = AdminService) => ({
         const payload = userIdParamsDto.parse(params);
         const { message } = await adminService.resetUserPassword(payload.id);
         return res.status(OK).json(message);
+    }),
+    findProducts: catchErrors(async ({ query }, res) => {
+        console.log(query, "QUERY PARAMS HERE");
+        const payload = searchProductsDto.parse(query);
+        const products = await adminService.findProducts(payload);
+        return res.status(OK).json(products);
     }),
 });
