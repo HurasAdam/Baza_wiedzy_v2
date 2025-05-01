@@ -41,6 +41,7 @@ import { Modal } from "../../../modal/Modal";
 import { Button } from "../../../ui/button";
 import EditArticle from "../../Edit/EditArticle";
 import ArticleCommentsDetails from "./ArticleCommentsDetails";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
     const { copyToClipboard } = useCopyToClipboard();
@@ -62,7 +63,7 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
     const { isOpen: isUnverifyAlertOpen, openAlert: openUnverifyAlrty, closeAlert: closeUnverifyAlert } = useAlert();
     const { isOpen: isDeleteAlertOpen, openAlert: openDeleteAlert, closeAlert: closeDeleteAlert } = useAlert();
 
-    const { data: article } = useQuery({
+    const { data: article, isLoading: isArticleLoading } = useQuery({
         queryKey: ["article", articleId],
         queryFn: () => articleApi.getArticle({ id: articleId }),
     });
@@ -148,7 +149,7 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
     const actionOptions = [
         {
             label: `${article?.isFavourite ? "Usuń z ulubionych" : "Dodaj do ulubionych"}`,
-            icon: article?.isFavourite ? <FaStar /> : <FaRegStar />,
+            icon: article?.isFavourite ? <FaStar size={15} /> : <FaRegStar size={15} />,
             actionHandler: () => markAsFavouriteHandler({ id: articleId }),
         },
         {
@@ -160,20 +161,20 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
             ? [
                   {
                       label: "Cofnij weryfikację",
-                      icon: <TiArrowBack />,
+                      icon: <TiArrowBack size={15} />,
                       actionHandler: () => unverifyArticleHandler(),
                   },
               ]
             : [
                   {
                       label: "Zweryfikuj",
-                      icon: <IoMdCheckmarkCircleOutline />,
+                      icon: <IoMdCheckmarkCircleOutline size={15} />,
                       actionHandler: () => verifyArticleHandler(),
                   },
               ]),
         {
             label: "Usuń",
-            icon: <MdDelete />,
+            icon: <MdDelete size={15} />,
             actionHandler: () => deleteArticleHandler(),
         },
     ];
@@ -194,9 +195,144 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
 
     const bannerURL = (article?.product?.banner && BANNER_IMAGES[article.product.banner]) || IMAGES.findArticleImage;
 
+    if (isArticleLoading) {
+        return (
+            <div className="flex flex-col h-full px-6">
+                <div className="flex justify-between mb-2 py-2 pr-14 pl-2 ">
+                    <div className="bg-background border animate-pulse w-28 h-9 rounded-md"></div>
+                    <div className="flex gap-2 ">
+                        <div className="bg-background border animate-pulse w-7 h-7 rounded-md"></div>
+                        <div className="bg-background border animate-pulse w-7 h-7 rounded-md"></div>
+                        <div className="bg-background border animate-pulse w-7 h-7 rounded-md"></div>
+                        <div className="bg-background border animate-pulse w-7 h-7 rounded-md"></div>
+                    </div>
+                    {/* Skeleton dla przycisków z odpowiednim kolorem i efektem pulsowania */}
+                </div>
+
+                {/* Nagłówek */}
+                <ScrollArea className="col-span-2 pr-4 h-fit">
+                    <div>
+                        {/* Banner z produktem */}
+                        <div className="relative w-full h-32 rounded-xl overflow-hidden shadow-sm border">
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
+                            {/* Skeleton dla przycisków w górnym rogu */}
+                            <div className="absolute top-2 right-2 flex gap-2 z-20">
+                                <Skeleton className="bg-gray-300 animate-pulse" width={120} height={40} />
+                                <Skeleton className="bg-gray-300 animate-pulse" width={120} height={40} />
+                            </div>
+
+                            {/* Szkielet dla nazwy produktu */}
+                            <div className="absolute bottom-2 left-4 py-2 space-y-2">
+                                <Skeleton className="bg-gray-300 animate-pulse" width="60%" height={24} />
+                                <Skeleton className="bg-gray-300 animate-pulse" width={60} height={16} />
+                            </div>
+                        </div>
+
+                        {/* Nagłówek tytułowy */}
+                        <div className="flex justify-between items-start my-4">
+                            <div className="py-4 w-full">
+                                <Skeleton className="bg-gray-300 animate-pulse" width="60%" height={30} />
+                            </div>
+                        </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* MAIN GRID - 2 COLUMNS */}
+                    <div className="grid grid-cols-1 md:grid-cols-[13fr_6fr] gap-6 h-full my-4">
+                        <div>
+                            {/* LEFT COLUMN */}
+                            <Card className="bg-background min-h-[580px]">
+                                <CardHeader className="flex flex-row items-center justify-between">
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={200} height={20} />
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={40} height={30} />
+                                </CardHeader>
+
+                                <CardContent>
+                                    <Skeleton
+                                        className="bg-gray-300 animate-pulse"
+                                        count={5}
+                                        height={20}
+                                        className="my-4"
+                                    />
+                                </CardContent>
+                            </Card>
+                        </div>
+
+                        {/* RIGHT COLUMN */}
+                        <div className="flex flex-col gap-4">
+                            {/* COMMENTS BUTTON */}
+                            <Skeleton className="bg-gray-300 animate-pulse" width={120} height={40} />
+                            <Skeleton className="bg-gray-300 animate-pulse mt-4" width="100%" height={10} />
+
+                            {/* Meta info */}
+                            <Card className="text-foreground bg-background">
+                                <CardHeader>
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={100} height={20} />
+                                </CardHeader>
+                                <CardContent className="space-y-2 text-sm">
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={150} height={20} />
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={150} height={20} />
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={150} height={20} />
+                                </CardContent>
+                            </Card>
+
+                            {/* TAGS */}
+                            <Card className="bg-background">
+                                <CardHeader>
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={100} height={20} />
+                                </CardHeader>
+                                <CardContent>
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={60} height={20} />
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={60} height={20} />
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={60} height={20} />
+                                </CardContent>
+                            </Card>
+
+                            {/* Status */}
+                            <Card className="bg-background">
+                                <CardHeader>
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={100} height={20} />
+                                </CardHeader>
+                                <CardContent className="space-y-2">
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={200} height={20} />
+                                </CardContent>
+                            </Card>
+
+                            {/* Autor */}
+                            <Card className="bg-background">
+                                <CardHeader>
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={100} height={20} />
+                                </CardHeader>
+                                <CardContent className="text-sm text-foreground">
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={150} height={20} />
+                                </CardContent>
+                            </Card>
+
+                            {/* Załączniki */}
+                            <Card className="bg-background">
+                                <CardHeader>
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={100} height={20} />
+                                </CardHeader>
+                                <CardContent>
+                                    <Skeleton className="bg-gray-300 animate-pulse" width={150} height={20} />
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </div>
+                </ScrollArea>
+
+                {/* Modals */}
+
+                {/* Alerts */}
+            </div>
+        );
+    }
+
     return (
         <TooltipProvider>
-            <div className="flex flex-col h-full px-6">
+            <div className="flex flex-col h-full px-6 bg-background/40">
                 <div className="flex gap-2 justify-between mb-1.5 p-2 rounded-md">
                     <Button variant="outline" size="sm" className="gap-1.5" onClick={openModal}>
                         <FaHistory />
@@ -208,7 +344,7 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
                             <Button
                                 key={idx}
                                 onClick={option.actionHandler}
-                                className="p-2 h-fit bg-primary/70 hover:bg-primary/85 gap-1.5 text-secondary"
+                                className="p-2 h-fit  hover:bg-primary/85 gap-1.5 text-secondary"
                                 variant="outline"
                             >
                                 {option.icon}

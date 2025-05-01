@@ -53,7 +53,7 @@ const ProductsPage = () => {
                                 setFilterParams(e.target.value);
                                 setPage(1); // <--- to kluczowe!
                             }}
-                            placeholder="Znajdź kategorie..."
+                            placeholder="Wyszukaj produkt..."
                             className="h-8 w-full lg:w-[250px] bg-inherit"
                         />
                         {name && (
