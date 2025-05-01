@@ -28,9 +28,14 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { productCategoryApi } from "@/lib/product-category.api";
 import { AnimatePresence, motion } from "framer-motion";
 import EmptyState from "@/components/EmptyState";
+import Pagination from "@/components/Pagination";
 
 const ArticleList = () => {
     const [params, setParams] = useSearchParams();
+
+    // Pobierz numer strony z query param, domyślnie 1
+    const page = parseInt(params.get("page") || "1", 10);
+
     const hasProduct = params.get("product");
     const hasCategory = params.get("category");
     const queryParams = hasProduct ? params : undefined;
@@ -40,6 +45,13 @@ const ArticleList = () => {
 
     const resetFilterHandler = () => {
         setParams();
+    };
+
+    const handlePageChange = (newPage: number) => {
+        setParams((prev) => {
+            prev.set("page", newPage.toString());
+            return prev;
+        });
     };
 
     if (isLoading) {
@@ -111,6 +123,11 @@ const ArticleList = () => {
                     className="hover:border-b hover:bg-muted/40 cursor-pointer transition-all"
                 />
             ))}
+            <Pagination
+                currentPage={articles.pagination.page}
+                totalPageCount={articles.pagination.pages}
+                onPageChange={handlePageChange}
+            />
         </>
     );
 };
