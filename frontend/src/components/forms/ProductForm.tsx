@@ -173,7 +173,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
                         <div
                             key={key}
                             onClick={() => handleSelectImage(key)}
-                            className={`border p-2 cursor-pointer rounded ${
+                            className={`border p-2 cursor-pointer rounded-md ${
                                 selectedImage === key ? "border-blue-500" : "border-gray-300"
                             }`}
                         >
