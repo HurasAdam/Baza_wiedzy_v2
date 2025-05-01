@@ -73,7 +73,7 @@ interface Props {
     isLoading: boolean;
 }
 
-const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
+const ArticleForm = ({ article, tags, products, onSave, isLoading, className }: Props) => {
     const [files, setFiles] = useState<File[] | null>(null);
 
     const dropZoneConfig = {
@@ -131,7 +131,10 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading }: Props) => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8  mx-auto py-10 ">
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className={`space-y-8  mx-auto  bg-background/75 ${className} py-[28px] `}
+            >
                 <FormField
                     control={form.control}
                     name="title"

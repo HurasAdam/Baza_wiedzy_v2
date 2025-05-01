@@ -48,19 +48,6 @@ const IssueReportsPage = () => {
     return (
         <div className="px-6 pb-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                <div className="flex flex-col">
-                    <h2 className="mb-6 text-2xl font-bold text-foreground flex items-center gap-1">
-                        <TbMessageReportFilled className="w-5.5 h-5.5" />
-                        Zgłoszenia
-                    </h2>
-                    <Input
-                        value={title}
-                        onChange={(e) => setFilterParams(e.target.value)}
-                        placeholder="Znajdź zgłoszenie"
-                        className="h-8 w-full lg:w-[250px] bg-inherit"
-                    />
-                </div>
-
                 <Button className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-primary/75 rounded-md hover:bg-primary/80 transition">
                     <Plus className="w-4 h-4" /> Dodaj produkt
                 </Button>

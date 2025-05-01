@@ -78,15 +78,15 @@ const CreateArticle = ({ onClose, isOpen, modalWidth }: Props) => {
             case "md":
                 return "px-20 py-6";
             case "lg":
-                return "px-24 py-8";
+                return "px-24 py-0";
             default:
                 return "px-12";
         }
     };
     const isDataLoading = isTagsLoading || isProductsLoading;
     return (
-        <div className={clsx(getModalPadding())}>
-            <Card className="border-none shadow-lg bg-background/55 rounded-lg">
+        <div>
+            <Card className={`border-none shadow-lg bg-background rounded-none `}>
                 <CardHeader
                     className="flex items-center gap-4 p-6 bg-cover bg-center rounded-t-lg"
                     style={{
@@ -99,7 +99,7 @@ const CreateArticle = ({ onClose, isOpen, modalWidth }: Props) => {
                     <FilePlus size={36} className="text-white" />
                     <CardTitle className="text-3xl font-semibold text-white">Tworzenie Artykułu</CardTitle>
                 </CardHeader>
-                <CardContent className="text-foreground/65 border-b text-xs border-dashed border-input/20">
+                <CardContent className="text-foreground/65 border-b py-1 text-xs border-dashed border-input/20">
                     Wypełnij formularz, aby dodać nowy artykuł
                 </CardContent>
             </Card>
@@ -116,7 +116,13 @@ const CreateArticle = ({ onClose, isOpen, modalWidth }: Props) => {
                 </div>
             ) : (
                 // Formularz wyświetlający się po załadowaniu danych
-                <ArticleForm onSave={onSave} tags={formatedTags} products={formatedProducts} isLoading={isPending} />
+                <ArticleForm
+                    className={clsx(getModalPadding())}
+                    onSave={onSave}
+                    tags={formatedTags}
+                    products={formatedProducts}
+                    isLoading={isPending}
+                />
             )}
             <Modal isOpen={isCreateArticleModalOpen} onClose={onCloseModals}>
                 <ArticleModalDetails articleId={createdArticleId} />
