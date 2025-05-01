@@ -68,7 +68,7 @@ const TrashedArticles = () => {
                                 <Input
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    placeholder="Szukaj po tytule..."
+                                    placeholder="Wyszukaj artykuł"
                                     className="h-9 w-full pr-10 text-sm rounded-lg border border-border focus:ring-1 focus:ring-primary transition"
                                 />
                                 {title && (
