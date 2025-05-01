@@ -6,26 +6,32 @@ import { Modal } from "../../components/modal/Modal";
 import { useModal } from "../../components/modal/hooks/useModal";
 import { Button } from "../../components/ui/button";
 import { BANNER_IMAGES } from "../../constants/productBanners";
-import { productApi } from "../../lib/product.api";
 import { Input } from "@/components/ui/input";
 import ProductCardSkeleton from "@/components/admin/Product/ProductCardSkeleton";
 import { IProduct } from "@/types";
 import EmptyState from "@/components/EmptyState";
 import ProductEditContainer from "@/components/admin/Product/ProductEditContainer";
 import { FiX } from "react-icons/fi";
+import { adminApi } from "@/lib/admin.api";
+import Pagination from "@/components/Pagination";
 
 const SKELETON_COUNT = 6;
-
+const DEFAULT_LIMIT = 15;
 const ProductsPage = () => {
     const [name, setFilterParams] = useState("");
+    const [page, setPage] = useState(1);
+    const limit = DEFAULT_LIMIT;
     const { openModal, isOpen, closeModal } = useModal();
     const [selectedProduct, setSelectedProduct] = useState<string>("");
     const { openModal: openEditModal, isOpen: isEditModalOpen, closeModal: closeEditModal } = useModal();
 
-    const { data: products = [], isLoading } = useQuery({
-        queryKey: ["all-products", name],
-        queryFn: () => productApi.find({ name }),
+    const { data, isLoading } = useQuery({
+        queryKey: ["all-products", name, page],
+        queryFn: () => adminApi.findProducts({ name, page, limit }),
     });
+
+    const products = data?.data ?? [];
+    const pagination = data?.pagination;
 
     const editProducthandler = (productId: string) => {
         setSelectedProduct(productId);
@@ -43,7 +49,10 @@ const ProductsPage = () => {
                     <div className="relative w-full lg:w-[300px]">
                         <Input
                             value={name}
-                            onChange={(e) => setFilterParams(e.target.value)}
+                            onChange={(e) => {
+                                setFilterParams(e.target.value);
+                                setPage(1); // <--- to kluczowe!
+                            }}
                             placeholder="Znajdź kategorie..."
                             className="h-8 w-full lg:w-[250px] bg-inherit"
                         />
@@ -70,7 +79,7 @@ const ProductsPage = () => {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {isLoading ? (
                     Array.from({ length: SKELETON_COUNT }).map((_, idx) => <ProductCardSkeleton key={idx} />)
-                ) : products.length === 0 ? (
+                ) : products?.length === 0 ? (
                     <EmptyState
                         icon={<Package className="w-10 h-10 text-muted" />}
                         onReset={() => setFilterParams("")}
@@ -78,7 +87,7 @@ const ProductsPage = () => {
                         description="Nie znaleziono produktów pasujących do podanego wyszukiwania."
                     />
                 ) : (
-                    products.map((product: IProduct) => (
+                    products?.map((product: IProduct) => (
                         <div
                             key={product._id}
                             className="bg-card border border-muted rounded-lg shadow-lg overflow-hidden flex flex-col transition-shadow duration-300"
@@ -126,7 +135,13 @@ const ProductsPage = () => {
                     ))
                 )}
             </div>
-
+            {pagination && (
+                <Pagination
+                    currentPage={pagination.page}
+                    totalPageCount={pagination.pages}
+                    onPageChange={(newPage) => setPage(newPage)}
+                />
+            )}
             <Modal closeOnOutsideClick={false} isOpen={isOpen} onClose={closeModal} height="md" width="sm">
                 <ProductForm onClose={closeModal} />
             </Modal>

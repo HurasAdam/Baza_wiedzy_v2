@@ -4,6 +4,10 @@ import { crurl } from "@/utils/crurl";
 
 const baseUrl = "/admin";
 
+const findProducts = (params?: URLSearchParams) => {
+    return api.get(crurl(baseUrl, "products"), { params });
+};
+
 const createUserAccount = (formData) => {
     return api.post(crurl(baseUrl, "create-account"), formData);
 };
@@ -20,6 +24,7 @@ const resetUserPassword = (id: string) => {
 };
 
 export const adminApi = {
+    findProducts,
     createUserAccount,
     disableUserAccount,
     enableUserAccount,
