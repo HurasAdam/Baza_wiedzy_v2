@@ -4,6 +4,8 @@ import appAssert from "@/utils/appAssert";
 import UserModel from "../user/user.model";
 
 import { DEFAULT_TEMP_PASSWORD } from "@/constants/env";
+import { SearchProductsDto } from "../product/dto/search-products.dto";
+import ProductModel from "../product/product.model";
 
 export const AdminService = {
     async createUserAccount(payload) {
@@ -55,5 +57,56 @@ export const AdminService = {
         user.mustChangePassword = true;
         await user.save();
         return { message: "User password has been reset to default" };
+    },
+
+    async findProducts(query: SearchProductsDto) {
+        const { name, limit, page, sortBy, sortAt } = query;
+        const querydb: any = {};
+
+        if (name?.trim()) {
+            querydb.name = new RegExp(name.trim(), "i");
+        }
+
+        const skip = (page - 1) * limit;
+
+        const pipeline: any[] = [
+            { $match: querydb },
+            {
+                $lookup: {
+                    from: "articles",
+                    localField: "_id",
+                    foreignField: "product",
+                    as: "articles",
+                },
+            },
+            {
+                $addFields: {
+                    articlesCount: { $size: "$articles" },
+                },
+            },
+
+            {
+                $project: {
+                    name: 1,
+                    labelColor: 1,
+                    banner: 1,
+                    articlesCount: 1,
+                    // Jeśli chcesz zachować sortBy pole w wyniku, to dodaj:
+                    // [sortBy]: 1,
+                },
+            },
+            { $skip: skip },
+            { $limit: limit },
+        ];
+
+        const data = await ProductModel.aggregate(pipeline);
+
+        const total = await ProductModel.countDocuments(querydb);
+        const pages = Math.ceil(total / limit);
+
+        return {
+            data,
+            pagination: { total, page, pages },
+        };
     },
 };
