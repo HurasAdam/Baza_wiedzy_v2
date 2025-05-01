@@ -5,6 +5,7 @@ import appAssert from "@/utils/appAssert";
 import { verifyToken } from "@/utils/jwt";
 import { UserService } from "@/features/user/user.service";
 import catchErrors from "@/utils/catchErrors";
+import { clearAuthCookies } from "@/utils/cookies";
 
 const authenticate = catchErrors(async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = req.cookies.accessToken as string | undefined;
@@ -20,13 +21,17 @@ const authenticate = catchErrors(async (req: Request, res: Response, next: NextF
         AppErrorCode.InvalidAccessToken
     );
 
-    // Upewnij się, że payload jest zgodny z AccessTokenPayload
     if (payload && typeof payload.userId === "string" && typeof payload.sessionId === "string") {
-        req.userId = payload.userId; // Teraz TypeScript wie, że to jest string
-        req.sessionId = payload.sessionId; // Teraz TypeScript wie, że to jest string
+        req.userId = payload.userId;
+        req.sessionId = payload.sessionId;
     }
 
     const user = await UserService.findOne(payload.userId.toString());
+
+    if (!user) {
+        clearAuthCookies(res);
+        appAssert(false, UNAUTHORIZED, "User not found, please login", AppErrorCode.InvalidAccessToken);
+    }
 
     req.user = user;
     next();
