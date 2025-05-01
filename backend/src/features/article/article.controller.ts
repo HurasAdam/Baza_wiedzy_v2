@@ -1,4 +1,4 @@
-import { OK } from "@/constants/http";
+import { NO_CONTENT, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
 import { ArticleService } from "./article.service";
 import { createArticleDto } from "./dto/create-article.dto";
@@ -59,17 +59,17 @@ export const ArticleController = (articleService = ArticleService) => ({
 
     updateOneAsTrash: catchErrors(async ({ userId, params }, res) => {
         await articleService.updateOneAsTrash(userId, params.id);
-        return res.status(OK).json({ message: "Artykuł został usunięty" });
+        res.sendStatus(NO_CONTENT);
     }),
 
     updateOneAsRestore: catchErrors(async ({ userId, params }, res) => {
         await articleService.updateOneAsRestore(userId, params.id);
-        return res.status(OK).json({ message: "Artykuł został przywrócony z kosza" });
+        res.sendStatus(NO_CONTENT);
     }),
 
     deleteOne: catchErrors(async ({ params }, res) => {
         await articleService.deleteOne(params.id);
-        return res.status(OK).json({ message: "Artykuł i powiązana historia zostały usunięte." });
+        res.sendStatus(NO_CONTENT);
     }),
 
     updateOne: catchErrors(async ({ userId, params, body }, res) => {

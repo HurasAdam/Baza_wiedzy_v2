@@ -96,26 +96,6 @@ const ArticleList = () => {
 
     return (
         <>
-            {/* <div className="flex justify-between mb-3.5 ">
-                <SelectBox
-                    value={params.get("sort") || "default"}
-                    onChange={() => void 0}
-                    data={[
-                        {
-                            label: "Domyśle",
-                            value: "default",
-                        },
-                        {
-                            label: "Popularne",
-                            value: "popular",
-                        },
-                        {
-                            label: "Najnowsze",
-                            value: "latest",
-                        },
-                    ]}
-                />
-            </div> */}
             {articles.data?.map((article: IArticle, i: number) => (
                 <ArticleListItem
                     key={i}
@@ -351,7 +331,7 @@ export const ArticlesFilter = () => {
                                 animate="show"
                                 exit="exit"
                                 variants={listVariants}
-                                className="inline-flex items-center rounded-md bg-[hsl(var(--background))]  p-1 space-x-1 overflow-x-auto pt-3  "
+                                className="inline-flex items-center rounded-md bg-[hsl(var(--background))]  p-1 overflow-x-auto pt-3 flex-wrap gap-1  "
                             >
                                 {categoriesLoading
                                     ? Array.from({ length: 3 }).map((_, idx) => (
@@ -368,7 +348,7 @@ export const ArticlesFilter = () => {
                                               whileTap={{ scale: 0.95 }}
                                               className={`flex items-center px-4 py-1.5 border text-sm rounded-md font-medium whitespace-nowrap transition-all hover:opacity-80 ${
                                                   selectedCategory === cat._id
-                                                      ? "bg-primary/80 text-primary-foreground shadow-md border-primary"
+                                                      ? "bg-primary/75 text-primary-foreground shadow-md "
                                                       : "bg-transparent border text-[hsl(var(--muted-foreground))]"
                                               }`}
                                           >
