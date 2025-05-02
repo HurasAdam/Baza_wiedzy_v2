@@ -1,4 +1,4 @@
-import { OK } from "@/constants/http";
+import { NO_CONTENT, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
 import { searchCategoriesDto } from "./dto/search-categories.dto";
 import { createCategoryDto } from "./dto/create-category.dto";
@@ -30,11 +30,11 @@ export const CategoryController = (categoryService = CategoryService) => ({
     updateOne: catchErrors(async ({ user, params, body }, res) => {
         const payload = updateCategoryDto.parse(body);
         await categoryService.updateOne(user.id, params.id, payload);
-        res.status(OK).json({ message: "Kategoria została zaktualizowana" });
+        res.sendStatus(NO_CONTENT);
     }),
 
     deleteOne: catchErrors(async ({ params }, res) => {
         await categoryService.deleteOne(params.id);
-        res.status(OK).json({ message: "Kategoria została usunięta" });
+        res.sendStatus(NO_CONTENT);
     }),
 });
