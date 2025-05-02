@@ -1,5 +1,4 @@
 import ArticleModalDetails from "@/components/articles/views/feedView/ArticleModalDetails";
-import { SelectBox } from "@/components/core/SelectBox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,7 +6,7 @@ import { useFetchArticles } from "@/hooks/query/useFetchArticles";
 import { useFetchProducts } from "@/hooks/query/useFetchProducts";
 import { IArticle } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, ChevronsUpDown, PanelLeft, PanelTop, SearchIcon, Star } from "lucide-react";
+import { Check, ChevronsUpDown, PanelLeft, PanelTop, Star } from "lucide-react";
 import { useEffect, type ChangeEventHandler } from "react";
 import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
@@ -25,10 +24,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import EmptyState from "@/components/EmptyState";
 import Pagination from "@/components/Pagination";
 import { useViewPref } from "@/contexts/ViewPreferenceContext";
-import { RxCross2 } from "react-icons/rx";
 
 const ArticleList = () => {
-    const { viewPreference, setViewPreference, filterPlacement, setFilterPlacement } = useViewPref();
     const [params, setParams] = useSearchParams();
 
     // Pobierz numer strony z query param, domyślnie 1
@@ -91,60 +88,9 @@ const ArticleList = () => {
             </div>
         );
     }
-    const hasFilters = params.get("title") || params.get("category");
+
     return (
-        <div className="py-2">
-            <div className="flex gap-2.5 mb-4 px-6 justify-between">
-                {/* Sekcja z wynikami */}
-                <div className="flex items-center flex-col space-y-3">
-                    <div className="flex items-center space-x-4">
-                        <div className="flex space-x-1.5">
-                            {/* Ikona i tekst */}
-                            <div className="flex items-center space-x-1.5">
-                                <SearchIcon className="text-primary-foreground/60 w-5 h-5" />
-                                <span className="text-sm font-medium text-primary-foreground/70">Znaleziono</span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                {/* Liczba artykułów */}
-                                <span className="text-md font-semibold text-primary ">
-                                    {articles?.pagination?.total}
-                                </span>
-                                <span className="text-sm font-medium text-gray-500">
-                                    {
-                                        // Odmiana w zależności od liczby artykułów
-                                        articles?.pagination?.total === 1
-                                            ? "artykuł"
-                                            : articles?.pagination?.total >= 2 && articles?.pagination?.total <= 4
-                                              ? "artykuły"
-                                              : "artykułów"
-                                    }
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                    <div
-                        onClick={() => setFilterPlacement("left")}
-                        className={`cursor-pointer py-2 px-2 rounded-lg transition-all duration-300 ease-in-out 
-        ${filterPlacement === "left" ? "bg-primary/80 text-white" : "bg-secondary/10 text-primary"}`}
-                        title="Filtry z lewej"
-                    >
-                        <PanelLeft size={18} />
-                    </div>
-                    <div
-                        onClick={() => setFilterPlacement("top")}
-                        className={`cursor-pointer py-2 px-2 rounded-lg transition-all duration-300 ease-in-out 
-        ${filterPlacement === "top" ? "bg-primary/80 text-white" : "bg-secondary/10 text-primary"}`}
-                        title="Filtry u góry"
-                    >
-                        <PanelTop size={18} />
-                    </div>
-                </div>
-            </div>
-            {/* Sekcja wyników */}
-
+        <>
             {articles.data?.map((article: IArticle, i: number) => (
                 <ArticleListItem
                     key={i}
@@ -157,7 +103,7 @@ const ArticleList = () => {
                 totalPageCount={articles.pagination.pages}
                 onPageChange={handlePageChange}
             />
-        </div>
+        </>
     );
 };
 
@@ -226,21 +172,22 @@ export const ArticleListItem = ({ article, className }: { article: IArticle; cla
             </Card>
 
             <Modal isOpen={isOpen} onClose={closeModal}>
-                <ArticleModalDetails articleId={article?._id} onClose={closeModal} />
+                <ArticleModalDetails articleId={article?._id} />
             </Modal>
         </div>
     );
 };
 
 export const ArticlesFilter = () => {
+    const { viewPreference, setViewPreference, filterPlacement, setFilterPlacement } = useViewPref();
     const [params, setParams] = useSearchParams();
     const selectedProduct = params.get("product") || "";
     const selectedCategory = params.get("category") || "";
     const titleParam = params.get("title") || "";
     const { products } = useFetchProducts();
-    const hasFilters = selectedCategory || titleParam;
+
     const { data: categories, isLoading: categoriesLoading } = useQuery({
-        queryKey: ["categories-by-product", selectedProduct],
+        queryKey: ["categories-by-product", selectedProduct], // Zapytanie jest zależne od wybranego produktu
         queryFn: () => {
             return productCategoryApi.findByProduct({}, selectedProduct);
         },
@@ -264,6 +211,7 @@ export const ArticlesFilter = () => {
             return prev;
         });
     };
+
     const categoryHandler = (categoryId: string) => {
         setParams((prev) => {
             prev.set("category", categoryId);
@@ -297,100 +245,113 @@ export const ArticlesFilter = () => {
     };
 
     return (
-        <div className="flex items-start justify-between    min-h-screen rounded-lg  ">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6  ">
-                <div className="flex flex-col ">
-                    <div className="flex items-center justify-between w-full">
-                        {/* Nagłówek lub przycisk resetowania filtrów */}
-                        {hasFilters ? (
+        <div className="flex items-center justify-between w-full  ">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 w-full  ">
+                <div className="flex flex-col w-full  ">
+                    <h2 className="mb-6 text-[23px] font-bold text-foreground flex items-center gap-1.5">
+                        <PiArticleMediumFill className="w-6 h-6" />
+                        Baza artykułów
+                    </h2>
+                    <div className="flex gap-4 items-center  justify-between w-full ">
+                        <div className=" flex">
+                            <div className="relative w-full lg:w-[300px]">
+                                <Input
+                                    value={titleParam}
+                                    onChange={titleHandler}
+                                    placeholder="Szukaj po tytule..."
+                                    className="h-9 w-full pr-10 text-sm rounded-lg border border-border focus:ring-1 focus:ring-primary transition"
+                                />
+                            </div>
+
+                            <div>
+                                <Popover>
+                                    <PopoverTrigger asChild className="w-full">
+                                        <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            className="w-full justify-between w-[280px]"
+                                        >
+                                            {selectedProduct
+                                                ? products.find((product) => product._id === selectedProduct)?.name // Wyświetlanie nazwy produktu
+                                                : "Wybierz produkt"}
+                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                        </Button>
+                                    </PopoverTrigger>
+
+                                    <PopoverContent
+                                        onWheelCapture={(e) => e.stopPropagation()}
+                                        className="w-[280px] p-0"
+                                    >
+                                        <Command>
+                                            <CommandInput placeholder="Wyszukaj produkt..." />
+                                            <CommandList className="scrollbar-custom">
+                                                <CommandEmpty>Nie znaleziono produktu.</CommandEmpty>
+                                                <CommandGroup>
+                                                    {products?.map((product) => {
+                                                        const bannerURL = BANNER_IMAGES?.[product.banner]; // Ścieżka do banera
+                                                        return (
+                                                            <CommandItem
+                                                                value={product.name}
+                                                                key={product._id}
+                                                                onSelect={() => {
+                                                                    productHandler(product._id); // Ustawienie ID produktu i aktualizacja URL
+                                                                }}
+                                                            >
+                                                                <Check
+                                                                    className={`mr-2 h-4 w-4 ${
+                                                                        product._id === selectedProduct
+                                                                            ? "opacity-100"
+                                                                            : "opacity-0"
+                                                                    }`}
+                                                                />
+                                                                <div className="flex items-center gap-3">
+                                                                    <span
+                                                                        className="h-6 w-6 rounded-md"
+                                                                        style={{
+                                                                            backgroundImage: `url(${bannerURL})`,
+                                                                            backgroundSize: "cover",
+                                                                            backgroundPosition: "center",
+                                                                        }}
+                                                                    ></span>
+                                                                    {product.name}
+                                                                </div>
+                                                            </CommandItem>
+                                                        );
+                                                    })}
+                                                </CommandGroup>
+                                            </CommandList>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+
+                            <div className="flex items-center gap-2 ">
+                                <Switch id="new-reports-toggle" />
+                                <label htmlFor="new-reports-toggle" className="text-sm text-muted-foreground">
+                                    Tylko nowe zgłoszenia
+                                </label>
+                            </div>
+                        </div>
+                        <div className="flex gap-3 px-6 w-max">
                             <div
-                                onClick={resetFilterHandler}
-                                className="mb-3 text-lg font-bold text-primary-foreground/80 hover:text-primary/80 transition-all flex items-center border border-transparentr  justify-center cursor-pointer gap-x-1.5   p-2 w-full rounded-md"
+                                onClick={() => setFilterPlacement("left")}
+                                className={`cursor-pointer py-2 px-2 rounded-lg transition-all duration-300 ease-in-out 
+        ${filterPlacement === "left" ? "bg-primary/80 text-white" : "bg-secondary/10 text-primary"}`}
+                                title="Filtry z lewej"
                             >
-                                <RxCross2 className="w-6 h-6" />
-                                Wyczyść filtry
+                                <PanelLeft size={18} />
                             </div>
-                        ) : (
-                            <div className="mb-3 text-lg font-bold text-foreground flex items-center p-2 gap-x-1.5 justify-center w-full border border-transparent">
-                                <PiArticleMediumFill className="w-6 h-6" />
-                                Wyszukaj artykuł
+                            <div
+                                onClick={() => setFilterPlacement("top")}
+                                className={`cursor-pointer py-2 px-2 rounded-lg transition-all duration-300 ease-in-out 
+        ${filterPlacement === "top" ? "bg-primary/80 text-white" : "bg-secondary/10 text-primary"}`}
+                                title="Filtry u góry"
+                            >
+                                <PanelTop size={18} />
                             </div>
-                        )}
-                    </div>
-
-                    <div className="flex flex-col gap-4 items-center">
-                        <div className="relative w-full lg:w-[300px]">
-                            <Input
-                                value={titleParam}
-                                onChange={titleHandler}
-                                placeholder="Szukaj po tytule..."
-                                className="h-9 w-full pr-10 text-sm rounded-lg border border-border focus:ring-1 focus:ring-primary transition"
-                            />
-                        </div>
-
-                        <div>
-                            <Popover>
-                                <PopoverTrigger asChild className="w-full">
-                                    <Button variant="outline" role="combobox" className=" justify-between w-[300px]">
-                                        {selectedProduct
-                                            ? products.find((product) => product._id === selectedProduct)?.name // Wyświetlanie nazwy produktu
-                                            : "Wybierz produkt"}
-                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                    </Button>
-                                </PopoverTrigger>
-
-                                <PopoverContent onWheelCapture={(e) => e.stopPropagation()} className="w-[300px] p-0">
-                                    <Command>
-                                        <CommandInput placeholder="Wyszukaj produkt..." />
-                                        <CommandList className="scrollbar-custom">
-                                            <CommandEmpty>Nie znaleziono produktu.</CommandEmpty>
-                                            <CommandGroup>
-                                                {products?.map((product) => {
-                                                    const bannerURL = BANNER_IMAGES?.[product.banner]; // Ścieżka do banera
-                                                    return (
-                                                        <CommandItem
-                                                            value={product.name}
-                                                            key={product._id}
-                                                            onSelect={() => {
-                                                                productHandler(product._id); // Ustawienie ID produktu i aktualizacja URL
-                                                            }}
-                                                        >
-                                                            <Check
-                                                                className={`mr-2 h-4 w-4 ${
-                                                                    product._id === selectedProduct
-                                                                        ? "opacity-100"
-                                                                        : "opacity-0"
-                                                                }`}
-                                                            />
-                                                            <div className="flex items-center gap-3">
-                                                                <span
-                                                                    className="h-6 w-6 rounded-md"
-                                                                    style={{
-                                                                        backgroundImage: `url(${bannerURL})`,
-                                                                        backgroundSize: "cover",
-                                                                        backgroundPosition: "center",
-                                                                    }}
-                                                                ></span>
-                                                                {product.name}
-                                                            </div>
-                                                        </CommandItem>
-                                                    );
-                                                })}
-                                            </CommandGroup>
-                                        </CommandList>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            <Switch id="new-reports-toggle" />
-                            <label htmlFor="new-reports-toggle" className="text-sm text-muted-foreground">
-                                Tylko nowe zgłoszenia
-                            </label>
                         </div>
                     </div>
-                    {/* ANIMATED CATEGORY BUTTONS*/}
+                    {/*ANIMATED CATEGORY BUTTONS */}
                     <AnimatePresence mode="wait">
                         {selectedProduct && (
                             <motion.div
@@ -399,7 +360,7 @@ export const ArticlesFilter = () => {
                                 animate="show"
                                 exit="exit"
                                 variants={listVariants}
-                                className="flex flex-col  items-start rounded-md bg-background  p-1 overflow-x-auto pt-3 flex-wrap gap-1  "
+                                className="inline-flex items-center rounded-md bg-[hsl(var(--background))]  p-1 overflow-x-auto pt-3 flex-wrap gap-1  "
                             >
                                 {categoriesLoading
                                     ? Array.from({ length: 3 }).map((_, idx) => (
@@ -414,7 +375,7 @@ export const ArticlesFilter = () => {
                                               onClick={() => categoryHandler(cat._id)}
                                               variants={itemVariants}
                                               whileTap={{ scale: 0.95 }}
-                                              className={`flex items-center w-full px-4 py-1.5 border text-sm rounded-md font-medium whitespace-nowrap transition-all hover:opacity-80 ${
+                                              className={`flex items-center px-4 py-1.5 border text-sm rounded-md font-medium whitespace-nowrap transition-all hover:opacity-80 ${
                                                   selectedCategory === cat._id
                                                       ? "bg-primary/75 text-primary-foreground shadow-md "
                                                       : "bg-transparent border text-[hsl(var(--muted-foreground))]"
@@ -445,16 +406,15 @@ export const ArticlesFilter = () => {
     );
 };
 
-export const ArticlesFeedView = () => {
+export const ArticlesFeedViewInline = () => {
     return (
-        <div className="flex w-full max-w-[1540px] mx-auto p-5 min-h-[calc(100vh-190px)] gap-6">
-            <aside className=" ">
-                <ArticlesFilter />
-            </aside>
-
-            <main className="flex-1 ">
+        <div className="text-foreground p-5 min-h-[calc(100vh-190px)]   w-full max-w-[1540px] mx-auto gap-6 ">
+            <ArticlesFilter />
+            {/* TUTAJ */}
+            {/* <ArticlesFilter /> */}
+            <div className="w-full">
                 <ArticleList />
-            </main>
+            </div>
         </div>
     );
 };

@@ -53,7 +53,7 @@ function App() {
     const { theme } = useTheme();
 
     return (
-        <div className="bg-background theme ">
+        <div className="bg-background theme">
             <Routes>
                 <Route
                     path="/"

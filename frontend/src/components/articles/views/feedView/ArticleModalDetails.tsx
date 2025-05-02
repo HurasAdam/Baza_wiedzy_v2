@@ -43,7 +43,7 @@ import EditArticle from "../../Edit/EditArticle";
 import ArticleCommentsDetails from "./ArticleCommentsDetails";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
+export const ArticleModalDetails = ({ articleId, onClose }: { articleId: string; onClose: () => void }) => {
     const { copyToClipboard } = useCopyToClipboard();
     const queryClient = useQueryClient();
 
@@ -106,16 +106,11 @@ export const ArticleModalDetails = ({ articleId }: { articleId: string }) => {
 
     const { mutate: deleteArticleMutation } = useMutation({
         mutationFn: ({ id }) => articleApi.trashArticle({ id }),
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries(["article", articleId]);
-            toast({
-                title: "Sukces",
-                description: data?.message,
-                variant: "success",
-                duration: 3550,
-            });
+            toast.success("Artykuł został przeniesiony do kosza");
             closeDeleteAlert();
-            closeModal();
+            onClose();
         },
     });
 
