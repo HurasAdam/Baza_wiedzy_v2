@@ -10,6 +10,7 @@ import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { productCategoryApi } from "@/lib/product-category.api";
+import { z } from "zod";
 interface Props {
     productId: string;
     onClose?: () => void;
@@ -38,14 +39,13 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }: Prop
         mutationFn: (formData) => {
             return productCategoryApi.create(productId, formData);
         },
-        onSuccess: (data) => {
+        onSuccess: () => {
             toast.success("Kategoria produktu został pomyślnie dodana.");
             queryClient.invalidateQueries(["product-categories", productId]);
             onClose();
         },
         onError: (error) => {
             if (error?.status === 409) {
-                // Jeśli kod błędu to 409, ustaw błąd w polu "name"
                 form.setError("name", {
                     message: "Produkt posiada już kategorie o podanej nazwie", // Wiadomość dla użytkownika
                 });
@@ -99,7 +99,7 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }: Prop
     }
 
     return (
-        <div className="w-full  max-w-full bg-background h-full">
+        <div className="w-full  max-w-full  h-full bg-background rounded-lg ">
             <div className="h-full px-10 py-10">
                 <div className="mb-5 pb-2 border-b">
                     <h1
@@ -147,7 +147,7 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }: Prop
                         </div>
 
                         <Button
-                            disabled={isPending}
+                            disabled={isPending || !form.formState.isDirty}
                             className="flex place-self-end  h-[40px] text-primary-foreground bg-primary/85 font-semibold"
                             type="submit"
                         >

@@ -85,9 +85,7 @@ export const CategoryService = {
     async deleteOne(categoryId: string) {
         const countArticles = await ArticleModel.countDocuments({ category: categoryId });
 
-        if (countArticles > 0) {
-            throw Error("Kategoria jest używana i nie można jej usunąć");
-        }
+        appAssert(countArticles === 0, 409, "Kategoria jest używana i nie można jej usunąć");
 
         await CategoryModel.findByIdAndDelete(categoryId);
     },
