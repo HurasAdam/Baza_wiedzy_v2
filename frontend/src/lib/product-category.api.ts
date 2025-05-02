@@ -25,6 +25,9 @@ const findByProduct = (params: URLSearchParams, id: string) => {
 const updateOne = (id: string, data) => {
     return api.put(crurl(baseUrl, id), data);
 };
+const deleteOne = (id: string) => {
+    return api.delete(crurl(baseUrl, id));
+};
 
 export const productCategoryApi = {
     find,
@@ -33,4 +36,5 @@ export const productCategoryApi = {
     findOne,
     updateOne,
     findByProduct,
+    deleteOne,
 };

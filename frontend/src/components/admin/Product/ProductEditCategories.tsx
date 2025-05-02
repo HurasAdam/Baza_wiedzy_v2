@@ -7,13 +7,17 @@ import { Card, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { productCategoryApi } from "@/lib/product-category.api";
 import { dateFormater } from "@/utils/date-formater";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { FolderPlus, Plus } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AlertTriangle, FolderPlus, Plus } from "lucide-react";
 import { useState } from "react";
 import ProductCategoryCardSkeleton from "./ProductCategoryCardSkeleton";
 import { FiX } from "react-icons/fi";
+import { useAlert } from "@/components/alert/hooks/useAlert";
+import { Alert } from "@/components/alert/Alert";
+import toast from "react-hot-toast";
 
 const ProductEditCategories = ({ productId }: { productId?: string }) => {
+    const queryClient = useQueryClient();
     const [categoryId, setCategoryId] = useState("");
     const [name, setFilterParams] = useState("");
     const {
@@ -28,6 +32,27 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
         closeModal: closeEditCategoryModal,
     } = useModal();
 
+    const { isOpen: isDeleteAlertOpen, closeAlert: closeDeleteAlert, openAlert: openDeleteAlert } = useAlert();
+
+    const { mutate: deleteCategoryMutation } = useMutation({
+        mutationFn: (id: string) => {
+            return productCategoryApi.deleteOne(id);
+        },
+        onSuccess: () => {
+            closeDeleteAlert();
+            toast.success("Kategoria została usunięta");
+            queryClient.invalidateQueries(["all-product-categories"]);
+        },
+        onError: ({ status }) => {
+            if (status === 409) {
+                toast.error(
+                    "Nie można usunąć tej kategorii, ponieważ jest używana przez jeden lub więcej artykułów. Najpierw zaktualizuj lub usuń te artykuły."
+                );
+                closeDeleteAlert();
+            }
+        },
+    });
+
     const openCreateCategory = () => {
         openCreateCategoryModal();
     };
@@ -36,12 +61,22 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
         setCategoryId(id);
     };
 
+    const onDelete = (id) => {
+        openDeleteAlert();
+        setCategoryId(id);
+    };
+
+    const onDeleteConfirm = (id) => {
+        deleteCategoryMutation(id);
+    };
+
     const { data: categories, isLoading } = useQuery({
         queryKey: ["all-product-categories", name],
         queryFn: () => {
             return productCategoryApi.findByProduct({ name }, productId);
         },
     });
+
     const resetFilter = () => setFilterParams("");
 
     return (
@@ -117,7 +152,9 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
                                     <Button onClick={() => openEditCategory(cat?._id)} className="" variant="outline">
                                         Edytuj
                                     </Button>
-                                    <Button variant="ghost">Usuń</Button>
+                                    <Button onClick={() => onDelete(cat?._id)} variant="ghost">
+                                        Usuń
+                                    </Button>
                                 </div>
                             </CardHeader>
                         </Card>
@@ -130,6 +167,20 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
             <Modal isOpen={isEditCategoryModalOpen} onClose={closeEditCategoryModal} height="sm" width="sm">
                 <ProductCategoryForm productId={productId} categoryId={categoryId} />
             </Modal>
+            <Alert
+                requireConfirmation={true}
+                isOpen={isDeleteAlertOpen}
+                onCancel={closeDeleteAlert}
+                onConfirm={() => onDeleteConfirm(categoryId)}
+            >
+                <div className="flex items-center  space-x-3">
+                    <AlertTriangle className="w-5 h-5 mt-1 text-rose-600" />
+                    <p className="text-sm text-primary-foreground dark:text-gray-200">
+                        Czy na pewno chcesz <span className="font-semibold text-rose-600">Usunąć</span> wybraną
+                        kategorie&nbsp; ?
+                    </p>
+                </div>
+            </Alert>
         </div>
     );
 };
