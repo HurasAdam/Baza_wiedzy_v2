@@ -1,3 +1,4 @@
+import ArticlesFeedViewContainer from "@/components/articles/views/feedView/ArticlesFeedViewContainer";
 import { ArticlesFeedView } from "../components/articles/views/feedView/ArticlesFeedView";
 import ArticlesSplitView from "../components/articles/views/splitView/ArticlesSplitView";
 import ArticlesTableView from "../components/articles/views/tableView/ArticlesTableView";
@@ -10,7 +11,7 @@ const ArticlesPage: React.FC = () => {
     if (viewPreference === "mailing") {
         return <ArticlesSplitView />;
     } else if (viewPreference === "default") {
-        return <ArticlesFeedView />;
+        return <ArticlesFeedViewContainer />;
     } else if (viewPreference === "table") {
         return <ArticlesTableView />; // nowy widok dla tabeli
     }

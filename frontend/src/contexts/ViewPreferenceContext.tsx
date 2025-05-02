@@ -1,17 +1,32 @@
+// ViewPreferenceContext.tsx
 import { createContext, useContext, useEffect, useState } from "react";
 
 const ViewPreferenceContext = createContext(null);
 
 export const ViewPreferenceProvider = ({ children }) => {
-    const getInitial = () => localStorage.getItem("viewPreference") || "default";
-    const [viewPreference, setViewPreference] = useState(getInitial);
+    const getView = () => localStorage.getItem("viewPreference") || "default";
+    const getPlacement = () => localStorage.getItem("filterPlacement") || "top";
+
+    const [viewPreference, setViewPreference] = useState(getView);
+    const [filterPlacement, setFilterPlacement] = useState(getPlacement);
 
     useEffect(() => {
         localStorage.setItem("viewPreference", viewPreference);
     }, [viewPreference]);
 
+    useEffect(() => {
+        localStorage.setItem("filterPlacement", filterPlacement);
+    }, [filterPlacement]);
+
     return (
-        <ViewPreferenceContext.Provider value={{ viewPreference, setViewPreference }}>
+        <ViewPreferenceContext.Provider
+            value={{
+                viewPreference,
+                setViewPreference,
+                filterPlacement,
+                setFilterPlacement,
+            }}
+        >
             {children}
         </ViewPreferenceContext.Provider>
     );
