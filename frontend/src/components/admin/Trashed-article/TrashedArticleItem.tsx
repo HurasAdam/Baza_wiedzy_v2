@@ -30,6 +30,7 @@ export const TrashedArticleItem = ({ article, className }: { article: IArticle; 
         onSuccess: () => {
             queryClient.invalidateQueries(["trashed-articles"]);
             toast.success("Artykuł został przywrócony z kosza");
+            closeRestoreArticleAlert();
         },
     });
 
@@ -38,6 +39,7 @@ export const TrashedArticleItem = ({ article, className }: { article: IArticle; 
         onSuccess: () => {
             queryClient.invalidateQueries(["trashed-articles"]);
             toast.success("Artykuł został usunięty");
+            closeRemoveArticleAlert();
         },
     });
 

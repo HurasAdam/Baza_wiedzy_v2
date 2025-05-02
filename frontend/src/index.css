@@ -261,10 +261,13 @@
     body {
         @apply bg-background text-foreground;
     }
+    html {
+        @apply scrollbar-custom;
+    }
 }
 
 .scrollbar-custom {
-    @apply scrollbar-thin scrollbar-thumb-border scrollbar-track-background;
+    @apply scrollbar-thin scrollbar-thumb-gray-500/90 scrollbar-track-transparent;
 }
 
 /* Spinner.css */
