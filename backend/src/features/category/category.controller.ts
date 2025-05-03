@@ -38,3 +38,45 @@ export const CategoryController = (categoryService = CategoryService) => ({
         res.sendStatus(NO_CONTENT);
     }),
 });
+
+// -----------------------
+// maybe in future
+// -----------------------
+// import { searchCategoriesDto } from "./dto/search-categories.dto";
+// import { createCategoryDto } from "./dto/create-category.dto";
+// import { updateCategoryDto } from "./dto/update-category.dto";
+// import { CategoryService } from "./category.service";
+
+// export const CategoryController = (categoryService = CategoryService) => ({
+//     async find({ query }) {
+//         const payload = searchCategoriesDto.parse(query);
+//         const categories = await categoryService.find(payload);
+//         return mapToObject(Category, categories);
+//     },
+
+//     async findOne({ params }) {
+//         const category = await categoryService.findOne(params.id);
+//         return mapToObject(Category, category);
+//     },
+
+//     async findByProduct({ params, query }) {
+//         const payload = searchCategoriesDto.parse(query);
+//         const category = await categoryService.findByProduct(params.id, payload);
+//         return mapToObject(Category, category);
+//     },
+
+//     async create({ userId, body, params }) {
+//         const payload = createCategoryDto.parse(body);
+//         const category = await categoryService.create(userId, payload, params.id);
+//         return mapToObject(Category, category);
+//     },
+
+//     async updateOne({ user, params, body }) {
+//         const payload = updateCategoryDto.parse(body);
+//         await categoryService.updateOne(user.id, params.id, payload);
+//     },
+
+//     async deleteOne({ params }) {
+//         await categoryService.deleteOne(params.id);
+//     },
+// });
