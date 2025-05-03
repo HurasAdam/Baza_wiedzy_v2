@@ -18,9 +18,9 @@ export const ToggleWidthModalButton = ({}) => {
                     <button
                         onClick={() => changeModalWidth(option.value)}
                         className={clsx(
-                            "relative w-48 h-32 rounded-lg border-4 overflow-hidden shadow-md flex flex-col items-center justify-center",
+                            "relative w-48 h-32 rounded-lg border-2 overflow-hidden shadow-md flex flex-col items-center justify-center",
                             {
-                                "border-blue-500 ring-2 ring-blue-300": modalWidth === option.value,
+                                "border-primary ring-2 ring-blue-300": modalWidth === option.value,
                                 "border-muted": modalWidth !== option.value,
                             }
                         )}

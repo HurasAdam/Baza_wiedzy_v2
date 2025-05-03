@@ -1,10 +1,9 @@
 import { ArticlesFeedView } from "./ArticlesFeedView";
 import { ArticlesFeedViewInline } from "./ArticlesFeedViewInline";
-import { Button } from "@/components/ui/button";
 import { useViewPref } from "@/contexts/ViewPreferenceContext";
 
 const ArticlesFeedViewContainer: React.FC = () => {
-    const { viewPreference, setViewPreference, filterPlacement, setFilterPlacement } = useViewPref();
+    const { viewPreference, filterPlacement } = useViewPref();
 
     const renderFeed = () => {
         if (viewPreference === "default" && filterPlacement === "left") {
