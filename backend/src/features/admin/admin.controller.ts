@@ -27,7 +27,6 @@ export const AdminController = (adminService = AdminService) => ({
         return res.status(OK).json(message);
     }),
     findProducts: catchErrors(async ({ query }, res) => {
-        console.log(query, "QUERY PARAMS HERE");
         const payload = searchProductsDto.parse(query);
         const products = await adminService.findProducts(payload);
         return res.status(OK).json(products);
