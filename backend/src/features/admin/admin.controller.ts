@@ -31,4 +31,8 @@ export const AdminController = (adminService = AdminService) => ({
         const products = await adminService.findProducts(payload);
         return res.status(OK).json(products);
     }),
+    findRoles: catchErrors(async (req, res) => {
+        const roles = await adminService.findRoles();
+        return res.status(OK).json(roles);
+    }),
 });
