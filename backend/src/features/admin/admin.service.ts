@@ -7,6 +7,7 @@ import { DEFAULT_TEMP_PASSWORD } from "@/constants/env";
 import { SearchProductsDto } from "../product/dto/search-products.dto";
 import ProductModel from "../product/product.model";
 import RoleModel from "../role-permission/roles-permission.model";
+import SessionModel from "../session/session.model";
 
 export const AdminService = {
     async createUserAccount(payload) {
@@ -37,6 +38,9 @@ export const AdminService = {
             user.mustChangePassword = true;
             await user.save();
         }
+
+        await SessionModel.deleteMany({ userId: params });
+
         return { message: "User account has been disabled" };
     },
 
