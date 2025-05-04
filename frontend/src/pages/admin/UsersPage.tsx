@@ -27,7 +27,7 @@ const UsersPage = () => {
                 <UserTable />
             </div>
             <Modal isOpen={isOpen} onClose={closeModal} height="md" width="md">
-                <CreateUserForm />
+                <CreateUserForm onClose={closeModal} />
             </Modal>
         </div>
     );
