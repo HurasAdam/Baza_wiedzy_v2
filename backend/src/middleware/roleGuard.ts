@@ -4,7 +4,7 @@ import AppErrorCode from "@/constants/appErrorCode";
 import appAssert from "@/utils/appAssert";
 import UserModel from "@/features/user/user.model";
 
-const roleGuard = (requiredRole: string): RequestHandler => {
+const roleGuard = (requiredPermissions: string[]): RequestHandler => {
     return async (req, res, next) => {
         const userId = req.userId;
 

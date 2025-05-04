@@ -23,10 +23,15 @@ const resetUserPassword = (id: string) => {
     return api.post(crurl(baseUrl, `users/${id}/reset-password`));
 };
 
+const getRoles = () => {
+    return api.get(crurl(baseUrl, "roles"));
+};
+
 export const adminApi = {
     findProducts,
     createUserAccount,
     disableUserAccount,
     enableUserAccount,
     resetUserPassword,
+    getRoles,
 };

@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import mongoose, { Schema } from "mongoose";
-import { compareValue, hashValue } from "@/utils/bcrypt";
+import { compareValue, hashValue } from "../../utils/bcrypt";
 
 export type UserWithoutPassword = Omit<UserDocument, "password">;
 
@@ -18,7 +18,7 @@ export interface UserDocument extends mongoose.Document {
     updatedAt: Date;
     lastLogin: Date | null;
     favourites: mongoose.Types.ObjectId[];
-    role: string;
+    role: ObjectId;
 
     comparePassword(val: string): boolean;
     omitPassword(): UserWithoutPassword;
@@ -36,7 +36,7 @@ const userSchema = new Schema<UserDocument>(
         isActive: { type: Boolean, default: true },
         lastLogin: { type: Date, default: null },
         favourites: [{ type: Schema.Types.ObjectId, ref: "Article" }],
-        role: { type: String, required: true, default: "user" }, // Default role is "user"
+        role: { type: Schema.Types.ObjectId, ref: "Role", required: true },
     },
     {
         timestamps: true,
