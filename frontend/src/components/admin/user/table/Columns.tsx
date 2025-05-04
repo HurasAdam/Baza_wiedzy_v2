@@ -11,6 +11,13 @@ import { DataTableColumnHeader } from "./table-column-header";
 import { DataTableRowActions } from "./table-row-actions";
 import { formatDate } from "@/utils/format-date";
 
+const ROLE_LABELS: Record<string, string> = {
+    ADMIN: "Admin",
+    LEADER: "Lider techniczny",
+    MEMBER: "Specjalista",
+    GUEST: "Gość",
+};
+
 export const getColumns = (projectId?: string): ColumnDef<UserType>[] => {
     const columns: ColumnDef<UserType>[] = [
         {
@@ -38,7 +45,9 @@ export const getColumns = (projectId?: string): ColumnDef<UserType>[] => {
             accessorKey: "Rola",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Rola" />,
             cell: ({ row }) => (
-                <span className="uppercase text-xs font-medium text-primary-foreground">{row.original.role}</span>
+                <span className="uppercase text-xs font-medium text-primary-foreground">
+                    {ROLE_LABELS[row.original.role?.name]}
+                </span>
             ),
         },
         {

@@ -2,45 +2,43 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { userApi } from "@/lib/user.api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { IMAGES } from "../../../constants/images";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader, LockIcon, ShieldCheckIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import { adminApi } from "@/lib/admin.api";
 import toast from "react-hot-toast";
+import { FaEye, FaUser, FaUserTie } from "react-icons/fa";
 
-const membersOptions = [
-    { value: "admin", label: "Admin" },
-    { value: "editor", label: "Editor" },
-    { value: "viewer", label: "Viewer" },
-    { value: "moderator", label: "Moderator" },
-];
+const ROLE_LABELS: Record<string, string> = {
+    ADMIN: "Admin",
+    LEADER: "Lider techniczny",
+    MEMBER: "Specjalista",
+    GUEST: "Gość",
+};
 
-const statusOptions = [
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-    { value: "pending", label: "Pending" },
-    { value: "suspended", label: "Suspended" },
-    { value: "archived", label: "Archived" },
-];
-
-const priorityOptions = [
-    { value: "low", label: "Low" },
-    { value: "medium", label: "Medium" },
-    { value: "high", label: "High" },
-    { value: "critical", label: "Critical" },
-];
+const ROLE_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+    ADMIN: ShieldCheckIcon,
+    LEADER: FaUserTie,
+    MEMBER: FaUser,
+    GUEST: FaEye,
+};
 
 export default function CreateUserForm({ onClose }: { onClose: () => void }) {
-    const navigate = useNavigate();
+    const { data: roles } = useQuery({
+        queryKey: ["all-roles"],
+        queryFn: () => {
+            return adminApi.getRoles();
+        },
+    });
 
-    const queryClient = useQueryClient();
+    const userRoles = (roles || []).map((role) => ({
+        value: role._id.toString(),
+        label: ROLE_LABELS[role.name],
+        Icon: ROLE_ICONS[role.name],
+    }));
 
     const { mutate, isPending } = useMutation({
         mutationFn: (formData) => {
@@ -48,6 +46,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
         },
         onSuccess: () => {
             toast.success("Konto zostało utworzone");
+            onClose();
         },
         onError: ({ status }) => {
             if (status === 409) {
@@ -60,9 +59,15 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
         name: z.string().trim().min(2, { message: "Imię musi zawierać co najmniej 2 znaki" }),
         surname: z.string().trim().min(2, { message: "Nazwisko musi zawierać co najmniej 2 znaki" }),
         email: z.string().nonempty({ message: "Email jest wymagany" }).email({ message: "Podaj poprawny adres email" }),
-        role: z.enum(["admin", "editor", "viewer", "moderator"], {
-            errorMap: () => ({ message: "Wybierz rolę" }),
-        }),
+        password: z
+            .string()
+            .min(8, { message: "Hasło musi zawierać co najmniej 8 znaków" })
+            .max(64, { message: "Hasło nie może przekraczać 64 znaków" })
+            .regex(/[A-Z]/, { message: "Hasło musi zawierać co najmniej jedną wielką literę" })
+            .regex(/[a-z]/, { message: "Hasło musi zawierać co najmniej jedną małą literę" })
+            .regex(/[0-9]/, { message: "Hasło musi zawierać co najmniej jedną cyfrę" })
+            .regex(/[^A-Za-z0-9]/, { message: "Hasło musi zawierać co najmniej jeden znak specjalny" }),
+        role: z.string({ required_error: "Wybierz rolę" }).nonempty({ message: "Wybierz rolę" }),
     });
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -72,6 +77,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
             surname: "",
             email: "",
             role: "",
+            password: "",
         },
     });
 
@@ -81,7 +87,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
     };
 
     return (
-        <main className="w-full flex flex-row min-h-[590px]  max-w-full  h-full">
+        <main className="w-full flex flex-row min-h-[590px] max-w-full bg-background h-full">
             <div className="h-full px-10 py-10 flex-1">
                 <div className="mb-5">
                     <h1
@@ -145,6 +151,26 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
                                 )}
                             />
                         </div>
+                        <div>
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-primary-foreground text-sm">Hasło</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="password"
+                                                placeholder="wprowadź adres email"
+                                                className="!h-[48px]"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
 
                         {/* {Members AssigneeTo} */}
 
@@ -162,20 +188,24 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <div
-                                                    className="w-full max-h-[200px]
-                           overflow-y-auto scrollbar
-                          "
-                                                >
-                                                    {membersOptions?.map((option) => (
-                                                        <SelectItem
-                                                            className="cursor-pointer"
-                                                            key={option.value}
-                                                            value={option.value}
-                                                        >
-                                                            {option.label}
-                                                        </SelectItem>
-                                                    ))}
+                                                <div className="w-full max-h-[200px] overflow-y-auto scrollbar">
+                                                    {userRoles.map((option) => {
+                                                        const Icon = option.Icon;
+                                                        return (
+                                                            <SelectItem
+                                                                key={option.value}
+                                                                value={option.value}
+                                                                className="cursor-pointer"
+                                                            >
+                                                                <div className="flex items-center gap-2 py-1">
+                                                                    {Icon && (
+                                                                        <Icon className="w-5 h-5 text-muted-foreground" />
+                                                                    )}
+                                                                    <span>{option.label}</span>
+                                                                </div>
+                                                            </SelectItem>
+                                                        );
+                                                    })}
                                                 </div>
                                             </SelectContent>
                                         </Select>
@@ -196,7 +226,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
                     </form>
                 </Form>
             </div>
-            <div
+            {/* <div
                 className="relative flex-1 shrink-0 md:block rounded-lg    "
                 style={{
                     backgroundImage: `url(${IMAGES.workspaceImage})`,
@@ -205,7 +235,20 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
                     backgroundRepeat: "no-repeat",
                     zIndex: -1,
                 }}
-            />
+            /> */}
+
+            <div className="relative flex-1 flex justify-center items-center bg-background">
+                <div className="w-full h-full bg-black/35 backdrop-blur-md flex  justify-center items-center  ">
+                    <div className="relative w-[380px] h-[380px]">
+                        {/* Obracający się pierścień */}
+                        <div className="absolute inset-0 rounded-full border-[40px] border-primary/30 border-t-primary-foreground  border-b-primary animate-spin-ultra-slow " />
+                        {/* Static inner glow */}
+                        <div className="absolute inset-[70px] rounded-full bg-primary/10 backdrop-blur-md shadow-inner " />
+                        {/* Centralna kulka jako core-logo */}
+                        <div className="absolute top-1/2 left-1/2 w-20 h-20 bg-primary rounded-full shadow-xl -translate-x-1/2 -translate-y-1/2 border border-white/10 " />
+                    </div>
+                </div>
+            </div>
         </main>
     );
 }

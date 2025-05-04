@@ -399,13 +399,13 @@ export const ArticlesFilter = () => {
                                 animate="show"
                                 exit="exit"
                                 variants={listVariants}
-                                className="flex flex-col  items-start rounded-md bg-background  p-1 overflow-x-auto pt-3 flex-wrap gap-1  "
+                                className="flex flex-col items-start rounded-md bg-background  p-1 overflow-x-auto pt-3 flex-wrap gap-1 max-w-[300px]   "
                             >
                                 {categoriesLoading
                                     ? Array.from({ length: 3 }).map((_, idx) => (
                                           <motion.div
                                               key={idx}
-                                              className="h-8 w-20 bg-[hsl(var(--muted))] rounded-md animate-pulse"
+                                              className="h-8 w-20 bg-[hsl(var(--muted))] rounded-md animate-pulse "
                                           />
                                       ))
                                     : categories.map((cat) => (
@@ -414,7 +414,7 @@ export const ArticlesFilter = () => {
                                               onClick={() => categoryHandler(cat._id)}
                                               variants={itemVariants}
                                               whileTap={{ scale: 0.95 }}
-                                              className={`flex items-center w-full px-4 py-1.5 border text-sm rounded-md font-medium whitespace-nowrap transition-all hover:opacity-80 ${
+                                              className={`flex items-center  w-full px-4 py-1.5 border text-sm rounded-md font-medium whitespace-normal break-words transition-all hover:opacity-80 ${
                                                   selectedCategory === cat._id
                                                       ? "bg-primary/75 text-primary-foreground shadow-md "
                                                       : "bg-transparent border text-[hsl(var(--muted-foreground))]"

@@ -6,6 +6,7 @@ import UserModel from "../user/user.model";
 import { DEFAULT_TEMP_PASSWORD } from "@/constants/env";
 import { SearchProductsDto } from "../product/dto/search-products.dto";
 import ProductModel from "../product/product.model";
+import RoleModel from "../role-permission/roles-permission.model";
 
 export const AdminService = {
     async createUserAccount(payload) {
@@ -18,7 +19,7 @@ export const AdminService = {
             name: payload.name,
             surname: payload.surname,
             email: payload.email,
-            password: DEFAULT_TEMP_PASSWORD,
+            password: payload.password,
             role: payload.role,
         });
 
@@ -33,6 +34,7 @@ export const AdminService = {
 
         if (user.isActive) {
             user.isActive = false;
+            user.mustChangePassword = true;
             await user.save();
         }
         return { message: "User account has been disabled" };
@@ -57,6 +59,11 @@ export const AdminService = {
         user.mustChangePassword = true;
         await user.save();
         return { message: "User password has been reset to default" };
+    },
+
+    async findRoles() {
+        const roles = await RoleModel.find({}).select(["-permissions", "-createdAt", "-updatedAt"]);
+        return roles;
     },
 
     async findProducts(query: SearchProductsDto) {
@@ -91,8 +98,6 @@ export const AdminService = {
                     labelColor: 1,
                     banner: 1,
                     articlesCount: 1,
-                    // Jeśli chcesz zachować sortBy pole w wyniku, to dodaj:
-                    // [sortBy]: 1,
                 },
             },
             { $skip: skip },

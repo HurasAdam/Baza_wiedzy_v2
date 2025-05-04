@@ -7,6 +7,7 @@ import ArticleHistoryModel from "../article-history/article-history.model";
 import type { FindUsersWithDto } from "./dto/find-users-with.dto";
 import { compareValue, hashValue } from "@/utils/bcrypt";
 import mongoose from "mongoose";
+import RoleModel from "../role-permission/roles-permission.model";
 
 export const UserService = {
     async changePassword(userId, payload) {
@@ -32,21 +33,22 @@ export const UserService = {
     },
 
     async findOne(id: string) {
-        const user = await UserModel.findById(id);
+        const user = await UserModel.findById(id).populate({
+            path: "role",
+            select: "name permissions", // wybieramy tylko te pola z roli
+        });
         appAssert(user, NOT_FOUND, "User not found");
 
         return user.omitPassword();
     },
 
     async findAll() {
-        const users = await UserModel.find().select([
-            "-password",
-            "-email",
-            "-verified",
-            "-createdAt",
-            "-updatedAt",
-            "-favourites",
-        ]);
+        const users = await UserModel.find()
+            .select(["-password", "-email", "-verified", "-createdAt", "-updatedAt", "-favourites"])
+            .populate({
+                path: "role",
+                select: "name ", // wybieramy tylko te pola z roli
+            });
         return users;
     },
 

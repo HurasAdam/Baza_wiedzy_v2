@@ -7,4 +7,5 @@ export const createUserAccountDto = z.object({
     name: z.string().min(3).max(255),
     surname: z.string().min(3).max(255),
     role: z.string(),
+    password: z.string(),
 });
