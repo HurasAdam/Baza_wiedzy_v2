@@ -103,6 +103,7 @@ function App() {
                     <Route path="topics" element={<TopicsPage />} />
                     <Route path="tags" element={<TagsPage />} />
                     <Route path="users" element={<UsersPage />} />
+                    <Route path="admins" element={<UsersPage />} />
                     <Route path="trashed-articles" element={<TrashedArticles />} />
                     <Route path="issues" element={<IssueReportsLayout />} />
                 </Route>

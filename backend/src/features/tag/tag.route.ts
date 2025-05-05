@@ -8,7 +8,7 @@ const tagController = TagController();
 
 // prefix /tags
 
-tagRoutes.get("/", tagController.getTags);
+tagRoutes.get("/", tagController.find);
 tagRoutes.get("/:id", tagController.getSingleTag);
 tagRoutes.post("/", tagController.createTag);
 tagRoutes.put("/:id", tagController.updateTag);

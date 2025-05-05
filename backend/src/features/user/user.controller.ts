@@ -3,6 +3,7 @@ import catchErrors from "@/utils/catchErrors";
 import { UserService } from "./user.service";
 import { findUsersWithDto } from "./dto/find-users-with.dto";
 import { changeUserPasswordDto } from "./dto/change-user-password.dto";
+import { findUsersDto } from "./dto/find-users.dto";
 
 export const UserController = (userService = UserService) => ({
     findMe: catchErrors(async ({ userId }, res) => {
@@ -15,8 +16,9 @@ export const UserController = (userService = UserService) => ({
         return res.status(OK).json(user);
     }),
 
-    findAll: catchErrors(async (_, res) => {
-        const users = await userService.findAll();
+    findAll: catchErrors(async ({ query }, res) => {
+        // const payload = findUsersDto.parse(query);
+        const users = await userService.findAll(query);
         return res.status(OK).json(users);
     }),
 

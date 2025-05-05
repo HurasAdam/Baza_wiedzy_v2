@@ -42,8 +42,23 @@ export const UserService = {
         return user.omitPassword();
     },
 
-    async findAll() {
-        const users = await UserModel.find()
+    async findAll(query) {
+        const querydb: any = {};
+        const name = query.name?.trim();
+        const role = query.role?.trim();
+        const isActive = query.isActive;
+        if (name) {
+            querydb.name = new RegExp(name, "i");
+        }
+        if (role) {
+            querydb.role = role;
+        }
+
+        if (isActive) {
+            querydb.isActive = isActive;
+        }
+        console.log(query, "USER QUERY");
+        const users = await UserModel.find(querydb)
             .select(["-password", "-email", "-verified", "-createdAt", "-updatedAt", "-favourites"])
             .populate({
                 path: "role",
