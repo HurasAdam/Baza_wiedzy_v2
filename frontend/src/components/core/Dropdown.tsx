@@ -6,13 +6,28 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+type DropdownOption = {
+    label?: string | React.ReactNode;
+    icon?: React.ReactNode;
+    actionHandler: () => void;
+    disabled?: boolean;
+};
+
+type DropdownPosition = {
+    align?: "start" | "center" | "end";
+    side?: "top" | "bottom" | "left" | "right";
+    sideOffset?: number;
+    alignOffset?: number;
+};
+
 export function Dropdown({
     triggerBtn,
     options = [],
     position = { align: "center" },
 }: {
     triggerBtn: React.ReactNode;
-    options: [];
+    options: DropdownOption[];
+    position: DropdownPosition;
 }) {
     return (
         <DropdownMenu>
