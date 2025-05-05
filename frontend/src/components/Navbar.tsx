@@ -1,5 +1,5 @@
 import { useLogout } from "@/hooks/auth/useLogout";
-import { ChevronDown, LayoutDashboard, LogOut, Settings, User } from "lucide-react";
+import { ChevronDown, Crown, LayoutDashboard, LogOut, Settings, User } from "lucide-react";
 import { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoNotifications } from "react-icons/io5";
@@ -20,8 +20,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/t
 import { TbMessageReportFilled } from "react-icons/tb";
 import MyIssueReports from "./IssueReports/MyIssueReports";
 import { useAuthContext } from "@/contexts/auth-provider";
+import { Separator } from "./ui/separator";
 
-const Navbar: React.FC = ({ openCreateArticleModal }) => {
+interface Props {
+    openCreateArticleModal: () => void;
+}
+
+const Navbar = ({ openCreateArticleModal }: Props) => {
     const { openModal: openCallsModal, isOpen: isCallsModalOpen, closeModal: closeCallsModal } = useModal();
     const { openModal: openSearchModal, isOpen: isSearchModalOpen, closeModal: closeSearchModal } = useModal();
     const { openModal: openSettingsModal, isOpen: isSettingsModalOpen, closeModal: closeSettingsModal } = useModal();
@@ -30,13 +35,13 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
         isOpen: isMyIssueReportModalOpen,
         closeModal: closeMyIssueReportsModal,
     } = useModal();
-    const { user } = useAuthContext();
+    const { user, role } = useAuthContext();
     const navigate = useNavigate();
     const location = useLocation();
     const { title, icon: Icon } = getPageTitle(location.pathname);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+    const initials = getAvatarFallbackText(user?.name);
     const { logoutAction } = useLogout();
 
     function openDrawer() {
@@ -48,6 +53,36 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
     }
 
     const profileMenuOptions = [
+        {
+            label: (
+                <div>
+                    <div className="flex items-center pr-4 pb-2 hover:bg-transparent">
+                        {/* Avatar */}
+
+                        {role === "ADMIN" ? (
+                            <div className="  ">
+                                <Crown className="text-primary w-7 h-7" />
+                            </div>
+                        ) : (
+                            <Avatar className="h-7 w-7 bg-primary">
+                                <AvatarImage src={user} alt={user?.name} />
+                                <AvatarFallback className="text-base font-sembibold bg-primary text-secondary">
+                                    {initials}
+                                </AvatarFallback>
+                            </Avatar>
+                        )}
+                        {/* User Data */}
+                        <div className="ml-3 text-left">
+                            <p className="font-medium text-foreground">{user?.name}</p>
+                            <p className="text-xs text-muted-foreground">{user?.email}</p>
+                        </div>
+                    </div>
+                    <Separator />
+                </div>
+            ),
+            icon: <></>,
+            actionHandler: () => {},
+        },
         {
             label: "Profil",
             icon: <User />,
@@ -71,8 +106,6 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
         },
         { label: "Wyloguj się", icon: <LogOut />, actionHandler: logoutAction },
     ];
-
-    const initials = getAvatarFallbackText(user?.name);
 
     return (
         <div className="flex justify-between sticky top-0 left-0 items-center z-40 px-5 py-[6px]  bg-background border-b">
@@ -147,12 +180,18 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                     options={profileMenuOptions}
                     triggerBtn={
                         <div className="rounded-full flex items-center gap-0.5 cursor-pointer bg-muted/90 p-1 hover:bg-muted">
-                            <Avatar className="h-[22px] w-[22px] bg-primary">
-                                <AvatarImage src={user} alt={user?.name} />
-                                <AvatarFallback className="text-base font-sembibold bg-primary text-secondary">
-                                    {initials}
-                                </AvatarFallback>
-                            </Avatar>
+                            {role === "ADMIN" ? (
+                                <div className="  ">
+                                    <Crown className="text-primary w-[22px] h-[22px]" />
+                                </div>
+                            ) : (
+                                <Avatar className="h-[22px] w-[22px] bg-primary">
+                                    <AvatarImage src={user} alt={user?.name} />
+                                    <AvatarFallback className="text-base font-sembibold bg-primary text-secondary">
+                                        {initials}
+                                    </AvatarFallback>
+                                </Avatar>
+                            )}
                             <ChevronDown className="chevron-icon h-4 w-4" />
                         </div>
                     }

@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Crown, Info, LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
 import { ComponentType, useEffect, useRef, useState } from "react";
 import { TiArrowBack } from "react-icons/ti";
-import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
+import { SlSpeech } from "react-icons/sl";
 import { cn } from "../utils/cn";
 import { TbMessageReportFilled } from "react-icons/tb";
 import toast from "react-hot-toast";
@@ -16,7 +17,7 @@ export const AdminLayout = () => {
     const NavItems = [
         { icon: LayoutDashboard, label: "Start", link: "/admin/dashboard" },
         { icon: Package, label: "Produkty", link: "/admin/products" },
-        { icon: LayoutDashboard, label: "Tematy rozmów,", link: "/admin/topics" },
+        { icon: SlSpeech, label: "Tematy rozmów,", link: "/admin/topics" },
         { icon: Tag, label: "Tagi", link: "/admin/tags" },
         { icon: Users, label: "Użytkownicy", link: "/admin/users" },
         { icon: Users, label: "Usunięte artykułu", link: "/admin/trashed-articles" },

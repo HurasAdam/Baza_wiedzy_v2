@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useModal } from "@/components/modal/hooks/useModal";
 import { Input } from "@/components/ui/input";
-import { TbMessageReportFilled } from "react-icons/tb";
+import { TbArchive, TbMessageReportFilled } from "react-icons/tb";
 import { Modal } from "@/components/modal/Modal";
 import { useQuery } from "@tanstack/react-query";
 import EmptyState from "@/components/EmptyState";
@@ -12,6 +12,7 @@ import { IssueReportCardSkeleton } from "@/components/admin/Issue/views/list/Iss
 import { ArticleListItem } from "@/components/articles/views/feedView/ArticlesFeedView";
 import IssueReportDetails from "@/components/admin/Issue/IssueReportDetails";
 import { TrashedArticleItem } from "@/components/admin/Trashed-article/TrashedArticleItem";
+import { IoArchive } from "react-icons/io5";
 
 export interface IReport {
     _id: string;
@@ -38,9 +39,9 @@ const TrashedArticles = () => {
         isLoading,
         isError,
     } = useQuery({
-        queryKey: ["all-trashed-articles", title, type, isUnread],
+        queryKey: ["all-trashed-articles", title],
         queryFn: () => {
-            return articleApi.findTrashed({});
+            return articleApi.findTrashed({ title });
         },
     });
 
@@ -60,7 +61,7 @@ const TrashedArticles = () => {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
                     <div className="flex flex-col">
                         <h2 className="mb-6 text-2xl font-bold text-foreground flex items-center gap-1">
-                            <TbMessageReportFilled className="w-5.5 h-5.5" />
+                            <IoArchive className="w-5.5 h-5.5" />
                             Usunięte artykuły
                         </h2>
                         <div className="flex gap-4 items-center">
@@ -81,7 +82,7 @@ const TrashedArticles = () => {
                                     </button>
                                 )}
                             </div>
-                            <div className="inline-flex items-center justify-center rounded-md bg-background border border-border p-1 space-x-1">
+                            {/* <div className="inline-flex items-center justify-center rounded-md bg-background border border-border p-1 space-x-1">
                                 {[
                                     { label: "Wszystkie", value: null },
                                     { label: "Błąd", value: "bug" },
@@ -100,13 +101,13 @@ const TrashedArticles = () => {
                                         {label}
                                     </button>
                                 ))}
-                            </div>
-                            <div className="flex items-center gap-2">
+                            </div> */}
+                            {/* <div className="flex items-center gap-2">
                                 <Switch id="new-reports-toggle" checked={isUnread} onCheckedChange={setIsUndread} />
                                 <label htmlFor="new-reports-toggle" className="text-sm text-muted-foreground">
                                     Tylko nowe zgłoszenia
                                 </label>
-                            </div>
+                            </div> */}
                             {/* Przycisk Resetowania Wszystkich Filtrów */}
                             {hasNonInputFilters && (
                                 <button
@@ -131,6 +132,11 @@ const TrashedArticles = () => {
             <div className="grid grid-cols-1 gap-4">
                 {isLoading ? (
                     Array.from({ length: 4 }).map((_, i) => <IssueReportCardSkeleton key={i} />)
+                ) : !title && trashedArticles?.data?.length === 0 ? (
+                    <EmptyState
+                        icon={<TbArchive className="w-10 h-10 text-muted" />}
+                        description="Wygląda na to, że lista usuniętych artykułów jest pusta."
+                    />
                 ) : trashedArticles?.data?.length === 0 ? (
                     <EmptyState
                         icon={<TbMessageReportFilled className="w-10 h-10 text-muted" />}
