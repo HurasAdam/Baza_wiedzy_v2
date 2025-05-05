@@ -6,8 +6,8 @@ export const useUser = () => {
     const user = queryClient.getQueryData<any>([USER_KEY]);
 
     if (!user) {
-        throw Error('user not exist')
+        throw Error("user not exist");
     }
 
     return user;
-}
+};
