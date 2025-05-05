@@ -5,7 +5,6 @@ import { IoIosSearch } from "react-icons/io";
 import { IoNotifications } from "react-icons/io5";
 import { MdAssignmentAdd, MdPhoneInTalk } from "react-icons/md";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useUser } from "../hooks/auth/useUser";
 import { getAvatarFallbackText } from "../utils/avatar";
 import { getPageTitle } from "../utils/route-mapper";
 import { Dropdown } from "./core/Dropdown";
@@ -20,6 +19,7 @@ import { Popover, PopoverTrigger } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { TbMessageReportFilled } from "react-icons/tb";
 import MyIssueReports from "./IssueReports/MyIssueReports";
+import { useAuthContext } from "@/contexts/auth-provider";
 
 const Navbar: React.FC = ({ openCreateArticleModal }) => {
     const { openModal: openCallsModal, isOpen: isCallsModalOpen, closeModal: closeCallsModal } = useModal();
@@ -30,7 +30,7 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
         isOpen: isMyIssueReportModalOpen,
         closeModal: closeMyIssueReportsModal,
     } = useModal();
-    const user = useUser();
+    const { user } = useAuthContext();
     const navigate = useNavigate();
     const location = useLocation();
     const { title, icon: Icon } = getPageTitle(location.pathname);
@@ -72,7 +72,7 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
         { label: "Wyloguj się", icon: <LogOut />, actionHandler: logoutAction },
     ];
 
-    const initials = getAvatarFallbackText(user.name);
+    const initials = getAvatarFallbackText(user?.name);
 
     return (
         <div className="flex justify-between sticky top-0 left-0 items-center z-40 px-5 py-[6px]  bg-background border-b">
@@ -148,7 +148,7 @@ const Navbar: React.FC = ({ openCreateArticleModal }) => {
                     triggerBtn={
                         <div className="rounded-full flex items-center gap-0.5 cursor-pointer bg-muted/90 p-1 hover:bg-muted">
                             <Avatar className="h-[22px] w-[22px] bg-primary">
-                                <AvatarImage src={user} alt={user.name} />
+                                <AvatarImage src={user} alt={user?.name} />
                                 <AvatarFallback className="text-base font-sembibold bg-primary text-secondary">
                                     {initials}
                                 </AvatarFallback>

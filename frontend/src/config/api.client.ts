@@ -1,5 +1,6 @@
 import axios from "axios";
-import { UNAUTHORIZED } from "../constants/http.mjs";
+import { FORBIDDEN, UNAUTHORIZED } from "../constants/http.mjs";
+import { redirect } from "react-router-dom";
 
 const options = {
     baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
@@ -30,6 +31,11 @@ API.interceptors.response.use(
         console.log("Error status:", status);
         console.log("Error data:", data);
         // Sprawdź, czy access token wygasł
+
+        if (status === FORBIDDEN && data?.errorCode === "Forbidden") {
+            window.location.replace("/login");
+        }
+
         if (status === UNAUTHORIZED && data?.errorCode === "InvalidAccessToken") {
             console.log("Access token expired, trying to refresh the token...");
 
@@ -43,9 +49,6 @@ API.interceptors.response.use(
                 console.error("Error during token refresh:", refreshError);
 
                 // Jeżeli refresh token również zwróci 401 (Unauthorized)
-                if (refreshError.response?.status === UNAUTHORIZED) {
-                    console.log("Refresh token invalid, logging out user...");
-                }
 
                 // W przypadku innych błędów rzucaj je dalej
                 return Promise.reject(refreshError);
