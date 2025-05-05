@@ -14,8 +14,8 @@ export const RolesEnum = {
 } as const;
 
 export const AccountStatusEnum = {
-    AKTYWNE: "Aktywne", // Konto aktywne
-    ZABLOKOWANE: "Zablokowane", // Konto zablokowane
+    AKTYWNE: true, // Konto aktywne
+    ZABLOKOWANE: false, // Konto zablokowane
 } as const;
 
 export const TaskPriorityEnum = {

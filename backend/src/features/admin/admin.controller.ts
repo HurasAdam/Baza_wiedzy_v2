@@ -31,6 +31,8 @@ export const AdminController = (adminService = AdminService) => ({
         const products = await adminService.findProducts(payload);
         return res.status(OK).json(products);
     }),
+
+    // TODO przenieść do modułu permissions
     findRoles: catchErrors(async (req, res) => {
         const roles = await adminService.findRoles();
         return res.status(OK).json(roles);

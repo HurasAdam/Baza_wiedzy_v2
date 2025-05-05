@@ -3,7 +3,9 @@ import { TaskPriorityEnum, TaskPriorityEnumType, TaskStatusEnum, TaskStatusEnumT
 
 const useTaskTableFilter = () => {
     return useQueryStates({
-        status: parseAsStringEnum<TaskStatusEnumType>(Object.values(TaskStatusEnum)),
+        name: parseAsString,
+        isActive: parseAsString,
+        role: parseAsString,
         priority: parseAsStringEnum<TaskPriorityEnumType>(Object.values(TaskPriorityEnum)),
         keyword: parseAsString,
         projectId: parseAsString,

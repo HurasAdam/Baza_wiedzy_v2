@@ -7,8 +7,8 @@ const findMe = () => {
     return api.get(crurl(baseUrl, "me"));
 };
 
-const findAll = () => {
-    return api.get(baseUrl);
+const findAll = (params?: URLSearchParams) => {
+    return api.get(baseUrl, { params });
 };
 
 const findAllFavouriteArticles = () => {
