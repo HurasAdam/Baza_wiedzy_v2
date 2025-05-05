@@ -1,5 +1,4 @@
 import ArticleModalDetails from "@/components/articles/views/feedView/ArticleModalDetails";
-import { SelectBox } from "@/components/core/SelectBox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

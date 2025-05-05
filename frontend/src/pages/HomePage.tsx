@@ -1,8 +1,7 @@
-import { useUser } from "@/hooks/auth/useUser";
+import { useAuthContext } from "@/contexts/auth-provider";
 
 export const HomePage = () => {
-    // test user - to remove
-    const user = useUser();
+    const { role, permissions, user, status } = useAuthContext();
 
     return (
         <div className="text-slate-700 p-5 h-full flex w-full max-w-[1580px] mx-auto gap-6 ">

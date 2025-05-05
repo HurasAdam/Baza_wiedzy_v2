@@ -7,10 +7,11 @@ import { useModal } from "../components/modal/hooks/useModal";
 import { Modal } from "../components/modal/Modal";
 import Navbar from "../components/Navbar";
 import { IMAGES } from "../constants/images";
+import { useAuthContext } from "@/contexts/auth-provider";
 
 export const RootLayout = () => {
     const logo = IMAGES.Logo;
-    const { user, status } = useCheckUser();
+    const { user, status } = useAuthContext();
     const [state, setState] = useState("Przykładowa wartość");
 
     const {

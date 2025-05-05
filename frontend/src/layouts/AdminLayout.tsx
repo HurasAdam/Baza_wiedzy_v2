@@ -1,14 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { Crown, LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
-import { ComponentType, useEffect, useState } from "react";
+import { Crown, Info, LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
+import { ComponentType, useEffect, useRef, useState } from "react";
 import { TiArrowBack } from "react-icons/ti";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "../utils/cn";
 import { TbMessageReportFilled } from "react-icons/tb";
+import toast from "react-hot-toast";
+import { useAuthContext } from "@/contexts/auth-provider";
 
 export const AdminLayout = () => {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const { status, role } = useAuthContext();
 
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const hasToasted = useRef(false);
     const NavItems = [
         { icon: LayoutDashboard, label: "Start", link: "/admin/dashboard" },
         { icon: Package, label: "Produkty", link: "/admin/products" },
@@ -29,10 +33,62 @@ export const AdminLayout = () => {
         };
 
         window.addEventListener("resize", handleResize);
-        handleResize(); // Wywołaj raz na start
+        handleResize();
 
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+    console.log(role);
+
+    if (status === "loading" || role == null) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="flex-1 px-4 py-6 overflow-y-auto max-h-full">
+                    <div className="flex flex-col items-center justify-center h-full text-center  rounded-2xl  p-6">
+                        <div className="relative w-16 h-16 mb-6  animate-spin-slow">
+                            {/* Obracający się pierścień */}
+                            <div className="absolute inset-0 rounded-full border-4 border-primary/30 border-t-primary-foreground  border-b-primary  animate-spin-slow" />
+
+                            {/* Static inner glow */}
+                            <div className="absolute inset-4 rounded-full bg-primary/10 backdrop-blur-md shadow-inner  animate-spin-slow" />
+
+                            {/* Centralna kulka jako core-logo */}
+                            <div className="absolute top-1/2 left-1/2 w-5 h-5 bg-primary rounded-full shadow-xl -translate-x-1/2 -translate-y-1/2 border border-white/10  animate-pulse" />
+                        </div>
+                        <h2 className="text-2xl font-semibold text-foreground">Przygotowujemy Panel Administracyjny</h2>
+                        <p className="text-sm text-muted-foreground max-w-sm">
+                            Proszę czekać — wczytujemy uprawnienia i konfigurację Twojego konta.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (status === "success" && role !== "ADMIN") {
+        if (!hasToasted.current) {
+            toast.custom((t) => (
+                <div
+                    className={cn(
+                        "max-w-md w-full bg-blue-200 shadow-lg rounded-md pointer-events-auto flex border",
+                        t.visible ? "animate-enter" : "animate-leave"
+                    )}
+                >
+                    <div className="flex p-4">
+                        <Info className="h-5 w-5 text-blue-500" />
+                        <div className="ml-3">
+                            <p className="text-sm font-medium text-zinc-900">Dostęp ograniczony</p>
+                            <p className="mt-1 text-sm text-zinc-600">
+                                Nie posiadasz wymaganych uprawnień do wyświetlenia tej sekcji
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            ));
+            hasToasted.current = true;
+        }
+        return <Navigate to="/" replace />;
+    }
 
     return (
         <div className={cn("flex  min-h-screen text-foreground bg-background")}>
