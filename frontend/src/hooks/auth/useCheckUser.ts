@@ -3,11 +3,14 @@ import { USER_KEY } from "./keys";
 import { userApi } from "@/lib/user.api";
 
 export const useCheckUser = () => {
-    const { data: user, status } = useQuery({
+    const {
+        data: user,
+        status,
+        refetch,
+    } = useQuery({
         queryKey: [USER_KEY],
         queryFn: () => userApi.findMe(),
-        staleTime: Infinity,
     });
 
-    return { user, status };
+    return { user, status, refetch };
 };

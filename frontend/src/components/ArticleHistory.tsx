@@ -32,9 +32,6 @@ const ArticleHistory = ({ articleId, showBackwardArrow = false, closeArticleHist
         setSelectedItem(id);
     };
 
-    console.log("historyItem");
-    console.log(historyItem);
-
     const stripHTML = (text) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, "text/html");

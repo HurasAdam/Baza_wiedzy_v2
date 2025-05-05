@@ -92,7 +92,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             return adminApi.resetUserPassword(id);
         },
         onSuccess: () => {
-            toast.success(`Konto użytkownika ${name} ${surname} zostało włączone `);
+            toast.success(`Ustationo domyślne hasło dla konta użytkownika ${name} ${surname}  `);
             closeAlert();
             queryClient.invalidateQueries(["all-users"]);
         },

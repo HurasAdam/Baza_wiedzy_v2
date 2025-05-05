@@ -2,17 +2,13 @@ import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { AuthLayout } from "./layouts/AuthLayout";
 import { RootLayout } from "./layouts/RootLayout";
-
 import { NotFoundPage } from "./pages/NotFoundPage";
-
 import { FavoritesPage } from "./pages/FavoritesArticlesPage";
 import { HomePage } from "./pages/HomePage";
 import { StatisticsPage } from "./pages/StatisticsPage";
 import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
-
 import CreateArticle from "./components/articles/Create/CreateArticle";
 import useTheme from "./hooks/useTheme";
-
 import { useQuery } from "@tanstack/react-query";
 import MailPage from "./components/articles/views/splitView/ArticlesSplitView";
 import { ViewPreferenceProvider } from "./contexts/ViewPreferenceContext";
@@ -29,38 +25,32 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import { LoginPage } from "./pages/auth/Login";
 import { RegisterPage } from "./pages/auth/Register";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
-import IssueReportsPage from "./pages/admin/IssueReportsPage";
 import IssueReportsLayout from "./components/admin/Issue/IssueReportsLayout";
 import { OnboardingLayout } from "./layouts/OnboardingLayout ";
 import OnboardingPage from "./components/OnboardingPage";
+import { AuthProvider } from "./contexts/auth-provider";
 
-const Test = () => {
-    const { id } = useParams();
-    const { data: article, isError } = useQuery({
-        queryKey: ["article", id],
-        queryFn: () => {
-            return articleApi.getArticle({ id });
-        },
-    });
-
-    if (isError) {
-        return <div>BŁAD</div>;
-    } else {
-        return <div className="text-foreground">{article?.title}</div>;
-    }
-};
 function App() {
     const { theme } = useTheme();
 
     return (
         <div className="bg-background theme">
             <Routes>
+                <Route element={<AuthLayout />}>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/password/forgot" element={<ForgotPasswordPage />} />
+                    <Route path="/password/reset" element={<ResetPasswordPage />} />
+                </Route>
+
                 <Route
                     path="/"
                     element={
-                        <ViewPreferenceProvider>
-                            <RootLayout />
-                        </ViewPreferenceProvider>
+                        <AuthProvider>
+                            <ViewPreferenceProvider>
+                                <RootLayout />
+                            </ViewPreferenceProvider>
+                        </AuthProvider>
                     }
                 >
                     <Route index element={<Navigate to="/dashboard" replace />} />
@@ -71,7 +61,6 @@ function App() {
                     <Route path="call-register" element={<TopicsRegisterPage />} />
                     <Route path="favourites" element={<FavoritesPage />} />
                     <Route path="new-article" element={<CreateArticle />} />
-                    <Route path="/article/:id" element={<Test />} />
 
                     {/* <Route path="articles/new" element={<CreateArticle />} /> */}
                     {/* <Route path="articles/favorite" element={<FavouritesPage />} /> */}
@@ -89,17 +78,25 @@ function App() {
                     <Route path="*" element={<NotFoundPage />} />
                 </Route>
 
-                <Route element={<AuthLayout />}>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/password/forgot" element={<ForgotPasswordPage />} />
-                    <Route path="/password/reset" element={<ResetPasswordPage />} />
-                </Route>
-                <Route path="/onboarding" element={<OnboardingLayout />}>
+                <Route
+                    path="/onboarding"
+                    element={
+                        <AuthProvider>
+                            <OnboardingLayout />
+                        </AuthProvider>
+                    }
+                >
                     <Route path="change-password" element={<OnboardingPage />} />
                 </Route>
 
-                <Route path="/admin" element={<AdminLayout />}>
+                <Route
+                    path="/admin"
+                    element={
+                        <AuthProvider>
+                            <AdminLayout />
+                        </AuthProvider>
+                    }
+                >
                     <Route index element={<Navigate to="/admin/dashboard" replace />} />
                     <Route path="dashboard" element={<AdminDashboard />} />
                     <Route path="products" element={<ProductsPage />} />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
@@ -103,6 +103,7 @@ const OnboardingPage = () => {
     const [currentStep, setCurrentStep] = useState(1);
     const { openAlert, isOpen: isLogoutAlertOpen, closeAlert } = useAlert();
     const navigate = useNavigate();
+    const [isExiting, setIsExiting] = useState(false);
 
     const {
         register,
@@ -113,25 +114,28 @@ const OnboardingPage = () => {
         mode: "onChange",
     });
 
-    const { mutate } = useMutation({
-        mutationFn: (formData) => {
-            return userApi.changePassword(formData);
-        },
+    // mutate but delay navigation until after exit
+    const { mutate, isLoading } = useMutation({
+        mutationFn: (formData: OnboardingFormData) => userApi.changePassword(formData),
         onSuccess: () => {
             queryClient.invalidateQueries(USER_KEY);
+            // trigger exit animation
+            setIsExiting(true);
         },
         onError: ({ status }) => {
-            if (status === 400) {
-                toast.error("Nowe hasło nie może być takie samo jak obecne.");
-            } else {
-                toast.error("Wystąpił błąd podczas zmiany hasła.");
-            }
+            status === 400
+                ? toast.error("Nowe hasło nie może być takie samo jak obecne.")
+                : toast.error("Wystąpił błął podczas zmiany hasła.");
         },
     });
 
     const onSubmit = (data: OnboardingFormData) => {
-        console.log("Finalne dane z formularza:", data);
         mutate(data);
+    };
+
+    // after exit animation, navigate
+    const handleExitComplete = () => {
+        if (isExiting) navigate("/dashboard", { replace: true });
     };
 
     const renderStepComponent = () => {
@@ -151,63 +155,77 @@ const OnboardingPage = () => {
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center px-4 py-10">
-            <Card className="w-full max-w-xl">
-                <CardHeader>
-                    <Progress value={progress} className="mb-4" />
-                    <div className="grid grid-cols-3 text-xs text-muted-foreground text-center mt-2">
-                        {steps.map((step) => (
-                            <div
-                                key={step.id}
-                                className={clsx("transition-colors", {
-                                    "text-foreground font-medium": currentStep === step.id,
-                                })}
-                            >
-                                {step.label}
-                            </div>
-                        ))}
-                    </div>
-                </CardHeader>
+            <AnimatePresence onExitComplete={handleExitComplete} mode="wait">
+                {!isExiting && (
+                    <motion.div
+                        key="onboarding"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1, transition: { duration: 0.3 } }}
+                        exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.3 } }}
+                        className="w-full max-w-xl"
+                    >
+                        <Card>
+                            <CardHeader>
+                                <Progress value={progress} className="mb-4" />
+                                <div className="grid grid-cols-3 text-xs text-muted-foreground text-center mt-2">
+                                    {steps.map((step) => (
+                                        <div
+                                            key={step.id}
+                                            className={clsx("transition-colors", {
+                                                "text-foreground font-medium": currentStep === step.id,
+                                            })}
+                                        >
+                                            {step.label}
+                                        </div>
+                                    ))}
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6">
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={`step-${currentStep}`}
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0, transition: { duration: 0.3 } }}
+                                            exit={{ opacity: 0, y: -10, transition: { duration: 0.3 } }}
+                                        >
+                                            {renderStepComponent()}
+                                        </motion.div>
+                                    </AnimatePresence>
 
-                <CardContent>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={`step-${currentStep}`}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -10 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                {renderStepComponent()}
-                            </motion.div>
-                        </AnimatePresence>
-
-                        <div className="flex justify-between pt-4">
-                            {currentStep > 1 ? (
-                                <Button variant="outline" onClick={() => setCurrentStep(currentStep - 1)} type="button">
-                                    Wstecz
-                                </Button>
-                            ) : (
-                                <div />
-                            )}
-                            {currentStep < steps.length ? (
-                                <button
-                                    className="border border-muted bg-background text-foreground hover:bg-primary rounded-md px-4 py-2 transition-colors"
-                                    onClick={() => setCurrentStep(currentStep + 1)}
-                                    disabled={currentStep === 1 && !isValid}
-                                    type="button"
-                                >
-                                    Dalej
-                                </button>
-                            ) : (
-                                <Button className="bg-primary/80" type="submit">
-                                    Zakończ
-                                </Button>
-                            )}
-                        </div>
-                    </form>
-                </CardContent>
-            </Card>
+                                    <div className="flex justify-between pt-4">
+                                        {currentStep > 1 ? (
+                                            <Button
+                                                variant="outline"
+                                                onClick={() => setCurrentStep((s) => s - 1)}
+                                                type="button"
+                                            >
+                                                Wstecz
+                                            </Button>
+                                        ) : (
+                                            <div />
+                                        )}
+                                        {currentStep < steps.length ? (
+                                            <button
+                                                className="border border-muted bg-background text-foreground hover:bg-primary rounded-md px-4 py-2 transition-colors"
+                                                onClick={() => setCurrentStep((s) => s + 1)}
+                                                disabled={currentStep === 1 && !isValid}
+                                                type="button"
+                                            >
+                                                Dalej
+                                            </button>
+                                        ) : (
+                                            <Button className="bg-primary/80" type="submit" disabled={isLoading}>
+                                                Zakończ
+                                            </Button>
+                                        )}
+                                    </div>
+                                </form>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Logout button */}
             <div className="absolute top-4 right-4">
