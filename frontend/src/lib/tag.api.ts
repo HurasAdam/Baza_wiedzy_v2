@@ -3,8 +3,8 @@ import { crurl } from "@/utils/crurl";
 
 const baseUrl = "/tags";
 
-export const findAll = () => {
-    return api.get(baseUrl);
+export const findAll = (params: URLSearchParams) => {
+    return api.get(baseUrl, { params });
 };
 
 export const findOne = (id: string) => {

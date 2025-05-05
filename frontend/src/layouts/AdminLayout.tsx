@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Crown, Info, LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
+import { MdAdminPanelSettings } from "react-icons/md";
 import { ComponentType, useEffect, useRef, useState } from "react";
 import { TiArrowBack } from "react-icons/ti";
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
@@ -20,6 +21,7 @@ export const AdminLayout = () => {
         { icon: SlSpeech, label: "Tematy rozmów,", link: "/admin/topics" },
         { icon: Tag, label: "Tagi", link: "/admin/tags" },
         { icon: Users, label: "Użytkownicy", link: "/admin/users" },
+        { icon: MdAdminPanelSettings, label: "Administratorzy", link: "/admin/admins" },
         { icon: Users, label: "Usunięte artykułu", link: "/admin/trashed-articles" },
         { icon: TbMessageReportFilled, label: "Zgłoszenia i sugestie", link: "/admin/issues" },
     ];

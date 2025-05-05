@@ -37,7 +37,7 @@ const TagTable = () => {
     const { data, isLoading } = useQuery({
         queryKey: ["all-tags", filters, pageNumber],
         queryFn: () => {
-            return tagApi.findAll();
+            return tagApi.findAll(filters);
         },
 
         staleTime: 0,
@@ -144,10 +144,10 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
         <div className="flex  flex-col lg:flex-row w-full items-start space-y-2 mb-2 lg:mb-0 lg:space-x-2  lg:space-y-0">
             <Input
                 placeholder="Wyszukaj tag..."
-                value={filters.keyword || ""}
+                value={filters.name || ""}
                 onChange={(e) =>
                     setFilters({
-                        keyword: e.target.value,
+                        name: e.target.value,
                     })
                 }
                 className="h-8 w-full lg:w-[250px] bg-inherit  "
@@ -181,8 +181,9 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
                     className="h-8 px-2 lg:px-3"
                     onClick={() =>
                         setFilters({
+                            name: null,
                             keyword: null,
-                            status: null,
+                            isActive: null,
                             priority: null,
                             projectId: null,
                             assigneeId: null,

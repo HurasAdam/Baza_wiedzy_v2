@@ -47,6 +47,7 @@ export function DataTable<TData, TValue>({
     pagination,
     onPageChange,
     onPageSizeChange,
+    setFilters,
 }: DataTableProps<TData, TValue>) {
     const { totalCount = 0, pageNumber = 1, pageSize = 10 } = pagination || {};
 
@@ -143,7 +144,21 @@ export function DataTable<TData, TValue>({
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                                        No results.
+                                        Brak wyników spełniających kryteria wyszukiwania
+                                        <Button
+                                            onClick={() => {
+                                                setFilters({
+                                                    isActive: null,
+                                                    keyword: null,
+                                                    role: null,
+                                                    priority: null,
+                                                    projectId: null,
+                                                    assigneeId: null,
+                                                });
+                                            }}
+                                        >
+                                            Reset X
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             )}

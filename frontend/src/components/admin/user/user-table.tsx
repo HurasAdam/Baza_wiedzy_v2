@@ -1,23 +1,18 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// import useGetProjectsInWorkspaceQuery from "@/hooks/api/use-get-projects";
-// import useGetWorkspaceMembers from "@/hooks/api/use-get-workspace-members";
 import useTaskTableFilter from "@/hooks/use-task-table-filter";
-
 import { userApi } from "@/lib/user.api";
-
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { FC, useState } from "react";
 import { useParams } from "react-router-dom";
-
 import { TaskType } from "../../../types/api.types";
 import { getAvatarColor, getAvatarFallbackText } from "../../../utils/avatar";
 import { getColumns } from "./table/Columns";
-import { accountStatuses, roles } from "./table/Data";
 import { DataTable } from "./table/table";
 import { DataTableFacetedFilter } from "./table/table-faceted-filter";
+import { adminApi } from "@/lib/admin.api";
 
 type Filters = ReturnType<typeof useTaskTableFilter>[0];
 type SetFilters = ReturnType<typeof useTaskTableFilter>[1];
@@ -42,7 +37,7 @@ const UserTable = () => {
 
     const { data, isLoading } = useQuery({
         queryKey: ["all-users", filters, pageNumber],
-        queryFn: () => userApi.findAll(),
+        queryFn: () => userApi.findAll(filters),
         staleTime: 0,
     });
 
@@ -60,6 +55,7 @@ const UserTable = () => {
     return (
         <div className="w-full relative">
             <DataTable
+                setFilter={setFilters}
                 isLoading={isLoading}
                 data={users}
                 columns={columns}
@@ -90,6 +86,24 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
     const projects = data?.projects || [];
     const members = memberData?.members || [];
 
+    const { data: rolez } = useQuery({
+        queryKey: ["all-roles"],
+        queryFn: () => {
+            return adminApi.getRoles();
+        },
+    });
+
+    const rolesOptions = rolez?.map(({ _id, name }) => {
+        return {
+            value: _id, // id z API
+            label: name, // np. "Administrator", "Lider techniczny"...
+        };
+    });
+    const userAccountStatusOptions = [
+        { label: "Aktywne", value: true },
+        { label: "Dezaktywowane", value: false },
+    ];
+    console.log(rolesOptions);
     //Workspace Projects
     const projectOptions = projects?.map((project) => {
         return {
@@ -134,54 +148,35 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
         <div className="flex  flex-col lg:flex-row w-full items-start space-y-2 mb-2 lg:mb-0 lg:space-x-2  lg:space-y-0">
             <Input
                 placeholder="Wyszukaj użytkownika..."
-                value={filters.keyword || ""}
+                value={filters.name || ""}
                 onChange={(e) =>
                     setFilters({
-                        keyword: e.target.value,
+                        name: e.target.value,
                     })
                 }
                 className="h-8 w-full lg:w-[250px] bg-inherit border-border  "
             />
             {/* Status filter */}
-            <DataTableFacetedFilter
-                title="Role"
-                multiSelect={false}
-                options={roles}
-                disabled={isLoading}
-                selectedValues={filters.status?.split(",") || []}
-                onFilterChange={(values) => handleFilterChange("status", values)}
-            />
-
-            {/* Account status filter*/}
-            <DataTableFacetedFilter
-                title="Status"
-                multiSelect={false}
-                options={accountStatuses}
-                disabled={isLoading}
-                selectedValues={filters.priority?.split(",") || []}
-                onFilterChange={(values) => handleFilterChange("priority", values)}
-            />
-
-            {/* Assigned To filter */}
-            {/* <DataTableFacetedFilter
-                title="Assigned To"
-                multiSelect={true}
-                options={assigneesOptions}
-                disabled={isLoading}
-                selectedValues={filters.assigneeId?.split(",") || []}
-                onFilterChange={(values) => handleFilterChange("assigneeId", values)}
-            /> */}
-
-            {/* {!projectId && (
+            {rolesOptions && (
                 <DataTableFacetedFilter
-                    title="Projects"
+                    title="Rola"
                     multiSelect={false}
-                    options={projectOptions}
+                    options={rolesOptions}
                     disabled={isLoading}
-                    selectedValues={filters.projectId?.split(",") || []}
-                    onFilterChange={(values) => handleFilterChange("projectId", values)}
+                    selectedValues={filters.role?.split(",") || []}
+                    onFilterChange={(values) => handleFilterChange("role", values)}
                 />
-            )} */}
+            )}
+            {rolesOptions && (
+                <DataTableFacetedFilter
+                    title="Status"
+                    multiSelect={false}
+                    options={userAccountStatusOptions}
+                    disabled={isLoading}
+                    selectedValues={filters.isActive?.split(",") || []}
+                    onFilterChange={(values) => handleFilterChange("isActive", values)}
+                />
+            )}
 
             {Object.values(filters).some((value) => value !== null && value !== "") && (
                 <Button
@@ -191,7 +186,8 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
                     onClick={() =>
                         setFilters({
                             keyword: null,
-                            status: null,
+                            isActive: null,
+                            role: null,
                             priority: null,
                             projectId: null,
                             assigneeId: null,
