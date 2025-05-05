@@ -37,7 +37,7 @@ const authenticate = catchErrors(async (req: Request, res: Response, next: NextF
     const session = await SessionModel.findById(payload.sessionId);
     if (!session) {
         clearAuthCookies(res);
-        appAssert(false, UNAUTHORIZED, "Session invalidated. Please log in again.", AppErrorCode.InvalidAccessToken);
+        appAssert(false, FORBIDDEN, "Session invalidated", AppErrorCode.Forbidden);
     }
 
     req.user = user;
