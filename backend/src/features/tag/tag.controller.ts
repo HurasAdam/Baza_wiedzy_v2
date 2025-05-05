@@ -1,62 +1,31 @@
 import { newTagSchema } from "./tag.schema";
 import TagModel from "./tag.model";
-import { createTag, getTag } from "./tag.service";
+import { TagService } from "./tag.service";
 import { CONFLICT, NOT_FOUND, OK } from "@/constants/http";
 import ArticleModel from "@/features/article/article.model";
 import appAssert from "@/utils/appAssert";
 import catchErrors from "@/utils/catchErrors";
+import { searchTagDto } from "./dto/search-tag.dto";
 
-export const TagController = () => ({
+export const TagController = (tagService = TagService) => ({
     createTag: catchErrors(async (req, res) => {
         const request = newTagSchema.parse(req.body);
         const { userId } = req;
-        const newTag = await createTag({ request, userId });
+        const newTag = await tagService.createTag({ request, userId });
 
         return res.status(OK).json(newTag);
     }),
 
-    getTags: catchErrors(async (req, res) => {
-        const { sort = "name", search = "" } = req.query;
-
-        // Filtr do wyszukiwania tagów
-        const filter = {
-            isDefault: false,
-            ...(search && { name: { $regex: search, $options: "i" } }), // Wyszukiwanie w nazwach tagów
-        };
-
-        // Agregacja
-        const tags = await TagModel.aggregate([
-            { $match: filter }, // Filtruj tagi
-            {
-                $lookup: {
-                    from: "articles", // Kolekcja, z którą łączymy (nazwa w MongoDB)
-                    localField: "_id", // Pole z `TagModel`, które łączymy
-                    foreignField: "tags", // Pole z `ArticleModel`, które łączymy
-                    as: "articleLinks", // Nazwa wynikowej tablicy
-                },
-            },
-            {
-                $addFields: {
-                    isUsed: { $gt: [{ $size: "$articleLinks" }, 0] }, // Dodaj pole `isUsed` (true, jeśli powiązania istnieją)
-                },
-            },
-            { $unset: "articleLinks" }, // Usuń tymczasową tablicę `articleLinks` (opcjonalne)
-        ]);
-
-        // Liczba wszystkich pasujących tagów
-        const totalCount = await TagModel.countDocuments(filter);
-
-        // Zwracamy dane
-        return res.status(200).json({
-            tags,
-            totalCount,
-        });
+    find: catchErrors(async ({ query }, res) => {
+        const payload = searchTagDto.parse(query);
+        const { tags, totalCount } = await tagService.find(payload);
+        return res.status(OK).json({ tags, totalCount });
     }),
 
     getSingleTag: catchErrors(async (req, res) => {
         const { id } = req.params;
         const { userId }: { userId: string } = req;
-        const conversationTopic = await getTag({ tagId: id });
+        const conversationTopic = await tagService.getTag({ tagId: id });
         return res.status(OK).json(conversationTopic);
     }),
 
