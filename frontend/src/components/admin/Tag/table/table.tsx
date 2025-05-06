@@ -22,6 +22,7 @@ import { ChevronDown } from "lucide-react";
 import * as React from "react";
 import TableSkeleton from "../../../skeleton-loaders/table-skeleton";
 import { DataTablePagination } from "./table-pagination";
+import EmptyState from "@/components/EmptyState";
 
 interface PaginationProps {
     totalCount: number;
@@ -37,9 +38,11 @@ interface DataTableProps<TData, TValue> {
     pagination?: PaginationProps;
     onPageChange?: (page: number) => void;
     onPageSizeChange?: (size: number) => void;
+    setFilters: () => void;
 }
 
 export function DataTable<TData, TValue>({
+    setFilters,
     columns,
     data,
     isLoading,
@@ -141,9 +144,23 @@ export function DataTable<TData, TValue>({
                                     </TableRow>
                                 ))
                             ) : (
-                                <TableRow>
+                                <TableRow className="hover:bg-background">
                                     <TableCell colSpan={columns.length} className="h-24 text-center ">
-                                        No results.
+                                        <div className="h-[580px] p-0 m-0 flex justify-center items-start">
+                                            <EmptyState
+                                                onReset={() => {
+                                                    setFilters({
+                                                        name: null,
+                                                        keyword: null,
+                                                        isActive: null,
+                                                        role: null,
+                                                        priority: null,
+                                                        projectId: null,
+                                                        assigneeId: null,
+                                                    });
+                                                }}
+                                            />
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             )}

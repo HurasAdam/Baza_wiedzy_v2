@@ -29,6 +29,7 @@ import IssueReportsLayout from "./components/admin/Issue/IssueReportsLayout";
 import { OnboardingLayout } from "./layouts/OnboardingLayout ";
 import OnboardingPage from "./components/OnboardingPage";
 import { AuthProvider } from "./contexts/auth-provider";
+import AdminsPage from "./pages/admin/AdminsPage";
 
 function App() {
     const { theme } = useTheme();
@@ -103,7 +104,7 @@ function App() {
                     <Route path="topics" element={<TopicsPage />} />
                     <Route path="tags" element={<TagsPage />} />
                     <Route path="users" element={<UsersPage />} />
-                    <Route path="admins" element={<UsersPage />} />
+                    <Route path="admins" element={<AdminsPage />} />
                     <Route path="trashed-articles" element={<TrashedArticles />} />
                     <Route path="issues" element={<IssueReportsLayout />} />
                 </Route>

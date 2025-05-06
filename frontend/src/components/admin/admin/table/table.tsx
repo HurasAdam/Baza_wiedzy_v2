@@ -145,7 +145,10 @@ export function DataTable<TData, TValue>({
                                 ))
                             ) : (
                                 <TableRow className="hover:bg-background">
-                                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                                    <TableCell
+                                        colSpan={columns.length}
+                                        className="h-24 text-center hover:bg-background"
+                                    >
                                         <div className="h-[580px] p-0 m-0 flex justify-center items-start">
                                             <EmptyState
                                                 onReset={() => {

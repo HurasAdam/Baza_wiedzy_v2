@@ -27,6 +27,10 @@ const getRoles = () => {
     return api.get(crurl(baseUrl, "roles"));
 };
 
+const findAdmins = (params?: URLSearchParams) => {
+    return api.get(crurl(baseUrl, "admins"), { params });
+};
+
 export const adminApi = {
     findProducts,
     createUserAccount,
@@ -34,4 +38,5 @@ export const adminApi = {
     enableUserAccount,
     resetUserPassword,
     getRoles,
+    findAdmins,
 };

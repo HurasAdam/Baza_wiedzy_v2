@@ -3,6 +3,8 @@ import { TaskPriorityEnum, TaskPriorityEnumType, TaskStatusEnum, TaskStatusEnumT
 
 const useTaskTableFilter = () => {
     return useQueryStates({
+        product: parseAsString,
+        title: parseAsString,
         name: parseAsString,
         isActive: parseAsString,
         role: parseAsString,
