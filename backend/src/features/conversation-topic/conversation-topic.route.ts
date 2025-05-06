@@ -9,5 +9,5 @@ export const conversationTopicController = ConversationTopicController();
 conversationTopicRoutes.get("/", conversationTopicController.find);
 conversationTopicRoutes.get("/:id", conversationTopicController.findOne);
 conversationTopicRoutes.post("/", conversationTopicController.create);
-conversationTopicRoutes.put("/:id", conversationTopicController.update);
-conversationTopicRoutes.delete("/:id", conversationTopicController.delete);
+conversationTopicRoutes.put("/:id", conversationTopicController.updateOne);
+conversationTopicRoutes.delete("/:id", conversationTopicController.deleteOne);

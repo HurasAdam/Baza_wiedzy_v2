@@ -4,6 +4,7 @@ import { createUserAccountDto } from "./dto/create-user-account.dto";
 import { AdminService } from "./admin.service";
 import { userIdParamsDto } from "./dto/user-id-params-.dto";
 import { searchProductsDto } from "../product/dto/search-products.dto";
+import { findAdminsDto } from "./dto/find-admins.dto";
 
 export const AdminController = (adminService = AdminService) => ({
     createUserAccount: catchErrors(async ({ userId, body }, res) => {
@@ -36,5 +37,11 @@ export const AdminController = (adminService = AdminService) => ({
     findRoles: catchErrors(async (req, res) => {
         const roles = await adminService.findRoles();
         return res.status(OK).json(roles);
+    }),
+
+    findAdmins: catchErrors(async ({ query }, res) => {
+        const payload = findAdminsDto.parse(query);
+        const admins = await adminService.findAdmins(payload);
+        return res.status(OK).json(admins);
     }),
 });

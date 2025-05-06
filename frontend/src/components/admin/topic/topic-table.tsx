@@ -38,7 +38,7 @@ const TopicTable = () => {
     const { data, isLoading } = useQuery({
         queryKey: ["all-topics", filters, pageNumber],
         queryFn: () => {
-            return conversationTopicApi.find({ title: "", product: "" });
+            return conversationTopicApi.find(filters);
         },
 
         staleTime: 0,
@@ -145,10 +145,10 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
         <div className="flex  flex-col lg:flex-row w-full items-start space-y-2 mb-2 lg:mb-0 lg:space-x-2  lg:space-y-0">
             <Input
                 placeholder="Wyszukaj temat rozmowy..."
-                value={filters.keyword || ""}
+                value={filters.title || ""}
                 onChange={(e) =>
                     setFilters({
-                        keyword: e.target.value,
+                        title: e.target.value,
                     })
                 }
                 className="h-8 w-full lg:w-[250px] bg-inherit  "
@@ -159,8 +159,8 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
                 multiSelect={false}
                 options={products}
                 disabled={isLoading}
-                selectedValues={filters.status?.split(",") || []}
-                onFilterChange={(values) => handleFilterChange("status", values)}
+                selectedValues={filters.product?.split(",") || []}
+                onFilterChange={(values) => handleFilterChange("product", values)}
             />
 
             {/* Assigned To filter */}
@@ -191,8 +191,9 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
                     className="h-8 px-2 lg:px-3"
                     onClick={() =>
                         setFilters({
+                            title: null,
                             keyword: null,
-                            status: null,
+                            product: null,
                             priority: null,
                             projectId: null,
                             assigneeId: null,
