@@ -1,73 +1,47 @@
-import { CONFLICT, NOT_FOUND, OK } from "@/constants/http";
+import { CONFLICT, CREATED, NO_CONTENT, NOT_FOUND, OK } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import catchErrors from "@/utils/catchErrors";
 import { constructSearchQuery } from "@/utils/constructSearchQuery";
 import ConversationTopicModel from "./conversation-topic.model";
 import ProductModel from "@/features/product/product.model";
-import { createConversationTopic, deleteConversationTopic, getConversationTopic } from "./conversation-topic.service";
-import { conversationTopicSchema, createConversationTopicSchema } from "./conversation-topic.schema";
+import { ConversationTopicService } from "./conversation-topic.service";
 
-export const ConversationTopicController = () => ({
-    create: catchErrors(async (req, res) => {
-        const request = createConversationTopicSchema.parse(req.body);
-        const { userId } = req;
-        const newTag = await createConversationTopic({ request, userId });
+import { searchTopicDto } from "./dto/search-topic.dto";
+import { createTopicDto } from "./dto/create-topic.dto";
 
-        return res.status(OK).json(newTag);
+export const ConversationTopicController = (conversationTopicService = ConversationTopicService) => ({
+    create: catchErrors(async ({ body, userId }, res) => {
+        const payload = createTopicDto.parse(body);
+
+        const { data, message } = await conversationTopicService.create(payload, userId);
+
+        return res.status(CREATED).json({ data, message });
     }),
 
-    find: catchErrors(async (req, res) => {
-        const query = constructSearchQuery(req.query as any);
-        const conversationTopics = await ConversationTopicModel.find(query)
-            .populate([{ path: "product", select: ["name", "labelColor", "banner", "-_id"] }])
-            .sort("product.name");
+    find: catchErrors(async ({ query }, res) => {
+        console.log(query, "TITLE QUERY");
+        const payload = searchTopicDto.parse(query);
+        const conversationTopics = await conversationTopicService.find(payload);
+
         return res.status(OK).json(conversationTopics);
     }),
 
-    findOne: catchErrors(async (req, res) => {
-        const { id } = req.params;
-        const { userId }: { userId: string } = req;
-        const conversationTopic = await getConversationTopic({
-            userId,
-            topicId: id,
-        });
+    findOne: catchErrors(async ({ params, userId }, res) => {
+        const { id } = params;
+        const conversationTopic = await conversationTopicService.findOne(id, userId);
         return res.status(OK).json(conversationTopic);
     }),
 
-    delete: catchErrors(async (req, res) => {
-        const { id } = req.params;
-
-        const conversationTopic = await deleteConversationTopic({ topicId: id });
+    deleteOne: catchErrors(async ({ params }, res) => {
+        const { id } = params;
+        const conversationTopic = await conversationTopicService.deleteOne(id);
         return res.status(OK).json(conversationTopic);
     }),
 
-    update: catchErrors(async (req, res) => {
-        const { id } = req.params;
-        const { title, product } = req.body;
+    updateOne: catchErrors(async ({ params, body }, res) => {
+        const payload = createTopicDto.parse(body);
+        await conversationTopicService.updateOne(params.id, payload);
 
-        const conversationTopic = await ConversationTopicModel.findById(id);
-        appAssert(conversationTopic, NOT_FOUND, "Conversation topic not found");
-
-        if (product) {
-            const assignedProduct = await ProductModel.findById(product);
-            appAssert(assignedProduct, NOT_FOUND, "Product not found");
-        }
-
-        if (title && product) {
-            const existingTopic = await ConversationTopicModel.findOne({
-                title,
-                product,
-                _id: { $ne: id },
-            });
-
-            appAssert(!existingTopic, CONFLICT, "Tytuł tematu rozmowy już istnieje dla tego produktu");
-        }
-
-        conversationTopic.title = title || conversationTopic.title;
-        conversationTopic.product = product || conversationTopic.product;
-
-        const updatedConversationTopic = await conversationTopic.save();
-
-        res.status(OK).json({ message: "Temat rozmowy został zaktualizowany" });
+        res.sendStatus(NO_CONTENT);
     }),
 });
