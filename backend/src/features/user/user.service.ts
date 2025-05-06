@@ -47,6 +47,7 @@ export const UserService = {
         const name = query.name?.trim();
         const role = query.role?.trim();
         const isActive = query.isActive;
+        const excludeAdmin = query.excludeAdmin === "true" || query.excludeAdmin === true;
         if (name) {
             querydb.name = new RegExp(name, "i");
         }
@@ -57,6 +58,19 @@ export const UserService = {
         if (isActive) {
             querydb.isActive = isActive;
         }
+
+        if (excludeAdmin) {
+            // pobieramy _id roli Administratora
+            const adminRole = await RoleModel.findOne({ name: "ADMIN" });
+            if (adminRole) {
+                // dodajemy do querydb.role: różne od tego ObjectId
+                querydb.role = {
+                    ...("role" in querydb ? querydb.role : {}),
+                    $ne: adminRole._id,
+                };
+            }
+        }
+
         console.log(query, "USER QUERY");
         const users = await UserModel.find(querydb)
             .select(["-password", "-email", "-verified", "-createdAt", "-updatedAt", "-favourites"])

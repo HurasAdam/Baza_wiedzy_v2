@@ -17,8 +17,8 @@ export const UserController = (userService = UserService) => ({
     }),
 
     findAll: catchErrors(async ({ query }, res) => {
-        // const payload = findUsersDto.parse(query);
-        const users = await userService.findAll(query);
+        const payload = findUsersDto.parse(query);
+        const users = await userService.findAll(payload);
         return res.status(OK).json(users);
     }),
 
