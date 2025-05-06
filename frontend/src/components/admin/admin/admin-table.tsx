@@ -1,17 +1,19 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import useTaskTableFilter from "@/hooks/use-task-table-filter";
+import { userApi } from "@/lib/user.api";
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { FC, useState } from "react";
 import { useParams } from "react-router-dom";
-import useTaskTableFilter from "../../../hooks/use-task-table-filter";
-import { productApi } from "@/lib/product.api";
-import { tagApi } from "@/lib/tag.api";
 import { TaskType } from "../../../types/api.types";
 import { getAvatarColor, getAvatarFallbackText } from "../../../utils/avatar";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
-import { Button } from "../../ui/button";
-import { Input } from "../../ui/input";
-import { getColumns } from "./table/Columns";
+
+import { adminApi } from "@/lib/admin.api";
 import { DataTable } from "./table/table";
+import { DataTableFacetedFilter } from "./table/table-faceted-filter";
+import { getColumns } from "./table/Columns";
 
 type Filters = ReturnType<typeof useTaskTableFilter>[0];
 type SetFilters = ReturnType<typeof useTaskTableFilter>[1];
@@ -23,7 +25,7 @@ interface DataTableFilterToolbarProps {
     setFilters: SetFilters;
 }
 
-const TagTable = () => {
+const AdminTable = () => {
     const param = useParams();
     const projectId = param.projectId as string;
 
@@ -35,15 +37,12 @@ const TagTable = () => {
     const columns = getColumns(projectId);
 
     const { data, isLoading } = useQuery({
-        queryKey: ["all-tags", filters, pageNumber],
-        queryFn: () => {
-            return tagApi.findAll(filters);
-        },
-
+        queryKey: ["admins", filters, pageNumber],
+        queryFn: () => adminApi.findAdmins(filters),
         staleTime: 0,
     });
 
-    const tags: TaskType[] = data?.tags || [];
+    const users: TaskType[] = data || [];
 
     const handlePageChange = (page: number) => {
         setPageNumber(page);
@@ -59,7 +58,7 @@ const TagTable = () => {
             <DataTable
                 setFilters={setFilters}
                 isLoading={isLoading}
-                data={tags}
+                data={users}
                 columns={columns}
                 onPageChange={handlePageChange}
                 onPageSizeChange={handlePageSizeChange}
@@ -85,34 +84,7 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
     const data = [];
     const memberData = [];
 
-    const { data: allProducts = [] } = useQuery({
-        queryKey: ["all-products"],
-        queryFn: () => {
-            return productApi.find();
-        },
-    });
-    const products =
-        (allProducts &&
-            allProducts?.map((product) => {
-                return { label: product.name, value: product._id };
-            })) ||
-        [];
-
-    const projects = data?.projects || [];
     const members = memberData?.members || [];
-
-    //Workspace Projects
-    const projectOptions = projects?.map((project) => {
-        return {
-            label: (
-                <div className="flex items-center gap-1">
-                    <span>{project.emoji}</span>
-                    <span>{project.name}</span>
-                </div>
-            ),
-            value: project._id,
-        };
-    });
 
     // Workspace Memebers
     const assigneesOptions = members?.map((member) => {
@@ -144,36 +116,15 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
     return (
         <div className="flex  flex-col lg:flex-row w-full items-start space-y-2 mb-2 lg:mb-0 lg:space-x-2  lg:space-y-0">
             <Input
-                placeholder="Wyszukaj tag..."
+                placeholder="Wyszukaj użytkownika..."
                 value={filters.name || ""}
                 onChange={(e) =>
                     setFilters({
                         name: e.target.value,
                     })
                 }
-                className="h-8 w-full lg:w-[250px] bg-inherit  "
+                className="h-8 w-full lg:w-[250px] bg-inherit border-border  "
             />
-
-            {/* Assigned To filter */}
-            {/* <DataTableFacetedFilter
-                title="Assigned To"
-                multiSelect={true}
-                options={assigneesOptions}
-                disabled={isLoading}
-                selectedValues={filters.assigneeId?.split(",") || []}
-                onFilterChange={(values) => handleFilterChange("assigneeId", values)}
-            /> */}
-
-            {/* {!projectId && (
-                <DataTableFacetedFilter
-                    title="Projects"
-                    multiSelect={false}
-                    options={projectOptions}
-                    disabled={isLoading}
-                    selectedValues={filters.projectId?.split(",") || []}
-                    onFilterChange={(values) => handleFilterChange("projectId", values)}
-                />
-            )} */}
 
             {Object.values(filters).some((value) => value !== null && value !== "") && (
                 <Button
@@ -185,6 +136,7 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
                             name: null,
                             keyword: null,
                             isActive: null,
+                            role: null,
                             priority: null,
                             projectId: null,
                             assigneeId: null,
@@ -199,4 +151,4 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
     );
 };
 
-export default TagTable;
+export default AdminTable;

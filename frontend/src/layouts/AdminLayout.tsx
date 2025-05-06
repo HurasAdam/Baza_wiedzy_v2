@@ -9,6 +9,7 @@ import { cn } from "../utils/cn";
 import { TbMessageReportFilled } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { useAuthContext } from "@/contexts/auth-provider";
+import { IoArchive } from "react-icons/io5";
 
 export const AdminLayout = () => {
     const { status, role } = useAuthContext();
@@ -18,11 +19,12 @@ export const AdminLayout = () => {
     const NavItems = [
         { icon: LayoutDashboard, label: "Start", link: "/admin/dashboard" },
         { icon: Package, label: "Produkty", link: "/admin/products" },
-        { icon: SlSpeech, label: "Tematy rozmów,", link: "/admin/topics" },
         { icon: Tag, label: "Tagi", link: "/admin/tags" },
+        { icon: SlSpeech, label: "Tematy rozmów,", link: "/admin/topics" },
+        { icon: IoArchive, label: "Usunięte artykuły", link: "/admin/trashed-articles" },
         { icon: Users, label: "Użytkownicy", link: "/admin/users" },
         { icon: MdAdminPanelSettings, label: "Administratorzy", link: "/admin/admins" },
-        { icon: Users, label: "Usunięte artykułu", link: "/admin/trashed-articles" },
+
         { icon: TbMessageReportFilled, label: "Zgłoszenia i sugestie", link: "/admin/issues" },
     ];
 

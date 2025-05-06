@@ -118,4 +118,30 @@ export const AdminService = {
             pagination: { total, page, pages },
         };
     },
+
+    async findAdmins(query) {
+        const querydb: any = {};
+        const name = query.name?.trim();
+
+        if (name) {
+            querydb.name = new RegExp(name, "i");
+        }
+
+        const adminRole = await RoleModel.findOne({ name: "ADMIN" });
+        if (adminRole) {
+            querydb.role = adminRole._id;
+        } else {
+            // jeżeli nie ma takiej roli w DB, zwracamy pustą listę
+            return [];
+        }
+
+        console.log(query, "USER QUERY");
+        const users = await UserModel.find(querydb)
+            .select(["-password", "-email", "-verified", "-createdAt", "-updatedAt", "-favourites"])
+            .populate({
+                path: "role",
+                select: "name ", // wybieramy tylko te pola z roli
+            });
+        return users;
+    },
 };

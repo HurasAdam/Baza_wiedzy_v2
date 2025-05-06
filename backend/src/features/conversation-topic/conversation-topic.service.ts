@@ -2,57 +2,96 @@ import { CONFLICT, NOT_FOUND } from "../../constants/http";
 import ConversationReportModel from "../conversation-report/conversation-report.model";
 import ConversationTopicModel from "./conversation-topic.model";
 import appAssert from "../../utils/appAssert";
+import catchErrors from "@/utils/catchErrors";
+import { SearchTopicDto } from "./dto/search-topic.dto";
+import { CreateTopicDto } from "./dto/create-topic.dto";
+import ProductModel from "../product/product.model";
+import { Types } from "mongoose";
 
 interface CreateConversationTopicRequest {
     title: string;
     product: string;
 }
 
-interface CreateConversationTopicParams {
-    request: CreateConversationTopicRequest;
-    userId: string;
-}
+export const ConversationTopicService = {
+    create: async (payload: CreateTopicDto, userId: string) => {
+        const { title, product } = payload;
 
-interface GetConversationTopicParams {
-    topicId: string;
-    userId: string;
-}
+        const conversationTopicExists = await ConversationTopicModel.exists({ title, product });
+        appAssert(
+            !conversationTopicExists,
+            CONFLICT,
+            "Conversation topic with this title already exists for the specified product"
+        );
 
-export const createConversationTopic = async ({ request, userId }: CreateConversationTopicParams) => {
-    const { title, product } = request;
+        const createdConversationTopic = await ConversationTopicModel.create({
+            title,
+            product,
+            createdBy: userId,
+        });
 
-    // Sprawdzanie, czy temat rozmowy z tym tytułem dla danego produktu już istnieje
-    const conversationTopicExists = await ConversationTopicModel.exists({ title, product });
-    appAssert(
-        !conversationTopicExists,
-        CONFLICT,
-        "Conversation topic with this title already exists for the specified product"
-    );
+        return { data: createdConversationTopic, message: "Conversation topic created successfully" };
+    },
 
-    // Tworzenie nowego tematu rozmowy
-    const createdConversationTopic = await ConversationTopicModel.create({
-        title,
-        product,
-        createdBy: userId,
-    });
+    find: async (query: SearchTopicDto) => {
+        const querydb: any = {};
 
-    return { data: createdConversationTopic, message: "Conversation topic created successfully" };
-};
+        const title = query.title?.trim();
+        const product = query.product?.trim();
 
-export const getConversationTopic = async ({ topicId, userId }: GetConversationTopicParams) => {
-    const conversationTopic = await ConversationTopicModel.findById({ _id: topicId }).populate([
-        { path: "product", select: ["name"] },
-    ]);
-    return conversationTopic;
-};
+        if (title) {
+            querydb.title = new RegExp(title, "i");
+        }
+        if (product) {
+            querydb.product = product;
+        }
 
-export const deleteConversationTopic = async ({ topicId }: { topicId: string }) => {
-    const conversationTopic = await ConversationTopicModel.findById({ _id: topicId });
-    appAssert(conversationTopic, NOT_FOUND, "Conversation topic not found");
+        const conversationTopics = await ConversationTopicModel.find(querydb)
+            .populate([{ path: "product", select: ["name", "labelColor", "banner", "-_id"] }])
+            .sort("product.name");
 
-    const deleteConversationTopic = await ConversationTopicModel.findByIdAndDelete({ _id: topicId });
+        return conversationTopics;
+    },
 
-    await ConversationReportModel.updateMany({ topic: topicId }, { $set: { topic: null } });
+    findOne: async (topicId: string, userId: string) => {
+        const conversationTopic = await ConversationTopicModel.findById({ _id: topicId }).populate([
+            { path: "product", select: ["name"] },
+        ]);
+        return conversationTopic;
+    },
 
-    return { message: "Conversataion topic deleted sucessfully" };
+    deleteOne: async (topicId: string) => {
+        const conversationTopic = await ConversationTopicModel.findById({ _id: topicId });
+        appAssert(conversationTopic, NOT_FOUND, "Conversation topic not found");
+
+        const deleteConversationTopic = await ConversationTopicModel.findByIdAndDelete({ _id: topicId });
+
+        await ConversationReportModel.updateMany({ topic: topicId }, { $set: { topic: null } });
+    },
+
+    updateOne: async (topicId: string, payload: CreateTopicDto) => {
+        const { title, product } = payload;
+
+        const conversationTopic = await ConversationTopicModel.findById({ _id: topicId });
+        appAssert(conversationTopic, NOT_FOUND, "Conversation topic not found");
+
+        if (product) {
+            const assignedProduct = await ProductModel.findById({ _id: product });
+            appAssert(assignedProduct, NOT_FOUND, "Product not found");
+        }
+
+        if (title && product) {
+            const existingTopic = await ConversationTopicModel.findOne({
+                title,
+                product,
+                _id: { $ne: topicId },
+            });
+
+            appAssert(!existingTopic, CONFLICT, "Tytuł tematu rozmowy już istnieje dla tego produktu");
+        }
+
+        conversationTopic.title = title || conversationTopic.title;
+        conversationTopic.product = product ? new Types.ObjectId(product) : conversationTopic.product;
+        await conversationTopic.save();
+    },
 };
