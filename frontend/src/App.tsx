@@ -30,6 +30,7 @@ import { OnboardingLayout } from "./layouts/OnboardingLayout ";
 import OnboardingPage from "./components/OnboardingPage";
 import { AuthProvider } from "./contexts/auth-provider";
 import AdminsPage from "./pages/admin/AdminsPage";
+import RolesAndPermissionsPage from "./pages/admin/RolesAndPermissionsPage";
 
 function App() {
     const { theme } = useTheme();
@@ -105,6 +106,7 @@ function App() {
                     <Route path="tags" element={<TagsPage />} />
                     <Route path="users" element={<UsersPage />} />
                     <Route path="admins" element={<AdminsPage />} />
+                    <Route path="roles" element={<RolesAndPermissionsPage />} />
                     <Route path="trashed-articles" element={<TrashedArticles />} />
                     <Route path="issues" element={<IssueReportsLayout />} />
                 </Route>
