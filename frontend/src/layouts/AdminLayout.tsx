@@ -10,6 +10,7 @@ import { TbMessageReportFilled } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { useAuthContext } from "@/contexts/auth-provider";
 import { IoArchive } from "react-icons/io5";
+import { LuKeyRound } from "react-icons/lu";
 
 export const AdminLayout = () => {
     const { status, role } = useAuthContext();
@@ -24,6 +25,7 @@ export const AdminLayout = () => {
         { icon: IoArchive, label: "Usunięte artykuły", link: "/admin/trashed-articles" },
         { icon: Users, label: "Użytkownicy", link: "/admin/users" },
         { icon: MdAdminPanelSettings, label: "Administratorzy", link: "/admin/admins" },
+        { icon: LuKeyRound, label: "Role i uprawnienia", link: "/admin/roles" },
 
         { icon: TbMessageReportFilled, label: "Zgłoszenia i sugestie", link: "/admin/issues" },
     ];
