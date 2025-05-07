@@ -23,8 +23,15 @@ const resetUserPassword = (id: string) => {
     return api.post(crurl(baseUrl, `users/${id}/reset-password`));
 };
 
-const getRoles = () => {
-    return api.get(crurl(baseUrl, "roles"));
+const getRoles = (params: URLSearchParams) => {
+    return api.get(crurl(baseUrl, "roles"), { params });
+};
+
+const findOneRole = (id: string) => {
+    return api.get(crurl(baseUrl, `roles/${id}`));
+};
+const updateOneRole = (id: string, formData) => {
+    return api.put(crurl(baseUrl, `roles/${id}`), formData);
 };
 
 const findAdmins = (params?: URLSearchParams) => {
@@ -39,4 +46,6 @@ export const adminApi = {
     resetUserPassword,
     getRoles,
     findAdmins,
+    findOneRole,
+    updateOneRole,
 };

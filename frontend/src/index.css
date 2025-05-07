@@ -347,13 +347,33 @@
 .ql-editor p {
     max-width: 100% !important;
     margin-bottom: 16px;
+    font-size: 0.95rem;
     /* Ustaw odstęp między paragrafami */
     line-height: 1.5;
+}
+
+.ql-editor p {
+    @apply text-primary-foreground/80;
+}
+
+.ql-editor h1,
+h2,
+h3,
+ul,
+ol {
+    @apply text-primary-foreground/90;
 }
 
 .ql-editor ol {
     margin-bottom: 10px;
     margin-top: 20px;
+    font-size: 0.85rem;
+}
+
+.ql-editor ul {
+    margin-bottom: 10px;
+    margin-top: 20px;
+    font-size: 0.85rem;
 }
 
 .toast-progress-bar {
@@ -466,7 +486,7 @@
 
 .article-details-in-modal ul,
 .article-details-in-modal ol {
-    @apply list-inside pl-4 my-6 text-primary-foreground  font-normal;
+    @apply list-inside pl-4 my-6 text-primary-foreground font-normal;
 }
 
 .article-details-in-modal ul {
@@ -482,7 +502,7 @@
 }
 
 .article-details-in-modal li {
-    @apply text-sm text-primary-foreground;
+    @apply text-base text-primary-foreground;
 }
 
 /* RICH TEXT EDITOR  */
