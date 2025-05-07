@@ -8,7 +8,11 @@ import { UpdateTagDto } from "./dto/update-tag.dto";
 
 export const TagService = {
     async create(userId: string, payload: CreateTagDto) {
+        // console.log(payload);
+
         const tag = await TagModel.exists({ name: payload.name });
+
+        console.log(tag, "ISTNIEJACY TAG");
         appAssert(!tag, CONFLICT, "Tag already exists");
 
         const createdTag = await TagModel.create({
@@ -20,9 +24,7 @@ export const TagService = {
     },
 
     async find(query: SearchTagDto) {
-        const querydb: any = {
-            isDefault: false,
-        };
+        const querydb: any = {};
 
         const name = query.name?.trim();
 
@@ -32,6 +34,7 @@ export const TagService = {
 
         const tags = await TagModel.aggregate([
             { $match: querydb },
+            { $sort: { createdAt: -1 } },
             {
                 $lookup: {
                     from: "articles",
@@ -90,36 +93,41 @@ export const TagService = {
         const articlesWithTag = await ArticleModel.find({ tags: id });
 
         // Wyszukaj domyślny tag (np. LIBRUS)
-        const defaultTag = await TagModel.findOne({
-            name: "LIBRUS",
-            isDefault: true,
-        });
-        appAssert(defaultTag, NOT_FOUND, "Domyślny tag nie został znaleziony.");
+        // const defaultTag = await TagModel.findOne({
+        //     name: "LIBRUS",
+        //     isDefault: true,
+        // });
+
+        appAssert(
+            articlesWithTag.length === 0,
+            NOT_FOUND,
+            "Nie można usunąc tagu. Wybrany tag został przypisany do conajmnie jednego z artykułów."
+        );
 
         // Jeśli artykuł ma tylko jeden tag i jest to tag, który chcemy usunąć
-        for (const article of articlesWithTag) {
-            if (article.tags.length === 1 && article.tags[0].toString() === id) {
-                // Jeśli artykuł ma tylko jeden tag, przypisz domyślny tag i usuń ten tag
-                await ArticleModel.updateOne(
-                    { _id: article._id },
-                    {
-                        $addToSet: { tags: defaultTag._id }, // Dodaj domyślny tag
-                    }
-                );
+        // for (const article of articlesWithTag) {
+        //     if (article.tags.length === 1 && article.tags[0].toString() === id) {
+        //         // Jeśli artykuł ma tylko jeden tag, przypisz domyślny tag i usuń ten tag
+        //         await ArticleModel.updateOne(
+        //             { _id: article._id },
+        //             {
+        //                 $addToSet: { tags: defaultTag._id }, // Dodaj domyślny tag
+        //             }
+        //         );
 
-                // Teraz usuń usuwany tag w osobnej operacji
-                await ArticleModel.updateOne(
-                    { _id: article._id },
-                    { $pull: { tags: id } } // Usuń usuwany tag
-                );
-            } else {
-                // Jeśli artykuł ma więcej niż jeden tag, po prostu usuń tag
-                await ArticleModel.updateOne(
-                    { _id: article._id },
-                    { $pull: { tags: id } } // Usuń usuwany tag
-                );
-            }
-        }
+        //         // Teraz usuń usuwany tag w osobnej operacji
+        //         await ArticleModel.updateOne(
+        //             { _id: article._id },
+        //             { $pull: { tags: id } } // Usuń usuwany tag
+        //         );
+        //     } else {
+        //         // Jeśli artykuł ma więcej niż jeden tag, po prostu usuń tag
+        //         await ArticleModel.updateOne(
+        //             { _id: article._id },
+        //             { $pull: { tags: id } } // Usuń usuwany tag
+        //         );
+        //     }
+        // }
 
         // Usuń tag z bazy danych
         await TagModel.findByIdAndDelete(id);
