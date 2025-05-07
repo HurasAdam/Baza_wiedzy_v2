@@ -5,6 +5,7 @@ import { AdminService } from "./admin.service";
 import { userIdParamsDto } from "./dto/user-id-params-.dto";
 import { searchProductsDto } from "../product/dto/search-products.dto";
 import { findAdminsDto } from "./dto/find-admins.dto";
+import { updateRoleDto } from "../role-permission/dto/update-role-permissions.dto";
 
 export const AdminController = (adminService = AdminService) => ({
     createUserAccount: catchErrors(async ({ userId, body }, res) => {
@@ -34,9 +35,22 @@ export const AdminController = (adminService = AdminService) => ({
     }),
 
     // TODO przenieść do modułu permissions
-    findRoles: catchErrors(async (req, res) => {
-        const roles = await adminService.findRoles();
+    findRoles: catchErrors(async ({ query }, res) => {
+        const roles = await adminService.findRoles(query);
         return res.status(OK).json(roles);
+    }),
+
+    findOneRole: catchErrors(async ({ params }, res) => {
+        const { id } = params;
+        const role = await adminService.findOneRole(id);
+        return res.status(OK).json(role);
+    }),
+
+    updateOneRole: catchErrors(async ({ params, body }, res) => {
+        const { id } = params;
+        const payload = updateRoleDto.parse(body);
+        const role = await adminService.updateOneRole(id, payload);
+        return res.status(OK).json(role);
     }),
 
     findAdmins: catchErrors(async ({ query }, res) => {
