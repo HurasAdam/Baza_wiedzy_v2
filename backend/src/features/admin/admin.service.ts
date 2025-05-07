@@ -65,9 +65,32 @@ export const AdminService = {
         return { message: "User password has been reset to default" };
     },
 
-    async findRoles() {
-        const roles = await RoleModel.find({}).select(["-permissions", "-createdAt", "-updatedAt"]);
+    async findRoles(query) {
+        const withPerms = query.withPermissions === "true" || query.withPermissions === true;
+        const baseFields = ["-createdAt", "-updatedAt"];
+
+        const selectFields = withPerms
+            ? baseFields // z permissions, więc tylko wykluczamy daty
+            : ["-permissions", ...baseFields]; // bez permissions
+
+        const roles = await RoleModel.find({})
+            .select(selectFields as string[])
+            .sort({ createdAt: 1 })
+            .lean();
         return roles;
+    },
+    async findOneRole(roleId: string) {
+        const role = await RoleModel.find({ _id: roleId });
+
+        return role;
+    },
+
+    async updateOneRole(roleId: string, payload) {
+        const role = await RoleModel.findById(roleId);
+        appAssert(role, NOT_FOUND, "Role not found");
+        console.log(payload, "AKTULIZACJI UPRWANIEŃ");
+        role.permissions = payload || role.permissions;
+        await role.save();
     },
 
     async findProducts(query: SearchProductsDto) {

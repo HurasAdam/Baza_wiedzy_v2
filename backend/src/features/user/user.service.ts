@@ -71,7 +71,6 @@ export const UserService = {
             }
         }
 
-        console.log(query, "USER QUERY");
         const users = await UserModel.find(querydb)
             .select(["-password", "-email", "-verified", "-createdAt", "-updatedAt", "-favourites"])
             .populate({
