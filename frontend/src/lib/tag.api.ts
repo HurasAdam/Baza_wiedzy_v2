@@ -15,7 +15,7 @@ export const create = (tag) => {
     return api.post(baseUrl, tag);
 };
 
-export const remove = (id: string) => {
+export const deleteOne = (id: string) => {
     return api.delete(crurl(baseUrl, id));
 };
 
@@ -26,7 +26,7 @@ export const updateOne = ({ id, formData }) => {
 export const tagApi = {
     findAll,
     create,
-    remove,
+    deleteOne,
     findOne,
     updateOne,
 };
