@@ -20,6 +20,7 @@ import { useAlert } from "../../../alert/hooks/useAlert";
 import TagForm from "../../../forms/TagForm";
 import { useModal } from "../../../modal/hooks/useModal";
 import { Modal } from "../../../modal/Modal";
+import toast from "react-hot-toast";
 
 interface DataTableRowActionsProps {
     row: Row<TaskType>;
@@ -35,11 +36,12 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
 
     const { mutate, isPending } = useMutation({
         mutationFn: () => {
-            return tagApi.remove(taskId);
+            return tagApi.deleteOne(taskId);
         },
         onSuccess: () => {
             closeAlert();
             queryClient.invalidateQueries(["all-tags"]);
+            toast.success("Tag został pomyślnie usunięty");
         },
     });
 

@@ -11,4 +11,4 @@ tagRoutes.get("/", tagController.find);
 tagRoutes.get("/:id", tagController.findOne);
 tagRoutes.post("/", tagController.create);
 tagRoutes.put("/:id", tagController.updateOne);
-tagRoutes.delete("/:id", defaultTagMiddleware, tagController.deleteOne);
+tagRoutes.delete("/:id", tagController.deleteOne);
