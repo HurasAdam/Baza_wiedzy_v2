@@ -6,9 +6,10 @@ import { adminApi } from "@/lib/admin.api";
 import { useQuery } from "@tanstack/react-query";
 import { Crown, Plus, Users } from "lucide-react";
 import React, { useState } from "react";
-import { FaEye, FaLockOpen, FaUser, FaUserTie } from "react-icons/fa";
+import { FaEye, FaUser, FaUserTie } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { LuKeyRound } from "react-icons/lu";
+import { RoleForm } from "@/components/admin/Role-permissions/RoleForm";
 
 const RolesAndPermissionsPage = () => {
     const ROLE_CONFIG: Record<string, { icon: React.ReactNode; bg: string; text: string }> = {
@@ -35,6 +36,7 @@ const RolesAndPermissionsPage = () => {
     });
 
     const { isOpen, closeModal, openModal } = useModal();
+    const { isOpen: isAddRoleModalOpen, closeModal: closeAddRoleModal, openModal: openAddRoleModal } = useModal();
     const [selectedRole, setSelctedRole] = useState("");
 
     const showRoleDetails = (id) => {
@@ -52,7 +54,10 @@ const RolesAndPermissionsPage = () => {
                     </h2>
                 </div>
 
-                <Button className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-primary/75 rounded-md group hover:bg-primary/80 transition">
+                <Button
+                    onClick={openAddRoleModal}
+                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-primary/75 rounded-md group hover:bg-primary/80 transition"
+                >
                     <Plus className="w-4 h-4 group-hover:bg-primary-foreground group-hover:text-primary group-hover:rounded-full group-hover:animate-spin" />{" "}
                     Dodaj role
                 </Button>
@@ -89,6 +94,9 @@ const RolesAndPermissionsPage = () => {
             </div>
             <Modal isOpen={isOpen} onClose={closeModal}>
                 <RolePermissionDetails roleId={selectedRole} onClose={closeModal} />
+            </Modal>
+            <Modal isOpen={isAddRoleModalOpen} onClose={closeAddRoleModal}>
+                <RoleForm />
             </Modal>
         </div>
     );
