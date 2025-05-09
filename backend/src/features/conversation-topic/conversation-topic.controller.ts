@@ -19,7 +19,6 @@ export const ConversationTopicController = (conversationTopicService = Conversat
     }),
 
     find: catchErrors(async ({ query }, res) => {
-        console.log(query, "TITLE QUERY");
         const payload = searchTopicDto.parse(query);
         const conversationTopics = await conversationTopicService.find(payload);
 

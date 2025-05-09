@@ -3,8 +3,8 @@ import { crurl } from "@/utils/crurl";
 
 const baseUrl = "/conversation-report";
 
-const sendConversationReport = async ({ description, topic }) => {
-    return api.post(baseUrl, { description, topic });
+const sendConversationReport = async (payload) => {
+    return api.post(baseUrl, payload);
 };
 
 const getCoversationReportStats = (params: URLSearchParams) => {

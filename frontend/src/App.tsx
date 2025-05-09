@@ -31,6 +31,7 @@ import OnboardingPage from "./components/OnboardingPage";
 import { AuthProvider } from "./contexts/auth-provider";
 import AdminsPage from "./pages/admin/AdminsPage";
 import RolesAndPermissionsPage from "./pages/admin/RolesAndPermissionsPage";
+import { RegisterTopicPage } from "./pages/RegisterTopicPage";
 
 function App() {
     const { theme } = useTheme();
@@ -60,7 +61,7 @@ function App() {
                     <Route path="mail" element={<MailPage />} />
                     <Route path="articles" element={<ArticlesPage />} />
                     <Route path="statistics" element={<StatisticsPage />} />
-                    <Route path="call-register" element={<TopicsRegisterPage />} />
+                    <Route path="register-topic" element={<RegisterTopicPage />} />
                     <Route path="favourites" element={<FavoritesPage />} />
                     <Route path="new-article" element={<CreateArticle />} />
 
