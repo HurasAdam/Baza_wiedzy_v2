@@ -7,14 +7,15 @@ import { conversationReportApi } from "@/lib/conversation-report.api";
 import { useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
+import toast from "react-hot-toast";
 
-const RegisterTopicForm = ({ topicId }: { topicId: string }) => {
+const RegisterTopicForm = ({ topic }) => {
     const [feedback, setFeedback] = useState<null | "call" | "message">(null);
 
     const { register, handleSubmit, reset } = useForm({
         defaultValues: {
             description: "",
-            topic: topicId || "",
+            topic: topic ? topic?._id : "",
         },
     });
 
@@ -25,7 +26,11 @@ const RegisterTopicForm = ({ topicId }: { topicId: string }) => {
         onSuccess: (_data, variables: any) => {
             setFeedback(variables.type);
             reset();
-
+            toast.success(
+                <span>
+                    Odnotowano temat: <span className="font-semibold">{topic?.title}</span>
+                </span>
+            );
             setTimeout(() => setFeedback(null), 1500);
         },
         onError: () => {},
@@ -42,7 +47,7 @@ const RegisterTopicForm = ({ topicId }: { topicId: string }) => {
     return (
         <form className="flex items-center space-x-3 w-1/2 my-auto">
             <Input placeholder="Notatka (opcjonalnie)" {...register("description")} className="h-11" />
-            <Input type="hidden" value={topicId} {...register("topic")} />
+            <Input type="hidden" value={topic?._id} {...register("topic")} />
 
             <div className=" flex  items-center pr-1 ">
                 <AnimatePresence mode="wait">
@@ -70,7 +75,7 @@ const RegisterTopicForm = ({ topicId }: { topicId: string }) => {
                                 type="button"
                                 onClick={onSubmit("call")}
                                 disabled={isPending}
-                                className="flex items-center justify-center"
+                                className="flex items-center justify-center hover:bg-primary/75"
                                 variant="outline"
                                 aria-label="Call"
                             >
@@ -86,7 +91,7 @@ const RegisterTopicForm = ({ topicId }: { topicId: string }) => {
                                 type="button"
                                 onClick={onSubmit("message")}
                                 disabled={isPending}
-                                className=" flex items-center justify-center"
+                                className=" flex items-center justify-center hover:bg-primary/75"
                                 variant="outline"
                                 aria-label="Message"
                             >
