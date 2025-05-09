@@ -27,7 +27,7 @@ export const MySidebar = () => {
         { icon: <PiArticleMediumFill size={21} />, label: "Artykuły", link: "/articles" },
         { icon: <FaStar size={22} />, label: "Ulubione", link: "/favourites" },
         { icon: <ImStatsBars2 size={22} />, label: "Statystyki", link: "/statistics" },
-        { icon: <FaPhoneSquareAlt size={22} />, label: "Tematy", link: "/topics" },
+        { icon: <FaPhoneSquareAlt size={22} />, label: "Tematy", link: "/register-topic" },
         { icon: <FaAddressBook size={22} />, label: "Działy", link: "/departments" },
     ];
 
