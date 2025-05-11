@@ -1,30 +1,39 @@
 import { adminApi } from "@/lib/admin.api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { RoleForm } from "./RoleForm";
 import toast from "react-hot-toast";
 
 const RolePermissionDetails = ({ roleId, onClose }) => {
+    const queryClient = useQueryClient();
     const { data, isLoading, error } = useQuery({
         queryKey: ["role", roleId],
         queryFn: () => adminApi.findOneRole(roleId),
     });
 
     const { mutate, isPending } = useMutation({
-        mutationFn: ({ id, formData }) => {
-            return adminApi.updateOneRole(id, formData);
+        mutationFn: ({ id, permissions, name, iconKey, labelColor }) => {
+            return adminApi.updateOneRole(id, permissions, name, iconKey, labelColor);
         },
         onSuccess: () => {
             onClose();
+            queryClient.invalidateQueries("all-roles");
             toast.success("Uprawnienia dla wybranej roli zostały zaktualizowane");
         },
-        onError: () => {
-            onClose();
-            toast.error("Wystapił błąd");
+        onError: (error) => {
+            if (error?.status === 409) {
+                onClose();
+                toast.error("Rola o wskazanej nazwie już istnieje");
+            } else {
+                onClose();
+                toast.error("Wystapił błąd");
+            }
         },
     });
 
-    const onSave = ({ id, formData }) => {
-        mutate({ id, formData });
+    const onSave = (formData) => {
+        const { id, name, permissions, iconKey, labelColor } = formData;
+        console.log(formData);
+        mutate({ id, permissions, name, iconKey, labelColor });
     };
 
     if (isLoading) return <div className="p-4">Ładowanie uprawnień…</div>;

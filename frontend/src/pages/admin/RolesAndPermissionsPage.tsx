@@ -3,21 +3,17 @@ import { useModal } from "@/components/modal/hooks/useModal";
 import { Modal } from "@/components/modal/Modal";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { adminApi } from "@/lib/admin.api";
-import { useQuery } from "@tanstack/react-query";
-import { Crown, Plus, Users } from "lucide-react";
-import React, { useState } from "react";
-import { FaEye, FaUser, FaUserTie } from "react-icons/fa";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Plus } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { LuKeyRound } from "react-icons/lu";
 import { RoleForm } from "@/components/admin/Role-permissions/RoleForm";
+import { ICON_MAP } from "@/constants/roleIcons";
+import toast from "react-hot-toast";
 
 const RolesAndPermissionsPage = () => {
-    const ROLE_CONFIG: Record<string, { icon: React.ReactNode; bg: string; text: string }> = {
-        ADMIN: { icon: <Crown />, bg: "bg-orange-100", text: "text-orange-600" },
-        LEADER: { icon: <FaUserTie />, bg: "bg-green-100", text: "text-green-600" },
-        MEMBER: { icon: <FaUser />, bg: "bg-blue-100", text: "text-blue-600" },
-        GUEST: { icon: <FaEye />, bg: "bg-gray-100", text: "text-gray-600" },
-    };
+    const queryClient = useQueryClient();
 
     const ROLE_LABELS: Record<string, string> = {
         ADMIN: "Admin",
@@ -44,6 +40,32 @@ const RolesAndPermissionsPage = () => {
         openModal();
     };
 
+    const { mutate: createRoleMutation, isPending } = useMutation({
+        mutationFn: ({ permissions, name, iconKey, labelColor }) => {
+            return adminApi.createRole(permissions, name, iconKey, labelColor);
+        },
+        onSuccess: () => {
+            closeAddRoleModal();
+            queryClient.invalidateQueries("all-roles");
+            toast.success("Uprawnienia dla wybranej roli zostały zaktualizowane");
+        },
+        onError: (error) => {
+            if (error?.status === 409) {
+                closeAddRoleModal();
+                toast.error("Rola o wskazanej nazwie już istnieje");
+            } else {
+                closeAddRoleModal();
+                toast.error("Wystapił błąd");
+            }
+        },
+    });
+
+    const onSave = (formData) => {
+        const { name, permissions, iconKey, labelColor } = formData;
+        console.log(formData);
+        createRoleMutation({ name, iconKey, permissions, labelColor });
+    };
+
     return (
         <div className="px-6 pb-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -64,23 +86,23 @@ const RolesAndPermissionsPage = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                 {roles?.map((role) => {
-                    const config = ROLE_CONFIG[role.name] || {
-                        icon: <Users />,
-                        bg: "bg-indigo-100",
-                        text: "text-indigo-600",
-                    };
+                    // 1) dynamiczny dobór ikony
+                    const IconButton = ICON_MAP[role.iconKey];
+
+                    // 2) dynamiczne klasy Tailwind wg labelColor
+                    const bgClass = `bg-${role.labelColor}-100`;
+                    const textClass = `${role.labelColor}-600`;
+
                     return (
                         <Card
-                            onClick={() => showRoleDetails(role?._id)}
                             key={role._id}
-                            className="cursor-pointer rounded-2xl shadow-md hover:shadow-2xl transform  transition-all hover:border-primary duration-300"
+                            onClick={() => showRoleDetails(role._id)}
+                            className="cursor-pointer rounded-2xl shadow-md hover:shadow-2xl transform transition-all hover:border-primary duration-300"
                         >
                             <CardHeader className="border-b">
                                 <div className="flex items-center space-x-3">
-                                    <div className={`${config.bg} p-3 rounded-lg flex items-center justify-center`}>
-                                        {React.cloneElement(config.icon as React.ReactElement, {
-                                            className: `w-6 h-6 ${config.text}`,
-                                        })}
+                                    <div className={`${bgClass} p-3 rounded-lg flex items-center justify-center`}>
+                                        <IconButton className={`w-6 h-6 text-${textClass}`} />
                                     </div>
                                     <h2 className="text-lg font-semibold">{ROLE_LABELS[role.name] ?? role.name}</h2>
                                 </div>
@@ -96,7 +118,7 @@ const RolesAndPermissionsPage = () => {
                 <RolePermissionDetails roleId={selectedRole} onClose={closeModal} />
             </Modal>
             <Modal isOpen={isAddRoleModalOpen} onClose={closeAddRoleModal}>
-                <RoleForm />
+                <RoleForm onSave={onSave} />
             </Modal>
         </div>
     );
