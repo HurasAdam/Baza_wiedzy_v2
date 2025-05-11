@@ -27,11 +27,15 @@ const getRoles = (params: URLSearchParams) => {
     return api.get(crurl(baseUrl, "roles"), { params });
 };
 
+const createRole = (permissions: string[], name: string, iconKey: string, labelColor: string) => {
+    return api.post(crurl(baseUrl, "roles/create"), { permissions, name, iconKey, labelColor });
+};
+
 const findOneRole = (id: string) => {
     return api.get(crurl(baseUrl, `roles/${id}`));
 };
-const updateOneRole = (id: string, formData) => {
-    return api.put(crurl(baseUrl, `roles/${id}`), formData);
+const updateOneRole = (id: string, permissions: string[], name: string, iconKey: string, labelColor: string) => {
+    return api.put(crurl(baseUrl, `roles/${id}`), { permissions, name, iconKey, labelColor });
 };
 
 const findAdmins = (params?: URLSearchParams) => {
@@ -48,4 +52,5 @@ export const adminApi = {
     findAdmins,
     findOneRole,
     updateOneRole,
+    createRole,
 };

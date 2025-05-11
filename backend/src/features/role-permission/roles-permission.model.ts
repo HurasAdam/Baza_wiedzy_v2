@@ -4,16 +4,18 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface RoleDocument extends Document {
     name: RoleType;
     permissions: Array<PermissionType>;
+    iconKey: string;
+    labelColor: string;
 }
 
 const roleSchema = new Schema<RoleDocument>(
     {
         name: {
             type: String,
-            enum: Object.values(Roles),
             required: true,
             unique: true,
         },
+
         permissions: {
             type: [String],
             enum: Object.values(Permissions),
@@ -21,6 +23,18 @@ const roleSchema = new Schema<RoleDocument>(
             default: function (this: RoleDocument) {
                 return Permissions[this.name] || [];
             },
+        },
+        iconKey: {
+            type: String,
+
+            required: true,
+            default: "FaEye",
+        },
+        labelColor: {
+            type: String,
+
+            required: true,
+            default: "blue",
         },
     },
     {
