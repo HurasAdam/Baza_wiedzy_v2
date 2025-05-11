@@ -1,4 +1,4 @@
-import { OK } from "@/constants/http";
+import { CREATED, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
 import { createUserAccountDto } from "./dto/create-user-account.dto";
 import { AdminService } from "./admin.service";
@@ -34,6 +34,11 @@ export const AdminController = (adminService = AdminService) => ({
         return res.status(OK).json(products);
     }),
 
+    createRole: catchErrors(async ({ userId, body }, res) => {
+        const payload = updateRoleDto.parse(body);
+        const role = await adminService.createRole(payload);
+        return res.sendStatus(CREATED);
+    }),
     // TODO przenieść do modułu permissions
     findRoles: catchErrors(async ({ query }, res) => {
         const roles = await adminService.findRoles(query);
@@ -48,6 +53,7 @@ export const AdminController = (adminService = AdminService) => ({
 
     updateOneRole: catchErrors(async ({ params, body }, res) => {
         const { id } = params;
+        console.log(body);
         const payload = updateRoleDto.parse(body);
         const role = await adminService.updateOneRole(id, payload);
         return res.status(OK).json(role);
