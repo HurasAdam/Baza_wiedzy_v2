@@ -13,7 +13,7 @@ import UserModel from "@/features/user/user.model";
 import VerificationCodeModel from "@/features/verification-code/verification-code.model";
 import appAssert from "@/utils/appAssert";
 import { hashValue } from "@/utils/bcrypt";
-import { ONE_DAY_IN_MS, fiveMinutesAgo, oneHourFromNow, oneYearFromNow, thirtyDaysFromNow } from "@/utils/date";
+import { fiveMinutesAgo, lessThanOneDay, oneHourFromNow, oneYearFromNow, thirtyDaysFromNow } from "@/utils/date";
 import { getPasswordResetTemplate, getVerifyEmailTemplate } from "@/utils/emailTemplates";
 import { RefreshTokenPayload, refreshTokenSignOptions, signToken, verifyToken } from "@/utils/jwt";
 import { sendMail } from "@/utils/sendMail";
@@ -151,7 +151,7 @@ export const refreshUserAccessToken = async (refreshToken: string) => {
     appAssert(session && session.expiresAt.getTime() > now, UNAUTHORIZED, "Session expired");
 
     // refresh the session if it expires in the next 24hrs
-    const sessionNeedsRefresh = session.expiresAt.getTime() - now <= ONE_DAY_IN_MS;
+    const sessionNeedsRefresh = lessThanOneDay(session.expiresAt);
     if (sessionNeedsRefresh) {
         session.expiresAt = thirtyDaysFromNow();
         await session.save();
