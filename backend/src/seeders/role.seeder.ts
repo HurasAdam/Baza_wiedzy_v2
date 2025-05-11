@@ -1,7 +1,7 @@
 import "dotenv/config";
 import mongoose from "mongoose";
 
-import { RolePermissions } from "../utils/role-permission";
+import { RolePermissions, RoleVisualConfig } from "../utils/role-permission";
 import connectDB from "../config/db";
 import RoleModel from "../features/role-permission/roles-permission.model";
 
@@ -22,6 +22,7 @@ const seedRoles = async () => {
         for (const roleName in RolePermissions) {
             const role = roleName as keyof typeof RolePermissions;
             const permissions = RolePermissions[role];
+            const { iconKey, labelColor } = RoleVisualConfig[role];
 
             // Check if the role already exists
             const existingRole = await RoleModel.findOne({ name: role }).session(session);
@@ -29,6 +30,8 @@ const seedRoles = async () => {
                 const newRole = new RoleModel({
                     name: role,
                     permissions: permissions,
+                    iconKey,
+                    labelColor,
                 });
                 await newRole.save({ session });
                 console.log(`Role ${role} added with permissions.`);

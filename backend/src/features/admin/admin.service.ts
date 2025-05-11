@@ -65,13 +65,27 @@ export const AdminService = {
         return { message: "User password has been reset to default" };
     },
 
+    async createRole(payload) {
+        const nameTaken = await RoleModel.exists({ name: payload.name });
+
+        appAssert(!nameTaken, CONFLICT, "Role name already in use");
+
+        // 3) Stwórz nową rolę
+        const role = await RoleModel.create({
+            name: payload.name,
+            iconKey: payload.iconKey,
+            labelColor: payload.labelColor,
+            permissions: payload.permissions,
+        });
+
+        return role;
+    },
+
     async findRoles(query) {
         const withPerms = query.withPermissions === "true" || query.withPermissions === true;
         const baseFields = ["-createdAt", "-updatedAt"];
 
-        const selectFields = withPerms
-            ? baseFields // z permissions, więc tylko wykluczamy daty
-            : ["-permissions", ...baseFields]; // bez permissions
+        const selectFields = withPerms ? baseFields : ["-permissions", ...baseFields];
 
         const roles = await RoleModel.find({})
             .select(selectFields as string[])
@@ -86,10 +100,22 @@ export const AdminService = {
     },
 
     async updateOneRole(roleId: string, payload) {
+        const { permissions, name, iconKey, labelColor } = payload;
         const role = await RoleModel.findById(roleId);
         appAssert(role, NOT_FOUND, "Role not found");
-        console.log(payload, "AKTULIZACJI UPRWANIEŃ");
-        role.permissions = payload || role.permissions;
+
+        if (name && name !== role.name) {
+            const nameTaken = await RoleModel.exists({
+                name,
+                _id: { $ne: roleId }, // pomiń samą siebie
+            });
+            appAssert(!nameTaken, CONFLICT, "Role name already in use");
+        }
+
+        role.name = name || role.name;
+        role.iconKey = iconKey || role.iconKey;
+        role.labelColor = labelColor || role.labelColor;
+        role.permissions = permissions || role.permissions;
         await role.save();
     },
 

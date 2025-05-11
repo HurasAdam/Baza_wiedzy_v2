@@ -1,28 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Crown, Users } from "lucide-react";
-import { FaEye, FaUser, FaUserTie } from "react-icons/fa";
+import * as Icons from "react-icons/fa";
 import { Input } from "@/components/ui/input";
-
+import { ICON_MAP, ICON_KEYS, IconKey } from "@/constants/roleIcons";
+import { Separator } from "@/components/ui/separator";
+// Interfaces
 interface Role {
     _id: string;
     name: string;
+    iconKey: string;
     permissions: string[];
 }
 
 interface SaveArgs {
-    id: string;
+    id?: string;
+    name?: string;
+    iconKey?: string;
     permissions: string[];
+    labelColor: string;
 }
 
 interface RoleFormSimpleProps {
-    role: Role;
+    role?: Role;
     isLoading: boolean;
-    // eslint-disable-next-line no-unused-vars
     onSave: (args: SaveArgs) => void;
 }
+
+// Labels
 const ROLE_LABELS: Record<string, string> = {
     ADMIN: "Admin",
     LEADER: "Lider techniczny",
@@ -30,13 +36,20 @@ const ROLE_LABELS: Record<string, string> = {
     GUEST: "Gość",
 };
 
-const ROLE_CONFIG: Record<string, { icon: React.ReactNode; bg: string; text: string }> = {
-    ADMIN: { icon: <Crown />, bg: "bg-orange-100", text: "text-orange-600" },
-    LEADER: { icon: <FaUserTie />, bg: "bg-green-100", text: "text-green-600" },
-    MEMBER: { icon: <FaUser />, bg: "bg-blue-100", text: "text-blue-600" },
-    GUEST: { icon: <FaEye />, bg: "bg-gray-100", text: "text-gray-600" },
-};
+// Options for icons picker
 
+export const COLOR_OPTIONS = [
+    { name: "bg-green-100", value: "green" },
+    { name: "bg-blue-100", value: "blue" },
+    { name: "bg-purple-100", value: "violet" },
+    { name: "bg-indigo-100", value: "indigo" },
+    { name: "bg-gray-100", value: "gray" },
+    { name: "bg-rose-100", value: "rose" },
+    { name: "bg-amber-100", value: "amber" },
+    { name: "bg-orange-100", value: "orange" },
+];
+
+// Permission labels
 const PERMISSION_LABELS: Record<string, string> = {
     ADD_ARTICLE: "Dodawanie artykułów",
     EDIT_ARTICLE: "Edycja artykułów",
@@ -62,15 +75,26 @@ const PERMISSION_LABELS: Record<string, string> = {
     DELETE_TOPIC: "Usuwanie tematów",
     READ_ONLY: "Tylko odczyt",
 };
-
 const ALL_PERMISSIONS = Object.keys(PERMISSION_LABELS);
 
+console.log("MAPA IKON", ICON_KEYS);
+
+// RoleForm component
 export function RoleForm({ role, isLoading, onSave }: RoleFormSimpleProps) {
     const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
-    const config = role ? ROLE_CONFIG[role.name] : { icon: <Users />, bg: "bg-indigo-100", text: "text-indigo-600" };
+    const [roleName, setRoleName] = useState<string>(role?.name || "");
+    const [selectedIconKey, setSelectedIconKey] = useState<string>(role?.iconKey || ICON_KEYS[0]);
+    const [selectedColor, setSelectedColor] = useState<string>(role?.labelColor || COLOR_OPTIONS[0].name);
+
+    // header icon and style
+
+    const IconComponent = (Icons as any)[selectedIconKey] as React.ComponentType<{ size?: number; className: string }>;
+
     useEffect(() => {
         if (role) {
             setSelectedPermissions(role.permissions || []);
+            setRoleName(role.name);
+            setSelectedIconKey(role.iconKey);
         }
     }, [role]);
 
@@ -80,51 +104,122 @@ export function RoleForm({ role, isLoading, onSave }: RoleFormSimpleProps) {
         );
     };
 
-    const handleSubmit = async (e: React.FormEvent, permissions: []) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(permissions);
-        onSave({ id: role?._id, formData: permissions });
+
+        const payload: SaveArgs = {
+            name: roleName,
+            iconKey: selectedIconKey,
+            permissions: selectedPermissions,
+            labelColor: selectedColor,
+        };
+
+        if (role?._id) {
+            payload.id = role._id;
+        }
+
+        onSave(payload);
     };
 
     return (
-        <Card className="p-4 h-full space-y-6">
-            {role ? (
-                <div className="p-6 flex items-center">
-                    <div className={`${config.bg} p-3 rounded-lg mr-4 flex items-center justify-center drop-shadow-sm`}>
-                        {React.cloneElement(config.icon as React.ReactElement, { className: `w-6 h-6 ${config.text}` })}
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold leading-tight text-primary-foreground/95">
-                            {ROLE_LABELS[role.name]}
-                        </h1>
-                        <p className="mt-1 text-sm text-gray-600">Zarządzaj uprawnieniami wybranej roli</p>
-                    </div>
+        <Card className="p-4 space-y-6  h-fit">
+            <div className="p-6 flex items-center">
+                <div className={`p-3 rounded-lg mr-4 flex items-center justify-center bg-${role?.labelColor}-100`}>
+                    {IconComponent && <IconComponent size={24} className={`text-${role?.labelColor}-600`} />}
                 </div>
-            ) : (
-                <div>Dodaj nową rolę</div>
-            )}
+                <div>
+                    <h1 className="text-2xl font-bold leading-tight text-primary-foreground/95">
+                        {role ? ROLE_LABELS[role.name] : roleName}
+                    </h1>
+                    <p className="mt-1 text-sm text-gray-600">
+                        {role ? "Zarządzaj uprawnieniami roli" : "Utwórz nową rolę"}
+                    </p>
+                </div>
+            </div>
+
             <CardContent>
-                <form onSubmit={(e) => handleSubmit(e, selectedPermissions)} className="space-y-6">
-                    {!role && (
-                        <div>
-                            <Input />
-                        </div>
-                    )}
-                    <div className="grid grid-cols-3 gap-5">
-                        {ALL_PERMISSIONS.map((perm) => (
-                            <label key={perm} className="flex items-center space-x-2 cursor-pointer">
-                                <Checkbox
-                                    className="w-5 h-5"
-                                    checked={selectedPermissions.includes(perm)}
-                                    onCheckedChange={() => toggle(perm)}
-                                />
-                                <span className="text-base">{PERMISSION_LABELS[perm]}</span>
-                            </label>
-                        ))}
+                <form onSubmit={handleSubmit} className="space-y-10">
+                    {/* Name */}
+                    <div>
+                        <label className="block text-sm font-medium text-primary-foreground/75 mb-2">Nazwa roli</label>
+                        <Input
+                            disabled={role?.name === "ADMIN"}
+                            value={roleName}
+                            onChange={(e) => setRoleName(e.currentTarget.value)}
+                            placeholder="Wpisz nazwę roli"
+                            required
+                        />
                     </div>
+
+                    {/* Icon picker */}
+                    <div>
+                        <label className="block text-sm font-medium text-primary-foreground/75 mb-2">
+                            Wybierz ikonę
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                            {ICON_KEYS.map((iconKey) => {
+                                const IconButton = ICON_MAP[iconKey];
+                                return (
+                                    <button
+                                        key={iconKey}
+                                        type="button"
+                                        onClick={() => setSelectedIconKey(iconKey)}
+                                        className={`w-12 h-12 flex flex-col items-center justify-center rounded-lg border bg-background ${
+                                            selectedIconKey === iconKey ? "border-primary text-primary" : ""
+                                        }`}
+                                    >
+                                        {IconButton && <IconButton size={20} />}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Color picker */}
+                    <div>
+                        <label className="block text-sm font-medium text-primary-foreground/70 mb-2">
+                            Kolor etykiety
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                            {COLOR_OPTIONS.map((color) => (
+                                <button
+                                    key={color.name}
+                                    type="button"
+                                    onClick={() => setSelectedColor(color.value)}
+                                    className={`${color.name} w-9 h-9 rounded-md border ${selectedColor === color.value ? "border-[4px] border-primary" : ""}`}
+                                >
+                                    <span className="sr-only">{color.value}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Permissions */}
+
+                    <div>
+                        <Separator className="my-4" />
+                        <label className="block text-sm font-medium text-primary-foreground/70 mb-6">Uprawnienia</label>
+
+                        <div className="grid grid-cols-3 gap-5">
+                            {ALL_PERMISSIONS.map((perm) => (
+                                <label key={perm} className="flex items-center space-x-2 cursor-pointer">
+                                    <Checkbox
+                                        className="w-5 h-5"
+                                        disabled={role?.name === "ADMIN"}
+                                        checked={selectedPermissions.includes(perm)}
+                                        onCheckedChange={() => toggle(perm)}
+                                    />
+                                    <span className="text-base text-primary-foreground/90">
+                                        {PERMISSION_LABELS[perm]}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                    {/* Save */}
                     <div className="mt-14 text-right">
-                        <Button type="submit" disabled={isLoading}>
-                            {isLoading ? "Zapisywanie..." : "Zapisz zmiany"}
+                        <Button type="submit" disabled={isLoading || !roleName.trim()}>
+                            {isLoading ? "Zapisywanie..." : role ? "Zapisz zmiany" : "Utwórz rolę"}
                         </Button>
                     </div>
                 </form>

@@ -66,3 +66,22 @@ export const RolePermissions: Record<RoleType, Array<PermissionType>> = {
 
     GUEST: [Permissions.READ_ONLY],
 };
+
+export const RoleVisualConfig: Record<RoleType, { iconKey: string; labelColor: string }> = {
+    ADMIN: {
+        iconKey: "FaCrown",
+        labelColor: "orange",
+    },
+    LEADER: {
+        iconKey: "FaUserTie",
+        labelColor: "green",
+    },
+    MEMBER: {
+        iconKey: "FaUser",
+        labelColor: "blue",
+    },
+    GUEST: {
+        iconKey: "FaEye",
+        labelColor: "gray",
+    },
+};
