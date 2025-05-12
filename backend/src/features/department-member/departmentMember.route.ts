@@ -7,6 +7,7 @@ export const departmentMemberRoutes = Router({ mergeParams: true });
 
 departmentMemberRoutes.post("/", departmentMemberController.create);
 departmentMemberRoutes.get("/", departmentMemberController.find);
+departmentMemberRoutes.get("/:memberId", departmentMemberController.findOne);
 // departmentMemberRoutes.post('/batch', departmentMemberController.createBatchInDepartment);
 // departmentMemberRoutes.get('/:id', departmentMemberController.findOne);
 // departmentMemberRoutes.put('/:id', departmentMemberController.updateOne);
