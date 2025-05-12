@@ -23,8 +23,7 @@ const ROLE_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     GUEST: FaEye,
 };
 
-export default function MemberForm({ onClose, departmentId, onSave, isPending }) {
-    console.log(departmentId);
+export default function MemberForm({ departmentId, onSave, isPending, departmentMember }) {
     const { data: roles } = useQuery({
         queryKey: ["all-roles"],
         queryFn: () => {
@@ -49,10 +48,10 @@ export default function MemberForm({ onClose, departmentId, onSave, isPending })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            surname: "",
-            email: "",
-            phone: "",
+            name: departmentMember ? departmentMember?.name : "",
+            surname: departmentMember ? departmentMember?.surname : "",
+            email: departmentMember ? departmentMember?.email : "",
+            phone: departmentMember ? departmentMember?.phone : "",
         },
     });
 
@@ -68,10 +67,12 @@ export default function MemberForm({ onClose, departmentId, onSave, isPending })
                         className="text-2xl tracking-[-0.16px] text-primary-foreground font-semibold mb-1.5
            text-center sm:text-left"
                     >
-                        Dodaj pracownika działu
+                        {departmentMember ? "Edytuj dane pracownika" : "Dodaj pracownika działu"}
                     </h1>
                     <p className="text-muted-foreground text-base leading-tight">
-                        Wprowadź dane pracownika, aby utworzyć jego konto w systemie.
+                        {departmentMember
+                            ? "Edytuj dane pracownika a następnie zapisz, aby zatwierdzić wprowadzone zmiany."
+                            : "Wprowadź dane pracownika oraz zatwierdź, aby dodać go do listy pracowników działu."}
                     </p>
                 </div>
                 <Form {...form}>
@@ -126,7 +127,6 @@ export default function MemberForm({ onClose, departmentId, onSave, isPending })
                             />
                         </div>
 
-                        {/* {Members AssigneeTo} */}
                         <div className="mb-4">
                             <FormField
                                 control={form.control}
@@ -155,7 +155,7 @@ export default function MemberForm({ onClose, departmentId, onSave, isPending })
                             type="submit"
                         >
                             {isPending && <Loader className="animate-spin" />}
-                            Utwórz konto
+                            {departmentMember ? "Zapisz" : "Dodaj pracownika"}
                         </Button>
                     </form>
                 </Form>

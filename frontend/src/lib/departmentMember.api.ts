@@ -9,8 +9,8 @@ const create = async (id, formData) => {
 const find = async (id, params: URLSearchParams) => {
     return api.get(`${baseUrl}/${id}/members`, { params });
 };
-const findOne = async (id: string) => {
-    return api.get(`${baseUrl}/${id}`);
+const findOne = async (departmentId: string, memberId: string) => {
+    return api.get(`${baseUrl}/${departmentId}/members/${memberId}`);
 };
 const updateOne = async (id: string, formData) => {
     return api.put(`${baseUrl}/${id}`, formData);
