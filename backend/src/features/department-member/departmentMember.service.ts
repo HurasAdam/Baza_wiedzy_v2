@@ -31,4 +31,14 @@ export const DepartmentMemberService = {
         const departments = await DepartmentMemberModel.find({ department: departmentId });
         return departments;
     },
+    async findOne(departmentId: string, memberId: string) {
+        const existingDepartment = await DepartmentModel.findById(departmentId);
+        appAssert(existingDepartment, NOT_FOUND, "Department not found");
+
+        const existingMember = await DepartmentMemberModel.findById(memberId);
+        appAssert(existingMember, NOT_FOUND, "Member not found");
+
+        const member = await DepartmentMemberModel.findById({ _id: memberId });
+        return member;
+    },
 };

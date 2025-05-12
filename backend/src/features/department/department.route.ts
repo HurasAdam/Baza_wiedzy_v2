@@ -17,4 +17,4 @@ departmentRoutes.put("/:id", departmenttController.updateOne);
  * @group DepartmentMembers – department members operations
  * @param {string} id– Department ID
  */
-departmentRoutes.use("/:id/members", departmentMemberRoutes);
+departmentRoutes.use("/:departmentId/members", departmentMemberRoutes);
