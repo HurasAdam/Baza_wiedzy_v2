@@ -19,6 +19,7 @@ import errorHandler from "./middleware/errorHandlers";
 import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
 import { adminRoutes } from "./features/admin/admin.route";
 import { categoryRoutes } from "./features/category/category.route";
+import { departmentRoutes } from "./features/department/department.route";
 
 const app = express();
 app.use(express.json());
@@ -44,6 +45,7 @@ app.use("/categories", authenticate, categoryRoutes);
 app.use("/products", authenticate, productRoutes);
 app.use("/conversation-topics", authenticate, conversationTopicRoutes);
 app.use("/conversation-report", authenticate, conversationReportRoutes);
+app.use("/departments", authenticate, departmentRoutes);
 app.use("/dashboard", authenticate, dashboardRoutes);
 app.use("/issue-report", authenticate, IssueReportRoutes);
 
