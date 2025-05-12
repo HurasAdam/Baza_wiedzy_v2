@@ -3,10 +3,9 @@ import ProductCategoryForm from "@/components/forms/ProductCategoryForm";
 import { useModal } from "@/components/modal/hooks/useModal";
 import { Modal } from "@/components/modal/Modal";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { productCategoryApi } from "@/lib/product-category.api";
-import { dateFormater } from "@/utils/date-formater";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, FolderPlus, Plus } from "lucide-react";
 import { useState } from "react";
@@ -17,10 +16,11 @@ import toast from "react-hot-toast";
 import ProductCategoryCardSkeleton from "../Product/ProductCategoryCardSkeleton";
 import MemberForm from "./member/memberForm";
 import { departmentMemberApi } from "@/lib/departmentMember.api";
+import EditDepartmentMember from "./member/EditMember";
 
 const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
     const queryClient = useQueryClient();
-    const [categoryId, setCategoryId] = useState("");
+    const [selectedMemberId, setSelectedMemberId] = useState("");
     const [name, setFilterParams] = useState("");
     const {
         openModal: openCreateCategoryModal,
@@ -41,12 +41,15 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
             return departmentMemberApi.create(id, payload);
         },
         onSuccess: () => {
-            // toast.success("Konto zostało utworzone");
-            // onClose();
+            toast.success("Pracownik działu został dodany");
+            queryClient.invalidateQueries(["all-department-members", departmentId]);
+            closeCreateCategoryModal();
         },
         onError: ({ status }) => {
             if (status === 409) {
-                return toast.error("Rejestracja nie powiodła się – adres e-mail jest już w użyciu");
+                return toast.error(
+                    "Wystapił błąd, pracownik o wskazanym adresie email już istnieje - adres e-mail musi być unikalny"
+                );
             }
         },
     });
@@ -73,9 +76,9 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
     const openCreateCategory = () => {
         openCreateCategoryModal();
     };
-    const openEditCategory = (id: string) => {
+    const openEditMember = (id: string) => {
         openEditCategoryModal();
-        setCategoryId(id);
+        setSelectedMemberId(id);
     };
 
     const onDelete = (id) => {
@@ -83,12 +86,16 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
         setCategoryId(id);
     };
 
+    const onCloseEditMemberModal = () => {
+        setSelectedMemberId("");
+        closeEditCategoryModal();
+    };
+
     const onDeleteConfirm = (id) => {
         deleteCategoryMutation(id);
     };
 
     const onSave = (formData) => {
-        console.log("ONSAVE", formData);
         const { id, values } = formData;
         createMemberMutation({ id, payload: values });
     };
@@ -165,34 +172,34 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
                 )
             ) : (
                 <div className="grid grid-cols-1 gap-4">
-                    {members?.map((cat) => (
+                    {members?.map((member) => (
                         <Card
-                            key={cat._id}
+                            key={member._id}
                             className="group transition-all duration-200 hover:shadow-md bg-card/60 border border-border rounded-xl p-5"
                         >
                             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center text-xl font-medium text-muted-foreground uppercase">
-                                        {cat.name?.[0]}
+                                        {member.name?.[0]}
                                     </div>
 
                                     <div className="space-y-0.5">
                                         <p className="text-sm ">
                                             <span className=" text-base text-primary-foreground/80  px-0.5 py-1 rounded-md">
                                                 Nr wew:{" "}
-                                                <span className="text-primary/95 font-semibold">{cat.phone}</span>
+                                                <span className="text-primary/95 font-semibold">{member.phone}</span>
                                             </span>
                                         </p>
                                         <h3 className="text-base font-semibold leading-tight text-primary-foreground/70">
-                                            {cat.name} {cat.surname}
+                                            {member.name} {member.surname}
                                         </h3>
-                                        <p className="text-sm text-muted-foreground">{cat.email}</p>
+                                        <p className="text-sm text-muted-foreground">{member.email}</p>
                                     </div>
                                 </div>
 
                                 <div className="flex gap-2 sm:mt-0 mt-2">
                                     <Button
-                                        onClick={() => openEditCategory(cat._id)}
+                                        onClick={() => openEditMember(member._id)}
                                         size="sm"
                                         variant="ghost"
                                         className="text-xs font-medium text-muted-foreground hover:text-primary"
@@ -200,7 +207,7 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
                                         Edytuj
                                     </Button>
                                     <Button
-                                        onClick={() => onDelete(cat._id)}
+                                        onClick={() => onDelete(member._id)}
                                         size="sm"
                                         variant="ghost"
                                         className="text-xs font-medium text-destructive hover:bg-destructive/10"
@@ -222,8 +229,8 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
                 <MemberForm onSave={onSave} departmentId={departmentId} isPending={isPending} />
             </Modal>
 
-            <Modal isOpen={isEditCategoryModalOpen} onClose={closeEditCategoryModal} height="sm" width="sm">
-                <ProductCategoryForm productId={departmentId} categoryId={departmentId} />
+            <Modal isOpen={isEditCategoryModalOpen} onClose={onCloseEditMemberModal} height="md" width="sm">
+                <EditDepartmentMember departmentId={departmentId} memberId={selectedMemberId} />
             </Modal>
             <Alert
                 requireConfirmation={true}
