@@ -1,7 +1,7 @@
 import { useLogout } from "@/hooks/auth/useLogout";
 import clsx from "clsx";
 import { Home } from "lucide-react";
-import { FaPhoneSquareAlt, FaStar } from "react-icons/fa";
+import { FaLandmark, FaPhoneSquareAlt, FaStar } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa6";
 import { ImStatsBars2 } from "react-icons/im";
 import { PiArticleMediumFill } from "react-icons/pi";
@@ -9,26 +9,25 @@ import { NavLink } from "react-router-dom";
 import { Alert } from "./alert/Alert";
 import { useAlert } from "./alert/hooks/useAlert";
 import { HiOutlineLogout } from "react-icons/hi";
-import BugReportForm from "./forms/BugReportForm";
+
 import { Modal } from "./modal/Modal";
 import { useModal } from "./modal/hooks/useModal";
-import { FaBug } from "react-icons/fa";
-import { HiOutlineLogin } from "react-icons/hi";
-import ReportSelector from "./ReportSelector";
+
 import ReportContent from "./ReportContent";
-import { MdReport } from "react-icons/md";
+
 import { TbMessageReportFilled } from "react-icons/tb";
 export const MySidebar = () => {
     const { logoutAction } = useLogout();
     const { openAlert: openLogoutAlert, isOpen: isLogoutAlertOpen, closeAlert: closeLogoutAlert } = useAlert();
     const { isOpen, closeModal, openModal } = useModal();
     const primaryMenuItems = [
-        { icon: <Home size={22} />, label: "Start", link: "/dashboard" },
+        { icon: <Home size={21} />, label: "Start", link: "/dashboard" },
         { icon: <PiArticleMediumFill size={21} />, label: "Artykuły", link: "/articles" },
-        { icon: <FaStar size={22} />, label: "Ulubione", link: "/favourites" },
-        { icon: <ImStatsBars2 size={22} />, label: "Statystyki", link: "/statistics" },
-        { icon: <FaPhoneSquareAlt size={22} />, label: "Tematy", link: "/register-topic" },
-        { icon: <FaAddressBook size={22} />, label: "Działy", link: "/departments" },
+        { icon: <FaStar size={21} />, label: "Ulubione", link: "/favourites" },
+        { icon: <ImStatsBars2 size={21} />, label: "Statystyki", link: "/statistics" },
+        { icon: <FaPhoneSquareAlt size={21} />, label: "Tematy", link: "/register-topic" },
+        { icon: <FaLandmark size={21} />, label: "Szkoły projektowe", link: "/projects" },
+        { icon: <FaAddressBook size={21} />, label: "Działy", link: "/departments" },
     ];
 
     const logoutHandler = () => {

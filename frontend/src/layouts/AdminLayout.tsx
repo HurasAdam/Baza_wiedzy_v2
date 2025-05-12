@@ -10,7 +10,7 @@ import { TbMessageReportFilled } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { useAuthContext } from "@/contexts/auth-provider";
 import { IoArchive } from "react-icons/io5";
-import { LuKeyRound } from "react-icons/lu";
+import { LuKeyRound, LuNetwork } from "react-icons/lu";
 
 export const AdminLayout = () => {
     const { status, role } = useAuthContext();
@@ -22,8 +22,10 @@ export const AdminLayout = () => {
         { icon: Package, label: "Produkty", link: "/admin/products" },
         { icon: Tag, label: "Tagi", link: "/admin/tags" },
         { icon: SlSpeech, label: "Tematy rozmów,", link: "/admin/topics" },
+        { icon: LuNetwork, label: "Działy i kontakty", link: "/admin/departments" },
         { icon: IoArchive, label: "Usunięte artykuły", link: "/admin/trashed-articles" },
         { icon: Users, label: "Użytkownicy", link: "/admin/users" },
+
         { icon: MdAdminPanelSettings, label: "Administratorzy", link: "/admin/admins" },
         { icon: LuKeyRound, label: "Role i uprawnienia", link: "/admin/roles" },
 
