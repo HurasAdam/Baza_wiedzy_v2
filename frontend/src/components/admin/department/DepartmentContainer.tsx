@@ -1,29 +1,25 @@
-import { Package, FileText, List } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import ProductForm from "@/components/forms/ProductForm";
-import ProductEditCategories from "./ProductEditCategories";
-import { useQuery } from "@tanstack/react-query";
-import { productApi } from "@/lib/product.api";
 import { useState } from "react";
+import EditDepartment from "./EditDepartment";
+import { MdGroups } from "react-icons/md";
+import { LuNetwork } from "react-icons/lu";
+import DepartmentMembers from "./DepartmentMembers";
+import { BsPeopleFill } from "react-icons/bs";
 
-interface ProductEditContainerProps {
-    productId?: string;
+interface DepartmentContainerProps {
+    department: {};
     onClose: () => void;
 }
 
-const ProductEditContainer: React.FC<ProductEditContainerProps> = ({ productId, onClose }) => {
-    const [activeTab, setActiveTab] = useState<"details" | "categories">("details");
-
+const DepartmentContainer: React.FC<DepartmentContainerProps> = ({ department, onClose }) => {
+    const [activeTab, setActiveTab] = useState<"details" | "members">("details");
+    const departmentId = department?._id;
     // jeżeli masz dane produktu (żeby pokazać nazwę w nagłówku)
-    const { data: product } = useQuery({
-        queryKey: ["product", productId],
-        queryFn: () => (productId ? productApi.findOne(productId) : Promise.resolve(null)),
-        enabled: !!productId,
-    });
 
     const menuItems = [
-        { key: "details", label: "Dane produktu", icon: FileText },
-        { key: "categories", label: "Kategorie", icon: List },
+        { key: "details", label: "Dane działu", icon: FileText },
+        { key: "members", label: "Pracownicy", icon: BsPeopleFill },
     ];
 
     return (
@@ -31,10 +27,10 @@ const ProductEditContainer: React.FC<ProductEditContainerProps> = ({ productId, 
             {/* NAGŁÓWEK */}
             <div className="flex items-center justify-between px-6 py-4  border-b">
                 <div className="flex items-center gap-3">
-                    <Package className="w-6 h-6 text-primary-600" />
+                    <LuNetwork className="w-6 h-6 text-primary-600" />
                     <h2 className="text-base font-semibold">
-                        Edycja produktu
-                        {product?.name && <span className="ml-2 text-primary-600">({product.name})</span>}
+                        Edycja działu
+                        {department?.name && <span className="ml-2 text-primary-600 text-sm">({department.name})</span>}
                     </h2>
                 </div>
             </div>
@@ -67,9 +63,9 @@ const ProductEditContainer: React.FC<ProductEditContainerProps> = ({ productId, 
                     <Card className="max-h-full h-fitw-full rounded-none border-none bg-background/30 p-0">
                         <div className="h-full w-full">
                             {activeTab === "details" ? (
-                                <ProductForm productId={productId} onClose={onClose} />
+                                <EditDepartment onClose={onClose} departmentId={departmentId} />
                             ) : (
-                                <ProductEditCategories productId={productId} />
+                                <DepartmentMembers departmentId={departmentId} />
                             )}
                         </div>
                     </Card>
@@ -79,4 +75,4 @@ const ProductEditContainer: React.FC<ProductEditContainerProps> = ({ productId, 
     );
 };
 
-export default ProductEditContainer;
+export default DepartmentContainer;

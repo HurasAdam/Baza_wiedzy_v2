@@ -32,6 +32,9 @@ import { AuthProvider } from "./contexts/auth-provider";
 import AdminsPage from "./pages/admin/AdminsPage";
 import RolesAndPermissionsPage from "./pages/admin/RolesAndPermissionsPage";
 import { RegisterTopicPage } from "./pages/RegisterTopicPage";
+import ProjectsPage from "./pages/ProjectsPage";
+import DepartmentsPage from "./pages/DepartmentsPage";
+import ManageDepartmentsPage from "./pages/admin/ManageDepartmentsPage";
 
 function App() {
     const { theme } = useTheme();
@@ -62,6 +65,8 @@ function App() {
                     <Route path="articles" element={<ArticlesPage />} />
                     <Route path="statistics" element={<StatisticsPage />} />
                     <Route path="register-topic" element={<RegisterTopicPage />} />
+                    <Route path="projects" element={<ProjectsPage />} />
+                    <Route path="departments" element={<DepartmentsPage />} />
                     <Route path="favourites" element={<FavoritesPage />} />
                     <Route path="new-article" element={<CreateArticle />} />
 
@@ -106,6 +111,7 @@ function App() {
                     <Route path="topics" element={<TopicsPage />} />
                     <Route path="tags" element={<TagsPage />} />
                     <Route path="users" element={<UsersPage />} />
+                    <Route path="departments" element={<ManageDepartmentsPage />} />
                     <Route path="admins" element={<AdminsPage />} />
                     <Route path="roles" element={<RolesAndPermissionsPage />} />
                     <Route path="trashed-articles" element={<TrashedArticles />} />

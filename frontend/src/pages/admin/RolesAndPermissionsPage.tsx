@@ -104,7 +104,7 @@ const RolesAndPermissionsPage = () => {
                                     <div className={`${bgClass} p-3 rounded-lg flex items-center justify-center`}>
                                         <IconButton className={`w-6 h-6 text-${textClass}`} />
                                     </div>
-                                    <h2 className="text-lg font-semibold">{ROLE_LABELS[role.name] ?? role.name}</h2>
+                                    <h2 className="text-xl font-semibold">{ROLE_LABELS[role.name] ?? role.name}</h2>
                                 </div>
                             </CardHeader>
                             <CardContent className="pt-4">
