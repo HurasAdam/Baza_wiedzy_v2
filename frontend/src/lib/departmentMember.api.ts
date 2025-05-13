@@ -12,8 +12,8 @@ const find = async (id, params: URLSearchParams) => {
 const findOne = async (departmentId: string, memberId: string) => {
     return api.get(`${baseUrl}/${departmentId}/members/${memberId}`);
 };
-const updateOne = async (id: string, formData) => {
-    return api.put(`${baseUrl}/${id}`, formData);
+const updateOne = async (departmentId: string, memberId: string, formData) => {
+    return api.put(`${baseUrl}/${departmentId}/members/${memberId}`, formData);
 };
 
 export const departmentMemberApi = {

@@ -8,7 +8,7 @@ interface Props {
     departmentId: string;
 }
 
-const EditDepartment = ({ onClose, departmentId }: Props) => {
+const DepartmentDetails = ({ onClose, departmentId }: Props) => {
     const queryClient = useQueryClient();
 
     const { data: department } = useQuery({
@@ -54,4 +54,4 @@ const EditDepartment = ({ onClose, departmentId }: Props) => {
     return <DepartmentForm onSave={onSave} isPending={isPending} department={department} />;
 };
 
-export default EditDepartment;
+export default DepartmentDetails;

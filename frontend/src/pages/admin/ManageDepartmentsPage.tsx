@@ -19,6 +19,7 @@ const ManageDepartmentsPage = () => {
         queryFn: () => {
             return departmentApi.find({});
         },
+        refetchOnWindowFocus: false,
     });
 
     const editDepartmentandler = (department) => {
