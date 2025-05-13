@@ -1,5 +1,5 @@
 import EmptyState from "@/components/EmptyState";
-import ProductCategoryForm from "@/components/forms/ProductCategoryForm";
+
 import { useModal } from "@/components/modal/hooks/useModal";
 import { Modal } from "@/components/modal/Modal";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 import ProductCategoryCardSkeleton from "../Product/ProductCategoryCardSkeleton";
 import MemberForm from "./member/memberForm";
 import { departmentMemberApi } from "@/lib/departmentMember.api";
-import EditDepartmentMember from "./member/EditMember";
+import EditDepartmentMember from "./member/EditDepartmentMember";
 
 const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
     const queryClient = useQueryClient();
@@ -35,6 +35,15 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
     } = useModal();
 
     const { isOpen: isDeleteAlertOpen, closeAlert: closeDeleteAlert, openAlert: openDeleteAlert } = useAlert();
+
+    const { data: members, isLoading } = useQuery({
+        queryKey: ["all-department-members", departmentId],
+        queryFn: () => {
+            return departmentMemberApi.find(departmentId, {});
+        },
+        enabled: !!departmentId,
+        refetchOnWindowFocus: false,
+    });
 
     const { mutate: createMemberMutation, isPending } = useMutation({
         mutationFn: ({ id, payload }) => {
@@ -100,18 +109,10 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
         createMemberMutation({ id, payload: values });
     };
 
-    const { data: members, isLoading } = useQuery({
-        queryKey: ["all-department-members", departmentId],
-        queryFn: () => {
-            return departmentMemberApi.find(departmentId, {});
-        },
-        enabled: !!departmentId,
-    });
-
     const resetFilter = () => setFilterParams("");
 
     return (
-        <div className="overflow-auto p-4 space-y-8">
+        <div className="overflow-auto px-6 py-10 space-y-8">
             <div className="flex flex-col space-y-1.5">
                 <div className="flex justify-between">
                     <h2 className="text-xl font-bold mb-4 text-primary-foreground">Pracownicy działu</h2>
@@ -230,7 +231,11 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
             </Modal>
 
             <Modal isOpen={isEditCategoryModalOpen} onClose={onCloseEditMemberModal} height="md" width="sm">
-                <EditDepartmentMember departmentId={departmentId} memberId={selectedMemberId} />
+                <EditDepartmentMember
+                    departmentId={departmentId}
+                    memberId={selectedMemberId}
+                    onClose={onCloseEditMemberModal}
+                />
             </Modal>
             <Alert
                 requireConfirmation={true}

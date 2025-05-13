@@ -4,39 +4,9 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Loader, ShieldCheckIcon } from "lucide-react";
-import { adminApi } from "@/lib/admin.api";
-import { FaEye, FaUser, FaUserTie } from "react-icons/fa";
-import { useQuery } from "@tanstack/react-query";
-
-const ROLE_LABELS: Record<string, string> = {
-    ADMIN: "Admin",
-    LEADER: "Lider techniczny",
-    MEMBER: "Specjalista",
-    GUEST: "Gość",
-};
-
-const ROLE_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
-    ADMIN: ShieldCheckIcon,
-    LEADER: FaUserTie,
-    MEMBER: FaUser,
-    GUEST: FaEye,
-};
+import { Loader } from "lucide-react";
 
 export default function MemberForm({ departmentId, onSave, isPending, departmentMember }) {
-    const { data: roles } = useQuery({
-        queryKey: ["all-roles"],
-        queryFn: () => {
-            return adminApi.getRoles();
-        },
-    });
-
-    const userRoles = (roles || []).map((role) => ({
-        value: role._id.toString(),
-        label: ROLE_LABELS[role.name],
-        Icon: ROLE_ICONS[role.name],
-    }));
-
     const formSchema = z.object({
         name: z.string().trim().min(2, { message: "Imię musi zawierać co najmniej 2 znaki" }),
         surname: z.string().trim().min(2, { message: "Nazwisko musi zawierać co najmniej 2 znaki" }),
@@ -56,6 +26,9 @@ export default function MemberForm({ departmentId, onSave, isPending, department
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
+        if (departmentMember) {
+            return onSave({ departmentId, departmentMemberId: departmentMember?._id, payload: values });
+        }
         onSave({ id: departmentId, values });
     };
 
