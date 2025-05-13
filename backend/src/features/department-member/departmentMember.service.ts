@@ -56,4 +56,13 @@ export const DepartmentMemberService = {
 
         await existingMember.save();
     },
+    async deleteOne(departmentId: string, memberId: string) {
+        const existingDepartment = await DepartmentModel.findById(departmentId);
+        appAssert(existingDepartment, NOT_FOUND, "Department not found");
+
+        const existingMember = await DepartmentMemberModel.findById(memberId);
+        appAssert(existingMember, NOT_FOUND, "Member not found");
+
+        await DepartmentMemberModel.findByIdAndDelete({ department: departmentId, _id: memberId });
+    },
 };
