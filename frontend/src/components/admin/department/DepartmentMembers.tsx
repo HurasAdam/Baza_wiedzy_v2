@@ -1,11 +1,9 @@
 import EmptyState from "@/components/EmptyState";
-
 import { useModal } from "@/components/modal/hooks/useModal";
 import { Modal } from "@/components/modal/Modal";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { productCategoryApi } from "@/lib/product-category.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, FolderPlus, Plus } from "lucide-react";
 import { useState } from "react";
@@ -63,14 +61,14 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
         },
     });
 
-    const { mutate: deleteCategoryMutation } = useMutation({
-        mutationFn: (id: string) => {
-            return productCategoryApi.deleteOne(id);
+    const { mutate: deleteDepartmentMemberMutation } = useMutation({
+        mutationFn: ({ departmentId, departmentMemberId }) => {
+            return departmentMemberApi.deleteOne(departmentId, departmentMemberId);
         },
         onSuccess: () => {
             closeDeleteAlert();
-            toast.success("Kategoria została usunięta");
-            queryClient.invalidateQueries(["all-product-categories"]);
+            toast.success("pracownik działu został usunięty");
+            queryClient.invalidateQueries(["all-department-members", departmentId]);
         },
         onError: ({ status }) => {
             if (status === 409) {
@@ -90,9 +88,9 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
         setSelectedMemberId(id);
     };
 
-    const onDelete = (id) => {
+    const onDelete = (departmentMemberId) => {
         openDeleteAlert();
-        setCategoryId(id);
+        setSelectedMemberId(departmentMemberId);
     };
 
     const onCloseEditMemberModal = () => {
@@ -100,8 +98,9 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
         closeEditCategoryModal();
     };
 
-    const onDeleteConfirm = (id) => {
-        deleteCategoryMutation(id);
+    const onDeleteConfirm = (formData) => {
+        const { departmentId, departmentMemberId } = formData;
+        deleteDepartmentMemberMutation(formData);
     };
 
     const onSave = (formData) => {
@@ -241,7 +240,7 @@ const DepartmentMembers = ({ departmentId }: { departmentId?: string }) => {
                 requireConfirmation={true}
                 isOpen={isDeleteAlertOpen}
                 onCancel={closeDeleteAlert}
-                onConfirm={() => onDeleteConfirm(departmentId)}
+                onConfirm={() => onDeleteConfirm({ departmentId, departmentMemberId: selectedMemberId })}
             >
                 <div className="flex items-center  space-x-3">
                     <AlertTriangle className="w-5 h-5 mt-1 text-rose-600" />

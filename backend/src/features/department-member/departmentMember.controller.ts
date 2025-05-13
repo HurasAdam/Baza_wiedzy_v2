@@ -32,4 +32,9 @@ export const DepartmentMemberController = (departmentMemberService = DepartmentM
         await departmentMemberService.updateOne(departmentId, memberId, payload);
         return res.sendStatus(NO_CONTENT);
     }),
+    deleteOne: catchErrors(async ({ params }, res) => {
+        const { departmentId, memberId } = params;
+        await departmentMemberService.deleteOne(departmentId, memberId);
+        return res.sendStatus(NO_CONTENT);
+    }),
 });

@@ -15,10 +15,14 @@ const findOne = async (departmentId: string, memberId: string) => {
 const updateOne = async (departmentId: string, memberId: string, formData) => {
     return api.put(`${baseUrl}/${departmentId}/members/${memberId}`, formData);
 };
+const deleteOne = async (departmentId: string, memberId: string) => {
+    return api.delete(`${baseUrl}/${departmentId}/members/${memberId}`);
+};
 
 export const departmentMemberApi = {
     create,
     find,
     findOne,
     updateOne,
+    deleteOne,
 };
