@@ -3,12 +3,12 @@ import clsx from "clsx";
 import { Home } from "lucide-react";
 import { FaLandmark, FaPhoneSquareAlt, FaStar } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa6";
+import { HiOutlineLogout } from "react-icons/hi";
 import { ImStatsBars2 } from "react-icons/im";
 import { PiArticleMediumFill } from "react-icons/pi";
 import { NavLink } from "react-router-dom";
 import { Alert } from "./alert/Alert";
 import { useAlert } from "./alert/hooks/useAlert";
-import { HiOutlineLogout } from "react-icons/hi";
 
 import { Modal } from "./modal/Modal";
 import { useModal } from "./modal/hooks/useModal";
@@ -27,7 +27,7 @@ export const MySidebar = () => {
         { icon: <ImStatsBars2 size={21} />, label: "Statystyki", link: "/statistics" },
         { icon: <FaPhoneSquareAlt size={21} />, label: "Tematy", link: "/register-topic" },
         { icon: <FaLandmark size={21} />, label: "Szkoły projektowe", link: "/projects" },
-        { icon: <FaAddressBook size={21} />, label: "Działy", link: "/departments" },
+        { icon: <FaAddressBook size={21} />, label: "Działy i kontakty", link: "/departments" },
     ];
 
     const logoutHandler = () => {
