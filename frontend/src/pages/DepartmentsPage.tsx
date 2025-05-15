@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FaAddressBook } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import DepartmentMemberCard, { IDepartmentMember } from "../components/department-member/departmentMemberCard";
+import DepartmentMemberCard, { IDepartmentMember } from "../components/department-member/DepartmentMemberCard";
 import DepartmentMembersSkeleteon from "../components/department-member/DepartmentMembersSkeleton";
 import DepartmentTabCard, { IDepartment } from "../components/department/DepartmentTabCard";
 import { DepartmentTabsSkeleton } from "../components/department/DepartmentTabsSkeleton";
