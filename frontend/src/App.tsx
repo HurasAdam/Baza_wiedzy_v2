@@ -1,21 +1,22 @@
 import { Toaster } from "react-hot-toast";
-import { Navigate, Route, Routes, useParams } from "react-router-dom";
-import { AuthLayout } from "./layouts/AuthLayout";
-import { RootLayout } from "./layouts/RootLayout";
-import { NotFoundPage } from "./pages/NotFoundPage";
-import { FavoritesPage } from "./pages/FavoritesArticlesPage";
-import { HomePage } from "./pages/HomePage";
-import { StatisticsPage } from "./pages/StatisticsPage";
-import { TopicsRegisterPage } from "./pages/TopicsRegisterPage";
+import { Navigate, Route, Routes } from "react-router-dom";
+import IssueReportsLayout from "./components/admin/Issue/IssueReportsLayout";
 import CreateArticle from "./components/articles/Create/CreateArticle";
-import useTheme from "./hooks/useTheme";
-import { useQuery } from "@tanstack/react-query";
 import MailPage from "./components/articles/views/splitView/ArticlesSplitView";
+import OnboardingPage from "./components/OnboardingPage";
+import { AuthProvider } from "./contexts/auth-provider";
 import { ViewPreferenceProvider } from "./contexts/ViewPreferenceContext";
+import useTheme from "./hooks/useTheme";
 import { AdminLayout } from "./layouts/AdminLayout";
-import { articleApi } from "./lib/article.api";
+import { AuthLayout } from "./layouts/AuthLayout";
+import { OnboardingLayout } from "./layouts/OnboardingLayout ";
+import { RootLayout } from "./layouts/RootLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminsPage from "./pages/admin/AdminsPage";
+import ManageDepartmentsPage from "./pages/admin/ManageDepartmentsPage";
+import ManageProjectsPage from "./pages/admin/ManageProjectsPage";
 import ProductsPage from "./pages/admin/ProductsPage";
+import RolesAndPermissionsPage from "./pages/admin/RolesAndPermissionsPage";
 import TagsPage from "./pages/admin/TagsPage";
 import TopicsPage from "./pages/admin/TopicsPage";
 import TrashedArticles from "./pages/admin/TrashedArticles";
@@ -25,16 +26,13 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import { LoginPage } from "./pages/auth/Login";
 import { RegisterPage } from "./pages/auth/Register";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
-import IssueReportsLayout from "./components/admin/Issue/IssueReportsLayout";
-import { OnboardingLayout } from "./layouts/OnboardingLayout ";
-import OnboardingPage from "./components/OnboardingPage";
-import { AuthProvider } from "./contexts/auth-provider";
-import AdminsPage from "./pages/admin/AdminsPage";
-import RolesAndPermissionsPage from "./pages/admin/RolesAndPermissionsPage";
-import { RegisterTopicPage } from "./pages/RegisterTopicPage";
-import ProjectsPage from "./pages/ProjectsPage";
 import DepartmentsPage from "./pages/DepartmentsPage";
-import ManageDepartmentsPage from "./pages/admin/ManageDepartmentsPage";
+import { FavoritesPage } from "./pages/FavoritesArticlesPage";
+import { HomePage } from "./pages/HomePage";
+import { NotFoundPage } from "./pages/NotFoundPage";
+import ProjectsPage from "./pages/ProjectsPage";
+import { RegisterTopicPage } from "./pages/RegisterTopicPage";
+import { StatisticsPage } from "./pages/StatisticsPage";
 
 function App() {
     const { theme } = useTheme();
@@ -111,6 +109,7 @@ function App() {
                     <Route path="topics" element={<TopicsPage />} />
                     <Route path="tags" element={<TagsPage />} />
                     <Route path="users" element={<UsersPage />} />
+                    <Route path="projects" element={<ManageProjectsPage />} />
                     <Route path="departments" element={<ManageDepartmentsPage />} />
                     <Route path="admins" element={<AdminsPage />} />
                     <Route path="roles" element={<RolesAndPermissionsPage />} />

@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 interface ITagFormProps {
-    tagId: string;
+    tagId?: string;
     onClose?: () => void;
 }
 
@@ -92,7 +92,7 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
     }
 
     return (
-        <div className="w-full h-auto max-w-full">
+        <div className="w-full h-auto max-w-full bg-background rounded-lg">
             <div className="h-full px-10 py-10">
                 <div className="mb-5 pb-2 border-b">
                     <h1
