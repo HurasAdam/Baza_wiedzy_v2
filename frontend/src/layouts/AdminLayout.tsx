@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { Crown, Info, LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
-import { MdAdminPanelSettings } from "react-icons/md";
-import { ComponentType, useEffect, useRef, useState } from "react";
-import { TiArrowBack } from "react-icons/ti";
-import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
-import { SlSpeech } from "react-icons/sl";
-import { cn } from "../utils/cn";
-import { TbMessageReportFilled } from "react-icons/tb";
-import toast from "react-hot-toast";
 import { useAuthContext } from "@/contexts/auth-provider";
+import { Crown, Info, LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
+import { ComponentType, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { FaLandmark } from "react-icons/fa";
 import { IoArchive } from "react-icons/io5";
 import { LuKeyRound, LuNetwork } from "react-icons/lu";
+import { MdAdminPanelSettings } from "react-icons/md";
+import { SlSpeech } from "react-icons/sl";
+import { TbMessageReportFilled } from "react-icons/tb";
+import { TiArrowBack } from "react-icons/ti";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
+import { cn } from "../utils/cn";
 
 export const AdminLayout = () => {
     const { status, role } = useAuthContext();
@@ -22,6 +23,7 @@ export const AdminLayout = () => {
         { icon: Package, label: "Produkty", link: "/admin/products" },
         { icon: Tag, label: "Tagi", link: "/admin/tags" },
         { icon: SlSpeech, label: "Tematy rozmów,", link: "/admin/topics" },
+        { icon: FaLandmark, label: "Szkoły projektowe", link: "/admin/projects" },
         { icon: LuNetwork, label: "Działy i kontakty", link: "/admin/departments" },
         { icon: IoArchive, label: "Usunięte artykuły", link: "/admin/trashed-articles" },
         { icon: Users, label: "Użytkownicy", link: "/admin/users" },

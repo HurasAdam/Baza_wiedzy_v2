@@ -5,6 +5,7 @@ import { Loader } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import TopicFormSkeleton from "../skeleton-loaders/topic-form-skeleton";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
@@ -19,7 +20,11 @@ const TopicForm = ({ topicId, onClose }: Props) => {
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const queryClient = useQueryClient();
-    const { data, isPending } = useQuery({
+    const {
+        data,
+        isPending,
+        isLoading: isProductsLoading,
+    } = useQuery({
         queryKey: ["products"],
         queryFn: () => {
             return productApi.find();
@@ -32,7 +37,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
         }) || [];
     console.log(products);
 
-    const { data: conversationTopic } = useQuery({
+    const { data: conversationTopic, isLoading: isTopicLoading } = useQuery({
         queryKey: ["conversationTopic", topicId],
         queryFn: () => {
             return conversationTopicApi.findOne({ id: topicId });
@@ -130,11 +135,11 @@ const TopicForm = ({ topicId, onClose }: Props) => {
         }
     }
 
-    if (topicId && !conversationTopic) {
-        return <div>Loading...</div>;
+    if (isProductsLoading && isTopicLoading) {
+        return <TopicFormSkeleton />;
     } else {
         return (
-            <main className="w-full flex flex-row min-h-[590px] h-auto max-w-full">
+            <main className="w-full flex flex-row min-h-[590px] max-w-full bg-background rounded-lg h-full">
                 <div className="h-full px-10 py-10 flex-1">
                     <div className="mb-5">
                         <h1

@@ -81,9 +81,11 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-            <Modal isOpen={isOpen} onClose={closeModal} height="md" width="sm">
-                <TopicForm onClose={closeModal} topicId={taskId} />
-            </Modal>
+            {taskId && (
+                <Modal isOpen={isOpen} onClose={closeModal} height="fit" width="xs">
+                    <TopicForm onClose={closeModal} topicId={taskId} />
+                </Modal>
+            )}
 
             {/* <ConfirmDialog
                 isOpen={openDeleteDialog}

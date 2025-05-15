@@ -1,16 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { userApi } from "@/lib/user.api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader, LockIcon, ShieldCheckIcon } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 import { adminApi } from "@/lib/admin.api";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Loader, ShieldCheckIcon } from "lucide-react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaEye, FaUser, FaUserTie } from "react-icons/fa";
+import { z } from "zod";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 
 const ROLE_LABELS: Record<string, string> = {
     ADMIN: "Admin",
@@ -87,7 +86,7 @@ export default function CreateUserForm({ onClose }: { onClose: () => void }) {
     };
 
     return (
-        <main className="w-full flex flex-row min-h-[590px] max-w-full bg-background h-full">
+        <main className="w-full flex flex-row min-h-[590px] max-w-full bg-background h-full rounded-lg">
             <div className="h-full px-10 py-10 flex-1">
                 <div className="mb-5">
                     <h1

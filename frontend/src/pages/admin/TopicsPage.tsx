@@ -25,7 +25,7 @@ const TopicsPage = () => {
             <div>
                 <TopicTable />
             </div>
-            <Modal isOpen={isOpen} onClose={closeModal} height="md" width="sm">
+            <Modal isOpen={isOpen} onClose={closeModal} height="fit" width="xs">
                 <TopicForm onClose={closeModal} />
             </Modal>
         </div>
