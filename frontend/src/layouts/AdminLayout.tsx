@@ -1,105 +1,39 @@
-import { Button } from "@/components/ui/button";
-import { useAuthContext } from "@/contexts/auth-provider";
-import { Crown, Info, LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
-import { ComponentType, useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
+import { Crown, LayoutDashboard, Menu, Package, Tag, Users } from "lucide-react";
+import { ComponentType, useEffect, useState } from "react";
 import { FaLandmark } from "react-icons/fa";
 import { IoArchive } from "react-icons/io5";
 import { LuKeyRound, LuNetwork } from "react-icons/lu";
 import { MdAdminPanelSettings } from "react-icons/md";
-import { SlSpeech } from "react-icons/sl";
 import { TbMessageReportFilled } from "react-icons/tb";
 import { TiArrowBack } from "react-icons/ti";
-import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import { Button } from "../components/ui/button";
 import { cn } from "../utils/cn";
 
-export const AdminLayout = () => {
-    const { status, role } = useAuthContext();
+//   Assumes AdminRoute has already verified auth.
 
-    const [sidebarOpen, setSidebarOpen] = useState(true);
-    const hasToasted = useRef(false);
-    const NavItems = [
-        { icon: LayoutDashboard, label: "Start", link: "/admin/dashboard" },
-        { icon: Package, label: "Produkty", link: "/admin/products" },
-        { icon: Tag, label: "Tagi", link: "/admin/tags" },
-        { icon: SlSpeech, label: "Tematy rozmów,", link: "/admin/topics" },
-        { icon: FaLandmark, label: "Szkoły projektowe", link: "/admin/projects" },
-        { icon: LuNetwork, label: "Działy i kontakty", link: "/admin/departments" },
-        { icon: IoArchive, label: "Usunięte artykuły", link: "/admin/trashed-articles" },
-        { icon: Users, label: "Użytkownicy", link: "/admin/users" },
-
-        { icon: MdAdminPanelSettings, label: "Administratorzy", link: "/admin/admins" },
-        { icon: LuKeyRound, label: "Role i uprawnienia", link: "/admin/roles" },
-
-        { icon: TbMessageReportFilled, label: "Zgłoszenia i sugestie", link: "/admin/issues" },
-    ];
+export const AdminLayout: React.FC = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 1024);
 
     useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth < 1024) {
-                setSidebarOpen(false);
-            } else {
-                setSidebarOpen(true);
-            }
-        };
-
+        const handleResize = () => setSidebarOpen(window.innerWidth >= 1024);
         window.addEventListener("resize", handleResize);
-        handleResize();
-
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    console.log(role);
-
-    if (status === "loading" || role == null) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="flex-1 px-4 py-6 overflow-y-auto max-h-full">
-                    <div className="flex flex-col items-center justify-center h-full text-center  rounded-2xl  p-6">
-                        <div className="relative w-16 h-16 mb-6  animate-spin-slow">
-                            {/* Obracający się pierścień */}
-                            <div className="absolute inset-0 rounded-full border-4 border-primary/30 border-t-primary-foreground  border-b-primary  animate-spin-slow" />
-
-                            {/* Static inner glow */}
-                            <div className="absolute inset-4 rounded-full bg-primary/10 backdrop-blur-md shadow-inner  animate-spin-slow" />
-
-                            {/* Centralna kulka jako core-logo */}
-                            <div className="absolute top-1/2 left-1/2 w-5 h-5 bg-primary rounded-full shadow-xl -translate-x-1/2 -translate-y-1/2 border border-white/10  animate-pulse" />
-                        </div>
-                        <h2 className="text-2xl font-semibold text-foreground">Przygotowujemy Panel Administracyjny</h2>
-                        <p className="text-sm text-muted-foreground max-w-sm">
-                            Proszę czekać — wczytujemy uprawnienia i konfigurację Twojego konta.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (status === "success" && role !== "ADMIN") {
-        if (!hasToasted.current) {
-            toast.custom((t) => (
-                <div
-                    className={cn(
-                        "max-w-md w-full bg-blue-200 shadow-lg rounded-md pointer-events-auto flex border",
-                        t.visible ? "animate-enter" : "animate-leave"
-                    )}
-                >
-                    <div className="flex p-4">
-                        <Info className="h-5 w-5 text-blue-500" />
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-zinc-900">Dostęp ograniczony</p>
-                            <p className="mt-1 text-sm text-zinc-600">
-                                Nie posiadasz wymaganych uprawnień do wyświetlenia tej sekcji
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            ));
-            hasToasted.current = true;
-        }
-        return <Navigate to="/" replace />;
-    }
+    const navItems = [
+        { icon: LayoutDashboard, label: "Start", link: "/admin/dashboard" },
+        { icon: Package, label: "Produkty", link: "/admin/products" },
+        { icon: Tag, label: "Tagi", link: "/admin/tags" },
+        { icon: FaLandmark, label: "Tematy", link: "/admin/topics" },
+        { icon: FaLandmark, label: "Projekty", link: "/admin/projects" },
+        { icon: LuNetwork, label: "Działy", link: "/admin/departments" },
+        { icon: IoArchive, label: "Kosz", link: "/admin/trashed-articles" },
+        { icon: Users, label: "Użytkownicy", link: "/admin/users" },
+        { icon: MdAdminPanelSettings, label: "Admini", link: "/admin/admins" },
+        { icon: LuKeyRound, label: "Role", link: "/admin/roles" },
+        { icon: TbMessageReportFilled, label: "Zgłoszenia", link: "/admin/issues" },
+    ];
 
     return (
         <div className={cn("flex  min-h-screen text-foreground bg-background")}>
@@ -133,7 +67,7 @@ export const AdminLayout = () => {
                 </div>
 
                 <nav className="space-y-1.5">
-                    {NavItems.map(({ icon, label, link }) => {
+                    {navItems.map(({ icon, label, link }) => {
                         return <NavItem icon={icon} label={label} link={link} />;
                     })}
                 </nav>

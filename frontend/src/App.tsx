@@ -8,6 +8,7 @@ import { AuthProvider } from "./contexts/auth-provider";
 import { ViewPreferenceProvider } from "./contexts/ViewPreferenceContext";
 import useTheme from "./hooks/useTheme";
 import { AdminLayout } from "./layouts/AdminLayout";
+import { AdminRoute } from "./layouts/AdminRoute";
 import { AuthLayout } from "./layouts/AuthLayout";
 import { OnboardingLayout } from "./layouts/OnboardingLayout ";
 import { RootLayout } from "./layouts/RootLayout";
@@ -99,22 +100,24 @@ function App() {
                     path="/admin"
                     element={
                         <AuthProvider>
-                            <AdminLayout />
+                            <AdminRoute />
                         </AuthProvider>
                     }
                 >
-                    <Route index element={<Navigate to="/admin/dashboard" replace />} />
-                    <Route path="dashboard" element={<AdminDashboard />} />
-                    <Route path="products" element={<ProductsPage />} />
-                    <Route path="topics" element={<TopicsPage />} />
-                    <Route path="tags" element={<TagsPage />} />
-                    <Route path="users" element={<UsersPage />} />
-                    <Route path="projects" element={<ManageProjectsPage />} />
-                    <Route path="departments" element={<ManageDepartmentsPage />} />
-                    <Route path="admins" element={<AdminsPage />} />
-                    <Route path="roles" element={<RolesAndPermissionsPage />} />
-                    <Route path="trashed-articles" element={<TrashedArticles />} />
-                    <Route path="issues" element={<IssueReportsLayout />} />
+                    <Route element={<AdminLayout />}>
+                        <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                        <Route path="dashboard" element={<AdminDashboard />} />
+                        <Route path="products" element={<ProductsPage />} />
+                        <Route path="topics" element={<TopicsPage />} />
+                        <Route path="tags" element={<TagsPage />} />
+                        <Route path="users" element={<UsersPage />} />
+                        <Route path="projects" element={<ManageProjectsPage />} />
+                        <Route path="departments" element={<ManageDepartmentsPage />} />
+                        <Route path="admins" element={<AdminsPage />} />
+                        <Route path="roles" element={<RolesAndPermissionsPage />} />
+                        <Route path="trashed-articles" element={<TrashedArticles />} />
+                        <Route path="issues" element={<IssueReportsLayout />} />
+                    </Route>
                 </Route>
             </Routes>
             <Toaster toastOptions={{ duration: 3500, position: "bottom-right" }} />
