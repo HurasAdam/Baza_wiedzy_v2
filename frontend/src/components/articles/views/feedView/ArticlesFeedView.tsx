@@ -1,30 +1,30 @@
 import ArticleModalDetails from "@/components/articles/views/feedView/ArticleModalDetails";
+import EmptyState from "@/components/EmptyState";
+import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
+import { BANNER_IMAGES } from "@/constants/productBanners";
+import { useViewPref } from "@/contexts/ViewPreferenceContext";
 import { useFetchArticles } from "@/hooks/query/useFetchArticles";
 import { useFetchProducts } from "@/hooks/query/useFetchProducts";
+import { productCategoryApi } from "@/lib/product-category.api";
 import { IArticle } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronsUpDown, PanelLeft, PanelTop, SearchIcon, Star } from "lucide-react";
-import { useEffect, type ChangeEventHandler } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
+import { PiArticleMediumFill } from "react-icons/pi";
+import { RxCross2 } from "react-icons/rx";
 import { useOutletContext, useSearchParams } from "react-router-dom";
 import { articleApi } from "../../../../lib/article.api";
 import { useModal } from "../../../modal/hooks/useModal";
 import { Modal } from "../../../modal/Modal";
-import { Switch } from "@/components/ui/switch";
-import { PiArticleMediumFill } from "react-icons/pi";
-import { BANNER_IMAGES } from "@/constants/productBanners";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { productCategoryApi } from "@/lib/product-category.api";
-import { AnimatePresence, motion } from "framer-motion";
-import EmptyState from "@/components/EmptyState";
-import Pagination from "@/components/Pagination";
-import { useViewPref } from "@/contexts/ViewPreferenceContext";
-import { RxCross2 } from "react-icons/rx";
 
 const ArticleList = () => {
     const { viewPreference, setViewPreference, filterPlacement, setFilterPlacement } = useViewPref();
@@ -322,7 +322,7 @@ export const ArticlesFilter = () => {
                             <Input
                                 value={titleParam}
                                 onChange={titleHandler}
-                                placeholder="Szukaj po tytule..."
+                                placeholder="Filtruj artykuły według tytułu..."
                                 className="h-9 w-full pr-10 text-sm rounded-lg border border-border focus:ring-1 focus:ring-primary transition"
                             />
                         </div>
