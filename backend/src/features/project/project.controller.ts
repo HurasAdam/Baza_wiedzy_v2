@@ -1,4 +1,4 @@
-import { CREATED, OK } from "../../constants/http";
+import { CREATED, NO_CONTENT, OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { createProjectDto } from "./dto/create-project.dto";
 import { ProjectService } from "./project.service";
@@ -19,5 +19,11 @@ export const ProjectController = (projectService = ProjectService) => ({
         const { id } = params;
         const project = await projectService.findOne(id);
         return res.status(OK).json(project);
+    }),
+    updateOne: catchErrors(async ({ params, body }, res) => {
+        const { id } = params;
+        const payload = createProjectDto.parse(body);
+        await projectService.updateOne(id, payload);
+        return res.sendStatus(NO_CONTENT);
     }),
 });
