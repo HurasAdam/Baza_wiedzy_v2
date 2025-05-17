@@ -1,4 +1,3 @@
-import { departmentApi } from "@/lib/departmentApi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { projectApi } from "../../../lib/project.api";
@@ -20,7 +19,7 @@ const ProjectDetails = ({ onClose, projectId }: Props) => {
 
     const { mutate: updateMutation, isPending } = useMutation({
         mutationFn: ({ id, formData }) => {
-            return departmentApi.updateOne(id, formData);
+            return projectApi.updateOne(id, formData);
         },
         onSuccess: () => {
             queryClient.invalidateQueries(["project", projectId]);
