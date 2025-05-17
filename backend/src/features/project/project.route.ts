@@ -7,7 +7,7 @@ export const projectRoutes = Router();
 projectRoutes.post("/", projectController.create);
 projectRoutes.get("/", projectController.find);
 projectRoutes.get("/:id", projectController.findOne);
-// projectRoutes.put("/:id", departmenttController.updateOne);
+projectRoutes.put("/:id", projectController.updateOne);
 
 // nested router for department members
 /**

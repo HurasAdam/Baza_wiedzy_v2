@@ -1,5 +1,6 @@
 import { CONFLICT, NOT_FOUND } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
+import { CreateProjectDto } from "./dto/create-project.dto";
 import ProjectModel from "./project.model";
 
 export const ProjectService = {
@@ -23,5 +24,12 @@ export const ProjectService = {
         appAssert(project, NOT_FOUND, "Project not found");
 
         return project;
+    },
+    async updateOne(projectId: string, payload: CreateProjectDto) {
+        const project = await ProjectModel.findById({ _id: projectId });
+        appAssert(project, NOT_FOUND, "Project not found");
+        project.name = payload.name || project.name;
+        project.description = payload.description || project.description;
+        await project.save();
     },
 };

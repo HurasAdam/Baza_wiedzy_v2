@@ -49,7 +49,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ project, onSave, isPending }
                     >
                         {project ? (
                             <span className="flex items-center gap-1.5">
-                                <MdOutlineEdit className="h-6 w-6 " /> Edytuj dział{" "}
+                                <MdOutlineEdit className="h-6 w-6 " /> Edytuj projekt{" "}
                             </span>
                         ) : (
                             <span className="flex items-center gap-1.5">
@@ -59,7 +59,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ project, onSave, isPending }
                     </h1>
                     <p className="text-muted-foreground text-sm leading-tight">
                         {project
-                            ? "Zmień nazwę istniejącego tagu, który jest używany do organizacji artykułów."
+                            ? "Edytuj dane projektu."
                             : "Utwórz nowy projekt, który pomoże w organizacji szkół projektowych"}
                     </p>
                 </div>
