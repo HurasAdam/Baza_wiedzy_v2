@@ -1,10 +1,32 @@
+import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 import { FaLandmark } from "react-icons/fa";
+import CreateProject from "../../components/admin/project/CreateProject";
+import ProjectContainer from "../../components/admin/project/ProjectContainer";
 import { useModal } from "../../components/modal/hooks/useModal";
+import { Modal } from "../../components/modal/Modal";
 import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardHeader } from "../../components/ui/card";
+import { projectApi } from "../../lib/project.api";
 
 const ManageProjectsPage = () => {
-    const { openModal } = useModal();
+    const { openModal, isOpen, closeModal } = useModal();
+    const { openModal: openEditModal, isOpen: isEditModalOpen, closeModal: closeEditModal } = useModal();
+    const [selectedProject, setSelectedProject] = useState<string>(null);
+    const { data: projects, isLoading } = useQuery({
+        queryKey: ["all-projects"],
+        queryFn: () => {
+            return projectApi.find({});
+        },
+        refetchOnWindowFocus: false,
+    });
+
+    const editProjectHandler = (project) => {
+        setSelectedProject(project);
+        openEditModal();
+    };
+
     return (
         <div className="px-6 pb-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
@@ -24,14 +46,38 @@ const ManageProjectsPage = () => {
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8"></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                {projects?.map((project) => {
+                    // 1) dynamiczny dobór ikony
 
-            {/* <Modal closeOnOutsideClick={false} isOpen={isOpen} onClose={closeModal} height="fit" width="xs">
-                        <CreateDepartment onClose={closeModal} />
-                    </Modal>
-                    <Modal closeOnOutsideClick={false} isOpen={isEditModalOpen} onClose={closeEditModal} height="lg" width="md">
-                        <DepartmentContainer onClose={closeEditModal} department={selectedDepartment} />
-                    </Modal> */}
+                    return (
+                        <Card
+                            key={project._id}
+                            onClick={() => editProjectHandler(project)}
+                            className="cursor-pointer rounded-2xl shadow-md hover:shadow-2xl transform transition-all hover:border-primary duration-300"
+                        >
+                            <CardHeader className="border-b">
+                                <div className="flex items-center space-x-3">
+                                    <div className={` p-3 rounded-lg flex items-center justify-center`}>
+                                        {/* <IconButton className={`w-6 h-6 text-${textClass}`} /> */}
+                                    </div>
+                                    <h2 className="text-lg font-semibold">{project?.name}</h2>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="pt-4">
+                                <p className="text-sm text-gray-600">Kliknij, aby wyświetlić więcej szczegółów</p>
+                            </CardContent>
+                        </Card>
+                    );
+                })}
+            </div>
+
+            <Modal closeOnOutsideClick={false} isOpen={isOpen} onClose={closeModal} height="fit" width="xs">
+                <CreateProject onClose={closeModal} />
+            </Modal>
+            <Modal closeOnOutsideClick={false} isOpen={isEditModalOpen} onClose={closeEditModal} height="lg" width="md">
+                <ProjectContainer onClose={closeEditModal} project={selectedProject} />
+            </Modal>
         </div>
     );
 };
