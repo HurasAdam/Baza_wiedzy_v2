@@ -112,7 +112,7 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
                     <p className="text-muted-foreground text-sm leading-tight">
                         {tagId
                             ? "Zmień nazwę istniejącego tagu, który jest używany do organizacji artykułów."
-                            : "Utwórz nowy tag, który pomoże w organizacji artykułów i ułatwi użytkownikom wyszukiwanie treści."}
+                            : "Utwórz tag, który pomoże w organizacji artykułów i ułatwi wyszukiwanie treści."}
                     </p>
                 </div>
                 <Form {...form}>
