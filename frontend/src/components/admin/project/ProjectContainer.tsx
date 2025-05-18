@@ -1,7 +1,8 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import { FileText } from "lucide-react";
-import { BsPeopleFill } from "react-icons/bs";
+import { FaLandmark } from "react-icons/fa";
 import ProjectDetails from "./ProjectDetails";
+import ProjectSchools from "./ProjectSchools";
 
 interface ProjectContainerProps {
     project: { _id: string; name?: string };
@@ -39,7 +40,7 @@ export default function ProjectContainer({ project, onClose }: ProjectContainerP
                         value="members"
                         className="flex items-center gap-2 px-4 py-3 text-sm text-primary-foreground/50 hover:bg-muted/80  data-[state=active]:border-l-4 data-[state=active]:border-primary data-[state=active]:text-primary-foreground "
                     >
-                        <BsPeopleFill className="w-5 h-5" />
+                        <FaLandmark className="w-5 h-5" />
                         Lista szkół
                     </Tabs.Trigger>
                 </Tabs.List>
@@ -49,7 +50,7 @@ export default function ProjectContainer({ project, onClose }: ProjectContainerP
                     <ProjectDetails onClose={onClose} projectId={projectId} />
                 </Tabs.Content>
                 <Tabs.Content value="members" className="flex-1 p-0 overflow-auto scrollbar-custom border-none">
-                    {/* <DepartmentMembers departmentId={departmentId} /> */}
+                    <ProjectSchools projectId={projectId} />
                 </Tabs.Content>
             </Tabs.Root>
         </div>

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { projectSchoolRoutes } from "../project-school/project-school.route";
 import { ProjectController } from "./project.controller";
 
 const projectController = ProjectController();
@@ -11,8 +12,8 @@ projectRoutes.put("/:id", projectController.updateOne);
 
 // nested router for department members
 /**
- * @route /departments/{id}/members
- * @group DepartmentMembers – department members operations
- * @param {string} id– Department ID
+ * @route /projects/{id}/schools
+ * @group ProjectSchools – department members operations
+ * @param {string} projectId project ID
  */
-// departmentRoutes.use("/:departmentId/members", departmentMemberRoutes);
+projectRoutes.use("/:projectId/schools", projectSchoolRoutes);

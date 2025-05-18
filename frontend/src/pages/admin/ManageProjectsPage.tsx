@@ -75,7 +75,7 @@ const ManageProjectsPage = () => {
             <Modal closeOnOutsideClick={false} isOpen={isOpen} onClose={closeModal} height="fit" width="xs">
                 <CreateProject onClose={closeModal} />
             </Modal>
-            <Modal closeOnOutsideClick={false} isOpen={isEditModalOpen} onClose={closeEditModal} height="lg" width="md">
+            <Modal closeOnOutsideClick={false} isOpen={isEditModalOpen} onClose={closeEditModal} height="lg" width="lg">
                 <ProjectContainer onClose={closeEditModal} project={selectedProject} />
             </Modal>
         </div>
