@@ -1,6 +1,5 @@
 import { CREATED, NO_CONTENT, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
-
 import { createSchoolDto } from "./dto/create-project-school.dto";
 import { searchProjectSchoolsDto } from "./dto/search-project-schools.dto";
 import { ProjectSchoolService } from "./project-school.service";
