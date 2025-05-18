@@ -1,7 +1,5 @@
-import appAssert from "@/utils/appAssert";
-
 import { CONFLICT, NOT_FOUND } from "@/constants/http";
-
+import appAssert from "@/utils/appAssert";
 import ProjectModel from "../project/project.model";
 import { CreateSchoolDto } from "./dto/create-project-school.dto";
 import { SearchProjectSchoolsDto } from "./dto/search-project-schools.dto";
@@ -32,10 +30,16 @@ export const ProjectSchoolService = {
         appAssert(existingProject, NOT_FOUND, "Project not found");
 
         const querydb: Record<string, any> = {};
-        if (query.name) {
-            const name = query.name.trim();
+        if (query.name?.trim()) {
+            querydb.name = { $regex: query.name.trim(), $options: "i" };
+        }
 
-            querydb.name = { $regex: name, $options: "i" };
+        if (query.adres?.trim()) {
+            querydb.adres = { $regex: query.adres.trim(), $options: "i" };
+        }
+
+        if (query.email?.trim()) {
+            querydb.email = { $regex: query.email.trim(), $options: "i" };
         }
 
         const schools = await ProjectSchoolModel.find({

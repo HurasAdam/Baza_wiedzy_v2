@@ -56,7 +56,7 @@ const ProjectSchools = ({ projectId }: { projectId?: string }) => {
         onError: ({ status }) => {
             if (status === 409) {
                 return toast.error(
-                    "Wystapił błąd, pracownik o wskazanym adresie email już istnieje - adres e-mail musi być unikalny"
+                    "Wystapił błąd, szkoła o wskazanym szkolnym ID istnieje już w systemie- szkole Id musi być unikalne"
                 );
             }
         },
