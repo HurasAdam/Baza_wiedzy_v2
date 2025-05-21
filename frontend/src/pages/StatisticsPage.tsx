@@ -1,60 +1,65 @@
-import { PrimaryButton } from "@/components/core/Button";
-import { DatePicker } from "@/components/DatePicker";
-import { useState } from "react";
+import { Modal } from "@/components/modal/Modal";
+import { useModal } from "@/components/modal/hooks/useModal";
+import { useEffect, useState } from "react";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
-import { IoMdSearch } from "react-icons/io";
+import { useSearchParams } from "react-router-dom";
+import { AddedArticlesReport } from "../components/statistics/AddedArticlesReport";
+import { EditedArticlesReport } from "../components/statistics/EditedArticlesReport";
+import { FilterPanel } from "../components/statistics/FilterPanel";
+import { TabNavigation } from "../components/statistics/TabNavigation";
+import { TopicsReport } from "../components/statistics/TopicsReport";
 
+export type TabKey = "topics" | "addedArticles" | "editedArticles";
 export type DateTypePicker = Date | undefined;
 
 export const StatisticsPage = () => {
-    const [startDate, setStartDate] = useState<DateTypePicker>(undefined);
-    const [endDate, setEndDate] = useState<DateTypePicker>(undefined);
+    const [activeTab, setActiveTab] = useState<TabKey>("topics");
+    const [params, setParams] = useSearchParams();
+    const [startDate, setStartDate] = useState<DateTypePicker>(
+        params.get("startDate") ? new Date(params.get("startDate")!) : undefined
+    );
+    const [endDate, setEndDate] = useState<DateTypePicker>(
+        params.get("endDate") ? new Date(params.get("endDate")!) : undefined
+    );
 
-    const resetDatesHandler = () => {
-        setStartDate(undefined);
-        setEndDate(undefined);
-    };
+    const { isOpen, openModal, closeModal } = useModal();
 
-    const setRangeMaxDate = (time: Date) => {
-        const currentDate = time.getTime();
-        const fromDate = endDate?.getTime();
+    useEffect(() => {
+        const newParams = new URLSearchParams(params);
 
-        return !fromDate ? false : currentDate > fromDate;
-    };
+        if (startDate) {
+            newParams.set("startDate", startDate.toISOString().split("T")[0]);
+        } else {
+            newParams.delete("startDate");
+        }
 
-    const setRangeMinDate = (time: Date) => {
-        const currentDate = time.getTime();
-        const toDate = startDate?.getTime();
+        if (endDate) {
+            newParams.set("endDate", endDate.toISOString().split("T")[0]);
+        } else {
+            newParams.delete("endDate");
+        }
 
-        return !toDate ? false : currentDate < toDate;
-    };
+        setParams(newParams);
+    }, [startDate, endDate]);
 
     return (
         <div className="p-5 h-full flex flex-col w-full max-w-[1580px] mx-auto">
             <h2 className="flex items-center gap-2 text-2xl font-bold mb-8 text-foreground">
-                <HiMiniPresentationChartBar className="w-8 h-8  text-foreground" />
+                <HiMiniPresentationChartBar className="w-8 h-8 text-foreground" />
                 Statystyki użytkowników
             </h2>
 
-            {/* Sekcja filtrów */}
-            <div className="border bg-background  text-foreground rounded-lg p-6 mb-8 shadow-sm">
-                <h3 className="text-lg font-semibold  text-foreground mb-4">Filtruj według zakresu dat</h3>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <DatePicker
-                        setState={setStartDate}
-                        state={startDate}
-                        label="Data początkowa"
-                        disabled={setRangeMaxDate}
-                    />
-                    <DatePicker setState={setEndDate} state={endDate} label="Data końcowa" disabled={setRangeMinDate} />
-                    <PrimaryButton icon={<IoMdSearch className="w-3.5 h-3.5" />} label="Wyszukaj" />
-                    <PrimaryButton
-                        label="Wyczyść filtry"
-                        onClick={resetDatesHandler}
-                        disabled={!startDate && !endDate}
-                    />
-                </div>
-            </div>
+            <TabNavigation activeTab={activeTab} onChange={setActiveTab} />
+
+            <FilterPanel startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
+
+            {activeTab === "topics" && <TopicsReport startDate={startDate} endDate={endDate} />}
+            {activeTab === "addedArticles" && <AddedArticlesReport startDate={startDate} endDate={endDate} />}
+            {activeTab === "editedArticles" && <EditedArticlesReport startDate={startDate} endDate={endDate} />}
+
+            <Modal isOpen={isOpen} onClose={closeModal}>
+                <div>Szczegóły użytkownika</div>
+            </Modal>
         </div>
     );
 };
