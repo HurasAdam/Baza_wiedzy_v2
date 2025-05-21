@@ -1,16 +1,14 @@
-import mongoose from "mongoose";
-import { endOfMonth, startOfDay, startOfMonth, subDays } from "date-fns";
-import catchErrors from "@/utils/catchErrors";
 import { OK } from "@/constants/http";
+import catchErrors from "@/utils/catchErrors";
 import ConversationReportModel from "./conversation-report.model";
-import { addConversationReport } from "./conversation-report.service";
 import { newConversationReportSchema } from "./conversation-report.schema";
+import { ConversationReportService } from "./conversation-report.service";
 
-export const ConversationReportController = () => ({
-    create: catchErrors(async (req, res) => {
-        const request = newConversationReportSchema.parse(req.body);
-        const { userId } = req;
-        const newTag = await addConversationReport({ request, userId });
+export const ConversationReportController = (conversationReportService = ConversationReportService) => ({
+    create: catchErrors(async ({ userId, body }, res) => {
+        const request = newConversationReportSchema.parse(body);
+
+        const newTag = await conversationReportService.addConversationReport(userId, request);
 
         return res.status(OK).json(newTag);
     }),
