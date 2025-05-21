@@ -1,13 +1,11 @@
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND } from "@/constants/http";
+import { BAD_REQUEST, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
-import UserModel from "./user.model";
-import ConversationReportModel from "../conversation-report/conversation-report.model";
-import ArticleModel from "../article/article.model";
-import ArticleHistoryModel from "../article-history/article-history.model";
-import type { FindUsersWithDto } from "./dto/find-users-with.dto";
 import { compareValue, hashValue } from "@/utils/bcrypt";
-import mongoose from "mongoose";
+import ArticleHistoryModel from "../article-history/article-history.model";
+import ArticleModel from "../article/article.model";
 import RoleModel from "../role-permission/roles-permission.model";
+import type { FindUsersWithDto } from "./dto/find-users-with.dto";
+import UserModel from "./user.model";
 
 export const UserService = {
     async changePassword(userId, payload) {
@@ -82,63 +80,63 @@ export const UserService = {
 
     async findWithReportCount(query: FindUsersWithDto) {
         const { startDate, endDate } = query;
-        const dateFilter: any = {};
 
-        if (startDate || endDate) {
-            dateFilter.createdAt = {};
+        const start = startDate ? new Date(startDate as string) : undefined;
+        let end = endDate ? new Date(endDate as string) : undefined;
 
-            startDate && (dateFilter.createdAt.$gte = new Date(startDate));
-            endDate && (dateFilter.createdAt.$gte = new Date(endDate));
+        if (end) {
+            end.setHours(23, 59, 59, 999);
         }
 
-        const usersWithReportCount = await ConversationReportModel.aggregate([
+        const reportCounts = await UserModel.aggregate([
             {
-                $match: dateFilter,
+                $lookup: {
+                    from: "roles",
+                    localField: "role",
+                    foreignField: "_id",
+                    as: "roleInfo",
+                },
             },
+            { $unwind: "$roleInfo" },
             {
-                $group: {
-                    _id: "$createdBy",
-                    reportCount: { $sum: 1 },
+                $match: {
+                    "roleInfo.name": { $ne: "ADMIN" },
                 },
             },
             {
                 $lookup: {
-                    from: "users",
-                    localField: "_id",
-                    foreignField: "_id",
-                    as: "user",
+                    from: "conversationreports",
+                    let: { userId: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$createdBy", "$$userId"] },
+                                ...(start || end
+                                    ? {
+                                          createdAt: {
+                                              ...(start ? { $gte: start } : {}),
+                                              ...(end ? { $lte: end } : {}),
+                                          },
+                                      }
+                                    : {}),
+                            },
+                        },
+                    ],
+                    as: "reports",
                 },
-            },
-            {
-                $unwind: "$user",
             },
             {
                 $project: {
-                    _id: { $toObjectId: "$user._id" },
-                    name: "$user.name",
-                    surname: "$user.surname",
-                    reportCount: 1,
-                },
-            },
-            {
-                $sort: {
-                    reportCount: -1, // Malejąco
+                    userId: "$_id",
+                    name: 1,
+                    surname: 1,
+                    email: 1,
+                    count: { $size: "$reports" },
+                    role: "$roleInfo.name",
                 },
             },
         ]);
-
-        const allUsers = await UserModel.find();
-
-        const usersWithZeroReports = allUsers
-            .filter((user) => !usersWithReportCount.some((report) => report._id.toString() === user._id.toString()))
-            .map((user) => ({
-                _id: user._id,
-                name: user.name,
-                surname: user.surname,
-                reportCount: 0,
-            }));
-
-        return [...usersWithReportCount, ...usersWithZeroReports];
+        return reportCounts;
     },
 
     async findWithFavouriteArticles(id: string, query: any) {
@@ -191,59 +189,69 @@ export const UserService = {
         if (startDate || endDate) {
             dateFilter.createdAt = {};
 
-            startDate && (dateFilter.createdAt.$gte = new Date(startDate));
-            endDate && (dateFilter.createdAt.$gte = new Date(endDate));
+            if (startDate) {
+                dateFilter.createdAt.$gte = new Date(startDate);
+            }
+
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                dateFilter.createdAt.$lte = end;
+            }
         }
 
-        // Agregacja w kolekcji artykułów, aby policzyć liczbę artykułów dla każdego użytkownika
-        const usersWithArticleCount = await ArticleModel.aggregate([
-            {
-                $match: dateFilter,
-            },
+        const articleCounts = await ArticleModel.aggregate([
+            { $match: dateFilter },
             {
                 $group: {
-                    _id: "$createdBy", // Grupowanie po użytkowniku
-                    createdArticleCount: { $sum: 1 },
-                },
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    localField: "_id",
-                    foreignField: "_id",
-                    as: "user",
-                },
-            },
-            {
-                $unwind: "$user",
-            },
-            {
-                $project: {
-                    _id: "$user._id",
-                    name: "$user.name",
-                    surname: "$user.surname",
-                    createdArticleCount: 1,
-                },
-            },
-            {
-                $sort: {
-                    createdArticleCount: -1,
+                    _id: "$createdBy",
+                    count: { $sum: 1 },
                 },
             },
         ]);
 
-        const allUsers = await UserModel.find();
+        const articleCountMap = new Map<string, number>();
+        articleCounts.forEach((item) => {
+            articleCountMap.set(item._id.toString(), item.count);
+        });
 
-        const usersWithZeroArticles = allUsers
-            .filter((user) => !usersWithArticleCount.some((article) => article._id.toString() === user._id.toString()))
-            .map((user) => ({
-                _id: user._id,
-                name: user.name,
-                surname: user.surname,
-                createdArticleCount: 0,
-            }));
+        const users = await UserModel.aggregate([
+            {
+                $lookup: {
+                    from: "roles",
+                    localField: "role",
+                    foreignField: "_id",
+                    as: "roleInfo",
+                },
+            },
+            { $unwind: "$roleInfo" },
+            {
+                $match: {
+                    "roleInfo.name": { $ne: "ADMIN" },
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    surname: 1,
+                    email: 1,
+                    role: "$roleInfo.name",
+                },
+            },
+        ]);
 
-        return [...usersWithArticleCount, ...usersWithZeroArticles];
+        const result = users.map((user) => ({
+            _id: user._id,
+            userId: user._id,
+            name: user.name,
+            surname: user.surname,
+            email: user.email,
+            role: user.role,
+            count: articleCountMap.get(user._id.toString()) || 0,
+        }));
+
+        return result;
     },
 
     async findWithChangeCount(query: FindUsersWithDto) {
