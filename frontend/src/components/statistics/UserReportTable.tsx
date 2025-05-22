@@ -1,5 +1,6 @@
 import { IoMdEye } from "react-icons/io";
 import { cn } from "../../utils/cn";
+import { User } from "./topics-report/UserTopicReportDetails";
 
 type UserReport = {
     userId: string;
@@ -11,7 +12,7 @@ type UserReport = {
 
 type Props = {
     data: UserReport[];
-    onClick: (id: string) => void;
+    onClick: (user: User) => void;
 };
 
 export const UserReportTable: React.FC<Props> = ({ data, onClick }) => {
@@ -28,31 +29,31 @@ export const UserReportTable: React.FC<Props> = ({ data, onClick }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map(({ userId, name, surname, role, count }) => (
+                    {data.map((user) => (
                         <tr
-                            key={userId}
-                            className="hover:bg-card/60 hover:text-accent-foreground transition-colors cursor-pointer text-primary-foreground text-sm font-semibold border-b"
+                            key={user.userId}
+                            className="hover:bg-card/60 hover:text-accent-foreground transition-colors  text-primary-foreground text-sm font-semibold border-b"
                             tabIndex={0}
                         >
-                            <td className="py-3 px-6 font-base">{name}</td>
-                            <td className="py-3 px-6 font-base">{surname}</td>
-                            <td className="py-3 px-6">
+                            <td className="py-2.5 px-6 font-base">{user.name}</td>
+                            <td className="py-2.5 px-6 font-base">{user.surname}</td>
+                            <td className="py-2.5 px-6">
                                 <span
                                     className={cn(
-                                        "inline-block rounded-lg px-3 py-1 text-xs font-base",
-                                        role === "LEADER"
+                                        "inline-block rounded-md px-2 py-0.5 text-xs font-medium",
+                                        user.role === "LEADER"
                                             ? "bg-primary/85 text-primary-foreground"
                                             : "bg-muted text-primary-foreground"
                                     )}
                                 >
-                                    {role}
+                                    {user.role}
                                 </span>
                             </td>
-                            <td className="py-3 px-6 text-center font-semibold">{count}</td>
-                            <td className="py-3 px-6 text-center font-semibold flex justify-center">
+                            <td className="py-2.5 px-6 text-center font-semibold">{user.count}</td>
+                            <td className="py-2.5 px-6 text-center font-semibold flex justify-center">
                                 <button
-                                    className="border p-1.5 rounded-lg bg-accent hover:bg-primary"
-                                    onClick={() => onClick(userId)}
+                                    className="border p-2 rounded-lg bg-accent hover:bg-primary"
+                                    onClick={() => onClick(user)}
                                 >
                                     <IoMdEye />
                                 </button>

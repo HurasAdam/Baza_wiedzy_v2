@@ -33,7 +33,12 @@ export const FilterPanel = ({
                 />
                 <DatePicker setState={setEndDate} state={endDate} label="Data końcowa" disabled={setRangeMinDate} />
 
-                <PrimaryButton label="Wyczyść filtry" onClick={resetDatesHandler} disabled={!startDate && !endDate} />
+                <PrimaryButton
+                    className="bg-primary/80"
+                    label="Wyczyść filtry"
+                    onClick={resetDatesHandler}
+                    disabled={!startDate && !endDate}
+                />
             </div>
         </div>
     );

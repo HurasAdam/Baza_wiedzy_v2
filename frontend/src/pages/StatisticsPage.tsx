@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
-import { AddedArticlesReport } from "../components/statistics/AddedArticlesReport";
-import { EditedArticlesReport } from "../components/statistics/EditedArticlesReport";
+import { AddedArticlesReport } from "../components/statistics/added-articles/AddedArticlesReport";
+import { EditedArticlesReport } from "../components/statistics/edited-articles/EditedArticlesReport";
 import { FilterPanel } from "../components/statistics/FilterPanel";
 import { TabNavigation } from "../components/statistics/TabNavigation";
-import { TopicsReport } from "../components/statistics/TopicsReport";
+import { TopicsReport } from "../components/statistics/topics-report/TopicsReport";
 
 export type TabKey = "topics" | "addedArticles" | "editedArticles";
 export type DateTypePicker = Date | undefined;
@@ -41,7 +41,7 @@ export const StatisticsPage = () => {
 
     return (
         <div className="p-5 h-full flex flex-col w-full max-w-[1580px] mx-auto">
-            <h2 className="flex items-center gap-2 text-2xl font-bold mb-8 text-foreground">
+            <h2 className="flex items-center gap-2 text-lg font-bold mb-8 text-foreground">
                 <HiMiniPresentationChartBar className="w-8 h-8 text-foreground" />
                 Statystyki użytkowników
             </h2>

@@ -21,7 +21,7 @@ import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
 import { PiArticleMediumFill } from "react-icons/pi";
 import { RxCross2 } from "react-icons/rx";
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { articleApi } from "../../../../lib/article.api";
 import { useModal } from "../../../modal/hooks/useModal";
 import { Modal } from "../../../modal/Modal";
@@ -30,15 +30,12 @@ const ArticleList = () => {
     const { viewPreference, setViewPreference, filterPlacement, setFilterPlacement } = useViewPref();
     const [params, setParams] = useSearchParams();
 
-    // Pobierz numer strony z query param, domyślnie 1
     const page = parseInt(params.get("page") || "1", 10);
 
     const hasProduct = params.get("product");
     const hasCategory = params.get("category");
     const queryParams = hasProduct ? params : undefined;
     const { articles, isError, isLoading, error } = useFetchArticles(params);
-
-    const { state, setState } = useOutletContext();
 
     const resetFilterHandler = () => {
         setParams();

@@ -4,7 +4,6 @@ import { Home } from "lucide-react";
 import { FaLandmark, FaPhoneSquareAlt, FaStar } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa6";
 import { HiOutlineLogout } from "react-icons/hi";
-import { ImStatsBars2 } from "react-icons/im";
 import { PiArticleMediumFill } from "react-icons/pi";
 import { NavLink } from "react-router-dom";
 import { Alert } from "./alert/Alert";
@@ -15,6 +14,7 @@ import { useModal } from "./modal/hooks/useModal";
 
 import ReportContent from "./ReportContent";
 
+import { HiMiniPresentationChartBar } from "react-icons/hi2";
 import { TbMessageReportFilled } from "react-icons/tb";
 export const MySidebar = () => {
     const { logoutAction } = useLogout();
@@ -24,7 +24,7 @@ export const MySidebar = () => {
         { icon: <Home size={21} />, label: "Start", link: "/dashboard" },
         { icon: <PiArticleMediumFill size={21} />, label: "Artykuły", link: "/articles" },
         { icon: <FaStar size={21} />, label: "Ulubione", link: "/favourites" },
-        { icon: <ImStatsBars2 size={21} />, label: "Statystyki", link: "/statistics" },
+        { icon: <HiMiniPresentationChartBar size={21} />, label: "Statystyki", link: "/statistics" },
         { icon: <FaPhoneSquareAlt size={21} />, label: "Tematy", link: "/register-topic" },
         { icon: <FaLandmark size={21} />, label: "Szkoły projektowe", link: "/projects" },
         { icon: <FaAddressBook size={21} />, label: "Działy i kontakty", link: "/departments" },

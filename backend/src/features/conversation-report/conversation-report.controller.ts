@@ -17,4 +17,10 @@ export const ConversationReportController = (conversationReportService = Convers
         const allConversationReports = await ConversationReportModel.find({});
         return res.status(OK).json(allConversationReports);
     }),
+    findByUser: catchErrors(async ({ params, query }, res) => {
+        const { userId } = params;
+
+        const reports = await conversationReportService.findByUser(userId, query);
+        return res.status(200).json(reports);
+    }),
 });
