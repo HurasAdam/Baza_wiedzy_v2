@@ -24,4 +24,17 @@ export const ConversationReportService = {
         });
         return createdConversationTopic;
     },
+    async findByUser(userId: string, query) {
+        const queryDb: any = { createdBy: userId };
+
+        const { startDate, endDate } = query;
+
+        if (startDate && endDate) {
+            queryDb.createdAt = {
+                $gte: new Date(startDate),
+                $lte: new Date(endDate),
+            };
+        }
+        return ConversationReportModel.find(queryDb).populate("topic").sort({ createdAt: -1 });
+    },
 };

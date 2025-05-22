@@ -8,3 +8,4 @@ const conversationReportController = ConversationReportController();
 
 conversationReportRoutes.get("/", conversationReportController.find);
 conversationReportRoutes.post("/", conversationReportController.create);
+conversationReportRoutes.get("/by-user/:userId", conversationReportController.findByUser);
