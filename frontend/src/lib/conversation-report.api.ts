@@ -17,6 +17,11 @@ const getUserConversationReportStats = async ({ userId, params }) => {
     return api.get(crurl("/users/statistics/", userId), { params });
 };
 
+const findByUser = async (userId, params) => {
+    // startDate, endDate, limit, page params
+    return api.get(`${baseUrl}/by-user/${userId}`, { params });
+};
+
 const getConversationReportValues = async (params: URLSearchParams) => {
     // startDate, endDate, limit params
     return api.get(baseUrl, { params });
@@ -27,4 +32,5 @@ export const conversationReportApi = {
     getCoversationReportStats,
     getConversationReportValues,
     getUserConversationReportStats,
+    findByUser,
 };

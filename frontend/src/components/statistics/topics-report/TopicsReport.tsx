@@ -1,16 +1,17 @@
+import { userApi } from "@/lib/user.api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { LuSearchX } from "react-icons/lu";
-import { userApi } from "../../lib/user.api";
-import { DateTypePicker } from "../../pages/StatisticsPage";
-import EmptyState from "../EmptyState";
-import { useModal } from "../modal/hooks/useModal";
-import { Modal } from "../modal/Modal";
-import { UserReportTable } from "./UserReportTable";
-import { UserReportTableSkeleton } from "./UserReportTableSkeleton";
+import { DateTypePicker } from "../../../pages/StatisticsPage";
+import EmptyState from "../../EmptyState";
+import { Modal } from "../../modal/Modal";
+import { useModal } from "../../modal/hooks/useModal";
+import { UserReportTable } from "../UserReportTable";
+import { UserReportTableSkeleton } from "../UserReportTableSkeleton";
+import UserTopicReportDetails, { User } from "./UserTopicReportDetails";
 
-export const AddedArticlesReport = ({
+export const TopicsReport = ({
     startDate,
     endDate,
     filtersSelected,
@@ -24,21 +25,23 @@ export const AddedArticlesReport = ({
         isFetching,
         isLoading,
     } = useQuery({
-        queryKey: ["statistics", "addedArticles", startDate, endDate],
+        queryKey: ["statistics", "topics", startDate, endDate],
         queryFn: () =>
-            userApi.findWithArticleCount({ startDate: startDate?.toISOString(), endDate: endDate?.toISOString() }),
+            userApi.findWithReportCount({
+                startDate: startDate?.toISOString(),
+                endDate: endDate?.toISOString(),
+            }),
         enabled: !!(startDate && endDate),
         refetchOnWindowFocus: false,
     });
-
-    const { isOpen, openModal, closeModal } = useModal();
+    const { isOpen, closeModal, openModal } = useModal();
     const hasData = data && data.length > 0;
     const isInitialLoad = isLoading;
     const isRefetching = !isLoading && isFetching;
-    const [selectedUser, setSelectedUser] = useState("");
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-    const handleModalOpen = (userId: string) => {
-        setSelectedUser(userId);
+    const handleModalOpen = (user: User) => {
+        setSelectedUser(user);
         openModal();
     };
 
@@ -48,19 +51,21 @@ export const AddedArticlesReport = ({
 
     if (isRefetching) {
         return (
-            <div className="flex justify-center items-center py-8 min-h-60 text-muted-foreground ">
+            <div className="flex justify-center items-center py-6 min-h-60 text-muted-foreground ">
                 <FaSpinner className="animate-spin w-6 h-6 mr-2" />
                 Ładowanie danych...
             </div>
         );
     }
-
+    console.log(selectedUser);
     if (hasData) {
         return (
             <>
                 <UserReportTable data={data} onClick={handleModalOpen} />
                 <Modal onClose={closeModal} isOpen={isOpen}>
-                    <div>{selectedUser}</div>
+                    {selectedUser && (
+                        <UserTopicReportDetails startDate={startDate} endDate={endDate} user={selectedUser} />
+                    )}
                 </Modal>
             </>
         );
