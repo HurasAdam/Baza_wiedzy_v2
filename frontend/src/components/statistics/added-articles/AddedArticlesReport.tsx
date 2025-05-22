@@ -1,16 +1,16 @@
-import { userApi } from "@/lib/user.api";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { LuSearchX } from "react-icons/lu";
-import { DateTypePicker } from "../../pages/StatisticsPage";
-import EmptyState from "../EmptyState";
-import { Modal } from "../modal/Modal";
-import { useModal } from "../modal/hooks/useModal";
-import { UserReportTable } from "./UserReportTable";
-import { UserReportTableSkeleton } from "./UserReportTableSkeleton";
+import { userApi } from "../../../lib/user.api";
+import { DateTypePicker } from "../../../pages/StatisticsPage";
+import EmptyState from "../../EmptyState";
+import { useModal } from "../../modal/hooks/useModal";
+import { Modal } from "../../modal/Modal";
+import { UserReportTable } from "../UserReportTable";
+import { UserReportTableSkeleton } from "../UserReportTableSkeleton";
 
-export const TopicsReport = ({
+export const AddedArticlesReport = ({
     startDate,
     endDate,
     filtersSelected,
@@ -24,16 +24,14 @@ export const TopicsReport = ({
         isFetching,
         isLoading,
     } = useQuery({
-        queryKey: ["statistics", "topics", startDate, endDate],
+        queryKey: ["statistics", "addedArticles", startDate, endDate],
         queryFn: () =>
-            userApi.findWithReportCount({
-                startDate: startDate?.toISOString(),
-                endDate: endDate?.toISOString(),
-            }),
+            userApi.findWithArticleCount({ startDate: startDate?.toISOString(), endDate: endDate?.toISOString() }),
         enabled: !!(startDate && endDate),
         refetchOnWindowFocus: false,
     });
-    const { isOpen, closeModal, openModal } = useModal();
+
+    const { isOpen, openModal, closeModal } = useModal();
     const hasData = data && data.length > 0;
     const isInitialLoad = isLoading;
     const isRefetching = !isLoading && isFetching;
@@ -50,7 +48,7 @@ export const TopicsReport = ({
 
     if (isRefetching) {
         return (
-            <div className="flex justify-center items-center py-6 min-h-60 text-muted-foreground ">
+            <div className="flex justify-center items-center py-8 min-h-60 text-muted-foreground ">
                 <FaSpinner className="animate-spin w-6 h-6 mr-2" />
                 Ładowanie danych...
             </div>

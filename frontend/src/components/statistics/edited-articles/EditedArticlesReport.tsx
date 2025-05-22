@@ -2,13 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FaSpinner } from "react-icons/fa";
 import { LuSearchX } from "react-icons/lu";
-import { userApi } from "../../lib/user.api";
-import { DateTypePicker } from "../../pages/StatisticsPage";
-import EmptyState from "../EmptyState";
-import { useModal } from "../modal/hooks/useModal";
-import { Modal } from "../modal/Modal";
-import { UserReportTable } from "./UserReportTable";
-import { UserReportTableSkeleton } from "./UserReportTableSkeleton";
+import { userApi } from "../../../lib/user.api";
+import { DateTypePicker } from "../../../pages/StatisticsPage";
+import EmptyState from "../../EmptyState";
+import { useModal } from "../../modal/hooks/useModal";
+import { Modal } from "../../modal/Modal";
+import { UserReportTable } from "../UserReportTable";
+import { UserReportTableSkeleton } from "../UserReportTableSkeleton";
 
 export const EditedArticlesReport = ({
     startDate,
