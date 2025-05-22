@@ -1,5 +1,4 @@
 import ArticlesFeedViewContainer from "@/components/articles/views/feedView/ArticlesFeedViewContainer";
-import { ArticlesFeedView } from "../components/articles/views/feedView/ArticlesFeedView";
 import ArticlesSplitView from "../components/articles/views/splitView/ArticlesSplitView";
 import ArticlesTableView from "../components/articles/views/tableView/ArticlesTableView";
 import { useViewPref } from "../contexts/ViewPreferenceContext";

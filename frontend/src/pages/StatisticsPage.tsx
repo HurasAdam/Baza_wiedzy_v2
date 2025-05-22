@@ -1,5 +1,3 @@
-import { Modal } from "@/components/modal/Modal";
-import { useModal } from "@/components/modal/hooks/useModal";
 import { useEffect, useState } from "react";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
 import { useSearchParams } from "react-router-dom";
@@ -21,8 +19,7 @@ export const StatisticsPage = () => {
     const [endDate, setEndDate] = useState<DateTypePicker>(
         params.get("endDate") ? new Date(params.get("endDate")!) : undefined
     );
-
-    const { isOpen, openModal, closeModal } = useModal();
+    const filtersSelected = !!(startDate && endDate);
 
     useEffect(() => {
         const newParams = new URLSearchParams(params);
@@ -53,13 +50,15 @@ export const StatisticsPage = () => {
 
             <FilterPanel startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
 
-            {activeTab === "topics" && <TopicsReport startDate={startDate} endDate={endDate} />}
-            {activeTab === "addedArticles" && <AddedArticlesReport startDate={startDate} endDate={endDate} />}
-            {activeTab === "editedArticles" && <EditedArticlesReport startDate={startDate} endDate={endDate} />}
-
-            <Modal isOpen={isOpen} onClose={closeModal}>
-                <div>Szczegóły użytkownika</div>
-            </Modal>
+            {activeTab === "topics" && (
+                <TopicsReport startDate={startDate} endDate={endDate} filtersSelected={filtersSelected} />
+            )}
+            {activeTab === "addedArticles" && (
+                <AddedArticlesReport startDate={startDate} endDate={endDate} filtersSelected={filtersSelected} />
+            )}
+            {activeTab === "editedArticles" && (
+                <EditedArticlesReport startDate={startDate} endDate={endDate} filtersSelected={filtersSelected} />
+            )}
         </div>
     );
 };
