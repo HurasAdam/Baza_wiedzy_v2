@@ -1,7 +1,6 @@
 import { PrimaryButton } from "@/components/core/Button";
 import { DatePicker } from "@/components/DatePicker";
-import { IoMdSearch } from "react-icons/io";
-import { DateTypePicker } from "../StatisticsPage";
+import { DateTypePicker } from "../../pages/StatisticsPage";
 
 export const FilterPanel = ({
     startDate,
@@ -33,7 +32,7 @@ export const FilterPanel = ({
                     disabled={setRangeMaxDate}
                 />
                 <DatePicker setState={setEndDate} state={endDate} label="Data końcowa" disabled={setRangeMinDate} />
-                <PrimaryButton icon={<IoMdSearch className="w-3.5 h-3.5" />} label="Wyszukaj" onClick={() => {}} />
+
                 <PrimaryButton label="Wyczyść filtry" onClick={resetDatesHandler} disabled={!startDate && !endDate} />
             </div>
         </div>

@@ -50,8 +50,11 @@ export const UserReportTable: React.FC<Props> = ({ data, onClick }) => {
                             </td>
                             <td className="py-3 px-6 text-center font-semibold">{count}</td>
                             <td className="py-3 px-6 text-center font-semibold flex justify-center">
-                                <button className="border p-1.5 rounded-lg bg-accent hover:bg-primary">
-                                    <IoMdEye onClick={() => onClick(userId)} />
+                                <button
+                                    className="border p-1.5 rounded-lg bg-accent hover:bg-primary"
+                                    onClick={() => onClick(userId)}
+                                >
+                                    <IoMdEye />
                                 </button>
                             </td>
                         </tr>
