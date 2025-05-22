@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { z } from "zod";
 const loginSchema = z.object({
     email: z.string().email({
-        message: "Invalid email format.",
+        message: "Login jest wymagany.",
     }),
     password: z.string().min(1, {
         message: "Hasło jest wymagane.",
@@ -35,7 +35,7 @@ export const LoginForm = () => {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(loginAction)}
-                className="form-container w-full md:w-[440px] flex flex-col gap-y-8 bg-card border rounded-lg px-10 pt-14 pb-14"
+                className="bg-card/65 form-container w-full md:w-[440px] flex flex-col gap-y-8  border rounded-lg px-10 pt-14 pb-14"
             >
                 <div className=" mb-1.5 ">
                     <p className="text-foreground text-3xl font-bold text-center font-inter">Zaloguj się</p>

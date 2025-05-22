@@ -4,8 +4,10 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { productCategoryApi } from "@/lib/product-category.api";
 import { cn } from "@/utils/cn";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronsUpDown, CloudUpload, Loader, Paperclip } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,8 +16,6 @@ import * as z from "zod";
 import Editor from "../editor/Editor";
 import { FileInput, FileUploader, FileUploaderContent, FileUploaderItem } from "../ui/file-input";
 import MultipleSelector from "../ui/multi-select";
-import { useQuery } from "@tanstack/react-query";
-import { productCategoryApi } from "@/lib/product-category.api";
 
 const allowedFormats = ["image/svg+xml", "image/png", "image/jpeg", "image/gif"];
 
@@ -133,7 +133,7 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading, className }: 
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className={`space-y-8  mx-auto  bg-background/75 ${className} py-[28px] `}
+                className={`space-y-8  px-20 bg-background/75 ${className} py-[28px] `}
             >
                 <FormField
                     control={form.control}
