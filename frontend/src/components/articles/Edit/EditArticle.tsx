@@ -99,7 +99,7 @@ const EditArticle = ({ articleId, onClose, isOpen, modalWidth }) => {
             case "sm":
                 return "px-16 py-4";
             case "md":
-                return "px-20 py-6";
+                return "px-0 py-0";
             case "lg":
                 return "px-24 py-8";
             default:
@@ -109,7 +109,7 @@ const EditArticle = ({ articleId, onClose, isOpen, modalWidth }) => {
 
     return (
         <div className={clsx(getModalPadding())}>
-            <Card className="border-none shadow-lg bg-background/55 rounded-lg">
+            <Card className="border-none shadow-lg bg-background/55 rounded-lg  ">
                 <CardHeader
                     className="flex items-center gap-4 p-6 bg-cover bg-center rounded-t-lg"
                     style={{

@@ -28,6 +28,7 @@ import { useRef, useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import { IoCheckmarkSharp } from "react-icons/io5";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { DUMMY_ATTACHMENTS } from "../../../../constants/attachments";
 import { IMAGES } from "../../../../constants/images";
 import { BANNER_IMAGES } from "../../../../constants/productBanners";
@@ -41,7 +42,6 @@ import { Modal } from "../../../modal/Modal";
 import { Button } from "../../../ui/button";
 import EditArticle from "../../Edit/EditArticle";
 import ArticleCommentsDetails from "./ArticleCommentsDetails";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export const ArticleModalDetails = ({ articleId, onClose }: { articleId: string; onClose: () => void }) => {
     const { copyToClipboard } = useCopyToClipboard();

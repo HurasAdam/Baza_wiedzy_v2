@@ -243,7 +243,7 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                         </Tooltip>
                     </div>
                     <div className="ml-auto flex items-center gap-2">
-                    <Tooltip>
+                        <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button onClick={editArticleHandler} variant="ghost" size="icon">
                                     <MdModeEdit className="h-4 w-4" />
@@ -273,7 +273,6 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                             <TooltipContent>{article?.isVerified ? "Cofnij weryfikację" : "Zweryfikuj"}</TooltipContent>
                         </Tooltip>
 
-                 
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button onClick={deleteArticleHandler} variant="ghost" size="icon">
@@ -284,8 +283,6 @@ export function ArticleDisplay({ mail, selectedArticle }: MailDisplayProps) {
                             <TooltipContent>Usuń</TooltipContent>
                         </Tooltip>
                     </div>
-               
-               
                 </div>
                 <Separator />
                 <div className="flex flex-1 flex-col">
