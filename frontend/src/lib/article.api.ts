@@ -18,6 +18,10 @@ export const getPopularArticles = (params: URLSearchParams) => {
 export const findTrashed = (params: URLSearchParams) => {
     return api.get(crurl(baseUrl, "trashed"), { params });
 };
+const findByUser = async (userId, params) => {
+    // startDate, endDate, limit, page params
+    return api.get(`${baseUrl}/by-user/${userId}`, { params });
+};
 
 export const createArticle = ({ formData }) => {
     return api.post(baseUrl, formData);
@@ -97,4 +101,5 @@ export const articleApi = {
     getArticlesHistoryByUser,
     getUsersChangedArticleStats,
     getArticleHistoryItem,
+    findByUser,
 };
