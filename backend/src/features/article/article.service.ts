@@ -92,6 +92,20 @@ export const ArticleService = {
             isFavourite,
         };
     },
+    async findByUser(userId: string, { startDate, endDate }: { startDate?: string; endDate?: string }) {
+        const query: any = { createdBy: userId };
+        if (startDate && endDate) {
+            query.createdAt = {
+                $gte: new Date(startDate),
+                $lte: new Date(endDate),
+            };
+        }
+
+        return ArticleModel.find(query)
+            .populate("product", "name")
+            .populate("category", "name")
+            .sort({ createdAt: -1 });
+    },
 
     async findOneHistory(articleId: string) {
         const articleWithHistory = await getArticleHistory({ articleId });

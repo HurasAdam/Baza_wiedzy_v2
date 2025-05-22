@@ -27,6 +27,11 @@ export const ArticleController = (articleService = ArticleService) => ({
         const article = await articleService.findOne(userId, params.id);
         return res.status(OK).json(article);
     }),
+    findByUser: catchErrors(async ({ params, query }, res) => {
+        const { id } = params;
+        const articles = await articleService.findByUser(id, query);
+        return res.status(200).json(articles);
+    }),
 
     findOneTrashed: catchErrors(async ({ userId, params }, res) => {
         const article = await articleService.findOne(userId, params.id, true);

@@ -19,6 +19,6 @@ articleRoutes.put("/:id", articleController.updateOne);
 articleRoutes.put("/:id/trash", articleController.updateOneAsTrash);
 articleRoutes.put("/:id/restore", articleController.updateOneAsRestore);
 articleRoutes.delete("/:id", articleController.deleteOne);
-
+articleRoutes.get("/by-user/:id", articleController.findByUser);
 articleRoutes.get("/userArticles/:id", articleController.findCreatedByUser);
 articleRoutes.get("/userHistory/:id", articleController.findHistoryByUser);

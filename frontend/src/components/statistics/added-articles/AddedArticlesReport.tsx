@@ -4,11 +4,13 @@ import { FaSpinner } from "react-icons/fa";
 import { LuSearchX } from "react-icons/lu";
 import { userApi } from "../../../lib/user.api";
 import { DateTypePicker } from "../../../pages/StatisticsPage";
+import ArticleModalDetails from "../../articles/views/feedView/ArticleModalDetails";
 import EmptyState from "../../EmptyState";
 import { useModal } from "../../modal/hooks/useModal";
 import { Modal } from "../../modal/Modal";
 import { UserReportTable } from "../UserReportTable";
 import { UserReportTableSkeleton } from "../UserReportTableSkeleton";
+import UserAddedArticlesDetails, { User } from "./UserAddedArticlesDetails";
 
 export const AddedArticlesReport = ({
     startDate,
@@ -32,13 +34,15 @@ export const AddedArticlesReport = ({
     });
 
     const { isOpen, openModal, closeModal } = useModal();
+    const { isOpen: isArticleModalOpen, openModal: openArticleModal, closeModal: closeArticleModal } = useModal();
     const hasData = data && data.length > 0;
     const isInitialLoad = isLoading;
     const isRefetching = !isLoading && isFetching;
-    const [selectedUser, setSelectedUser] = useState("");
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [selectedArticle, setSelectedArticle] = useState("");
 
-    const handleModalOpen = (userId: string) => {
-        setSelectedUser(userId);
+    const handleModalOpen = (user: User) => {
+        setSelectedUser(user);
         openModal();
     };
 
@@ -55,12 +59,28 @@ export const AddedArticlesReport = ({
         );
     }
 
+    const handleOpenArticleModal = (articleId: string) => {
+        setSelectedArticle(articleId);
+        openArticleModal();
+    };
+
     if (hasData) {
         return (
             <>
                 <UserReportTable data={data} onClick={handleModalOpen} />
                 <Modal onClose={closeModal} isOpen={isOpen}>
-                    <div>{selectedUser}</div>
+                    {selectedUser && (
+                        <UserAddedArticlesDetails
+                            startDate={startDate}
+                            endDate={endDate}
+                            user={selectedUser}
+                            onClick={handleOpenArticleModal}
+                        />
+                    )}
+                </Modal>
+
+                <Modal onClose={closeArticleModal} isOpen={isArticleModalOpen}>
+                    <ArticleModalDetails articleId={selectedArticle} onClose={closeArticleModal} />
                 </Modal>
             </>
         );
