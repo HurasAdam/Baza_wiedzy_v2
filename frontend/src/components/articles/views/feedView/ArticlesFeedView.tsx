@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Switch } from "@/components/ui/switch";
 import { BANNER_IMAGES } from "@/constants/productBanners";
 import { useViewPref } from "@/contexts/ViewPreferenceContext";
 import { useFetchArticles } from "@/hooks/query/useFetchArticles";
@@ -16,7 +15,6 @@ import { IArticle } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronsUpDown, PanelLeft, PanelTop, SearchIcon, Star } from "lucide-react";
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
 import { PiArticleMediumFill } from "react-icons/pi";
@@ -234,7 +232,7 @@ export const ArticlesFilter = () => {
     const selectedCategory = params.get("category") || "";
     const titleParam = params.get("title") || "";
     const { products } = useFetchProducts();
-    const hasFilters = selectedCategory || titleParam;
+    const hasFilters = selectedCategory || titleParam || selectedProduct;
     const { data: categories, isLoading: categoriesLoading } = useQuery({
         queryKey: ["categories-by-product", selectedProduct],
         queryFn: () => {
@@ -243,20 +241,14 @@ export const ArticlesFilter = () => {
         enabled: !!selectedProduct,
     });
 
-    useEffect(() => {
-        if (!selectedProduct && products.length > 0) {
-            const defaultProduct = products[0]._id;
-            setParams((prev) => {
-                prev.set("product", defaultProduct);
-                return prev;
-            });
-        }
-    }, [selectedProduct, products, setParams]);
-
     const productHandler = (product: string) => {
         setParams((prev) => {
-            prev.set("product", product);
-            prev.delete("category");
+            if (product) {
+                prev.set("product", product);
+            } else {
+                prev.delete("product"); // ← usuwa parametr z URL
+            }
+            prev.delete("category"); // zawsze kasujemy kategorię przy zmianie produktu
             return prev;
         });
     };
@@ -341,6 +333,21 @@ export const ArticlesFilter = () => {
                                         <CommandList className="scrollbar-custom">
                                             <CommandEmpty>Nie znaleziono produktu.</CommandEmpty>
                                             <CommandGroup>
+                                                <CommandItem
+                                                    value="Wszystkie"
+                                                    key="all"
+                                                    onSelect={() => {
+                                                        productHandler("");
+                                                    }}
+                                                >
+                                                    <Check
+                                                        className={`mr-2 h-4 w-4 ${!selectedProduct ? "opacity-100" : "opacity-0"}`}
+                                                    />
+                                                    <div className="flex items-center gap-3">
+                                                        <span className="h-6 w-6 rounded-md bg-background"></span>
+                                                        Wszystkie
+                                                    </div>
+                                                </CommandItem>
                                                 {products?.map((product) => {
                                                     const bannerURL = BANNER_IMAGES?.[product.banner]; // Ścieżka do banera
                                                     return (
@@ -378,13 +385,6 @@ export const ArticlesFilter = () => {
                                 </PopoverContent>
                             </Popover>
                         </div>
-
-                        <div className="flex items-center gap-2">
-                            <Switch id="new-reports-toggle" />
-                            <label htmlFor="new-reports-toggle" className="text-sm text-muted-foreground">
-                                Tylko nowe zgłoszenia
-                            </label>
-                        </div>
                     </div>
                     {/* ANIMATED CATEGORY BUTTONS*/}
                     <AnimatePresence mode="wait">
@@ -413,7 +413,7 @@ export const ArticlesFilter = () => {
                                               className={`flex items-center  w-full px-4 py-1.5 border text-sm rounded-md font-medium whitespace-normal break-words transition-all hover:opacity-80 ${
                                                   selectedCategory === cat._id
                                                       ? "bg-primary/75 text-primary-foreground shadow-md "
-                                                      : "bg-transparent border text-[hsl(var(--muted-foreground))]"
+                                                      : "bg-transparent border text-[hsl(var(--muted-foreground))] "
                                               }`}
                                           >
                                               {selectedCategory === cat._id && (

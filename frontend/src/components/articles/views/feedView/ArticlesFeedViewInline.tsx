@@ -1,29 +1,27 @@
 import ArticleModalDetails from "@/components/articles/views/feedView/ArticleModalDetails";
+import EmptyState from "@/components/EmptyState";
+import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { BANNER_IMAGES } from "@/constants/productBanners";
+import { useViewPref } from "@/contexts/ViewPreferenceContext";
 import { useFetchArticles } from "@/hooks/query/useFetchArticles";
 import { useFetchProducts } from "@/hooks/query/useFetchProducts";
+import { productCategoryApi } from "@/lib/product-category.api";
 import { IArticle } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
 import { Check, ChevronsUpDown, PanelLeft, PanelTop, Star } from "lucide-react";
-import { useEffect, type ChangeEventHandler } from "react";
 import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
+import { PiArticleMediumFill } from "react-icons/pi";
 import { useOutletContext, useSearchParams } from "react-router-dom";
 import { articleApi } from "../../../../lib/article.api";
 import { useModal } from "../../../modal/hooks/useModal";
 import { Modal } from "../../../modal/Modal";
-import { Switch } from "@/components/ui/switch";
-import { PiArticleMediumFill } from "react-icons/pi";
-import { BANNER_IMAGES } from "@/constants/productBanners";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { productCategoryApi } from "@/lib/product-category.api";
-import { AnimatePresence, motion } from "framer-motion";
-import EmptyState from "@/components/EmptyState";
-import Pagination from "@/components/Pagination";
-import { useViewPref } from "@/contexts/ViewPreferenceContext";
 
 const ArticleList = () => {
     const [params, setParams] = useSearchParams();
@@ -194,16 +192,6 @@ export const ArticlesFilter = () => {
         enabled: !!selectedProduct,
     });
 
-    useEffect(() => {
-        if (!selectedProduct && products.length > 0) {
-            const defaultProduct = products[0]._id;
-            setParams((prev) => {
-                prev.set("product", defaultProduct);
-                return prev;
-            });
-        }
-    }, [selectedProduct, products, setParams]);
-
     const productHandler = (product: string) => {
         setParams((prev) => {
             prev.set("product", product);
@@ -323,13 +311,6 @@ export const ArticlesFilter = () => {
                                         </Command>
                                     </PopoverContent>
                                 </Popover>
-                            </div>
-
-                            <div className="flex items-center gap-2 ">
-                                <Switch id="new-reports-toggle" />
-                                <label htmlFor="new-reports-toggle" className="text-sm text-muted-foreground">
-                                    Tylko nowe zgłoszenia
-                                </label>
                             </div>
                         </div>
                         <div className="flex gap-3 px-6 w-max">
