@@ -33,6 +33,7 @@ import { DUMMY_ATTACHMENTS } from "../../../../constants/attachments";
 import { IMAGES } from "../../../../constants/images";
 import { BANNER_IMAGES } from "../../../../constants/productBanners";
 import useCopyToClipboard from "../../../../hooks/useCopyToClipboard";
+import { articleViewApi } from "../../../../lib/article-view.api";
 import { articleApi } from "../../../../lib/article.api";
 import { Alert } from "../../../alert/Alert";
 import { useAlert } from "../../../alert/hooks/useAlert";
@@ -68,8 +69,9 @@ export const ArticleModalDetails = ({ articleId, onClose }: { articleId: string;
         queryFn: () => articleApi.getArticle({ id: articleId }),
     });
 
-    const callbackFn = () => {
+    const callbackFn = (id: string) => {
         setClipBoardCopyMessage("Skopiowano!");
+        incrementViewCounterMutation({ id });
         setTimeout(() => {
             setClipBoardCopyMessage("");
         }, 1000);
@@ -93,6 +95,10 @@ export const ArticleModalDetails = ({ articleId, onClose }: { articleId: string;
                 : "Artykuł został zweryfikowany pomyślnie";
             toast.success(verifyMessage);
         },
+    });
+
+    const { mutate: incrementViewCounterMutation } = useMutation({
+        mutationFn: ({ id }: { id: string }) => articleViewApi.create(id),
     });
 
     const { mutate: markAsFavouriteHandler } = useMutation({
@@ -397,7 +403,7 @@ export const ArticleModalDetails = ({ articleId, onClose }: { articleId: string;
                                     {/* COPY BUTTON */}
 
                                     <Button
-                                        onClick={() => copyToClipboard(articleReff, callbackFn)}
+                                        onClick={() => copyToClipboard(articleReff, () => callbackFn(articleId))}
                                         variant="ghost"
                                         size="sm"
                                         className="w-fit mr-2 hover:bg-muted/10 "
