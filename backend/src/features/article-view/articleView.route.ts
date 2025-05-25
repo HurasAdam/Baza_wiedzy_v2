@@ -6,3 +6,4 @@ export const articleViewRoute = Router();
 const articleViewController = ArticleViewController();
 
 articleViewRoute.post("/:id/increment", articleViewController.create);
+articleViewRoute.get("/popular", articleViewController.findPopular);
