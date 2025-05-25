@@ -5,11 +5,13 @@ export interface ArticleViewDocument extends mongoose.Document {
     _id: ObjectId;
     articleId: ObjectId;
     date: Date;
+    userId: ObjectId;
     viewsCount: number;
 }
 
 const articleViewSchema = new Schema({
     articleId: { type: Schema.Types.ObjectId, ref: "Article", required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     date: { type: Date, required: true },
     viewsCount: { type: Number, default: 0 },
 });
