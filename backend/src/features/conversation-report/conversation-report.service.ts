@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { CONFLICT } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
 import ConversationTopicModel from "../conversation-topic/conversation-topic.model";
@@ -23,6 +24,49 @@ export const ConversationReportService = {
             topic,
         });
         return createdConversationTopic;
+    },
+    async find(query) {
+        const { startDate, endDate, userId, limit } = query;
+        const match: any = {};
+
+        if (startDate && endDate) {
+            match.createdAt = {
+                $gte: new Date(startDate),
+                $lte: new Date(endDate),
+            };
+        }
+
+        if (userId) {
+            match.createdBy = new mongoose.Types.ObjectId(userId);
+        }
+
+        return ConversationReportModel.aggregate([
+            { $match: match },
+            {
+                $lookup: {
+                    from: "conversationtopics",
+                    localField: "topic",
+                    foreignField: "_id",
+                    as: "topicDetails",
+                },
+            },
+            { $unwind: "$topicDetails" },
+            {
+                $group: {
+                    _id: "$topicDetails.title",
+                    count: { $sum: 1 },
+                },
+            },
+            { $sort: { count: -1 } },
+            { $limit: limit },
+            {
+                $project: {
+                    _id: 0,
+                    title: "$_id",
+                    count: 1,
+                },
+            },
+        ]);
     },
     async findByUser(userId: string, query) {
         const queryDb: any = { createdBy: userId };
