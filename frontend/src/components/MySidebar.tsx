@@ -17,17 +17,17 @@ import ReportContent from "./ReportContent";
 import { HiMiniPresentationChartBar } from "react-icons/hi2";
 import { TbMessageReportFilled } from "react-icons/tb";
 export const MySidebar = () => {
-    const { logoutAction } = useLogout();
+    const { logoutAction, isPending } = useLogout();
     const { openAlert: openLogoutAlert, isOpen: isLogoutAlertOpen, closeAlert: closeLogoutAlert } = useAlert();
     const { isOpen, closeModal, openModal } = useModal();
     const primaryMenuItems = [
-        { icon: <Home size={21} />, label: "Start", link: "/dashboard" },
-        { icon: <PiArticleMediumFill size={21} />, label: "Artykuły", link: "/articles" },
-        { icon: <FaStar size={21} />, label: "Ulubione", link: "/favourites" },
-        { icon: <HiMiniPresentationChartBar size={21} />, label: "Statystyki", link: "/statistics" },
-        { icon: <FaPhoneSquareAlt size={21} />, label: "Tematy", link: "/register-topic" },
-        { icon: <FaLandmark size={21} />, label: "Szkoły projektowe", link: "/projects" },
-        { icon: <FaAddressBook size={21} />, label: "Działy i kontakty", link: "/departments" },
+        { icon: <Home size={20} />, label: "Start", link: "/dashboard" },
+        { icon: <PiArticleMediumFill size={20} />, label: "Artykuły", link: "/articles" },
+        { icon: <FaStar size={20} />, label: "Ulubione", link: "/favourites" },
+        { icon: <HiMiniPresentationChartBar size={20} />, label: "Statystyki", link: "/statistics" },
+        { icon: <FaPhoneSquareAlt size={20} />, label: "Tematy", link: "/register-topic" },
+        { icon: <FaLandmark size={20} />, label: "Szkoły projektowe", link: "/projects" },
+        { icon: <FaAddressBook size={20} />, label: "Działy i kontakty", link: "/departments" },
     ];
 
     const logoutHandler = () => {
@@ -45,10 +45,8 @@ export const MySidebar = () => {
 
     return (
         <div className="min-w-[88px] h-full  ">
-            {/* Sidebar bez zmian kolorystycznych */}
             <div className="w-[88px] fixed top-0 h-full py-2 flex flex-col text-foreground bg-sidebar border-r ">
                 <div className="mx-auto mb-9 bg-sidebar-accent p-1.5 rounded-xl backdrop-blur-md">
-                    {/* <img className="w-6 h-6" src={IMAGES.Logo} alt="logo" /> */}
                     <div className="relative w-8 h-8">
                         {/* Obracający się pierścień */}
                         <div className="absolute inset-0 rounded-full border-4 border-primary/30 border-t-primary-foreground  border-b-primary animate-spin-ultra-slow " />
@@ -65,7 +63,6 @@ export const MySidebar = () => {
                         <NavLink
                             key={index}
                             to={item.link}
-                            // Klasa dla całego linku – możesz tu ustawić styl ogólny
                             className="group flex items-center  gap-1.5  text-center transition-all duration-300 p-2  flex-col"
                         >
                             {({ isActive }) => (
@@ -73,14 +70,12 @@ export const MySidebar = () => {
                                     <div
                                         className={clsx(
                                             "inline-block transition-transform duration-300 ease-in-out group-hover:scale-110 group-hover:drop-shadow-md",
-                                            {
-                                                // Na przykład możesz zmienić również styl ikony, jeśli chcesz
-                                            }
+                                            {}
                                         )}
                                     >
                                         <span
                                             className={clsx("transition-colors duration-300", {
-                                                "text-sidebar-primary/85": isActive, // domyślna klasa
+                                                "text-sidebar-primary/85": isActive,
                                             })}
                                         >
                                             {item.icon}
@@ -88,7 +83,7 @@ export const MySidebar = () => {
                                     </div>
                                     <span
                                         className={clsx("transition-colors duration-300 text-[11px] font-semibold", {
-                                            "text-sidebar-primary/85": isActive, // domyślna klasa
+                                            "text-sidebar-primary/85": isActive,
                                         })}
                                     >
                                         {item.label}
@@ -112,7 +107,13 @@ export const MySidebar = () => {
                     ))}
                 </div>
             </div>
-            <Alert type="info" isOpen={isLogoutAlertOpen} onCancel={closeLogoutAlert} onConfirm={logoutAction}>
+            <Alert
+                type="info"
+                isOpen={isLogoutAlertOpen}
+                onCancel={closeLogoutAlert}
+                onConfirm={logoutAction}
+                isLoading={isPending}
+            >
                 <div>Czy na pewno chcesz się wylogować?</div>
             </Alert>
             <Modal closeOnOutsideClick={false} width="sm" isOpen={isOpen} onClose={closeModal}>

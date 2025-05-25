@@ -1,8 +1,8 @@
 import { OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
-import ConversationReportModel from "./conversation-report.model";
 import { newConversationReportSchema } from "./conversation-report.schema";
 import { ConversationReportService } from "./conversation-report.service";
+import { topicReportsFilterDto } from "./dto/search-popular-topic-report.dto";
 
 export const ConversationReportController = (conversationReportService = ConversationReportService) => ({
     create: catchErrors(async ({ userId, body }, res) => {
@@ -13,9 +13,12 @@ export const ConversationReportController = (conversationReportService = Convers
         return res.status(OK).json(newTag);
     }),
 
-    find: catchErrors(async (req, res) => {
-        const allConversationReports = await ConversationReportModel.find({});
-        return res.status(OK).json(allConversationReports);
+    find: catchErrors(async ({ query }, res) => {
+        console.log(query, "QUERY TOPIC");
+        const payload = topicReportsFilterDto.parse(query);
+        const result = await conversationReportService.find(payload);
+
+        return res.status(OK).json(result);
     }),
     findByUser: catchErrors(async ({ params, query }, res) => {
         const { userId } = params;
