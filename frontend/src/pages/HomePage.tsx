@@ -5,6 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { Clock, FileText, Flame, Home, MessageSquare, Pencil } from "lucide-react";
 import { useState } from "react";
+import { HomeListSkeleton } from "../components/home/PopularTopicListSkeleton";
 import { useAuthContext } from "../contexts/auth-provider";
 import { articleViewApi } from "../lib/article-view.api";
 import { articleApi } from "../lib/article.api";
@@ -50,7 +51,7 @@ export function HomePage() {
     const { startDate, endDate } = getDateRange(articleFilter);
     const { startDate: topicStartDate, endDate: topicEndDate } = getDateRange(topicFilter);
 
-    const { data: popularArticles = [], isLoading } = useQuery({
+    const { data: popularArticles = [], isLoading: isPopularArticlesLoading } = useQuery({
         queryKey: ["most-popular-articles", articleFilter, scope],
         queryFn: () =>
             articleViewApi.find({
@@ -60,14 +61,18 @@ export function HomePage() {
             }),
     });
 
-    const { data: latest = [] } = useQuery({
+    const { data: latestArticles = [], isLoading: isLatestArticlesLoading } = useQuery({
         queryKey: ["latest-articles", scope],
         queryFn: () => {
-            return articleApi.getAllArticles({});
+            const params = new URLSearchParams();
+            if (scope === ActivityScope.User) {
+                params.append("author", user._id);
+            }
+            return articleApi.getAllArticles(params);
         },
     });
 
-    const { data: popularTopics = [] } = useQuery({
+    const { data: popularTopics = [], isLoading: isPopularTopicsLoading } = useQuery({
         queryKey: ["most-popular-topics", topicFilter, scope],
         queryFn: () =>
             conversationReportApi.find({
@@ -163,26 +168,33 @@ export function HomePage() {
                             </div>
                         </CardHeader>
                         <CardContent className="pr-4">
-                            <ul className="space-y-3  ">
-                                {popularArticles.map((article, index) => (
-                                    <li
-                                        key={article.articleId}
-                                        className="flex items-center justify-between group cursor-pointer"
-                                    >
-                                        <div className="flex-1 min-w-0">
-                                            <span
-                                                className=" text-sm text-primary-foreground group-hover:text-primary"
-                                                title={article.title}
+                            {isPopularArticlesLoading ? (
+                                <HomeListSkeleton count={15} />
+                            ) : (
+                                <ul className="space-y-3  ">
+                                    {popularArticles.map((article, index) => (
+                                        <li
+                                            key={article.articleId}
+                                            className="flex items-center justify-between group cursor-pointer"
+                                        >
+                                            <div className="flex-1 min-w-0">
+                                                <span
+                                                    className=" text-sm text-primary-foreground group-hover:text-primary"
+                                                    title={article.title}
+                                                >
+                                                    {index + 1}. {article.title}
+                                                </span>
+                                            </div>
+                                            <Badge
+                                                variant="outline"
+                                                className="text-xs whitespace-nowrap ml-2 shrink-0"
                                             >
-                                                {index + 1}. {article.title}
-                                            </span>
-                                        </div>
-                                        <Badge variant="outline" className="text-xs whitespace-nowrap ml-2 shrink-0">
-                                            {article.totalViews} {pluralizeViewResult(article.totalViews)}
-                                        </Badge>
-                                    </li>
-                                ))}
-                            </ul>
+                                                {article.totalViews} {pluralizeViewResult(article.totalViews)}
+                                            </Badge>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </CardContent>
                     </Card>
 
@@ -206,17 +218,24 @@ export function HomePage() {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <ul className="space-y-3">
-                                {popularTopics.map((topic) => (
-                                    <li key={topic.id} className="flex justify-between items-center text-sm">
-                                        <span>{topic.title}</span>
-                                        <Badge variant="outline" className="text-xs whitespace-nowrap ml-2 shrink-0">
-                                            {topic.count + " "}
-                                            {pluralizeReportResult(topic.count)}
-                                        </Badge>
-                                    </li>
-                                ))}
-                            </ul>
+                            {isPopularTopicsLoading ? (
+                                <HomeListSkeleton count={15} />
+                            ) : (
+                                <ul className="space-y-3">
+                                    {popularTopics.map((topic) => (
+                                        <li key={topic.id} className="flex justify-between items-center text-sm">
+                                            <span>{topic.title}</span>
+                                            <Badge
+                                                variant="outline"
+                                                className="text-xs whitespace-nowrap ml-2 shrink-0"
+                                            >
+                                                {topic.count + " "}
+                                                {pluralizeReportResult(topic.count)}
+                                            </Badge>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </CardContent>
                     </Card>
 
@@ -227,18 +246,22 @@ export function HomePage() {
                             <CardTitle className="text-lg font-semibold">Ostatnio Dodane</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <ul className="space-y-3">
-                                {latest?.data?.map((article, index) => (
-                                    <li key={article?._id} className="flex justify-between items-center text-sm">
-                                        <span className="truncate max-w-[74%] block">
-                                            {index + 1}. {article.title}
-                                        </span>
-                                        <span className="text-xs text-muted-foreground">
-                                            {formatDate(article?.createdAt)}
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
+                            {isLatestArticlesLoading ? (
+                                <HomeListSkeleton count={15} />
+                            ) : (
+                                <ul className="space-y-3">
+                                    {latestArticles?.data?.map((article, index) => (
+                                        <li key={article?._id} className="flex justify-between items-center text-sm">
+                                            <span className="truncate max-w-[74%] block">
+                                                {index + 1}. {article.title}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground">
+                                                {formatDate(article?.createdAt)}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </CardContent>
                     </Card>
                 </div>
