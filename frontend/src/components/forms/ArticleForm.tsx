@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { productCategoryApi } from "@/lib/product-category.api";
 import { cn } from "@/utils/cn";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PopoverClose } from "@radix-ui/react-popover";
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronsUpDown, CloudUpload, Loader, Paperclip } from "lucide-react";
 import { useState } from "react";
@@ -185,26 +186,29 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading, className }: 
                                 >
                                     <Command>
                                         <CommandInput placeholder="Search language..." />
-                                        <CommandList>
+                                        <CommandList className="scrollbar-custom">
                                             <CommandEmpty>Nie znaleziono produktu.</CommandEmpty>
                                             <CommandGroup>
                                                 {products.map((language) => (
                                                     <CommandItem
+                                                        className="p-0"
                                                         value={language.label}
                                                         key={language.value}
                                                         onSelect={() => {
                                                             field.onChange(language.value);
                                                         }}
                                                     >
-                                                        <Check
-                                                            className={cn(
-                                                                "mr-2 h-4 w-4",
-                                                                language.value === selectedProduct
-                                                                    ? "opacity-100"
-                                                                    : "opacity-0"
-                                                            )}
-                                                        />
-                                                        {language.label}
+                                                        <PopoverClose className=" min-w-full p-2 flex items-center">
+                                                            <Check
+                                                                className={cn(
+                                                                    "mr-2 h-4 w-4",
+                                                                    language.value === selectedProduct
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0"
+                                                                )}
+                                                            />
+                                                            {language.label}
+                                                        </PopoverClose>
                                                     </CommandItem>
                                                 ))}
                                             </CommandGroup>
@@ -258,26 +262,29 @@ const ArticleForm = ({ article, tags, products, onSave, isLoading, className }: 
                                     ) : formatedCategories && formatedCategories.length > 0 ? (
                                         <Command>
                                             <CommandInput placeholder="Wyszukaj kategorię..." />
-                                            <CommandList>
+                                            <CommandList className="scrollbar-custom">
                                                 <CommandEmpty>Nie znaleziono kategorii.</CommandEmpty>
                                                 <CommandGroup>
                                                     {formatedCategories.map((category) => (
                                                         <CommandItem
+                                                            className="p-0"
                                                             value={category.value}
                                                             key={category.value}
                                                             onSelect={() => {
                                                                 field.onChange(category.value);
                                                             }}
                                                         >
-                                                            <Check
-                                                                className={cn(
-                                                                    "mr-2 h-4 w-4",
-                                                                    category.value === selectedCategory
-                                                                        ? "opacity-100"
-                                                                        : "opacity-0"
-                                                                )}
-                                                            />
-                                                            {category.label}
+                                                            <PopoverClose className=" min-w-full p-2 flex items-center">
+                                                                <Check
+                                                                    className={cn(
+                                                                        "mr-2 h-4 w-4",
+                                                                        category.value === selectedCategory
+                                                                            ? "opacity-100"
+                                                                            : "opacity-0"
+                                                                    )}
+                                                                />
+                                                                {category.label}
+                                                            </PopoverClose>
                                                         </CommandItem>
                                                     ))}
                                                 </CommandGroup>
