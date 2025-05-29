@@ -94,11 +94,19 @@ export const ArticleService = {
     },
     async findByUser(userId: string, { startDate, endDate }: { startDate?: string; endDate?: string }) {
         const query: any = { createdBy: userId };
-        if (startDate && endDate) {
-            query.createdAt = {
-                $gte: new Date(startDate),
-                $lte: new Date(endDate),
-            };
+
+        if (startDate || endDate) {
+            query.createdAt = {};
+
+            if (startDate) {
+                query.createdAt.$gte = new Date(startDate);
+            }
+
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                query.createdAt.$lte = end;
+            }
         }
 
         return ArticleModel.find(query)
