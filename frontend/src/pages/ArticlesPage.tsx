@@ -1,21 +1,18 @@
-import ArticlesFeedViewContainer from "@/components/articles/views/feedView/ArticlesFeedViewContainer";
-import ArticlesSplitView from "../components/articles/views/splitView/ArticlesSplitView";
-import ArticlesTableView from "../components/articles/views/tableView/ArticlesTableView";
-import { useViewPref } from "../contexts/ViewPreferenceContext";
+import { useViewPref } from "@/contexts/ViewPreferenceContext";
+import ArticlesSplitView from "@/components/articles/views/splitView/ArticlesSplitView";
+import ArticlesTableView from "@/components/articles/views/tableView/ArticlesTableView";
+import { ArticlesFeedView } from "@/components/articles/views/feedView/ArticlesFeedView";
 
-const ArticlesPage: React.FC = () => {
+const ArticlesPage = () => {
     const { viewPreference } = useViewPref();
 
-    // Dodanie logiki dla "TableView"
-    if (viewPreference === "mailing") {
-        return <ArticlesSplitView />;
-    } else if (viewPreference === "default") {
-        return <ArticlesFeedViewContainer />;
-    } else if (viewPreference === "table") {
-        return <ArticlesTableView />; // nowy widok dla tabeli
-    }
+    const viewModes = {
+        mailing: <ArticlesSplitView />,
+        table: <ArticlesTableView />,
+        default: <ArticlesFeedView />,
+    };
 
-    return null;
+    return viewModes[viewPreference] || <ArticlesFeedView />;
 };
 
 export default ArticlesPage;

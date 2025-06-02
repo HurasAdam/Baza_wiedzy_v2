@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -79,7 +77,7 @@ export default function ForgotPasswordForm({ onSave, isPending }: Props) {
                         </form>
                     </Form>
                     <span className="flex justify-center mt-5 text-xs font-semibold text-muted-foreground hover:text-primary">
-                        <Link className="" to="/login">
+                        <Link className="" to="/auth/login" replace>
                             Powrót do logowania
                         </Link>
                     </span>

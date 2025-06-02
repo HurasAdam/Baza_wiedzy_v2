@@ -42,7 +42,7 @@ const ResetPasswordPage = () => {
                         </div>
                         <div className="mt-10">
                             <Link
-                                to="/login"
+                                to="/auth//login"
                                 className="px-6 py-3 border border-green-600 text-green-600 font-semibold rounded-lg shadow-md transition-all duration-300 hover:bg-green-600 hover:text-white"
                             >
                                 Przejdź do logowania
@@ -74,7 +74,7 @@ const ResetPasswordPage = () => {
                         </div>
                         <div className="mt-10">
                             <Link
-                                to="/password/forgot"
+                                to="/auth/password/forgot"
                                 className="px-6 py-3 border border-red-500 text-red-500 font-semibold rounded-lg shadow-md transition-all duration-300 hover:bg-red-500 hover:text-white"
                             >
                                 Wyślij nowy link

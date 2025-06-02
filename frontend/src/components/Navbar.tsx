@@ -19,8 +19,8 @@ import { Popover, PopoverTrigger } from "./ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { TbMessageReportFilled } from "react-icons/tb";
 import MyIssueReports from "./IssueReports/MyIssueReports";
-import { useAuthContext } from "@/contexts/auth-provider";
 import { Separator } from "./ui/separator";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
     openCreateArticleModal: () => void;
@@ -35,14 +35,17 @@ const Navbar = ({ openCreateArticleModal }: Props) => {
         isOpen: isMyIssueReportModalOpen,
         closeModal: closeMyIssueReportsModal,
     } = useModal();
-    const { user, role } = useAuthContext();
     const navigate = useNavigate();
     const location = useLocation();
     const { title, icon: Icon } = getPageTitle(location.pathname);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const initials = getAvatarFallbackText(user?.name);
     const { logoutAction } = useLogout();
+
+    const queryClient = useQueryClient();
+    const user = queryClient.getQueryData(["user"]);
+    const initials = getAvatarFallbackText(user?.name);
+    const { role } = user;
 
     function openDrawer() {
         setIsDrawerOpen(true);

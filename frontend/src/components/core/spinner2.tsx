@@ -1,0 +1,22 @@
+export const Spinner2 = () => {
+    return (
+        <div className="relative h-screen w-full">
+            <div className=" flex h-full items-center justify-center">
+                <div className="flex flex-col items-center justify-center h-full text-center  w-full rounded-2xl shadow-lg p-6">
+                    <div className="relative w-16 h-16 mb-6 animate-spin-slow">
+                        {/* Obracający się pierścień */}
+                        <div className="absolute inset-0 rounded-full border-4 border-primary/30 border-t-primary-foreground  border-b-primary animate-spin-slow" />
+
+                        {/* Static inner glow */}
+                        <div className="absolute inset-4 rounded-full bg-primary/10 backdrop-blur-md shadow-inner" />
+
+                        {/* Centralna kulka jako core-logo */}
+                        <div className="absolute top-1/2 left-1/2 w-5 h-5 bg-primary rounded-full shadow-xl -translate-x-1/2 -translate-y-1/2 border border-white/10 " />
+                    </div>
+                    <h2 className="text-xl font-semibold text-foreground mb-2">Łoadowanie...</h2>
+                    <p className="text-sm text-muted-foreground max-w-md">Trwa ładowanie, danych..</p>
+                </div>
+            </div>
+        </div>
+    );
+};

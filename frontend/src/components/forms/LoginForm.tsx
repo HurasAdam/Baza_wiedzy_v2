@@ -1,19 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useLogin } from "@/hooks/auth/useLogin";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useLogin } from "@/hooks/auth/useLogin";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 const loginSchema = z.object({
-    email: z.string().email({
-        message: "Login jest wymagany.",
-    }),
-    password: z.string().min(1, {
-        message: "Hasło jest wymagane.",
-    }),
+    email: z.string().email("Invalid email format"),
+    password: z.string().min(1, "Hasło jest wymagane"),
 });
 
 export type LoginSchema = z.infer<typeof loginSchema>;
@@ -28,8 +25,6 @@ export const LoginForm = () => {
             password: "",
         },
     });
-
-    console.log(error?.status, "ERROR321");
 
     return (
         <Form {...form}>
@@ -89,7 +84,7 @@ export const LoginForm = () => {
                         )}
                     />
                     <span className="text-sm text-gray-500 hover:text-gray-700 hover:underline cursor-pointer">
-                        <Link to="/password/forgot"> Zapomniałeś hasła?</Link>
+                        <Link to="/auth/password/forgot">Zapomniałeś hasła?</Link>
                     </span>
                     <Button disabled={isPending} className="my-0.5 flex gap-0.5 bg-primary/80" type="submit">
                         {isPending && <Loader className="animate-spin" />}

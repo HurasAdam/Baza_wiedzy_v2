@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { articleApi } from "../../../../lib/article.api";
-import { productApi } from "../../../../lib/product.api";
+import { articleApi } from "@/lib/article.api";
+import { productApi } from "@/lib/product.api";
 import { Mail } from "./components/mail";
 import { accounts } from "./data";
+import { useSearchParams } from "react-router-dom";
 
-export default function ArticlesSplitView() {
-    const params = {};
+const ArticlesSplitView = () => {
+    const [params] = useSearchParams();
+
     const { data: articles } = useQuery({
         queryKey: ["articles"],
-        queryFn: () => {
-            return articleApi.getAllArticles(params);
-        },
+        queryFn: () => articleApi.getAllArticles(params),
     });
 
     const { data: products } = useQuery({
@@ -34,4 +34,6 @@ export default function ArticlesSplitView() {
             </div>
         </>
     );
-}
+};
+
+export default ArticlesSplitView;

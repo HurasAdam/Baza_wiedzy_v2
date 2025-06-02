@@ -17,7 +17,6 @@ createRoot(root).render(
                     <App />
                 </NuqsAdapter>
             </ModalSettingsProvider>
-            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryClientProvider>
     </BrowserRouter>
 );

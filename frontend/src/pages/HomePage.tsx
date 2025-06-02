@@ -1,3 +1,4 @@
+import { useUser } from "@/hooks/auth/useUser";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -6,13 +7,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Clock, FileText, Flame, Home, MessageSquare, Pencil } from "lucide-react";
 import { useState } from "react";
 import { HomeListSkeleton } from "../components/home/PopularTopicListSkeleton";
-import { useAuthContext } from "../contexts/auth-provider";
 import { articleViewApi } from "../lib/article-view.api";
 import { articleApi } from "../lib/article.api";
 import { conversationReportApi } from "../lib/conversation-report.api";
 import { getDateRange } from "../utils/date-range-result";
 import { formatDate } from "../utils/format-date";
 import { pluralizeReportResult, pluralizeViewResult } from "../utils/pluralize-result";
+import { User } from "@/hooks/auth/useCheckUser";
 
 const timeFilters = [
     { label: "Ten tydzień", value: "week" },
@@ -40,7 +41,7 @@ enum ActivityScope {
 }
 
 export function HomePage() {
-    const { user } = useAuthContext();
+    const user = useUser() as User;
     const [articleFilter, setArticleFilter] = useState("week");
     const [topicFilter, setTopicFilter] = useState("week");
     const [statsFilter, setStatsFilter] = useState("week");
