@@ -12,10 +12,6 @@ const logout = () => {
     return api.get(crurl(baseUrl, "logout"));
 };
 
-const register = ({ email, name, surname, password, confirmPassword }) => {
-    return api.post(crurl(baseUrl, "register"), { email, name, surname, password, confirmPassword });
-};
-
 const verifyEmail = ({ verificationCode }) => {
     return api.get(crurl(baseUrl, "email/verify", verificationCode));
 };
@@ -31,7 +27,6 @@ const resetPassword = ({ verificationCode, password }: { verificationCode: strin
 export const authApi = {
     login,
     logout,
-    register,
     verifyEmail,
     sendPasswordResetEmail,
     resetPassword,

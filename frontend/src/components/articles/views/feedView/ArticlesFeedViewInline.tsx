@@ -1,3 +1,8 @@
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import toast from "react-hot-toast";
+import { FaStar } from "react-icons/fa";
 import ArticleModalDetails from "@/components/articles/views/feedView/ArticleModalDetails";
 import EmptyState from "@/components/EmptyState";
 import Pagination from "@/components/Pagination";
@@ -22,23 +27,20 @@ import { useOutletContext, useSearchParams } from "react-router-dom";
 import { articleApi } from "../../../../lib/article.api";
 import { useModal } from "../../../modal/hooks/useModal";
 import { Modal } from "../../../modal/Modal";
+import { Switch } from "@/components/ui/switch";
+import { PiArticleMediumFill } from "react-icons/pi";
+import { BANNER_IMAGES } from "@/constants/productBanners";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { productCategoryApi } from "@/lib/product-category.api";
+import { AnimatePresence, motion } from "framer-motion";
+import EmptyState from "@/components/EmptyState";
+import Pagination from "@/components/Pagination";
+import { useViewPref } from "@/contexts/ViewPreferenceContext";
 
 const ArticleList = () => {
     const [params, setParams] = useSearchParams();
-
-    // Pobierz numer strony z query param, domyślnie 1
-    const page = parseInt(params.get("page") || "1", 10);
-
-    const hasProduct = params.get("product");
-    const hasCategory = params.get("category");
-    const queryParams = hasProduct ? params : undefined;
     const { articles, isError, isLoading, error } = useFetchArticles(params);
-
-    const { state, setState } = useOutletContext();
-
-    const resetFilterHandler = () => {
-        setParams();
-    };
 
     const handlePageChange = (newPage: number) => {
         setParams((prev) => {
@@ -49,8 +51,8 @@ const ArticleList = () => {
 
     if (isLoading) {
         return (
-            <div className="relative h-full w-full  p-40">
-                <div className=" flex h-full items-center justify-center">
+            <div className="relative h-full w-full p-40">
+                <div className="flex h-full items-center justify-center">
                     <div className="flex flex-col items-center justify-center h-full text-center  w-full rounded-2xl  p-6">
                         <div className="relative w-16 h-16 mb-6 animate-spin-slow">
                             {/* Obracający się pierścień */}
@@ -89,9 +91,9 @@ const ArticleList = () => {
 
     return (
         <>
-            {articles.data?.map((article: IArticle, i: number) => (
+            {articles.data?.map((article: IArticle) => (
                 <ArticleListItem
-                    key={i}
+                    key={article._id}
                     article={article}
                     className="hover:border-b hover:bg-muted/40 cursor-pointer transition-all"
                 />
@@ -233,14 +235,14 @@ export const ArticlesFilter = () => {
     };
 
     return (
-        <div className="flex items-center justify-between w-full  ">
+        <div className="flex items-center justify-between w-full">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 w-full  ">
                 <div className="flex flex-col w-full  ">
                     <h2 className="mb-6 text-[23px] font-bold text-foreground flex items-center gap-1.5">
                         <PiArticleMediumFill className="w-6 h-6" />
                         Baza artykułów
                     </h2>
-                    <div className="flex gap-4 items-center  justify-between w-full ">
+                    <div className="flex gap-4 items-center justify-between w-full ">
                         <div className=" flex">
                             <div className="relative w-full lg:w-[300px]">
                                 <Input
@@ -387,12 +389,11 @@ export const ArticlesFilter = () => {
     );
 };
 
+// Filtry nad artykułami
 export const ArticlesFeedViewInline = () => {
     return (
         <div className="text-foreground p-5 min-h-[calc(100vh-190px)]   w-full max-w-[1540px] mx-auto gap-6 ">
             <ArticlesFilter />
-            {/* TUTAJ */}
-            {/* <ArticlesFilter /> */}
             <div className="w-full">
                 <ArticleList />
             </div>

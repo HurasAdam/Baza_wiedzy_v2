@@ -1,9 +1,9 @@
 // ViewPreferenceContext.tsx
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, type PropsWithChildren } from "react";
 
 const ViewPreferenceContext = createContext(null);
 
-export const ViewPreferenceProvider = ({ children }) => {
+export const ViewPreferenceProvider = ({ children }: PropsWithChildren) => {
     const getView = () => localStorage.getItem("viewPreference") || "default";
     const getPlacement = () => localStorage.getItem("filterPlacement") || "top";
 

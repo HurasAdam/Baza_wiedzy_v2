@@ -21,12 +21,12 @@ export const AuthController = (authService = AuthService) => ({
 
     login: catchErrors(async ({ body }, res) => {
         const payload = loginUserDto.parse(body);
-        const { accessToken, refreshToken } = await authService.login(payload);
+        const { user, accessToken, refreshToken } = await authService.login(payload);
 
         res.cookie("accessToken", accessToken, getAccessTokenCookieOptions());
         res.cookie("refreshToken", refreshToken, getRefreshTokenCookieOptions());
 
-        return res.status(OK).json({ message: "Login successful" });
+        return res.status(OK).json(user);
     }),
 
     logout: catchErrors(async ({ cookies }, res) => {

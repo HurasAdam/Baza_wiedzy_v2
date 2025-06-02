@@ -122,7 +122,7 @@ const NavItem = ({ icon: Icon, label, link }: NavItemProps) => {
         <Link
             to={link}
             className={cn(
-                "flex items-center px-3 py-2 rounded-md text-sm font-medium",
+                "flex items-center px-3 py-2 rounded-md font-medium",
                 isActive ? "bg-sidebar-primary/70 text-white" : "text-foreground hover:text-foreground/80"
             )}
         >

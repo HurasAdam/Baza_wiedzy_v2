@@ -1,12 +1,13 @@
 import { LoginSchema } from "@/components/forms/LoginForm";
 import { authApi } from "@/lib/auth.api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 // Po zmianie na backendzie dokonać podmiany w loginAction
 export const useLogin = () => {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const { mutate, isError, isPending, error } = useMutation({
         mutationFn: authApi.login,
@@ -14,7 +15,8 @@ export const useLogin = () => {
 
     const loginAction = (data: LoginSchema) => {
         mutate(data, {
-            onSuccess: () => {
+            onSuccess: (data) => {
+                queryClient.setQueryData(["user"], data);
                 navigate("/dashboard", { replace: true });
             },
             onError: ({ status }) => {

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { FORBIDDEN, UNAUTHORIZED } from "../constants/http.mjs";
-import { redirect } from "react-router-dom";
 
 const options = {
     baseURL: import.meta.env.VITE_BACKEND_BASE_URL,

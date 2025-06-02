@@ -11,12 +11,12 @@ const ForgotPasswordPage = () => {
         },
     });
 
-    const onSave = (email) => {
+    const onSave = (email: string) => {
         mutate(email);
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center  p-6">
+        <div className="min-h-screen flex items-center justify-center p-6">
             {isSuccess ? (
                 <div className="w-full max-w-md bg-gradient-to-r from-green-400 to-green-600 text-white p-8 rounded-xl shadow-2xl transform transition-all duration-300 ease-out scale-105">
                     <div className="flex justify-center mb-6">
@@ -54,7 +54,7 @@ const ForgotPasswordPage = () => {
                     </div>
                     {/* Formularz */}
                     <div className="">
-                        <ForgotPasswordForm onSave={onSave} isPending={isPending} isSuccess={isSuccess} />
+                        <ForgotPasswordForm onSave={onSave} isPending={isPending} />
                     </div>
                 </div>
             )}

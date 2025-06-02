@@ -1,16 +1,34 @@
 import { useQuery } from "@tanstack/react-query";
 import { USER_KEY } from "./keys";
 import { userApi } from "@/lib/user.api";
+import { AxiosResponse } from "axios";
+
+export interface User {
+    profilePicture: string | null;
+    _id: string;
+    name: string;
+    surname: string;
+    email: string;
+    verified: boolean;
+    favourites: string[];
+    role: {
+        _id: string;
+        name: string;
+        permissions: string[];
+    };
+    createdAt: string; // Można użyć Date, jeśli chcesz pracować z datami
+    updatedAt: string; // Można użyć Date, jeśli chcesz pracować z datami
+    __v: number;
+    mustChangePassword: boolean;
+    isActive: boolean;
+    lastLogin: string; // Można użyć Date, jeśli chcesz pracować z datami
+}
 
 export const useCheckUser = () => {
-    const {
-        data: user,
-        status,
-        refetch,
-    } = useQuery({
+    const { data, status } = useQuery({
         queryKey: [USER_KEY],
-        queryFn: () => userApi.findMe(),
+        queryFn: () => userApi.findMe() as Promise<AxiosResponse<User>>,
     });
 
-    return { user, status, refetch };
+    return { user: data?.data, status };
 };

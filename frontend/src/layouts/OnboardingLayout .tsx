@@ -1,11 +1,12 @@
-import { useCheckUser } from "@/hooks/auth/useCheckUser";
 import { Navigate, Outlet } from "react-router-dom";
+import { Spinner2 } from "@/components/core/spinner2";
+import { useCheckUser } from "@/hooks/auth/useCheckUser";
 
 export const OnboardingLayout = () => {
     const { user, status } = useCheckUser();
 
     if (status === "pending") {
-        return <div>Ładowanie...</div>;
+        return <Spinner2 />;
     }
 
     if (!user) {
