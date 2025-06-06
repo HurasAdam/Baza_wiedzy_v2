@@ -1,13 +1,13 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import { Star } from "lucide-react";
-import { FaStar } from "react-icons/fa";
-import { articleApi } from "@/lib/article.api";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Modal } from "@/components/modal/Modal";
 import { useModal } from "@/components/modal/hooks/useModal";
-import ArticleModalDetails from "./ArticleModalDetails";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { articleApi } from "@/lib/article.api";
 import type { IArticle } from "@/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Star } from "lucide-react";
+import toast from "react-hot-toast";
+import { FaStar } from "react-icons/fa";
+import ArticleModalDetails from "./ArticleModalDetails";
 
 export const ArticleListItem = ({ article, className }: { article: IArticle; className?: string }) => {
     const queryClient = useQueryClient();

@@ -1,8 +1,9 @@
-import { useUser } from "@/hooks/auth/useUser";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { User } from "@/hooks/auth/useCheckUser";
+import { useUser } from "@/hooks/auth/useUser";
 import { useQuery } from "@tanstack/react-query";
 import { Clock, FileText, Flame, Home, MessageSquare, Pencil } from "lucide-react";
 import { useState } from "react";
@@ -13,7 +14,6 @@ import { conversationReportApi } from "../lib/conversation-report.api";
 import { getDateRange } from "../utils/date-range-result";
 import { formatDate } from "../utils/format-date";
 import { pluralizeReportResult, pluralizeViewResult } from "../utils/pluralize-result";
-import { User } from "@/hooks/auth/useCheckUser";
 
 const timeFilters = [
     { label: "Ten tydzień", value: "week" },
@@ -84,7 +84,7 @@ export function HomePage() {
     });
 
     return (
-        <div className="p-8 space-y-3.5 bg-muted/50 min-h-screen">
+        <div className="p-8 space-y-3.5 bg-muted/50 min-h-screen ">
             <header className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                     <Home />

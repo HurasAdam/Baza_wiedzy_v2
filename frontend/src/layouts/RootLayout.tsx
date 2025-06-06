@@ -1,11 +1,11 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { MySidebar } from "@/components/MySidebar";
 import CreateArticle from "@/components/articles/Create/CreateArticle";
 import { useModal } from "@/components/modal/hooks/useModal";
 import { Modal } from "@/components/modal/Modal";
+import { MySidebar } from "@/components/MySidebar";
 import Navbar from "@/components/Navbar";
 import { ViewPreferenceProvider } from "@/contexts/ViewPreferenceContext";
 import { useUser } from "@/hooks/auth/useUser";
+import { Navigate, Outlet } from "react-router-dom";
 
 export const RootLayout = () => {
     const user = useUser();
@@ -21,12 +21,12 @@ export const RootLayout = () => {
 
     return (
         <ViewPreferenceProvider>
-            <div className="flex bg-card">
+            <div className="flex bg-card min-h-screen">
                 <MySidebar />
                 <div className="w-full">
                     <div className="flex flex-1 flex-col min-h-screen bg-background">
                         <Navbar openCreateArticleModal={createArticleModal.openModal} />
-                        <div className="overflow-hidden">
+                        <div className="overflow-hidden ">
                             <Outlet />
                         </div>
                     </div>
