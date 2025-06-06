@@ -1,16 +1,16 @@
-import { useSearchParams } from "react-router-dom";
-import clsx from "clsx";
-import { useQuery } from "@tanstack/react-query";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { RxCross2 } from "react-icons/rx";
-import { PiArticleMediumFill } from "react-icons/pi";
-import { productCategoryApi } from "@/lib/product-category.api";
-import { useFetchProducts } from "@/hooks/query/useFetchProducts";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { BANNER_IMAGES } from "@/constants/productBanners";
+import { useFetchProducts } from "@/hooks/query/useFetchProducts";
+import { productCategoryApi } from "@/lib/product-category.api";
+import { useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { PiArticleMediumFill } from "react-icons/pi";
+import { RxCross2 } from "react-icons/rx";
+import { useSearchParams } from "react-router-dom";
 import { ArticleList } from "./article-list";
 
 export const ArticlesFilter = () => {
@@ -167,7 +167,7 @@ export const ArticlesFilter = () => {
 
 export const ArticlesFeedView = () => {
     return (
-        <div className="max-w-[1540px] mx-auto p-5">
+        <div className="max-w-[1540px] mx-auto p-5 ">
             <h2 className="mb-2 text-lg font-bold text-foreground flex items-center p-2 gap-x-1.5 w-full border border-transparent">
                 <PiArticleMediumFill className="w-6 h-6" />
                 Artykuły

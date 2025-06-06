@@ -1,16 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
-import { conversationTopicApi } from "@/lib/conversation-topic.api";
-import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { useSearchParams } from "react-router-dom";
-import { Check } from "lucide-react";
-import { productApi } from "@/lib/product.api";
-import RegisterTopicForm from "@/components/forms/RegisterTopicForm";
 import EmptyState from "@/components/EmptyState";
+import RegisterTopicForm from "@/components/forms/RegisterTopicForm";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { RxCross2 } from "react-icons/rx";
-import { PiArticleMediumFill } from "react-icons/pi";
+import { conversationTopicApi } from "@/lib/conversation-topic.api";
+import { productApi } from "@/lib/product.api";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Check } from "lucide-react";
 import { IoIosCall } from "react-icons/io";
+import { RxCross2 } from "react-icons/rx";
+import { useSearchParams } from "react-router-dom";
 
 const listVariants = {
     hidden: { opacity: 1, y: 1 },
@@ -61,7 +60,47 @@ export function RegisterTopicPage() {
     return (
         <div className=" flex w-full max-w-[1540px] mx-auto p-5 min-h-[calc(100vh-190px)]  ">
             <div className="flex w-full gap-6 ">
-                <div>
+                <div className="space-y-5 flex-1">
+                    {topics?.length === 0 && !title ? (
+                        <EmptyState
+                            onReset={() => {}}
+                            resetLabel="+ Dodaj temat"
+                            title="Brak tematów"
+                            description="Wygląda na to, że dla tego produktu nie dodano jeszcze żadnych tematów"
+                        />
+                    ) : topics?.length === 0 ? (
+                        <EmptyState onReset={() => setParams({})} />
+                    ) : (
+                        topics?.map((topic) => (
+                            <Card
+                                key={topic._id}
+                                className="w-full shadow-sm hover:shadow-md transition-shadow rounded-lg px-0.5"
+                            >
+                                <CardContent className="flex items-start justify-between px-4 py-1.5 w-full">
+                                    {/* LEFT SIDE */}
+                                    <div className="flex flex-col px-1.5 space-y-0.5">
+                                        <div className="flex items-center py-2.5  gap-1.5">
+                                            <div
+                                                className=" text-xs uppercase text-muted-foreground w-3.5 h-3.5 rounded-sm"
+                                                style={{ backgroundColor: topic.product.labelColor }}
+                                            />
+                                            <span className="text-xs font-medium text-primary-foreground/80">
+                                                {" "}
+                                                {topic.product.name}
+                                            </span>
+                                        </div>
+                                        <div className="flex-1 pr-4 pb-[1px]">
+                                            <h3 className="text-lg font-semibold text-foreground/90">{topic.title}</h3>
+                                        </div>
+                                    </div>
+                                    {/* RIGHT SIDE*/}
+                                    <RegisterTopicForm topic={topic} />
+                                </CardContent>
+                            </Card>
+                        ))
+                    )}
+                </div>
+                <div className=" ">
                     <div
                         key={product}
                         variants={listVariants}
@@ -131,47 +170,6 @@ export function RegisterTopicPage() {
                             </motion.button>
                         ))}
                     </div>
-                </div>
-
-                <div className="space-y-5 flex-1">
-                    {topics?.length === 0 && !title ? (
-                        <EmptyState
-                            onReset={() => {}}
-                            resetLabel="+ Dodaj temat"
-                            title="Brak tematów"
-                            description="Wygląda na to, że dla tego produktu nie dodano jeszcze żadnych tematów"
-                        />
-                    ) : topics?.length === 0 ? (
-                        <EmptyState onReset={() => setParams({})} />
-                    ) : (
-                        topics?.map((topic) => (
-                            <Card
-                                key={topic._id}
-                                className="w-full shadow-sm hover:shadow-md transition-shadow rounded-lg px-0.5"
-                            >
-                                <CardContent className="flex items-start justify-between px-4 py-1.5 w-full">
-                                    {/* LEFT SIDE */}
-                                    <div className="flex flex-col px-1.5 space-y-0.5">
-                                        <div className="flex items-center py-2.5  gap-1.5">
-                                            <div
-                                                className=" text-xs uppercase text-muted-foreground w-3.5 h-3.5 rounded-sm"
-                                                style={{ backgroundColor: topic.product.labelColor }}
-                                            />
-                                            <span className="text-xs font-medium text-primary-foreground/80">
-                                                {" "}
-                                                {topic.product.name}
-                                            </span>
-                                        </div>
-                                        <div className="flex-1 pr-4 pb-[1px]">
-                                            <h3 className="text-lg font-semibold text-foreground/90">{topic.title}</h3>
-                                        </div>
-                                    </div>
-                                    {/* RIGHT SIDE*/}
-                                    <RegisterTopicForm topic={topic} />
-                                </CardContent>
-                            </Card>
-                        ))
-                    )}
                 </div>
             </div>
         </div>
