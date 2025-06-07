@@ -29,35 +29,38 @@ export const ArticleListItem = ({ article, className }: { article: IArticle; cla
     };
 
     return (
-        <div className="mb-3.5">
+        <div className="mb-3">
             <Card
                 onClick={openModal}
-                className={`bg-card/60 border border-border hover:border-primary/40 transition-all hover:shadow-md cursor-pointer px-4 py-3 space-y-3 ${className}`}
+                className={`bg-card border border-border hover:border-primary/40 transition-all hover:shadow-md cursor-pointer px-4 py-3 space-y-3 ${className}`}
             >
-                <CardHeader className="p-0 flex  space-y-1">
+                <CardHeader className="p-0 flex space-y-1">
                     <div className="flex justify-between">
-                        <span className="text-xs text-muted-foreground">
-                            {new Date(article.createdAt).toLocaleDateString("pl-PL", {
-                                day: "2-digit",
-                                month: "long",
-                                year: "numeric",
-                            })}
-                        </span>
+                        <h3 className="text-base font-semibold text-foreground leading-snug line-clamp-2">
+                            {article.title}
+                        </h3>
 
-                        <span className="text-xs">Wyświetlenia: {article?.viewsCounter || 0}</span>
+                        <div className="flex gap-1.5 items-center">
+                            <span className="text-xs font-normal text-muted-foreground"> Wyświetlenia: </span>
+
+                            <span className="text-muted-foreground text-xs font-montserrat">
+                                {article?.viewsCounter || 0}
+                            </span>
+                        </div>
                     </div>
-                    <h3 className="text-base font-semibold text-foreground leading-snug line-clamp-2">
-                        {article.title}
-                    </h3>
                 </CardHeader>
 
                 <CardContent className="p-0 flex justify-between items-center text-sm text-muted-foreground">
-                    <div className="flex flex-col py-1">
-                        {article?.product?.name && (
-                            <span className="text-xs ">
-                                Produkt: <span className="text-xs">{article.product.name}</span>
-                            </span>
-                        )}
+                    <div className="flex gap-1.5 py-1">
+                        #
+                        {article?.tags.length > 0 &&
+                            article.tags?.map((tag) => {
+                                return (
+                                    <span className="text-xs ">
+                                        <span className="text-xs">{tag.name}</span>
+                                    </span>
+                                );
+                            })}
                     </div>
 
                     <button

@@ -167,11 +167,16 @@ export const ArticlesFilter = () => {
 
 export const ArticlesFeedView = () => {
     return (
-        <div className="max-w-[1540px] mx-auto p-5 ">
-            <h2 className="mb-2 text-lg font-bold text-foreground flex items-center p-2 gap-x-1.5 w-full border border-transparent">
-                <PiArticleMediumFill className="w-6 h-6" />
-                Artykuły
-            </h2>
+        <div className="max-w-[1460px] mx-auto p-4  ">
+            <div className="flex">
+                <h2 className="mb-2 text-lg font-bold text-foreground flex items-center p-2 gap-x-1.5 w-full border border-transparent">
+                    <PiArticleMediumFill className="w-6 h-6" />
+                    Artykuły
+                </h2>
+                <Button size="sm" className="bg-primary/70">
+                    Dodaj artykuł
+                </Button>
+            </div>
 
             <main className="flex gap-4">
                 <ArticleList />
