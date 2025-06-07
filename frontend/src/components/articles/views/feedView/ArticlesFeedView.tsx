@@ -5,12 +5,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { BANNER_IMAGES } from "@/constants/productBanners";
 import { useFetchProducts } from "@/hooks/query/useFetchProducts";
 import { productCategoryApi } from "@/lib/product-category.api";
+import { PopoverClose } from "@radix-ui/react-popover";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Plus, XCircle } from "lucide-react";
 import { PiArticleMediumFill } from "react-icons/pi";
 import { RxCross2 } from "react-icons/rx";
-import { useSearchParams } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
+import { Separator } from "../../../ui/separator";
 import { ArticleList } from "./article-list";
 
 export const ArticlesFilter = () => {
@@ -74,13 +76,12 @@ export const ArticlesFilter = () => {
                     className="h-9 w-full pr-10 text-sm rounded-lg border border-border focus:ring-1 focus:ring-primary transition"
                 />
             </div>
-
             <Popover>
                 <PopoverTrigger asChild>
                     <Button variant="outline" role="combobox" className="h-9 justify-between w-[300px]">
                         {selectedProduct
                             ? products.find((product) => product._id === selectedProduct)?.name
-                            : "Wszystkie produkty"}
+                            : "Wybierz produkt"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
@@ -91,74 +92,131 @@ export const ArticlesFilter = () => {
                         <CommandList className="scrollbar-custom">
                             <CommandEmpty>Nie znaleziono produktu.</CommandEmpty>
                             <CommandGroup>
-                                <CommandItem onSelect={() => chooseProductHandler("")}>
-                                    <Check
-                                        className={clsx("mr-3 h-4 w-4", {
-                                            "opacity-0": "" !== selectedProduct,
-                                        })}
-                                    />
-                                    <div className="flex items-center gap-3">Wszystkie produkty</div>
-                                </CommandItem>
-
-                                {products?.map((product) => {
-                                    const bannerURL = BANNER_IMAGES?.[product.banner];
-                                    return (
+                                {selectedProduct && (
+                                    <PopoverClose className=" min-w-full min-h-full  flex items-center">
                                         <CommandItem
-                                            key={product._id}
-                                            onSelect={() => chooseProductHandler(product._id)}
+                                            className="hover:bg-transparent w-full "
+                                            onSelect={() => chooseProductHandler("")}
                                         >
-                                            <Check
-                                                className={clsx("mr-3 h-4 w-4", {
-                                                    "opacity-0": product._id !== selectedProduct,
-                                                })}
-                                            />
-                                            <div className="flex items-center gap-3">
-                                                <div
-                                                    className="h-6 w-6 rounded-md"
-                                                    style={{
-                                                        backgroundImage: `url(${bannerURL})`,
-                                                        backgroundSize: "cover",
-                                                        backgroundPosition: "center",
-                                                    }}
-                                                />
-                                                {product.name}
-                                            </div>
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="w-full flex items-center bg-rose-900/45 hover:bg-rose-900/75 text-orange-500  justify-start text-sm px-4 py-2 border-none rounded-md text-primary-foreground  hover:text-white "
+                                            >
+                                                <XCircle className="mr-2 h-5 w-5 text-destructive-foreground" />
+                                                Wyczyść filtr
+                                            </Button>
                                         </CommandItem>
-                                    );
-                                })}
+                                    </PopoverClose>
+                                )}
+
+                                <div>
+                                    <Separator />
+                                    {products?.map((product) => {
+                                        const bannerURL = BANNER_IMAGES?.[product.banner];
+
+                                        return (
+                                            <PopoverClose className=" min-w-full min-h-full  flex items-center">
+                                                <CommandItem
+                                                    className="w-full"
+                                                    key={product._id}
+                                                    onSelect={() => chooseProductHandler(product._id)}
+                                                >
+                                                    <Check
+                                                        className={clsx("mr-3 h-4 w-4", {
+                                                            "opacity-0": product._id !== selectedProduct,
+                                                        })}
+                                                    />
+                                                    <div className="flex items-center gap-3">
+                                                        <div
+                                                            className="h-6 w-6 rounded-md"
+                                                            style={{
+                                                                backgroundImage: `url(${bannerURL})`,
+                                                                backgroundSize: "cover",
+                                                                backgroundPosition: "center",
+                                                            }}
+                                                        />
+                                                        {product.name}
+                                                    </div>
+                                                </CommandItem>
+                                            </PopoverClose>
+                                        );
+                                    })}
+                                </div>
                             </CommandGroup>
                         </CommandList>
                     </Command>
                 </PopoverContent>
             </Popover>
+            {/* -------------- CATEGORIES ------------ */}
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button
+                        disabled={!selectedProduct}
+                        variant="outline"
+                        role="combobox"
+                        className="h-9 justify-between w-[300px]"
+                    >
+                        {selectedCategory
+                            ? categories?.find((cat) => cat._id === selectedCategory)?.name
+                            : "Wybierz kategorię"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                </PopoverTrigger>
 
-            {selectedProduct && (
-                <div
-                    key={selectedProduct}
-                    className="flex flex-col rounded-md bg-background overflow-x-auto flex-wrap max-w-[300px]"
-                >
-                    {categoriesLoading
-                        ? Array.from({ length: 3 }).map((_, idx) => (
-                              <div key={idx} className="h-8 w-20 bg-[hsl(var(--muted))] rounded-md animate-pulse" />
-                          ))
-                        : categories.map((cat) => (
-                              <button
-                                  key={cat._id}
-                                  onClick={() => chooseCategoryHandler(cat._id)}
-                                  className={`flex items-center  w-full px-4 py-1.5 border text-sm rounded-md font-medium whitespace-normal break-words transition-all hover:opacity-80 ${
-                                      selectedCategory === cat._id
-                                          ? "bg-primary/75 text-primary-foreground shadow-md "
-                                          : "bg-transparent border text-[hsl(var(--muted-foreground))]"
-                                  }`}
-                              >
-                                  {selectedCategory === cat._id && (
-                                      <Check className="mr-1 w-4 h-4 text-[hsl(var(--primary-foreground))]" />
-                                  )}
-                                  {cat.name}
-                              </button>
-                          ))}
-                </div>
-            )}
+                <PopoverContent onWheelCapture={(e) => e.stopPropagation()} className="w-[300px] p-0">
+                    <Command>
+                        <CommandInput placeholder="Wyszukaj produkt..." />
+                        <CommandList className="scrollbar-custom">
+                            <CommandEmpty>Nie znaleziono produktu.</CommandEmpty>
+                            <CommandGroup>
+                                {selectedCategory && (
+                                    <PopoverClose className=" min-w-full min-h-full  flex items-center">
+                                        <CommandItem
+                                            className="hover:bg-transparent w-full "
+                                            onSelect={() => chooseCategoryHandler("")}
+                                        >
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="w-full flex items-center bg-rose-900/45 hover:bg-rose-900/75 text-orange-500  justify-start text-sm px-4 py-2 border-none rounded-md text-primary-foreground  hover:text-white "
+                                            >
+                                                <XCircle className="mr-2 h-5 w-5 text-destructive-foreground" />
+                                                Wyczyść filtr
+                                            </Button>
+                                        </CommandItem>
+                                    </PopoverClose>
+                                )}
+
+                                <div>
+                                    <Separator />
+                                    {categories?.map((cat) => {
+                                        return (
+                                            <PopoverClose className=" min-w-full min-h-full  flex items-center">
+                                                <CommandItem
+                                                    className="w-full"
+                                                    key={cat._id}
+                                                    onSelect={() => chooseCategoryHandler(cat._id)}
+                                                >
+                                                    <Check
+                                                        className={clsx("mr-3 h-4 w-4", {
+                                                            "opacity-0": cat._id !== selectedCategory,
+                                                        })}
+                                                    />
+                                                    <div className="flex  gap-3  text-left">
+                                                        <div className="h-6 w-6 rounded-md" />
+                                                        {cat.name}
+                                                    </div>
+                                                </CommandItem>
+                                            </PopoverClose>
+                                        );
+                                    })}
+                                </div>
+                            </CommandGroup>
+                        </CommandList>
+                    </Command>
+                </PopoverContent>
+            </Popover>
 
             {hasFilters && <ResetFilterButton onClick={resetFilterHandler} />}
         </aside>
@@ -166,6 +224,7 @@ export const ArticlesFilter = () => {
 };
 
 export const ArticlesFeedView = () => {
+    const { openCreateArticleModal } = useOutletContext(); // Odbierasz funkcję
     return (
         <div className="max-w-[1460px] mx-auto p-4  ">
             <div className="flex">
@@ -173,7 +232,13 @@ export const ArticlesFeedView = () => {
                     <PiArticleMediumFill className="w-6 h-6" />
                     Artykuły
                 </h2>
-                <Button size="sm" className="bg-primary/70">
+
+                <Button
+                    size="sm"
+                    onClick={openCreateArticleModal}
+                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-primary/75 rounded-md group hover:bg-primary/80 transition"
+                >
+                    <Plus className="w-4 h-4 group-hover:bg-primary-foreground group-hover:text-primary group-hover:rounded-full group-hover:animate-spin" />{" "}
                     Dodaj artykuł
                 </Button>
             </div>

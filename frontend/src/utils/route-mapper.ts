@@ -5,8 +5,8 @@ import { MdArticle, MdBarChart, MdDashboard } from "react-icons/md";
 import { PiArticleMediumFill } from "react-icons/pi";
 
 const pageMeta: Record<string, { title: string; icon: ComponentType<{ size?: number }> }> = {
-    "/dashboard": { title: "Start", icon: Home },
-    "/articles": { title: "Baza artykułów", icon: PiArticleMediumFill },
+    "/dashboard": { title: "Panel aktywności", icon: Home },
+    "/articles": { title: "Artykuły", icon: PiArticleMediumFill },
     "/statistics": { title: "Statystyki", icon: MdBarChart },
     "/register-topic": { title: "Rejestr rozmów", icon: FaPhoneSquareAlt },
     "/favourites": { title: "Moje ulubione", icon: FaStar },

@@ -27,7 +27,7 @@ export const RootLayout = () => {
                     <div className="flex flex-1 flex-col min-h-screen bg-background">
                         <Navbar openCreateArticleModal={createArticleModal.openModal} />
                         <div className="overflow-hidden ">
-                            <Outlet />
+                            <Outlet context={{ openCreateArticleModal: createArticleModal.openModal }} />
                         </div>
                     </div>
                 </div>
