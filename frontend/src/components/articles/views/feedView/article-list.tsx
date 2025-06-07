@@ -1,11 +1,11 @@
-import { useSearchParams } from "react-router-dom";
-import { useFetchArticles } from "@/hooks/query/useFetchArticles";
 import { Spinner2 } from "@/components/core/spinner2";
 import EmptyState from "@/components/EmptyState";
 import Pagination from "@/components/Pagination";
+import { useFetchArticles } from "@/hooks/query/useFetchArticles";
+import type { IArticle } from "@/types";
+import { useSearchParams } from "react-router-dom";
 import { ArticleListItem } from "./article-list-item";
 import { ArticlesFilter } from "./ArticlesFeedView";
-import type { IArticle } from "@/types";
 
 const ArticleError = ({ error }: { error: Error }) => {
     return (
@@ -32,7 +32,7 @@ export const ArticleList = () => {
     };
 
     return (
-        <div className="flex-1">
+        <div className="flex-1 ">
             <div className="flex gap-3 mb-4 justify-between">
                 <ArticlesFilter />
             </div>

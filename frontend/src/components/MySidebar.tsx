@@ -69,7 +69,7 @@ export const MySidebar = () => {
                                     )
                                 }
                             >
-                                <item.icon className="w-5 h-5 shrink-0" />
+                                <item.icon size={18} className=" shrink-0" />
                                 {item.label}
                             </NavLink>
                         </li>
