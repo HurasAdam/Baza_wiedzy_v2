@@ -88,7 +88,7 @@ export function HomePage() {
             <header className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                     <Home />
-                    <h1 className="text-2xl font-bold tracking-tight text-primary-foreground">Centrum aktywności</h1>
+                    <h1 className="text-2xl font-bold tracking-tight text-primary-foreground">Panel aktywności</h1>
                 </div>
 
                 {/* Taby wyboru zakresu statystyk */}

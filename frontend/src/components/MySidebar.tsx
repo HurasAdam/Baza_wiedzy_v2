@@ -14,7 +14,7 @@ export const MySidebar = () => {
     const { isOpen, closeModal, openModal } = useModal();
 
     const primaryMenuItems = [
-        { icon: Home, label: "Start", link: "/dashboard" },
+        { icon: Home, label: "Panel aktywności", link: "/dashboard" },
         { icon: FileText, label: "Artykuły", link: "/articles" },
         { icon: Star, label: "Ulubione", link: "/favourites" },
         { icon: BarChart3, label: "Statystyki", link: "/statistics" },
