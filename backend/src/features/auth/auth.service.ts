@@ -74,7 +74,7 @@ export const AuthService = {
     },
 
     async login(payload: LoginUserDto) {
-        const user = await UserModel.findOne({ email: payload.email });
+        const user = await UserModel.findOne({ email: payload.email }).populate("role");
         appAssert(user, UNAUTHORIZED, "Invalid email or password");
 
         const isValid = user.comparePassword(payload.password);
