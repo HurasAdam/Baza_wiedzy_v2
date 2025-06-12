@@ -1,13 +1,13 @@
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { MdCall, MdEmail } from "react-icons/md";
-import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
 import { conversationReportApi } from "@/lib/conversation-report.api";
-import { useState } from "react";
-import { IoCheckmarkCircle } from "react-icons/io5";
+import { useMutation } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { IoCheckmarkCircle } from "react-icons/io5";
+import { MdCall, MdEmail } from "react-icons/md";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 const RegisterTopicForm = ({ topic }) => {
     const [feedback, setFeedback] = useState<null | "call" | "message">(null);
@@ -75,32 +75,32 @@ const RegisterTopicForm = ({ topic }) => {
                                 type="button"
                                 onClick={onSubmit("call")}
                                 disabled={isPending}
-                                className="flex items-center justify-center hover:bg-primary/75"
+                                className="flex items-center justify-center group hover:bg-primary "
                                 variant="outline"
                                 aria-label="Call"
                             >
                                 {isPending ? (
-                                    <div className="animate-spin">
-                                        <MdCall className="w-4 h-4" />
+                                    <div className="animate-spin ">
+                                        <MdCall className="w-4 h-4 text-foreground group-hover:text-secondary-foreground" />
                                     </div>
                                 ) : (
-                                    <MdCall className="w-4 h-4" />
+                                    <MdCall className="w-4 h-4 text-foreground group-hover:text-secondary-foreground" />
                                 )}
                             </Button>
                             <Button
                                 type="button"
                                 onClick={onSubmit("message")}
                                 disabled={isPending}
-                                className=" flex items-center justify-center hover:bg-primary/75"
+                                className=" flex items-center justify-center group hover:bg-primary"
                                 variant="outline"
                                 aria-label="Message"
                             >
                                 {isPending ? (
                                     <div className="animate-spin">
-                                        <MdEmail className="w-4 h-4" />
+                                        <MdEmail className="w-4 h-4 text-foreground group-hover:text-secondary-foreground" />
                                     </div>
                                 ) : (
-                                    <MdEmail className="w-4 h-4" />
+                                    <MdEmail className="w-4 h-4 text-foreground group-hover:text-secondary-foreground" />
                                 )}
                             </Button>
                         </motion.div>

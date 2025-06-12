@@ -1,3 +1,5 @@
+import { Alert } from "@/components/alert/Alert";
+import { useAlert } from "@/components/alert/hooks/useAlert";
 import EmptyState from "@/components/EmptyState";
 import ProductCategoryForm from "@/components/forms/ProductCategoryForm";
 import { useModal } from "@/components/modal/hooks/useModal";
@@ -10,11 +12,9 @@ import { dateFormater } from "@/utils/date-formater";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, FolderPlus, Plus } from "lucide-react";
 import { useState } from "react";
-import ProductCategoryCardSkeleton from "./ProductCategoryCardSkeleton";
-import { FiX } from "react-icons/fi";
-import { useAlert } from "@/components/alert/hooks/useAlert";
-import { Alert } from "@/components/alert/Alert";
 import toast from "react-hot-toast";
+import { FiX } from "react-icons/fi";
+import ProductCategoryCardSkeleton from "./ProductCategoryCardSkeleton";
 
 const ProductEditCategories = ({ productId }: { productId?: string }) => {
     const queryClient = useQueryClient();
@@ -83,7 +83,7 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
         <div className="overflow-auto p-4 space-y-8">
             <div className="flex flex-col space-y-1.5">
                 <div className="flex justify-between">
-                    <h2 className="text-xl font-bold mb-4 text-primary-foreground">Kategorie produktu</h2>
+                    <h2 className="text-xl font-medium mb-4 text-foreground">Kategorie produktu</h2>
                     <Button
                         onClick={openCreateCategory}
                         className=" text-xs flex gap-1.5  md:mt-0 font-medium text-primary-foreground bg-primary/80 rounded-md hover:bg-primary/90 transition group"
@@ -98,7 +98,7 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
                         value={name}
                         onChange={(e) => setFilterParams(e.target.value)}
                         placeholder="Znajdź kategorie..."
-                        className="h-8 w-full lg:w-[250px] bg-inherit"
+                        className="h-8 w-full lg:w-[250px] text-foreground bg-inherit placeholder:text-foreground placeholder:text-xs"
                     />
                     {name && (
                         <button
@@ -145,14 +145,22 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
                         <Card key={cat._id} className="bg-card/60 border border-border hover:bg-card/90">
                             <CardHeader className="p-4 flex flex-row justify-between">
                                 <div className=" space-y-1">
-                                    <div className="text-xs text-gray-500">{dateFormater(cat?.createdAt)}</div>
-                                    <h3 className="text-base font-medium text-primary-foreground ">{cat?.name}</h3>
+                                    <div className="text-xs text-foreground/65">{dateFormater(cat?.createdAt)}</div>
+                                    <h3 className="text-base font-medium text-foreground ">{cat?.name}</h3>
                                 </div>
                                 <div className="space-x-3.5">
-                                    <Button onClick={() => openEditCategory(cat?._id)} className="" variant="outline">
+                                    <Button
+                                        className="text-foreground hover:bg-primary hover:border-primary"
+                                        onClick={() => openEditCategory(cat?._id)}
+                                        variant="outline"
+                                    >
                                         Edytuj
                                     </Button>
-                                    <Button onClick={() => onDelete(cat?._id)} variant="ghost">
+                                    <Button
+                                        className="text-foreground hover:bg-rose-800"
+                                        onClick={() => onDelete(cat?._id)}
+                                        variant="ghost"
+                                    >
                                         Usuń
                                     </Button>
                                 </div>
@@ -164,7 +172,7 @@ const ProductEditCategories = ({ productId }: { productId?: string }) => {
             <Modal isOpen={isCreateCategoryModalOpen} onClose={closeCreateCategoryModal} height="sm" width="sm">
                 <ProductCategoryForm productId={productId} />
             </Modal>
-            <Modal isOpen={isEditCategoryModalOpen} onClose={closeEditCategoryModal} height="sm" width="sm">
+            <Modal isOpen={isEditCategoryModalOpen} onClose={closeEditCategoryModal} height="sm" width="xs">
                 <ProductCategoryForm productId={productId} categoryId={categoryId} />
             </Modal>
             <Alert

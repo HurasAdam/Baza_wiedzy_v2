@@ -1,13 +1,13 @@
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 
-import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/button";
 import { Calendar, type CalendarProps } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import type { DateTypePicker } from "@/pages/StatisticsPage";
+import { cn } from "@/utils/cn";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useRef } from "react";
-import type { DateTypePicker } from "@/pages/StatisticsPage";
 
 interface IDatePickerProps {
     state: DateTypePicker;
@@ -24,7 +24,7 @@ export function DatePicker({ state, setState, label, ...props }: IDatePickerProp
                 <Button
                     variant={"outline"}
                     className={cn(
-                        "w-[240px] justify-start text-left font-normal space-x-0.5",
+                        "w-[240px] justify-start text-left hover:bg-muted font-normal space-x-0.5",
                         !state && "text-muted-foreground"
                     )}
                 >

@@ -1,7 +1,7 @@
-import { tagApi } from "@/lib/tag.api";
+import { productCategoryApi } from "@/lib/product-category.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { IoIosAdd } from "react-icons/io";
@@ -9,8 +9,6 @@ import { MdOutlineEdit } from "react-icons/md";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { productCategoryApi } from "@/lib/product-category.api";
-import { z } from "zod";
 interface Props {
     productId: string;
     onClose?: () => void;
@@ -99,9 +97,9 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }: Prop
     }
 
     return (
-        <div className="w-full  max-w-full  h-full bg-background rounded-lg ">
+        <div className="w-full  max-w-full  h-full bg-background rounded-lg">
             <div className="h-full px-10 py-10">
-                <div className="mb-5 pb-2 border-b">
+                <div className="mb-5 pb-2 border-b space-y-3">
                     <h1
                         className="text-xl tracking-[-0.16px] text-primary-foreground font-semibold mb-1
            text-center sm:text-left"
@@ -116,7 +114,7 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }: Prop
                             </span>
                         )}
                     </h1>
-                    <p className="text-muted-foreground text-sm leading-tight">
+                    <p className="text-foreground text-sm leading-tight">
                         {categoryId
                             ? "Zmień nazwę istniejącej kategorii, która jest używana do organizacji artykułów."
                             : "Utwórz nową kategorię, która pomoże w organizacji artykułów i ułatwi użytkownikom wyszukiwanie treści."}
@@ -130,8 +128,8 @@ const ProductCategoryForm = ({ productId, categoryId, onClose = () => {} }: Prop
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-primary-foreground  text-sm">
-                                            Nazwa kategori
+                                        <FormLabel className="text-foreground font-medium  text-sm">
+                                            Nazwa kategorii
                                         </FormLabel>
                                         <FormControl>
                                             <Input

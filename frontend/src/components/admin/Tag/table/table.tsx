@@ -1,3 +1,4 @@
+import EmptyState from "@/components/EmptyState";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -22,7 +23,6 @@ import { ChevronDown } from "lucide-react";
 import * as React from "react";
 import TableSkeleton from "../../../skeleton-loaders/table-skeleton";
 import { DataTablePagination } from "./table-pagination";
-import EmptyState from "@/components/EmptyState";
 
 interface PaginationProps {
     totalCount: number;
@@ -118,7 +118,7 @@ export function DataTable<TData, TValue>({
                                 <TableRow key={headerGroup.id} className="bg-muted/20">
                                     {headerGroup.headers.map((header) => {
                                         return (
-                                            <TableHead key={header.id} className="text-slate-500  h-fit py-0.5 ">
+                                            <TableHead key={header.id} className="text-foreground/80  h-fit py-0.5 ">
                                                 {header.isPlaceholder
                                                     ? null
                                                     : flexRender(header.column.columnDef.header, header.getContext())}

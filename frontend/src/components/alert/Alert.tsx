@@ -66,7 +66,9 @@ export function Alert({
                     />
                 )}
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={onCancel}>Anuluj</AlertDialogCancel>
+                    <AlertDialogCancel className="hover:bg-muted" onClick={onCancel}>
+                        Anuluj
+                    </AlertDialogCancel>
                     <AlertDialogAction onClick={onConfirm} disabled={requireConfirmation && !isChecked}>
                         {isLoading && <Loader className="animate-spin" />}
                         Potwierdź

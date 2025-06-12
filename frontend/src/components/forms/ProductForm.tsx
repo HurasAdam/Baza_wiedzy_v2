@@ -53,7 +53,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
         },
         onSuccess: () => {
             onClose();
-            toast.success("Produkt został dodany pomyślnie .");
+            toast.success("Produkt został dodany.");
 
             queryClient.invalidateQueries("products");
         },
@@ -77,7 +77,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
             queryClient.invalidateQueries(["product"], productId);
 
             onClose();
-            toast.success("Produkt został zaktualizowany pomyślnie .");
+            toast.success("Produkt został zaktualizowany.");
         },
 
         onError: (error) => {
@@ -134,7 +134,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
     return (
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-12 bg-background h-full ">
             <div className="space-y-1.5 relative ">
-                <label htmlFor="" className="text-sm text-primary-foreground">
+                <label htmlFor="" className="text-sm font-medium text-foreground">
                     Nazwa produktu
                 </label>
 
@@ -142,7 +142,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
                     {...form.register("name", {
                         required: "nazwa produktu jest wymagana",
                     })}
-                    className="pl-4 placeholder:text-gray-600"
+                    className="pl-4 placeholder:text-gray-600 text-foreground font-medium text-base border-border"
                     value={form.watch("name")}
                     placeholder="wprowadź pełną nazwe produktu"
                 />
@@ -152,7 +152,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
                 )}
             </div>
             <div className="flex items-center  ">
-                <label htmlFor="" className="text-sm text-primary-foreground">
+                <label htmlFor="" className="text-sm text-foreground font-medium">
                     Kolor etykiety
                 </label>
                 <ColorPicker
@@ -165,8 +165,8 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
             </div>
 
             <div className="space-y-1.5">
-                <label htmlFor="banner" className="text-sm text-primary-foreground">
-                    Wybierz baner
+                <label htmlFor="banner" className="text-sm text-foreground font-medium">
+                    Baner produktu
                 </label>
                 <div className="grid grid-cols-4 gap-4">
                     {Object.entries(BANNER_IMAGES).map(([key, src]) => (
@@ -174,7 +174,7 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
                             key={key}
                             onClick={() => handleSelectImage(key)}
                             className={`border p-2 cursor-pointer rounded-md ${
-                                selectedImage === key ? "border-blue-500" : "border-gray-300"
+                                selectedImage === key ? "border-blue-500" : "border-border"
                             }`}
                         >
                             <img src={src} alt={key} className="w-full h-24 object-cover" />
@@ -193,11 +193,11 @@ const ProductForm: React.FC<IProductFormProps> = ({ productId, onClose = () => {
                     Anuluj
                 </Button>
 
-                <Button type="submit" className="text-primary-foreground bg-primary/80">
+                <Button type="submit" className="text-secondary-foreground bg-primary/80">
                     {isCreatePending && <Loader className="animate-spin" />}
                     {isPending && <Loader className="animate-spin" />}
 
-                    {productId ? "Aktualizuj" : "Dodaj produkt"}
+                    {productId ? "Zapisz" : "Dodaj produkt"}
                 </Button>
             </div>
         </form>

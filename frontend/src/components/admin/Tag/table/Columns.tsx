@@ -21,9 +21,11 @@ export const getColumns = (projectId?: string): ColumnDef<UserType>[] => {
             cell: ({ row }) => {
                 const isUsed = row.original.isUsed;
                 return isUsed ? (
-                    <Badge className="hover:bg-green-600 w-fit text-xs bg-emerald-600/80 text-foreground">Tak</Badge>
+                    <Badge className="hover:bg-emerald-600/80 w-fit text-xs bg-emerald-600/80 text-primary-foreground">
+                        Tak
+                    </Badge>
                 ) : (
-                    <Badge className="w-fit text-xs text-foreground bg-rose-700/80">Nie</Badge>
+                    <Badge className="w-fit text-xs hover:bg-rose-700/80 text-foreground bg-rose-700/80">Nie</Badge>
                 );
             },
         },

@@ -14,13 +14,13 @@ import {
 
 import { tagApi } from "@/lib/tag.api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import { TaskType } from "../../../../types/api.types";
 import { Alert } from "../../../alert/Alert";
 import { useAlert } from "../../../alert/hooks/useAlert";
 import TagForm from "../../../forms/TagForm";
 import { useModal } from "../../../modal/hooks/useModal";
 import { Modal } from "../../../modal/Modal";
-import toast from "react-hot-toast";
 
 interface DataTableRowActionsProps {
     row: Row<TaskType>;
@@ -82,26 +82,26 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
+                    <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted hover:bg-card">
                         <MoreHorizontal />
                         <span className="sr-only">Open menu</span>
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[160px]">
-                    <DropdownMenuItem className="cursor-pointer" onClick={openModal}>
+                    <DropdownMenuItem className="cursor-pointer  " onClick={openModal}>
                         Edytuj
                         <DropdownMenuShortcut>✏️</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuItem className={`!text-destructive cursor-pointer ${taskId}`} onClick={openAlert}>
+                    <DropdownMenuItem className={`!text-destructive cursor-pointer ${taskId} `} onClick={openAlert}>
                         Usuń
                         <DropdownMenuShortcut>🗑️</DropdownMenuShortcut>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <Modal isOpen={isOpen} onClose={closeModal} height="" width="sm">
+            <Modal isOpen={isOpen} onClose={closeModal} height="" width="xs">
                 <TagForm tagId={taskId} />
             </Modal>
 

@@ -35,8 +35,8 @@ const ProjectSchoolCard = ({ school }: Props) => {
                 {/* Main details*/}
                 <div className="flex-1">
                     <div className="flex justify-between">
-                        <h3 className="mt-1 text-base font-semibold leading-tight text-primary-foreground/70 flex items-center gap-2">
-                            <FaCaretRight className="w-4 h-4 text-muted-foreground" />
+                        <h3 className="mt-1 text-base font-semibold leading-tight text-foreground flex items-center gap-2">
+                            <FaCaretRight className="w-4 h-4 text-foreground" />
                             {school.name}
                         </h3>
                         <GoCopy
@@ -52,15 +52,15 @@ const ProjectSchoolCard = ({ school }: Props) => {
                         </div>
                         <div className="flex items-center gap-2">
                             <MapPin className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground truncate">{school.adres}</span>
+                            <span className="text-sm text-foreground truncate">{school.adres}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <Phone className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground truncate">{school.phone}</span>
+                            <span className="text-sm text-foreground truncate">{school.phone}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <Mail className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground truncate">{school.email}</span>
+                            <span className="text-sm text-foreground truncate">{school.email}</span>
                         </div>
                     </div>
                 </div>

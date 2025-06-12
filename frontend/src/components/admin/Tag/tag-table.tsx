@@ -1,10 +1,10 @@
+import { productApi } from "@/lib/product.api";
+import { tagApi } from "@/lib/tag.api";
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { FC, useState } from "react";
 import { useParams } from "react-router-dom";
 import useTaskTableFilter from "../../../hooks/use-task-table-filter";
-import { productApi } from "@/lib/product.api";
-import { tagApi } from "@/lib/tag.api";
 import { TaskType } from "../../../types/api.types";
 import { getAvatarColor, getAvatarFallbackText } from "../../../utils/avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
@@ -101,7 +101,6 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
     const projects = data?.projects || [];
     const members = memberData?.members || [];
 
-    //Workspace Projects
     const projectOptions = projects?.map((project) => {
         return {
             label: (
@@ -114,7 +113,6 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
         };
     });
 
-    // Workspace Memebers
     const assigneesOptions = members?.map((member) => {
         const name = member.userId?.name || "Unknown";
         const initials = getAvatarFallbackText(name);
@@ -151,35 +149,14 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({ isLoading, pr
                         name: e.target.value,
                     })
                 }
-                className="h-8 w-full lg:w-[250px] bg-inherit  "
+                className="h-8 w-full lg:w-[250px] bg-inherit  placeholder:text-foreground "
             />
-
-            {/* Assigned To filter */}
-            {/* <DataTableFacetedFilter
-                title="Assigned To"
-                multiSelect={true}
-                options={assigneesOptions}
-                disabled={isLoading}
-                selectedValues={filters.assigneeId?.split(",") || []}
-                onFilterChange={(values) => handleFilterChange("assigneeId", values)}
-            /> */}
-
-            {/* {!projectId && (
-                <DataTableFacetedFilter
-                    title="Projects"
-                    multiSelect={false}
-                    options={projectOptions}
-                    disabled={isLoading}
-                    selectedValues={filters.projectId?.split(",") || []}
-                    onFilterChange={(values) => handleFilterChange("projectId", values)}
-                />
-            )} */}
 
             {Object.values(filters).some((value) => value !== null && value !== "") && (
                 <Button
                     disabled={isLoading}
                     variant="ghost"
-                    className="h-8 px-2 lg:px-3"
+                    className="h-8 px-2 lg:px-3 hover:bg-muted"
                     onClick={() =>
                         setFilters({
                             name: null,

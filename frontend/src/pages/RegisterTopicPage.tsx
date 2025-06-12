@@ -60,7 +60,7 @@ export function RegisterTopicPage() {
     return (
         <div className=" flex w-full max-w-[1540px] mx-auto p-5 min-h-[calc(100vh-190px)]  ">
             <div className="flex w-full gap-6 ">
-                <div className="space-y-5 flex-1">
+                <div className="space-y-3.5 flex-1">
                     {topics?.length === 0 && !title ? (
                         <EmptyState
                             onReset={() => {}}
@@ -125,7 +125,7 @@ export function RegisterTopicPage() {
                         </div>
                         <div className="w-full mb-4">
                             <Input
-                                className="p-4"
+                                className="p-4 placeholder:text-foreground"
                                 value={title}
                                 onChange={titleHandler}
                                 placeholder="Wyszukaj temat..."
@@ -144,11 +144,11 @@ export function RegisterTopicPage() {
                             variants={itemVariants}
                             className={`flex items-center w-full px-4 py-1.5 text-sm rounded-md font-medium transition-all hover:opacity-80 ${
                                 !product
-                                    ? "bg-primary/75 border text-primary-foreground shadow-md"
-                                    : "bg-transparent border text-[hsl(var(--muted-foreground))]"
+                                    ? "bg-primary/75 border text-secondary-foreground"
+                                    : "bg-transparent border text-foreground"
                             }`}
                         >
-                            {!product && <Check className="mr-1 w-4 h-4 text-[hsl(var(--primary-foreground))]" />}
+                            {!product && <Check className="mr-1 w-4 h-4 text-secondary-foreground" />}
                             Wszystkie
                         </motion.button>
                         {products?.map((cat) => (
@@ -159,13 +159,11 @@ export function RegisterTopicPage() {
                                 whileTap={{ scale: 0.95 }}
                                 className={`flex items-center  w-full px-4 py-1.5 border text-sm rounded-md font-medium whitespace-normal break-words transition-all hover:opacity-80 ${
                                     product === cat._id
-                                        ? "bg-primary/75 text-primary-foreground shadow-md "
-                                        : "bg-transparent border text-[hsl(var(--muted-foreground))]"
+                                        ? "bg-primary text-secondary-foreground shadow-md "
+                                        : "bg-transparent text-foreground "
                                 }`}
                             >
-                                {product === cat._id && (
-                                    <Check className="mr-1 w-4 h-4 text-[hsl(var(--primary-foreground))]" />
-                                )}
+                                {product === cat._id && <Check className="mr-1 w-4 h-4 text-secondary-foreground" />}
                                 {cat.name}
                             </motion.button>
                         ))}

@@ -26,9 +26,9 @@ const TagsPage = () => {
                 </h2>
                 <Button
                     onClick={openModal}
-                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-primary-foreground bg-primary/75 rounded-md hover:bg-primary/85 transition"
+                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-secondary-foreground bg-primary rounded-md hover:text-secondary-foreground transition"
                 >
-                    <Plus className="w-4 h-4" /> Dodaj tag
+                    <Plus className="w-4 h-4 text-secondary-foreground" /> Dodaj tag
                 </Button>
             </div>
             <div>

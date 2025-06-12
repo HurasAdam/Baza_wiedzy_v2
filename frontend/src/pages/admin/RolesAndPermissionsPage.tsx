@@ -1,16 +1,16 @@
+import { RoleForm } from "@/components/admin/Role-permissions/RoleForm";
 import RolePermissionDetails from "@/components/admin/Role-permissions/RolePermissionDetails";
 import { useModal } from "@/components/modal/hooks/useModal";
 import { Modal } from "@/components/modal/Modal";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { ICON_MAP } from "@/constants/roleIcons";
 import { adminApi } from "@/lib/admin.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { LuKeyRound } from "react-icons/lu";
-import { RoleForm } from "@/components/admin/Role-permissions/RoleForm";
-import { ICON_MAP } from "@/constants/roleIcons";
 import toast from "react-hot-toast";
+import { LuKeyRound } from "react-icons/lu";
 
 const RolesAndPermissionsPage = () => {
     const queryClient = useQueryClient();
@@ -78,9 +78,9 @@ const RolesAndPermissionsPage = () => {
 
                 <Button
                     onClick={openAddRoleModal}
-                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-primary/75 rounded-md group hover:bg-primary/80 transition"
+                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-secondary-foreground bg-primary rounded-md group hover:bg-primary/80 transition"
                 >
-                    <Plus className="w-4 h-4 group-hover:bg-primary-foreground group-hover:text-primary group-hover:rounded-full group-hover:animate-spin" />{" "}
+                    <Plus className="w-4 h-4 group-hover:bg-secondary-foreground group-hover:text-primary group-hover:rounded-full group-hover:animate-spin" />{" "}
                     Dodaj role
                 </Button>
             </div>

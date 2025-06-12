@@ -8,6 +8,9 @@ export const themes = {
     LINEAR: "linear",
     AURORA: "aurora",
     FLOW: "flow",
+    SUPABASE: "supabase",
+    DOOM_64: "doom64",
+    HYPE: "hype",
 } as const;
 
 export type Theme = (typeof themes)[keyof typeof themes];

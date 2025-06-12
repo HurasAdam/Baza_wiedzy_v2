@@ -55,6 +55,10 @@ const getNavbarPreviewClass = (theme: Theme): string => {
             return "bg-[#24243e]";
         case themes.FLOW:
             return "bg-[#f8f8f8]";
+        case themes.SUPABASE:
+            return "bg-sidebar-background";
+        case themes.DOOM_64:
+            return "bg-background";
         default:
             return "bg-gray-300";
     }
@@ -76,6 +80,10 @@ const getSidebarPreviewClass = (theme: Theme): string => {
             return "bg-[#2a2a40]";
         case themes.FLOW:
             return "bg-[#ffffff]";
+        case themes.SUPABASE:
+            return "bg-card";
+        case themes.DOOM_64:
+            return "bg-card";
         default:
             return "bg-gray-100";
     }
@@ -97,6 +105,10 @@ const getContentPreviewClass = (theme: Theme): string => {
             return "bg-[#2a2a40]";
         case themes.FLOW:
             return "bg-[#fefefe]";
+        case themes.SUPABASE:
+            return "bg-background";
+        case themes.DOOM_64:
+            return "bg-background";
         default:
             return "bg-gray-100";
     }
@@ -118,6 +130,10 @@ const getCardPreviewClass = (theme: Theme): string => {
             return "bg-[#3a3a55]";
         case themes.FLOW:
             return "bg-gray-200";
+        case themes.SUPABASE:
+            return "bg-card";
+        case themes.DOOM_64:
+            return "bg-card";
         default:
             return "bg-gray-200";
     }

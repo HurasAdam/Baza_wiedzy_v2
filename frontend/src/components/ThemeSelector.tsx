@@ -1,7 +1,7 @@
 import useTheme, { Theme, themes } from "@/hooks/useTheme";
 import clsx from "clsx";
-import { ThemePreview } from "./ToggleThemeButton";
 import { CheckCircle } from "lucide-react";
+import { ThemePreview } from "./ToggleThemeButton";
 
 const allThemes: Theme[] = [
     themes.LIGHT,
@@ -11,6 +11,9 @@ const allThemes: Theme[] = [
     themes.PHOENIX,
     themes.LINEAR,
     themes.AURORA,
+    themes.SUPABASE,
+    themes.DOOM_64,
+    themes.HYPE,
 ];
 
 const ThemeSelector = () => {

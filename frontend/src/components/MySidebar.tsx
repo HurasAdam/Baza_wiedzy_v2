@@ -29,11 +29,11 @@ export const MySidebar = () => {
     ];
 
     return (
-        <aside className="w-64 h-screen sticky top-0 bg-sidebar border-r shadow-sm flex flex-col">
+        <aside className="w-64 h-screen bg-sidebar-background  sticky top-0 bg-default border-r shadow-sm flex flex-col">
             {/* ------ LOGO ------*/}
             <div
                 className="h-20 flex items-center gap-3 px-6 border-b
-             bg-sidebar hover:bg-sidebar-accent transition-colors duration-300 cursor-default"
+             bg-sidebar-background hover:bg-sidebar-accent transition-colors duration-300 cursor-default"
             >
                 <div className="relative w-10 h-10">
                     {/* Spinning ring */}
@@ -64,8 +64,8 @@ export const MySidebar = () => {
                                     clsx(
                                         "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
                                         isActive
-                                            ? "bg-muted text-primary shadow-inner"
-                                            : "text-muted-foreground hover:bg-muted hover:text-foreground "
+                                            ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-inner"
+                                            : "text-sidebar-foreground hover:bg-muted hover:text-foreground "
                                     )
                                 }
                             >
@@ -83,7 +83,7 @@ export const MySidebar = () => {
                     <button
                         key={idx}
                         onClick={item.onClick}
-                        className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                        className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-sidebar-foreground hover:bg-muted hover:text-foreground transition-colors"
                     >
                         <item.icon className="w-5 h-5" />
                         {item.label}

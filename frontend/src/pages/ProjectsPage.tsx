@@ -90,10 +90,10 @@ export default function ProjectsPage() {
                             <SelectTrigger className="w-36">
                                 <SelectValue placeholder="Kryterium" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-card">
                                 {filterOptions.map(({ value, label, icon }) => (
-                                    <SelectItem key={value} value={value}>
-                                        <div className="flex items-center py-0.5 text-primary-foreground/85">
+                                    <SelectItem key={value} value={value} className="bg-card">
+                                        <div className="flex items-center py-0.5 text-primary-foreground ">
                                             {icon}
                                             {label}
                                         </div>
@@ -102,7 +102,7 @@ export default function ProjectsPage() {
                             </SelectContent>
                         </Select>
                         <Input
-                            className="flex-1"
+                            className="flex-1 outline-none ring-0 focus:ring-0"
                             placeholder={placeholderMap[filterField]}
                             value={filterQuery}
                             onChange={(e) => setFilterQuery(e.target.value)}
@@ -114,7 +114,7 @@ export default function ProjectsPage() {
                                 setFilterField("name");
                                 setFilterQuery("");
                             }}
-                            className="ml-2"
+                            className="ml-2 text-secondary-foreground"
                         >
                             Resetuj
                         </Button>
