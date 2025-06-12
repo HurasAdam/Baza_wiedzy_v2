@@ -36,18 +36,18 @@ export const AdminLayout: React.FC = () => {
     ];
 
     return (
-        <div className={cn("flex  min-h-screen text-foreground bg-background")}>
+        <div className={cn("flex  min-h-screen text-foreground bg-sidebar-background")}>
             {/* Sidebar */}
             <aside
                 className={cn(
-                    "fixed inset-y-0 left-0 flex flex-col w-56 p-3  text-foreground bg-sidebar shadow-sm border-r transition-all duration-300",
+                    "fixed inset-y-0 left-0 flex flex-col w-56 p-3  text-foreground bg-sidebar-background  shadow-sm border-r transition-all duration-300",
                     sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
                 )}
             >
                 {/* Nagłówek panelu admina z tagline */}
-                <div className="px-2 pb-4 border-b  border-border mb-4 text-center">
+                <div className="px-2 pb-4 border-b  border-border mb-4 text-center ">
                     <div>
-                        <span className="text-xs font-semibold text-sidebar-primary animate-pulse">Baza wiedzy</span>
+                        <span className="text-xs font-semibold text-primary animate-pulse">Baza wiedzy</span>
                     </div>
                     <div className="flex items-center justify-center">
                         <Crown className="w-6 h-6 text-primary" />
@@ -66,7 +66,7 @@ export const AdminLayout: React.FC = () => {
                     </Button>
                 </div>
 
-                <nav className="space-y-1.5">
+                <nav className="space-y-1">
                     {navItems.map(({ icon, label, link }) => {
                         return <NavItem icon={icon} label={label} link={link} />;
                     })}
@@ -122,11 +122,11 @@ const NavItem = ({ icon: Icon, label, link }: NavItemProps) => {
         <Link
             to={link}
             className={cn(
-                "flex items-center px-3 py-2 rounded-md font-medium",
-                isActive ? "bg-sidebar-primary/70 text-white" : "text-foreground hover:text-foreground/80"
+                "flex items-center px-3 py-1.5 rounded-md font-medium text-sm",
+                isActive ? "bg-sidebar-primary text-secondary-foreground" : "text-foreground hover:text-foreground/80"
             )}
         >
-            <Icon className="mr-3 w-4 h-4" />
+            <Icon className="mr-2.5 w-4 h-4 " />
             {label}
         </Link>
     );

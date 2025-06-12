@@ -165,7 +165,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
                                             <FormLabel>Produkt</FormLabel>
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
-                                                    <SelectTrigger>
+                                                    <SelectTrigger className="border-border">
                                                         <SelectValue placeholder="wybierz produkt" />
                                                     </SelectTrigger>
                                                 </FormControl>
@@ -206,6 +206,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
                                             </FormLabel>
                                             <FormControl>
                                                 <Textarea
+                                                    className="border-border"
                                                     rows={6}
                                                     placeholder="Np. Wypisanie ucznia ze szkoły."
                                                     {...field}
@@ -222,7 +223,7 @@ const TopicForm = ({ topicId, onClose }: Props) => {
 
                             <Button
                                 disabled={isCreatePending || isUpdatePending || !isDirty}
-                                className="w-full h-[40px] text-primary-foreground font-semibold bg-primary/85"
+                                className="w-full h-[40px] text-secondary-foreground font-semibold bg-primary"
                                 type="submit"
                             >
                                 {isCreatePending && <Loader className="animate-spin" />}

@@ -19,8 +19,8 @@ const SettingsContainer = () => {
                 <ul className="space-y-4">
                     <li className="text-foreground">
                         <button
-                            className={clsx("w-full text-sm text-left py-1.5 px-3 rounded-md", {
-                                "bg-primary text-background": activeTab === "personalization",
+                            className={clsx("w-full text-sm font-medium text-left py-1.5 px-3 rounded-md", {
+                                "bg-primary text-secondary-foreground font-medium": activeTab === "personalization",
                                 "hover:bg-muted": activeTab !== "personalization",
                             })}
                             onClick={() => setActiveTab("personalization")}
@@ -30,8 +30,8 @@ const SettingsContainer = () => {
                     </li>
                     <li>
                         <button
-                            className={clsx("w-full text-sm text-left py-1.5 px-3 rounded-md", {
-                                "bg-primary  text-background": activeTab === "notifications",
+                            className={clsx("w-full text-sm font-medium text-left py-1.5 px-3 rounded-md", {
+                                "bg-primary  text-secondary-foreground font-medium": activeTab === "notifications",
                                 "hover:bg-muted": activeTab !== "notifications",
                             })}
                             onClick={() => setActiveTab("notifications")}
@@ -41,8 +41,8 @@ const SettingsContainer = () => {
                     </li>
                     <li>
                         <button
-                            className={clsx("w-full text-sm text-left py-1.5 px-3 rounded-md", {
-                                "bg-primary  text-background": activeTab === "avatar",
+                            className={clsx("w-full text-sm font-medium text-left py-1.5 px-3 rounded-md", {
+                                "bg-primary  text-secondary-foreground font-medium": activeTab === "avatar",
                                 "hover:bg-muted": activeTab !== "avatar",
                             })}
                             onClick={() => setActiveTab("avatar")}
@@ -57,11 +57,11 @@ const SettingsContainer = () => {
             <div className="flex-1 p-5 px-8  min-h-fit bg-background border-l ">
                 {activeTab === "personalization" && (
                     <div>
-                        <h3 className="text-xl mb-8 border-b pb-3">Personalizacja</h3>
+                        <h3 className="text-xl font-medium text-foreground mb-8 border-b pb-3">Personalizacja</h3>
                         <div className="flex flex-col gap-6 mb-10">
                             {/* Kolor tła */}
                             <div className="flex flex-col w-full">
-                                <label className="text-foreground mb-4 ">Motyw interfejsu</label>
+                                <label className="mb-4 text-foreground text-base font-medium ">Motyw interfejsu</label>
 
                                 <ThemeSelector />
                             </div>

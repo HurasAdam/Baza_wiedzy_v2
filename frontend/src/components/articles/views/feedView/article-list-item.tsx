@@ -50,7 +50,7 @@ export const ArticleListItem = ({ article, className }: { article: IArticle; cla
                     </div>
                 </CardHeader>
 
-                <CardContent className="p-0 flex justify-between items-center text-sm text-muted-foreground">
+                <CardContent className="p-0 flex justify-between items-center text-sm text-foreground/65">
                     <div className="flex gap-1.5 py-1">
                         #
                         {article?.tags.length > 0 &&

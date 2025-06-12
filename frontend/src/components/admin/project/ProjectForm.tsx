@@ -77,7 +77,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ project, onSave, isPending }
                                         <FormControl>
                                             <Input
                                                 placeholder="Wpisz nazwę projektu"
-                                                className="!h-[48px]"
+                                                className="!h-[48px] border-border"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -96,6 +96,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ project, onSave, isPending }
                                         <FormLabel className="dark:text-[#f1f7feb5] text-sm">krótki opis</FormLabel>
                                         <FormControl>
                                             <Textarea
+                                                className="border-border"
                                                 rows={2}
                                                 placeholder="np. sposób logowania do systemu"
                                                 {...field}
@@ -110,7 +111,7 @@ const ProjectForm: React.FC<IProjectFormProps> = ({ project, onSave, isPending }
 
                         <Button
                             disabled={isPending}
-                            className="flex place-self-end  h-[40px] text-primary-foreground bg-primary/85 font-semibold"
+                            className="flex place-self-end  h-[40px] text-secondary-foreground bg-primary  font-semibold"
                             type="submit"
                         >
                             {isPending && <Loader className="animate-spin" />}

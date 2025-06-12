@@ -18,9 +18,10 @@ const UsersPage = () => {
                 </h2>
                 <Button
                     onClick={openModal}
-                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-primary-foreground bg-primary/75 rounded-md hover:bg-primary/85 transition"
+                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-secondary-foreground bg-primary group rounded-md hover:bg-primary/85 transition"
                 >
-                    <Plus className="w-4 h-4" /> Utwórz konto
+                    <Plus className="w-4 h-4 group-hover:bg-secondary-foreground group-hover:text-primary group-hover:rounded-full group-hover:animate-spin" />{" "}
+                    Utwórz konto
                 </Button>
             </div>
             <div>

@@ -13,7 +13,7 @@ export const TabNavigation = ({ activeTab, onChange }: { activeTab: TabKey; onCh
                 <button
                     key={key}
                     onClick={() => onChange(key as TabKey)}
-                    className={`py-2 px-6 -mb-px border-b-2 font-semibold text-sm ${activeTab === key ? "border-primary/85 text-primary/85" : "border-transparent text-gray-600 hover:text-primary/85"}`}
+                    className={`py-2 px-6 -mb-px font-semibold text-sm ${activeTab === key ? " text-primary" : "border-transparent text-foreground hover:text-primary-foreground"}`}
                 >
                     {label}
                 </button>

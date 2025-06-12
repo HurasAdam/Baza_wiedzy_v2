@@ -167,7 +167,7 @@ export default function SchoolForm({ projectId, onSave, isPending, projectSchool
 
                         <Button
                             disabled={isPending}
-                            className="w-full h-[40px]  text-primary-foreground bg-primary/85  font-semibold"
+                            className="w-full h-[40px]  text-secondary-foreground bg-primary   font-semibold"
                             type="submit"
                         >
                             {isPending && <Loader className="animate-spin" />}

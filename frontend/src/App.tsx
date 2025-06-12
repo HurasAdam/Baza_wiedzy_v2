@@ -9,35 +9,35 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import { LoginPage } from "./pages/auth/Login";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 
-import { RootLayout } from "./layouts/RootLayout";
-import { HomePage } from "./pages/HomePage";
 import MailPage from "./components/articles/views/splitView/ArticlesSplitView";
+import { RootLayout } from "./layouts/RootLayout";
 import ArticlesPage from "./pages/ArticlesPage";
-import { FavoritesPage } from "./pages/FavoritesArticlesPage";
-import { StatisticsPage } from "./pages/StatisticsPage";
-import { RegisterTopicPage } from "./pages/RegisterTopicPage";
-import ProjectsPage from "./pages/ProjectsPage";
 import DepartmentsPage from "./pages/DepartmentsPage";
+import { FavoritesPage } from "./pages/FavoritesArticlesPage";
+import { HomePage } from "./pages/HomePage";
+import ProjectsPage from "./pages/ProjectsPage";
+import { RegisterTopicPage } from "./pages/RegisterTopicPage";
+import { StatisticsPage } from "./pages/StatisticsPage";
 // import CreateArticle from "./components/articles/Create/CreateArticle";
 
-import { AdminRoute } from "./layouts/AdminRoute";
-import { AdminLayout } from "./layouts/AdminLayout";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import ProductsPage from "./pages/admin/ProductsPage";
-import TopicsPage from "./pages/admin/TopicsPage";
-import TagsPage from "./pages/admin/TagsPage";
-import UsersPage from "./pages/admin/UsersPage";
-import ManageProjectsPage from "./pages/admin/ManageProjectsPage";
-import ManageDepartmentsPage from "./pages/admin/ManageDepartmentsPage";
-import AdminsPage from "./pages/admin/AdminsPage";
-import RolesAndPermissionsPage from "./pages/admin/RolesAndPermissionsPage";
-import TrashedArticles from "./pages/admin/TrashedArticles";
 import IssueReportsLayout from "./components/admin/Issue/IssueReportsLayout";
+import { AdminLayout } from "./layouts/AdminLayout";
+import { AdminRoute } from "./layouts/AdminRoute";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminsPage from "./pages/admin/AdminsPage";
+import ManageDepartmentsPage from "./pages/admin/ManageDepartmentsPage";
+import ManageProjectsPage from "./pages/admin/ManageProjectsPage";
+import ProductsPage from "./pages/admin/ProductsPage";
+import RolesAndPermissionsPage from "./pages/admin/RolesAndPermissionsPage";
+import TagsPage from "./pages/admin/TagsPage";
+import TopicsPage from "./pages/admin/TopicsPage";
+import TrashedArticles from "./pages/admin/TrashedArticles";
+import UsersPage from "./pages/admin/UsersPage";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { NotFoundPage } from "./pages/NotFoundPage";
-import { useCheckUser } from "./hooks/auth/useCheckUser";
 import { Spinner2 } from "./components/core/spinner2";
+import { useCheckUser } from "./hooks/auth/useCheckUser";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 function App() {
     useTheme();
@@ -52,7 +52,7 @@ function App() {
     queryClient.setQueryData(["user"], user);
 
     return (
-        <div className="bg-background theme">
+        <div className="theme">
             <Routes>
                 <Route path="auth" element={<AuthLayout />}>
                     <Route index element={<Navigate to="login" replace />} />
@@ -99,7 +99,7 @@ function App() {
                     </Route>
                 </Route>
             </Routes>
-            <Toaster toastOptions={{ duration: 3500, position: "bottom-right" }} />
+            <Toaster toastOptions={{ duration: 3500, position: "top-right" }} />
         </div>
     );
 }

@@ -1,10 +1,10 @@
-import { Package, FileText, List } from "lucide-react";
-import { Card } from "@/components/ui/card";
 import ProductForm from "@/components/forms/ProductForm";
-import ProductEditCategories from "./ProductEditCategories";
-import { useQuery } from "@tanstack/react-query";
+import { Card } from "@/components/ui/card";
 import { productApi } from "@/lib/product.api";
+import { useQuery } from "@tanstack/react-query";
+import { FileText, List, Package } from "lucide-react";
 import { useState } from "react";
+import ProductEditCategories from "./ProductEditCategories";
 
 interface ProductEditContainerProps {
     productId?: string;
@@ -51,7 +51,7 @@ const ProductEditContainer: React.FC<ProductEditContainerProps> = ({ productId, 
                   ${
                       activeTab === key
                           ? " text-primary-foreground border-l-4 border-primary font-medium shadow-sm "
-                          : "text-primary-foreground/50 hover:bg-muted/80 rounded-lg"
+                          : "text-foreground hover:bg-muted/80 rounded-lg"
                   }
                 `}
                             >

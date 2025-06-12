@@ -1,26 +1,26 @@
 import { useLogout } from "@/hooks/auth/useLogout";
+import { useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, Crown, LayoutDashboard, LogOut, Settings, User } from "lucide-react";
 import { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoNotifications } from "react-icons/io5";
 import { MdAssignmentAdd, MdPhoneInTalk } from "react-icons/md";
+import { TbMessageReportFilled } from "react-icons/tb";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAvatarFallbackText } from "../utils/avatar";
 import { getPageTitle } from "../utils/route-mapper";
 import { Dropdown } from "./core/Dropdown";
 import { SideDrawer } from "./core/SideDrawer";
 import ShortcutCallRegisterForm from "./forms/ShortcutCallRegisterForm";
+import MyIssueReports from "./IssueReports/MyIssueReports";
 import { useModal } from "./modal/hooks/useModal";
 import { Modal } from "./modal/Modal";
 import NotificationsPanel from "./NotificationsPanel";
 import SettingsContainer from "./SettingsContainer";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Popover, PopoverTrigger } from "./ui/popover";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import { TbMessageReportFilled } from "react-icons/tb";
-import MyIssueReports from "./IssueReports/MyIssueReports";
 import { Separator } from "./ui/separator";
-import { useQueryClient } from "@tanstack/react-query";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
 interface Props {
     openCreateArticleModal: () => void;
@@ -69,7 +69,7 @@ const Navbar = ({ openCreateArticleModal }: Props) => {
                         ) : (
                             <Avatar className="h-7 w-7 bg-primary">
                                 <AvatarImage src={user} alt={user?.name} />
-                                <AvatarFallback className="text-base font-sembibold bg-primary text-secondary">
+                                <AvatarFallback className="text-base font-sembibold bg-primary text-secondary-foreground">
                                     {initials}
                                 </AvatarFallback>
                             </Avatar>
@@ -119,10 +119,10 @@ const Navbar = ({ openCreateArticleModal }: Props) => {
             </div>
             <button
                 onClick={openSearchModal}
-                className="bg-input flex items-center gap-1 h-full rounded-md border border-border w-[480px] cursor-pointer     p-1 px-2 text-slate-400"
+                className="bg-muted flex items-center gap-1 h-full rounded-md  w-[480px] cursor-pointer     p-1 px-2 text-slate-400"
             >
                 <IoIosSearch size={16} className="text-sidebar-foreground" />
-                <p className="max-sm:hidden pr-[3rem] text-sidebar-foreground/70 text-sm  ">Wyszukaj artukuł...</p>
+                <p className="max-sm:hidden pr-[3rem] text-foreground text-sm  ">Wyszukaj artukuł...</p>
             </button>
             <div className="flex gap-4 items-center">
                 <TooltipProvider delayDuration={300}>
@@ -190,7 +190,7 @@ const Navbar = ({ openCreateArticleModal }: Props) => {
                             ) : (
                                 <Avatar className="h-[22px] w-[22px] bg-primary">
                                     <AvatarImage src={user} alt={user?.name} />
-                                    <AvatarFallback className="text-base font-sembibold bg-primary text-secondary">
+                                    <AvatarFallback className="text-sm font-sembibold bg-primary text-secondary-foreground">
                                         {initials}
                                     </AvatarFallback>
                                 </Avatar>
@@ -203,8 +203,8 @@ const Navbar = ({ openCreateArticleModal }: Props) => {
             <Modal isOpen={isCallsModalOpen} onClose={closeCallsModal}>
                 <ShortcutCallRegisterForm />
             </Modal>
-            <Modal height="sm" isOpen={isSearchModalOpen} onClose={closeSearchModal}>
-                <div>.</div>
+            <Modal height="sm" isOpen={isSearchModalOpen} onClose={closeSearchModal} width="xs" height="xs">
+                <div className="bg-background h-full rounded-lg">.</div>
             </Modal>
             <Modal isOpen={isSettingsModalOpen} onClose={closeSettingsModal}>
                 <SettingsContainer />

@@ -345,7 +345,7 @@ export const ArticleModalDetails = ({ articleId, onClose }: { articleId: string;
                             <Button
                                 key={idx}
                                 onClick={option.actionHandler}
-                                className="p-2 h-fit  hover:bg-primary/85 gap-1.5 text-secondary"
+                                className="p-2 h-fit  hover:bg-primary/85 gap-1.5 text-foreground"
                                 variant="outline"
                             >
                                 {option.icon}
@@ -399,7 +399,7 @@ export const ArticleModalDetails = ({ articleId, onClose }: { articleId: string;
                             {/* LEFT COLUMN */}
                             <Card className="bg-background min-h-[580px]">
                                 <CardHeader className="flex flex-row items-center justify-between">
-                                    <CardTitle className="text-xl">Odpowiedź dla klienta</CardTitle>
+                                    <CardTitle className="text-xl text-foreground">Odpowiedź dla klienta</CardTitle>
                                     {/* COPY BUTTON */}
 
                                     <Button
@@ -426,7 +426,7 @@ export const ArticleModalDetails = ({ articleId, onClose }: { articleId: string;
                                 <CardContent>
                                     <div
                                         ref={articleReff}
-                                        className="article-details-in-modal text-primary-foreground "
+                                        className="article-details-in-modal text-foreground "
                                         dangerouslySetInnerHTML={{
                                             __html: clientDescription || "",
                                         }}

@@ -94,13 +94,13 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
     return (
         <div className="w-full h-auto max-w-full bg-background rounded-lg">
             <div className="h-full px-10 py-10">
-                <div className="mb-5 pb-2 border-b">
+                <div className="mb-5 pb-2 border-b space-y-3">
                     <h1
                         className="text-xl tracking-[-0.16px] text-primary-foreground font-semibold mb-1
            text-center sm:text-left"
                     >
                         {tagId ? (
-                            <span className="flex items-center gap-1.5">
+                            <span className="flex items-center font-medium gap-1.5">
                                 <MdOutlineEdit className="h-6 w-6 " /> Edytuj tag{" "}
                             </span>
                         ) : (
@@ -109,7 +109,7 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
                             </span>
                         )}
                     </h1>
-                    <p className="text-muted-foreground text-sm leading-tight">
+                    <p className="text-foreground text-sm leading-tight">
                         {tagId
                             ? "Zmień nazwę istniejącego tagu, który jest używany do organizacji artykułów."
                             : "Utwórz tag, który pomoże w organizacji artykułów i ułatwi wyszukiwanie treści."}
@@ -123,9 +123,15 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-primary-foreground  text-sm">Nazwa tagu</FormLabel>
+                                        <FormLabel className="text-foreground font-medium  text-sm">
+                                            Nazwa tagu
+                                        </FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Wpisz nazwę tagu" className="!h-[48px]" {...field} />
+                                            <Input
+                                                placeholder="Wpisz nazwę tagu"
+                                                className="!h-[48px] border-border"
+                                                {...field}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -134,8 +140,9 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
                         </div>
 
                         <Button
+                            variant="outline"
                             disabled={isPending}
-                            className="flex place-self-end  h-[40px] text-primary-foreground bg-primary/85 font-semibold"
+                            className="flex place-self-end  h-[40px] text-primary-foreground hover:bg-primary hover:border-primary hover:text-secondary-foreground font-semibold"
                             type="submit"
                         >
                             {isPending && <Loader className="animate-spin" />}

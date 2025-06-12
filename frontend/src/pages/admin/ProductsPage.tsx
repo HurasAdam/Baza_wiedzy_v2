@@ -1,19 +1,20 @@
+import EmptyState from "@/components/EmptyState";
+import Pagination from "@/components/Pagination";
+import ProductCardSkeleton from "@/components/admin/Product/ProductCardSkeleton";
+import ProductEditContainer from "@/components/admin/Product/ProductEditContainer";
+import { Input } from "@/components/ui/input";
+import { adminApi } from "@/lib/admin.api";
+import { IProduct } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { FileText, Package, Plus } from "lucide-react";
 import { useState } from "react";
+import { FiX } from "react-icons/fi";
 import ProductForm from "../../components/forms/ProductForm";
 import { Modal } from "../../components/modal/Modal";
 import { useModal } from "../../components/modal/hooks/useModal";
 import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
 import { BANNER_IMAGES } from "../../constants/productBanners";
-import { Input } from "@/components/ui/input";
-import ProductCardSkeleton from "@/components/admin/Product/ProductCardSkeleton";
-import { IProduct } from "@/types";
-import EmptyState from "@/components/EmptyState";
-import ProductEditContainer from "@/components/admin/Product/ProductEditContainer";
-import { FiX } from "react-icons/fi";
-import { adminApi } from "@/lib/admin.api";
-import Pagination from "@/components/Pagination";
 
 const SKELETON_COUNT = 6;
 const DEFAULT_LIMIT = 15;
@@ -54,7 +55,7 @@ const ProductsPage = () => {
                                 setPage(1); // <--- to kluczowe!
                             }}
                             placeholder="Wyszukaj produkt..."
-                            className="h-8 w-full lg:w-[250px] bg-inherit"
+                            className="h-8 w-full lg:w-[250px] bg-inherit border-border"
                         />
                         {name && (
                             <button
@@ -70,9 +71,9 @@ const ProductsPage = () => {
 
                 <Button
                     onClick={openModal}
-                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-white bg-primary/75 rounded-md group hover:bg-primary/80 transition"
+                    className="px-4 flex gap-1.5 py-2 mt-4 md:mt-0 text-sm font-medium text-secondary-foreground bg-primary rounded-md group hover:text-secondary-foreground transition"
                 >
-                    <Plus className="w-4 h-4 group-hover:bg-primary-foreground group-hover:text-primary group-hover:rounded-full group-hover:animate-spin" />{" "}
+                    <Plus className="w-4 h-4 text-secondary-foreground group-hover:bg-secondary-foreground group-hover:text-primary group-hover:rounded-full group-hover:animate-spin" />{" "}
                     Dodaj produkt
                 </Button>
             </div>
@@ -89,7 +90,7 @@ const ProductsPage = () => {
                     />
                 ) : (
                     products?.map((product: IProduct) => (
-                        <div
+                        <Card
                             key={product._id}
                             className="bg-card border border-muted rounded-lg shadow-lg overflow-hidden flex flex-col transition-shadow duration-300"
                         >
@@ -105,7 +106,7 @@ const ProductsPage = () => {
                                 <div className="mt-2 flex justify-between items-center">
                                     <span
                                         style={{ backgroundColor: product.labelColor }}
-                                        className="px-2 py-1 text-xs font-medium text-white rounded-full"
+                                        className="px-2 py-1 text-xs font-medium text-secondary-foreground rounded-full"
                                     >
                                         {product.name}
                                     </span>
@@ -118,7 +119,7 @@ const ProductsPage = () => {
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="ml-2 px-3 py-1 text-sm font-medium text-primary-foreground hover:text-foreground"
+                                        className="ml-2 px-3 py-1 text-sm font-medium text-foreground hover:bg-muted"
                                     >
                                         Szczegóły
                                     </Button>
@@ -126,13 +127,13 @@ const ProductsPage = () => {
                                         variant="ghost"
                                         size="sm"
                                         onClick={() => editProducthandler(product._id)}
-                                        className="ml-2 px-3 py-1 text-sm font-medium text-primary-foreground hover:text-foreground"
+                                        className="ml-2 px-3 py-1 text-sm font-medium text-foreground hover:bg-muted"
                                     >
                                         Edytuj
                                     </Button>
                                 </div>
                             </div>
-                        </div>
+                        </Card>
                     ))
                 )}
             </div>
