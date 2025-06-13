@@ -44,9 +44,11 @@ export function Dropdown({
                 <DropdownMenuGroup>
                     {options.map(({ icon, label, actionHandler }) => {
                         return (
-                            <DropdownMenuItem className="cursor-pointer" onClick={() => actionHandler()}>
-                                <div className="mr-2 w-4 h-4 flex items-center">{icon}</div>
-                                <span>{label}</span>
+                            <DropdownMenuItem className="cursor-pointer group" onClick={() => actionHandler()}>
+                                <div className="mr-2 w-4 h-4 flex items-center group-hover:text-sidebar-foreground text-sidebar-foreground">
+                                    {icon}
+                                </div>
+                                <span className="text-foreground ">{label}</span>
                             </DropdownMenuItem>
                         );
                     })}

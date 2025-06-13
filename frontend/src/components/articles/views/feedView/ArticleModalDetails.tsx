@@ -365,7 +365,7 @@ export const ArticleModalDetails = ({ articleId, onClose }: { articleId: string;
                             >
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                                 <div className="absolute bottom-2 left-4 py-2 space-y-2">
-                                    <span className="text-foreground p-2 text-lg font-semibold drop-shadow">
+                                    <span className="text-secondary-foreground p-2 text-lg font-semibold drop-shadow">
                                         {product.name}
                                     </span>
                                     {isVerified ? (
@@ -442,7 +442,7 @@ export const ArticleModalDetails = ({ articleId, onClose }: { articleId: string;
                                 onClick={openCommentsHandler}
                                 variant="outline"
                                 size="sm"
-                                className="p-2 h-fit bg-primary/70 hover:bg-primary/85 gap-1.5"
+                                className="p-2 h-fit bg-primary hover:bg-primary/85 text-secondary-foreground hover:text-secondary-foreground gap-1.5"
                                 aria-label="Pokaż uwagi"
                             >
                                 💬 Pokaż uwagi
