@@ -62,7 +62,7 @@ export const MySidebar = () => {
                                 to={item.link}
                                 className={({ isActive }) =>
                                     clsx(
-                                        "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                                        "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-montserrat transition-colors",
                                         isActive
                                             ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-inner"
                                             : "text-sidebar-foreground hover:bg-muted hover:text-foreground "
