@@ -14,6 +14,8 @@ const allThemes: Theme[] = [
     themes.SUPABASE,
     themes.DOOM_64,
     themes.HYPE,
+    themes.VIOLET,
+    themes.NIGHT,
 ];
 
 const ThemeSelector = () => {

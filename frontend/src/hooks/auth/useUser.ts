@@ -1,14 +1,20 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { userApi } from "@/lib/user.api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { USER_KEY } from "./keys";
-import type { User } from "./useCheckUser";
 
 export const useUser = () => {
     const queryClient = useQueryClient();
-    const user = queryClient.getQueryData<User>([USER_KEY]);
 
-    if (!user) {
-        return null;
-    }
+    const { data: user } = useQuery({
+        queryKey: [USER_KEY],
+        queryFn: () => {
+            return userApi.findMe();
+        },
+        staleTime: Infinity,
+        enabled: !queryClient.getQueryData([USER_KEY]),
+    });
+
+    if (!user) return null;
 
     const { _id, email, name, surname, role, isActive, favourites, profilePicture, mustChangePassword } = user;
 
@@ -27,14 +33,3 @@ export const useUser = () => {
         },
     };
 };
-
-// export const useUser = () => {
-//     const queryClient = useQueryClient();
-//     const user = queryClient.getQueryData<any>([USER_KEY]);
-
-//     if (!user) {
-//         throw Error("user not exist");
-//     }
-
-//     return user;
-// };

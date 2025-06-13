@@ -11,6 +11,8 @@ export const themes = {
     SUPABASE: "supabase",
     DOOM_64: "doom64",
     HYPE: "hype",
+    VIOLET: "violet",
+    NIGHT: "night",
 } as const;
 
 export type Theme = (typeof themes)[keyof typeof themes];
