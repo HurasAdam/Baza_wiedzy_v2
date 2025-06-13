@@ -64,7 +64,7 @@ export const MySidebar = () => {
                                     clsx(
                                         "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-montserrat transition-colors",
                                         isActive
-                                            ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-inner"
+                                            ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-inner font-semibold"
                                             : "text-sidebar-foreground hover:bg-muted hover:text-foreground "
                                     )
                                 }

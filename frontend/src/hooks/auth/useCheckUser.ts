@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { USER_KEY } from "./keys";
 import { userApi } from "@/lib/user.api";
+import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
+import { USER_KEY } from "./keys";
 
 export interface User {
     profilePicture: string | null;
@@ -28,6 +28,7 @@ export const useCheckUser = () => {
     const { data, status } = useQuery({
         queryKey: [USER_KEY],
         queryFn: () => userApi.findMe() as Promise<AxiosResponse<User>>,
+        staleTime: Infinity,
     });
 
     return { user: data?.data, status };
