@@ -4,7 +4,7 @@ const projectSchoolSchema = new Schema(
     {
         name: { type: String, required: true, trim: true },
         adres: { type: String, required: true, trim: true },
-        email: { type: String, unique: true, required: true, trim: true, lowercase: true },
+        email: { type: String, unique: false, required: true, trim: true, lowercase: true },
         project: { type: Schema.Types.ObjectId, ref: "Project", required: true },
         szId: { type: String, required: true, unique: true },
         phone: { type: String, required: true },
