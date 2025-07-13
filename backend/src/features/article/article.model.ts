@@ -6,6 +6,7 @@ const articleSchema = new Schema(
         employeeDescription: { type: String, required: true },
         tags: [{ type: Schema.Types.ObjectId, ref: "Tag", required: true }],
         isVerified: { type: Boolean, required: true, default: false },
+        isApproved: { type: Boolean, required: true, default: false },
         createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
         clientDescription: { type: String, required: true },
         verifiedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
