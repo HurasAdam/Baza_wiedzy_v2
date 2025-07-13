@@ -80,6 +80,7 @@ export const ArticleService = {
                 { path: "createdBy", select: ["name", "surname"] },
                 { path: "verifiedBy", select: ["name", "surname", "isActive"] },
                 { path: "product", select: ["name", "labelColor", "banner"] },
+                { path: "category", select: ["name"] },
             ])
             .where({ isTrashed: findTrashed });
 
