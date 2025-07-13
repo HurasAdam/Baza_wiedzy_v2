@@ -27,5 +27,11 @@ export const constructSearchQuery = (query: any) => {
         constructedQuery.isVerified = query.verified;
     }
 
+    if (typeof query.isApproved !== "undefined") {
+        constructedQuery.isApproved = query.isApproved === "true";
+    } else {
+        constructedQuery.isApproved = true;
+    }
+
     return constructedQuery;
 };
