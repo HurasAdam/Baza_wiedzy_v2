@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { searchDto } from "@/common/dto/search.dto";
+import { z } from "zod";
 
 export const searchArticlesDto = searchDto.extend({
     title: z.string().optional(),
@@ -13,6 +13,8 @@ export const searchArticlesDto = searchDto.extend({
     category: z.string().optional(),
 
     verified: z.string().optional(),
+
+    isApproved: z.string().optional(),
 });
 
 export type SearchArticlesDto = z.infer<typeof searchArticlesDto>;
