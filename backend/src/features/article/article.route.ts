@@ -14,6 +14,8 @@ articleRoutes.get("/:id/history", articleController.findOneHistory);
 articleRoutes.get("/:id", articleController.findOne);
 articleRoutes.post("/", articleController.create);
 articleRoutes.post("/:id/verify", articleController.toggleVerify);
+articleRoutes.post("/:id/aprove", articleController.aproveOne);
+articleRoutes.post("/:id/reject", articleController.rejectOne);
 articleRoutes.post("/:id/markAsFavourite", articleController.toggleFavourite);
 articleRoutes.put("/:id", articleController.updateOne);
 articleRoutes.put("/:id/trash", articleController.updateOneAsTrash);
