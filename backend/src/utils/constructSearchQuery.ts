@@ -27,10 +27,10 @@ export const constructSearchQuery = (query: any) => {
         constructedQuery.isVerified = query.verified;
     }
 
-    if (typeof query.isApproved !== "undefined") {
-        constructedQuery.isApproved = query.isApproved === "true";
+    if (query.status) {
+        constructedQuery.status = query.status;
     } else {
-        constructedQuery.isApproved = true;
+        constructedQuery.status = "approved";
     }
 
     return constructedQuery;

@@ -55,6 +55,21 @@ export const ArticleController = (articleService = ArticleService) => ({
         });
     }),
 
+    aproveOne: catchErrors(async ({ userId, body, params }, res) => {
+        await articleService.aproveOne(userId, params.id);
+        return res.status(OK).json({
+            message: body.isVerified ? "Artykuł został zweryfikowany" : "Artykuł został oznaczony jako do weryfikacji",
+        });
+    }),
+
+    rejectOne: catchErrors(async ({ userId, body, params }, res) => {
+        console.log(body);
+        await articleService.rejectOne(userId, params.id, body.rejectionReason);
+        return res.status(OK).json({
+            message: body.isVerified ? "Artykuł został zweryfikowany" : "Artykuł został oznaczony jako do weryfikacji",
+        });
+    }),
+
     toggleFavourite: catchErrors(async ({ userId, params }, res) => {
         const isFavourite = await articleService.toggleFavourite(userId, params.id);
         return res.status(OK).json({

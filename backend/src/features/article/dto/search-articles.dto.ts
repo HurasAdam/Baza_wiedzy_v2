@@ -14,7 +14,7 @@ export const searchArticlesDto = searchDto.extend({
 
     verified: z.string().optional(),
 
-    isApproved: z.string().optional(),
+    status: z.enum(["draft", "pending", "approved", "rejected"]).optional(),
 });
 
 export type SearchArticlesDto = z.infer<typeof searchArticlesDto>;

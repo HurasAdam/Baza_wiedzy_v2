@@ -1,8 +1,8 @@
-import mongoose, { Types } from "mongoose";
-import { NOT_FOUND } from "@/constants/http";
 import EventType from "@/constants/articleEventTypes";
-import appAssert from "@/utils/appAssert";
+import { NOT_FOUND } from "@/constants/http";
 import ArticleModel from "@/features/article/article.model";
+import appAssert from "@/utils/appAssert";
+import mongoose, { Types } from "mongoose";
 import ArticleHistoryModel from "./article-history.model";
 
 interface Article {

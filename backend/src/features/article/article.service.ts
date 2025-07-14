@@ -2,6 +2,7 @@ import EventType from "@/constants/articleEventTypes";
 import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import { constructSearchQuery } from "@/utils/constructSearchQuery";
+import mongoose from "mongoose";
 import ArticleHistoryModel from "../article-history/article-history.model";
 import { getArticleHistory, saveArticleChanges } from "../article-history/article-history.service";
 import TagModel from "../tag/tag.model";
@@ -166,12 +167,48 @@ export const ArticleService = {
         if (isVerifiedChanged) {
             await saveArticleChanges({
                 articleId: articleId,
-                articleBeforeChanges: article, // Artykuł przed zmianą
-                updatedArticle: updatedAritlceObj, // Artykuł po zmianie
+                articleBeforeChanges: article,
+                updatedArticle: updatedAritlceObj,
                 updatedBy: userId,
                 eventType: isVerified ? EventType.verified : EventType.Unverified,
             });
         }
+    },
+
+    async aproveOne(userId: string, articleId: string) {
+        const article = await ArticleModel.findById(articleId);
+        appAssert(article, NOT_FOUND, "Article not found");
+
+        article.status = "approved";
+        article.isVerified = true;
+        article.rejectionReason = null;
+        article.rejectedBy = null;
+        article.verifiedBy = new mongoose.Types.ObjectId(userId);
+
+        const updatedArticle = await article.save();
+        const updatedArticleObj = updatedArticle.toObject();
+        const articleBeforeChangesObj = article.toObject();
+
+        await saveArticleChanges({
+            articleId,
+            articleBeforeChanges: articleBeforeChangesObj,
+            updatedArticle: updatedArticleObj,
+            updatedBy: userId,
+            eventType: EventType.verified,
+        });
+    },
+
+    async rejectOne(userId: string, articleId: string, rejectionReason: string) {
+        const article = await ArticleModel.findById(articleId);
+        appAssert(article, NOT_FOUND, "Article not found");
+
+        const isPending = article.status === "pending";
+        appAssert(isPending, NOT_FOUND, "Article status must be 'pending' to reject");
+
+        article.status = "rejected";
+        article.rejectionReason = rejectionReason;
+        article.rejectedBy = new mongoose.Types.ObjectId(userId);
+        await article.save();
     },
 
     async toggleFavourite(userId: string, articleId: string) {
