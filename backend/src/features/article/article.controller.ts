@@ -106,4 +106,10 @@ export const ArticleController = (articleService = ArticleService) => ({
         const history = await articleService.findHistoryByUser(params.id, query);
         return res.status(OK).json(history);
     }),
+
+    findAllByUser: catchErrors(async ({ userId, query }, res) => {
+        const payload = searchArticlesDto.parse(query);
+        const articles = await articleService.findAllByUser(userId, payload);
+        return res.status(200).json(articles);
+    }),
 });
