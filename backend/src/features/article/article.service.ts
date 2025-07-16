@@ -380,4 +380,44 @@ export const ArticleService = {
         const userHistoryFiltered = userHistory.filter((entry) => entry.articleId);
         return userHistoryFiltered;
     },
+
+    async findAllByUser(userId: string, query: SearchArticlesDto) {
+        const querydb = {
+            createdBy: userId,
+            ...constructSearchQuery(query),
+            isTrashed: false,
+        };
+
+        const { limit, page, sortBy, sortAt } = query;
+        const skip = (page - 1) * limit;
+
+        const articles = await ArticleModel.find(querydb)
+            .select(["-clientDescription", "-employeeDescription", "-verifiedBy", "-updatedAt", "-__v"])
+            .populate([
+                { path: "tags", select: ["name", "shortname"] },
+                { path: "createdBy", select: ["name", "surname"] },
+                { path: "product", select: ["name", "labelColor", "banner"] },
+                { path: "category", select: ["name"] },
+            ])
+            .skip(skip)
+            .limit(limit)
+            .sort([[sortBy, sortAt]]);
+
+        const total = await ArticleModel.countDocuments(querydb);
+        const { favourites } = await UserService.findOne(userId);
+
+        const articlesWithFavourites = articles.map((article) => ({
+            ...article.toObject(),
+            isFavourite: favourites.some((favId) => favId.equals(article._id)),
+        }));
+
+        return {
+            data: articlesWithFavourites,
+            pagination: {
+                total,
+                page,
+                pages: Math.ceil(total / limit),
+            },
+        };
+    },
 };
