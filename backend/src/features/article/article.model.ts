@@ -15,7 +15,7 @@ const articleSchema = new Schema(
         rejectionReason: { type: String, default: null, required: false },
         rejectedBy: { type: Schema.Types.ObjectId, ref: "User", default: null, required: false },
         createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
-        clientDescription: { type: String, required: true },
+
         verifiedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
         viewsCounter: { type: Number, default: 0 },
         isTrashed: { type: Boolean, default: false },
