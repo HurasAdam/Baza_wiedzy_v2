@@ -1,37 +1,40 @@
-import EventType from "@/constants/articleEventTypes";
 import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import { constructSearchQuery } from "@/utils/constructSearchQuery";
 import mongoose from "mongoose";
 import ArticleHistoryModel from "../article-history/article-history.model";
-import { getArticleHistory, saveArticleChanges } from "../article-history/article-history.service";
+import { getArticleHistory } from "../article-history/article-history.service";
 import TagModel from "../tag/tag.model";
 import UserModel from "../user/user.model";
 import { UserService } from "../user/user.service";
 import ArticleModel from "./article.model";
 import type { CreateArticleDto } from "./dto/create-article.dto";
 import type { SearchArticlesDto } from "./dto/search-articles.dto";
+import ResponseVariantModel from "./responseVariant/responseVariant.model";
 
 export const ArticleService = {
     async create(userId: string, payload: CreateArticleDto) {
-        const article = await ArticleModel.exists({ title: payload.title });
-        appAssert(!article, CONFLICT, "Article already exists");
+        const articleExists = await ArticleModel.exists({ title: payload.title });
+        appAssert(!articleExists, CONFLICT, "Article already exists");
 
-        const nextArticle = await ArticleModel.create({
+        const newArticle = await ArticleModel.create({
             ...payload,
             createdBy: userId,
             verifiedBy: userId,
         });
 
-        await saveArticleChanges({
-            articleId: nextArticle?._id.toString(),
-            updatedBy: userId,
-            articleBeforeChanges: null,
-            updatedArticle: nextArticle,
-            eventType: EventType.Created,
-        });
+        // Create response varaint/variants based on form data and link them to created Article
+        await Promise.all(
+            payload.responseVariants.map((variant) =>
+                ResponseVariantModel.create({
+                    ...variant,
+                    createdBy: userId,
+                    articleId: newArticle._id,
+                })
+            )
+        );
 
-        return nextArticle;
+        return newArticle;
     },
 
     async find(userId: string, query: SearchArticlesDto, findTrashed = false) {
@@ -86,11 +89,12 @@ export const ArticleService = {
             .where({ isTrashed: findTrashed });
 
         appAssert(article, NOT_FOUND, "Article not found");
-
+        const responseVariants = await ResponseVariantModel.find({ articleId: article._id }).lean();
         const isFavourite = user.favourites.some((f) => f._id.equals(article._id));
 
         return {
             ...article.toObject(),
+            responseVariants,
             isFavourite,
         };
     },
@@ -163,16 +167,6 @@ export const ArticleService = {
         article.isVerified = isVerified;
         const updatedAritlce = await article.save();
         const updatedAritlceObj = updatedAritlce.toObject();
-
-        if (isVerifiedChanged) {
-            await saveArticleChanges({
-                articleId: articleId,
-                articleBeforeChanges: article,
-                updatedArticle: updatedAritlceObj,
-                updatedBy: userId,
-                eventType: isVerified ? EventType.verified : EventType.Unverified,
-            });
-        }
     },
 
     async aproveOne(userId: string, articleId: string) {
@@ -188,14 +182,6 @@ export const ArticleService = {
         const updatedArticle = await article.save();
         const updatedArticleObj = updatedArticle.toObject();
         const articleBeforeChangesObj = article.toObject();
-
-        await saveArticleChanges({
-            articleId,
-            articleBeforeChanges: articleBeforeChangesObj,
-            updatedArticle: updatedArticleObj,
-            updatedBy: userId,
-            eventType: EventType.verified,
-        });
     },
 
     async rejectOne(userId: string, articleId: string, rejectionReason: string) {
@@ -239,16 +225,6 @@ export const ArticleService = {
         const trashedArticle = await article.save();
 
         const updatedAritlceObj = trashedArticle.toObject();
-
-        if (updatedAritlceObj.isTrashed) {
-            await saveArticleChanges({
-                articleId: articleId,
-                articleBeforeChanges: article,
-                updatedArticle: updatedAritlceObj,
-                updatedBy: userId,
-                eventType: EventType.Trashed,
-            });
-        }
     },
 
     async updateOneAsRestore(userId: string, articleId: string) {
@@ -259,16 +235,6 @@ export const ArticleService = {
         const restoredArticle = await article.save();
 
         const updatedAritlceObj = restoredArticle.toObject();
-
-        if (!updatedAritlceObj.isTrashed) {
-            await saveArticleChanges({
-                articleId: articleId,
-                articleBeforeChanges: article,
-                updatedArticle: updatedAritlceObj,
-                updatedBy: userId,
-                eventType: EventType.Restored,
-            });
-        }
     },
 
     async deleteOne(articleId: string) {
@@ -282,31 +248,61 @@ export const ArticleService = {
     },
 
     async updateOne(userId: string, articleId: string, body: any) {
-        const { title, clientDescription, employeeDescription, tags, product, category } = body;
+        const { title, employeeDescription, tags, product, category, responseVariants } = body;
 
-        const article = await ArticleModel.findById({ _id: articleId });
-
+        const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
-        const articleBeforeChanges = article.toObject();
+        article.title = title ?? article.title;
+        article.employeeDescription = employeeDescription ?? article.employeeDescription;
+        article.tags = tags ?? article.tags;
+        article.product = product ?? article.product;
+        article.category = category ?? article.category;
 
-        article.title = title || article.title;
-        article.clientDescription = clientDescription || article.clientDescription;
-        article.employeeDescription = employeeDescription || article.employeeDescription;
-        article.tags = tags || article.tags;
-        article.product = product || article.product;
-        article.category = category || article.category;
+        await article.save();
 
-        const updatedArticle = await article.save();
-        const updatedArticleObject = updatedArticle.toObject();
+        if (Array.isArray(responseVariants)) {
+            // getting response varriants linked to current Article
+            const existingVariants = await ResponseVariantModel.find({ articleId });
 
-        await saveArticleChanges({
-            articleId: articleId,
-            updatedBy: userId,
-            articleBeforeChanges,
-            updatedArticle: updatedArticleObject,
-            eventType: EventType.Updated,
-        });
+            // converting array into map
+            const existingMap = new Map(existingVariants.map((v) => [v._id.toString(), v]));
+
+            const incomingIds = responseVariants.filter((v: any) => v._id).map((v: any) => v._id);
+
+            // 1. Update
+            for (const variant of responseVariants) {
+                if (variant._id && existingMap.has(variant._id)) {
+                    // Update istniejącego
+                    await ResponseVariantModel.findByIdAndUpdate(variant._id, {
+                        version: variant.version,
+                        variantName: variant.variantName,
+                        variantContent: variant.variantContent,
+                        modifiedBy: userId,
+                        modifiedAt: new Date(),
+                    });
+                } else {
+                    // Adding new varaints
+                    const newVariant = new ResponseVariantModel({
+                        articleId,
+                        version: variant.version,
+                        variantName: variant.variantName,
+                        variantContent: variant.variantContent,
+                        createdBy: userId,
+                    });
+                    await newVariant.save();
+                }
+            }
+
+            // 2. Removing variants
+            for (const existing of existingVariants) {
+                if (!incomingIds.includes(existing._id.toString())) {
+                    await ResponseVariantModel.findByIdAndDelete(existing._id);
+                }
+            }
+        }
+
+        return article.toObject();
     },
 
     async findCreatedByUser(userId: string, query: any) {
