@@ -3,22 +3,19 @@ import { z } from "zod";
 
 export const createArticleDto = z.object({
     title: z.string().trim().min(4).max(255),
-
     employeeDescription: z.string().trim().min(6).max(9000),
+    tags: z.array(z.string().refine(Types.ObjectId.isValid)).nonempty(),
+    product: z.string().refine(Types.ObjectId.isValid),
+    category: z.string().refine(Types.ObjectId.isValid),
 
-    clientDescription: z.string().trim().min(6).max(9000),
-
-    tags: z
-        .array(z.string().refine((value) => Types.ObjectId.isValid(value)))
-        .nonempty()
-        .refine((values) => new Set(values).size === values.length),
-
-    product: z.string().refine((value) => {
-        return Types.ObjectId.isValid(value);
-    }),
-    category: z.string().refine((value) => {
-        return Types.ObjectId.isValid(value);
-    }),
+    responseVariants: z
+        .array(
+            z.object({
+                version: z.number(),
+                variantName: z.string().optional(),
+                variantContent: z.string().min(1),
+            })
+        )
+        .nonempty(),
 });
-
 export type CreateArticleDto = z.infer<typeof createArticleDto>;
