@@ -61,13 +61,26 @@ export const ArticleService = {
         const total = await ArticleModel.countDocuments(querydb);
         const { favourites } = await UserService.findOne(userId);
 
-        const articlesWithFavourites = articles.map((article) => ({
-            ...article.toObject(),
-            isFavourite: favourites.some((favId) => favId.equals(article._id)),
-        }));
+        const articlesWithExtras = await Promise.all(
+            articles.map(async (article) => {
+                const articleObj = article.toObject();
+
+                const isFavourite = favourites.some((favId) => favId.equals(article._id));
+
+                const responseVariantsCount = await ResponseVariantModel.countDocuments({
+                    articleId: article._id,
+                });
+
+                return {
+                    ...articleObj,
+                    isFavourite,
+                    responseVariantsCount,
+                };
+            })
+        );
 
         return {
-            data: articlesWithFavourites,
+            data: articlesWithExtras,
             pagination: {
                 total,
                 page,
@@ -394,6 +407,7 @@ export const ArticleService = {
                 { path: "createdBy", select: ["name", "surname"] },
                 { path: "product", select: ["name", "labelColor", "banner"] },
                 { path: "category", select: ["name"] },
+                { path: "rejectedBy", select: ["name", "surname"] },
             ])
             .skip(skip)
             .limit(limit)
