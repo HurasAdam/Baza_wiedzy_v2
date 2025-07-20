@@ -8,9 +8,9 @@ const articleSchema = new Schema(
         isVerified: { type: Boolean, required: true, default: false },
         status: {
             type: String,
-            enum: ["pending", "approved", "rejected"],
+            enum: ["pending", "approved", "rejected", "draft"],
             required: true,
-            default: "pending",
+            default: "draft",
         },
         rejectionReason: { type: String, default: null, required: false },
         rejectedBy: { type: Schema.Types.ObjectId, ref: "User", default: null, required: false },
