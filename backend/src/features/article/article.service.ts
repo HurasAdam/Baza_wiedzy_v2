@@ -201,8 +201,8 @@ export const ArticleService = {
         const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
-        const isPending = article.status === "pending";
-        appAssert(isPending, NOT_FOUND, "Article status must be 'pending' to reject");
+        const isPending = article.status === "draft";
+        appAssert(isPending, NOT_FOUND, "Article status must be 'draft' to reject");
 
         article.status = "rejected";
         article.rejectionReason = rejectionReason;
@@ -271,6 +271,11 @@ export const ArticleService = {
         article.tags = tags ?? article.tags;
         article.product = product ?? article.product;
         article.category = category ?? article.category;
+        if (article.status === "rejected") {
+            article.status = "draft";
+        } else {
+            article.status = "pending";
+        }
 
         await article.save();
 
