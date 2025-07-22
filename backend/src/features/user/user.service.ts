@@ -1,6 +1,7 @@
 import { BAD_REQUEST, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import { compareValue, hashValue } from "@/utils/bcrypt";
+import { constructSearchQuery } from "../../utils/constructSearchQuery";
 import ArticleHistoryModel from "../article-history/article-history.model";
 import ArticleModel from "../article/article.model";
 import RoleModel from "../role-permission/roles-permission.model";
@@ -151,10 +152,12 @@ export const UserService = {
         }
 
         const favourites = user.favourites;
-
-        const favouriteArticles = await ArticleModel.find({
+        const querydb = {
+            ...constructSearchQuery(query),
             _id: { $in: favourites },
-        })
+        };
+
+        const favouriteArticles = await ArticleModel.find(querydb)
             .select([
                 "-clientDescription",
                 "-employeeDescription",
@@ -167,13 +170,12 @@ export const UserService = {
             .populate([
                 { path: "tags", select: ["name"] },
                 { path: "product", select: ["name", "labelColor"] },
+                { path: "createdBy", select: ["name", "surname"] },
             ])
             .skip(skip)
             .limit(pageSize);
 
-        const totalFavouriteArticles = await ArticleModel.countDocuments({
-            _id: { $in: favourites },
-        });
+        const totalFavouriteArticles = await ArticleModel.countDocuments(querydb);
 
         return {
             data: favouriteArticles,
