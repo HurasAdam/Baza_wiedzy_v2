@@ -29,10 +29,13 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(
     cors({
-        origin: APP_ORIGIN,
-        credentials: true,
+        origin: (origin, callback) => {
+            callback(null, true); // Zezwól na wszystkie origins
+        },
+        credentials: true, // potrzebne jeśli używasz cookies/tokenów w headerze
     })
 );
 app.use(cookieParser());

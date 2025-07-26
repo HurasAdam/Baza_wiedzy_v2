@@ -4,6 +4,10 @@ export const findUsersDto = z
     .object({
         name: z.string().optional(),
         role: z.string().optional(),
+        isActive: z
+            .union([z.literal("true"), z.literal("false"), z.boolean()])
+            .optional()
+            .transform((val) => (val === undefined ? undefined : val === "true" || val === true)),
         excludeAdmin: z
             .union([z.literal("true"), z.literal("false"), z.boolean()])
             .optional()
