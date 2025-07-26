@@ -20,6 +20,7 @@ export const IssueReportService = {
 
         const title = query.title?.trim();
         const type = query.type?.trim();
+        const status = query.status?.trim();
 
         if (title) {
             querydb.title = new RegExp(title, "i");
@@ -27,6 +28,9 @@ export const IssueReportService = {
 
         if (type) {
             querydb.type = type;
+        }
+        if (status) {
+            querydb.status = status;
         }
 
         if (query.isUnread === true || query.isUnread === "true") {

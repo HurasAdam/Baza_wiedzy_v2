@@ -7,6 +7,7 @@ export const searchIssuesDto = searchDto.extend({
     category: z.string().optional(),
     isUnread: z.string().optional(),
     verified: z.string().optional(),
+    status: z.string().optional(),
 });
 
 export type SearchIssuesDto = z.infer<typeof searchIssuesDto>;

@@ -16,7 +16,28 @@ export const ProjectService = {
         });
     },
     async find(query) {
-        const projects = await ProjectModel.find(query);
+        const projects = await ProjectModel.aggregate([
+            { $match: query },
+            {
+                $lookup: {
+                    from: "projectschools", // nazwa kolekcji szkół w MongoDB (z małej litery i plural!)
+                    localField: "_id",
+                    foreignField: "project",
+                    as: "schools",
+                },
+            },
+            {
+                $addFields: {
+                    schoolsCount: { $size: "$schools" },
+                },
+            },
+            {
+                $project: {
+                    schools: 0, // usuwamy szczegóły szkół, zostawiamy tylko liczbę
+                },
+            },
+        ]);
+
         return projects;
     },
     async findOne(projectId: string) {
