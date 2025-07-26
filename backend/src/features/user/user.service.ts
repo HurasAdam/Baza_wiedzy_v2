@@ -54,7 +54,7 @@ export const UserService = {
             querydb.role = role;
         }
 
-        if (isActive) {
+        if (typeof isActive === "boolean") {
             querydb.isActive = isActive;
         }
 
