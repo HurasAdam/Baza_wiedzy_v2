@@ -8,6 +8,7 @@ import { SearchProductsDto } from "../product/dto/search-products.dto";
 import ProductModel from "../product/product.model";
 import RoleModel from "../role-permission/roles-permission.model";
 import SessionModel from "../session/session.model";
+import { SearchRolesDto } from "../role-permission/dto/search-roles.dto";
 
 export const AdminService = {
     async createUserAccount(payload) {
@@ -81,22 +82,20 @@ export const AdminService = {
         return role;
     },
 
-    async findRoles(query) {
-        const withPerms = query.withPermissions === "true" || query.withPermissions === true;
+    async findRoles(query: SearchRolesDto) {
+        const { withPermissions, name } = query;
+
         const baseFields = ["-createdAt", "-updatedAt"];
+        const selectFields = withPermissions ? baseFields : ["-permissions", ...baseFields];
 
-        const selectFields = withPerms ? baseFields : ["-permissions", ...baseFields];
+        const filter: any = {};
+        if (name) {
+            filter.name = { $regex: name, $options: "i" };
+        }
 
-        const roles = await RoleModel.find({})
-            .select(selectFields as string[])
-            .sort({ createdAt: 1 })
-            .lean();
+        const roles = await RoleModel.find(filter).select(selectFields).sort({ createdAt: 1 }).lean();
+
         return roles;
-    },
-    async findOneRole(roleId: string) {
-        const role = await RoleModel.find({ _id: roleId });
-
-        return role;
     },
 
     async updateOneRole(roleId: string, payload) {
@@ -107,7 +106,7 @@ export const AdminService = {
         if (name && name !== role.name) {
             const nameTaken = await RoleModel.exists({
                 name,
-                _id: { $ne: roleId }, // pomiń samą siebie
+                _id: { $ne: roleId },
             });
             appAssert(!nameTaken, CONFLICT, "Role name already in use");
         }
