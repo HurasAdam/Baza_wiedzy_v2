@@ -1,4 +1,19 @@
 import {
+    BicepsFlexed,
+    Crown,
+    Ellipsis,
+    Eye,
+    FileIcon,
+    Gem,
+    Hammer,
+    KeyRound,
+    Loader,
+    Lock,
+    Plus,
+    User,
+    XCircleIcon,
+} from "lucide-react";
+import {
     FaCrown,
     FaUserTie,
     FaEye,
@@ -50,6 +65,19 @@ export const ICON_MAP = {
     FaRocket,
     FaHammer,
     FaPaperPlane,
+    Ellipsis,
+    FileIcon,
+    Crown,
+    Gem,
+    Eye,
+    BicepsFlexed,
+    Hammer,
+    User,
+    KeyRound,
+    Loader,
+    Lock,
+    Plus,
+    XCircleIcon,
 } as const;
 
 export type IconKey = keyof typeof ICON_MAP;
