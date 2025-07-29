@@ -98,6 +98,12 @@ export const AdminService = {
         return roles;
     },
 
+    async findOneRole(roleId: string) {
+        const role = await RoleModel.find({ _id: roleId });
+
+        return role;
+    },
+
     async updateOneRole(roleId: string, payload) {
         const { permissions, name, iconKey, labelColor } = payload;
         const role = await RoleModel.findById(roleId);
