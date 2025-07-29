@@ -18,7 +18,7 @@ const TagForm: React.FC<ITagFormProps> = ({ tagId, onClose = () => {} }) => {
     const queryClient = useQueryClient();
 
     const { data: tag } = useQuery({
-        queryKey: ["conversationTopic", tagId],
+        queryKey: ["tags", tagId],
         queryFn: () => {
             return tagApi.findOne(tagId);
         },
