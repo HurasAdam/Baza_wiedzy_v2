@@ -1,6 +1,7 @@
 import { CREATED, NO_CONTENT, OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { createProjectDto } from "./dto/create-project.dto";
+import { searchProjectsDto } from "./dto/search-projects.dto";
 import { ProjectService } from "./project.service";
 
 export const ProjectController = (projectService = ProjectService) => ({
@@ -10,8 +11,9 @@ export const ProjectController = (projectService = ProjectService) => ({
         return res.sendStatus(CREATED);
     }),
 
-    find: catchErrors(async ({ params }, res) => {
-        const payload = params;
+    find: catchErrors(async ({ query }, res) => {
+        const payload = searchProjectsDto.parse(query);
+
         const projects = await projectService.find(payload);
         return res.status(OK).json(projects);
     }),

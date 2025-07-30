@@ -1,6 +1,7 @@
 import { CONFLICT, NOT_FOUND } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
 import { CreateProjectDto } from "./dto/create-project.dto";
+import { SearchProjectsDto } from "./dto/search-projects.dto";
 import ProjectModel from "./project.model";
 
 export const ProjectService = {
@@ -15,12 +16,17 @@ export const ProjectService = {
             description: payload.description,
         });
     },
-    async find(query) {
+    async find(query: SearchProjectsDto) {
+        const dbQuery: any = {};
+        if (query.name) {
+            dbQuery.name = { $regex: query.name, $options: "i" };
+        }
+
         const projects = await ProjectModel.aggregate([
-            { $match: query },
+            { $match: dbQuery },
             {
                 $lookup: {
-                    from: "projectschools", // nazwa kolekcji szkół w MongoDB (z małej litery i plural!)
+                    from: "projectschools",
                     localField: "_id",
                     foreignField: "project",
                     as: "schools",
@@ -33,7 +39,7 @@ export const ProjectService = {
             },
             {
                 $project: {
-                    schools: 0, // usuwamy szczegóły szkół, zostawiamy tylko liczbę
+                    schools: 0,
                 },
             },
         ]);
