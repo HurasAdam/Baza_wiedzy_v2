@@ -38,6 +38,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Spinner2 } from "./components/core/spinner2";
 import { useCheckUser } from "./hooks/auth/useCheckUser";
 import { NotFoundPage } from "./pages/NotFoundPage";
+import { OnboardingLayout } from "./layouts/OnboardingLayout ";
+import OnboardingPage from "./components/OnboardingPage";
 
 function App() {
     useTheme();
@@ -77,9 +79,9 @@ function App() {
                     <Route path="*" element={<NotFoundPage />} />
                 </Route>
 
-                {/* <Route path="/onboarding" element={<OnboardingLayout />}>
+                <Route path="/onboarding" element={<OnboardingLayout />}>
                     <Route path="change-password" element={<OnboardingPage />} />
-                </Route> */}
+                </Route>
 
                 <Route path="/admin" element={<AdminRoute />}>
                     <Route element={<AdminLayout />}>
