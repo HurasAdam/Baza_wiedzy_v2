@@ -84,7 +84,7 @@ export const ProductService = {
     },
 
     async findOne(productId: string) {
-        const product = await ProductModel.findById(productId);
+        const product = await ProductModel.findById(productId).populate("createdBy", "name surname -_id");
         appAssert(product, NOT_FOUND, "Product not found");
 
         return product;
