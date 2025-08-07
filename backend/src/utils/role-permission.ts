@@ -32,7 +32,7 @@ export const RolePermissions: Record<RoleType, Array<PermissionType>> = {
         Permissions.READ_ONLY,
     ],
 
-    LEADER: [
+    MODERATOR: [
         Permissions.ADD_ARTICLE,
         Permissions.EDIT_ARTICLE,
         Permissions.TRASH_ARTICLE,
@@ -56,7 +56,14 @@ export const RolePermissions: Record<RoleType, Array<PermissionType>> = {
         Permissions.READ_ONLY,
     ],
 
-    MEMBER: [
+    EDYTOR: [
+        Permissions.ADD_ARTICLE,
+        Permissions.EDIT_ARTICLE,
+        Permissions.REPORT_BUG,
+        Permissions.REPORT_PROPOSAL,
+        Permissions.READ_ONLY,
+    ],
+    AUTOR: [
         Permissions.ADD_ARTICLE,
         Permissions.EDIT_ARTICLE,
         Permissions.REPORT_BUG,
@@ -64,24 +71,28 @@ export const RolePermissions: Record<RoleType, Array<PermissionType>> = {
         Permissions.READ_ONLY,
     ],
 
-    GUEST: [Permissions.READ_ONLY],
+    CZYTELNIK: [Permissions.READ_ONLY],
 };
 
 export const RoleVisualConfig: Record<RoleType, { iconKey: string; labelColor: string }> = {
     ADMIN: {
-        iconKey: "FaCrown",
+        iconKey: "Crown",
         labelColor: "orange",
     },
-    LEADER: {
-        iconKey: "FaUserTie",
+    MODERATOR: {
+        iconKey: "TowerControl",
         labelColor: "green",
     },
-    MEMBER: {
-        iconKey: "FaUser",
+    EDYTOR: {
+        iconKey: "PencilRuler",
         labelColor: "blue",
     },
-    GUEST: {
-        iconKey: "FaEye",
+    AUTOR: {
+        iconKey: "PenTool",
+        labelColor: "blue",
+    },
+    CZYTELNIK: {
+        iconKey: "User",
         labelColor: "gray",
     },
 };
