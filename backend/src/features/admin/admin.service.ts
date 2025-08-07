@@ -6,9 +6,9 @@ import UserModel from "../user/user.model";
 import { DEFAULT_TEMP_PASSWORD } from "@/constants/env";
 import { SearchProductsDto } from "../product/dto/search-products.dto";
 import ProductModel from "../product/product.model";
+import { SearchRolesDto } from "../role-permission/dto/search-roles.dto";
 import RoleModel from "../role-permission/roles-permission.model";
 import SessionModel from "../session/session.model";
-import { SearchRolesDto } from "../role-permission/dto/search-roles.dto";
 
 export const AdminService = {
     async createUserAccount(payload) {
@@ -67,13 +67,14 @@ export const AdminService = {
     },
 
     async createRole(payload) {
-        const nameTaken = await RoleModel.exists({ name: payload.name });
+        const { name } = payload;
+        const transformedRoleName = name.toUpperCase();
+        const nameTaken = await RoleModel.exists({ name: transformedRoleName });
 
         appAssert(!nameTaken, CONFLICT, "Role name already in use");
 
-        // 3) Stwórz nową rolę
         const role = await RoleModel.create({
-            name: payload.name,
+            name: transformedRoleName,
             iconKey: payload.iconKey,
             labelColor: payload.labelColor,
             permissions: payload.permissions,
