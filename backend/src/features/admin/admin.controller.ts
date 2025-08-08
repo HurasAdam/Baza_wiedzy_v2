@@ -1,12 +1,13 @@
 import { CREATED, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
-import { createUserAccountDto } from "./dto/create-user-account.dto";
-import { AdminService } from "./admin.service";
-import { userIdParamsDto } from "./dto/user-id-params-.dto";
+import { PERMISSIONS_LIST } from "../../constants/permissions";
 import { searchProductsDto } from "../product/dto/search-products.dto";
-import { findAdminsDto } from "./dto/find-admins.dto";
-import { updateRoleDto } from "../role-permission/dto/update-role-permissions.dto";
 import { searchRolesDto } from "../role-permission/dto/search-roles.dto";
+import { updateRoleDto } from "../role-permission/dto/update-role-permissions.dto";
+import { AdminService } from "./admin.service";
+import { createUserAccountDto } from "./dto/create-user-account.dto";
+import { findAdminsDto } from "./dto/find-admins.dto";
+import { userIdParamsDto } from "./dto/user-id-params-.dto";
 
 export const AdminController = (adminService = AdminService) => ({
     createUserAccount: catchErrors(async ({ userId, body }, res) => {
@@ -65,5 +66,9 @@ export const AdminController = (adminService = AdminService) => ({
         const payload = findAdminsDto.parse(query);
         const admins = await adminService.findAdmins(payload);
         return res.status(OK).json(admins);
+    }),
+
+    findPermissions: catchErrors(async (_, res) => {
+        return res.status(OK).json(PERMISSIONS_LIST);
     }),
 });
