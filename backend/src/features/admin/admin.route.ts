@@ -1,7 +1,6 @@
 import { Router } from "express";
 
 import { AdminController } from "./admin.controller";
-import { UserController } from "../user/user.controller";
 
 export const adminRoutes = Router();
 const adminController = AdminController();
@@ -18,3 +17,4 @@ adminRoutes.get("/roles", adminController.findRoles);
 adminRoutes.get("/roles/:id", adminController.findOneRole);
 adminRoutes.put("/roles/:id", adminController.updateOneRole);
 adminRoutes.get("/admins", adminController.findAdmins);
+adminRoutes.get("/permissions", adminController.findPermissions);
