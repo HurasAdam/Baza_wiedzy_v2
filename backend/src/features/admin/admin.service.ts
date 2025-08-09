@@ -100,7 +100,7 @@ export const AdminService = {
     },
 
     async findOneRole(roleId: string) {
-        const role = await RoleModel.find({ _id: roleId });
+        const role = await RoleModel.findOne({ _id: roleId });
 
         return role;
     },
