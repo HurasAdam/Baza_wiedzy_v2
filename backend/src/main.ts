@@ -5,7 +5,7 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import connectDB from "./config/db";
-import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
+import { NODE_ENV, PORT } from "./constants/env";
 import { adminRoutes } from "./features/admin/admin.route";
 import { articleViewRoute } from "./features/article-view/articleView.route";
 import { articleRoutes } from "./features/article/article.route";
@@ -15,6 +15,7 @@ import { conversationReportRoutes } from "./features/conversation-report/convers
 import { conversationTopicRoutes } from "./features/conversation-topic/conversation-topic.route";
 import { dashboardRoutes } from "./features/dashboard/dashboard.route";
 import { departmentRoutes } from "./features/department/department.route";
+import { faqRoutes } from "./features/faq/faq.route";
 import { funnyMessageRoutes } from "./features/funny-message/funny-message.route";
 import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
 import { productRoutes } from "./features/product/product.route";
@@ -33,9 +34,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
     cors({
         origin: (origin, callback) => {
-            callback(null, true); // Zezwól na wszystkie origins
+            callback(null, true); //  wszystkie origins
         },
-        credentials: true, // potrzebne jeśli używasz cookies/tokenów w headerze
+        credentials: true,
     })
 );
 app.use(cookieParser());
@@ -57,6 +58,7 @@ app.use("/projects", authenticate, projectRoutes);
 app.use("/dashboard", authenticate, dashboardRoutes);
 app.use("/issue-report", authenticate, IssueReportRoutes);
 app.use("/funny-messages", authenticate, funnyMessageRoutes);
+app.use("/faq", authenticate, faqRoutes);
 
 app.use(errorHandler);
 
