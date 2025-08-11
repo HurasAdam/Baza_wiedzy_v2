@@ -15,6 +15,7 @@ import { conversationReportRoutes } from "./features/conversation-report/convers
 import { conversationTopicRoutes } from "./features/conversation-topic/conversation-topic.route";
 import { dashboardRoutes } from "./features/dashboard/dashboard.route";
 import { departmentRoutes } from "./features/department/department.route";
+import { faqItemRoutes } from "./features/faq-item/faq-item.route";
 import { faqRoutes } from "./features/faq/faq.route";
 import { funnyMessageRoutes } from "./features/funny-message/funny-message.route";
 import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
@@ -59,6 +60,7 @@ app.use("/dashboard", authenticate, dashboardRoutes);
 app.use("/issue-report", authenticate, IssueReportRoutes);
 app.use("/funny-messages", authenticate, funnyMessageRoutes);
 app.use("/faq", authenticate, faqRoutes);
+app.use("/faq-item", authenticate, faqItemRoutes);
 
 app.use(errorHandler);
 
