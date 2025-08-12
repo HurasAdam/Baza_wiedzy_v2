@@ -1,21 +1,21 @@
-import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "../../constants/http";
-import appAssert from "../../utils/appAssert";
+import { CREATED, NO_CONTENT } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
-import { FaqItemModel } from "./faq-item.model";
+import { createFaqItemDto } from "./dto/create-faq-item.dto";
+import { FaqItemService } from "./faq-item.service";
 
-export const FaqItemController = () => ({
+export const FaqItemController = (faqItemService = FaqItemService) => ({
     create: catchErrors(async ({ userId, body, params }, res) => {
-        return res.status(OK).json({ message: "Dodano nowy faq item", data: "FAQ" });
+        const payload = createFaqItemDto.parse(body);
+        const { faqId } = params;
+        const newFaqItem = await faqItemService.create(faqId, userId, payload);
+        return res.status(CREATED).json({ message: "FAQ Item has been created", data: newFaqItem });
     }),
 
-    deleteOne: catchErrors(async ({ userId, body, params }, res) => {
+    deleteOne: catchErrors(async ({ params }, res) => {
         const { faqItemId } = params;
-        const faqItem = await FaqItemModel.findById({ _id: faqItemId });
-        appAssert(faqItem, NOT_FOUND, "Faq item not found");
 
-        const deletedFaqItem = await FaqItemModel.findByIdAndDelete({ _id: faqItemId });
-        appAssert(deletedFaqItem, INTERNAL_SERVER_ERROR, "Something went wrong");
+        await faqItemService.deleteOne(faqItemId);
 
-        return res.status(OK).json({ message: "Faq item has been delted" });
+        return res.status(NO_CONTENT).send();
     }),
 });
