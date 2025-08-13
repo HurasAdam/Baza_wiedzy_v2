@@ -1,38 +1,42 @@
-import { OK } from "@/constants/http";
+import { CREATED, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
-import { FaqItemModel } from "../faq-item/faq-item.model";
-import FaqModel from "./faq.model";
+import { paramsIdDto } from "../../common/dto/params-id.dto";
+import { faqItemResponseDto } from "../faq-item/dto/response-dto/faqItemResponseDto";
+import { createFaqDto } from "./dto/request-dto/create-faq.dto";
+import { faqListResponseDto } from "./dto/response-dto/faq-list-response.dto";
+import { faqResponseDto } from "./dto/response-dto/faq-response.dto";
 import { FaqService } from "./faq.service";
 
 export const FaqController = (faqService = FaqService) => ({
     create: catchErrors(async ({ userId, body }, res) => {
-        console.log(body);
-        // const payload = createArticleDto.parse(body);
-        // const article = await articleService.create(userId, payload);
-        const faq = await faqService.create(userId, body);
-        return res.status(OK).json({ message: "Dodano nowy faq", data: "FAQ" });
+        const payload = createFaqDto.parse(body);
+        const faq = await faqService.create(userId, payload);
+        return res.status(CREATED).json({ message: "Dodano nowy faq", data: "FAQ" });
     }),
 
-    find: catchErrors(async ({ userId, query }, res) => {
-        // const payload = searchArticlesDto.parse(query);
-        // const articles = await articleService.find(userId, payload);
-        const faqs = await FaqModel.find({});
-        return res.status(OK).json(faqs);
+    find: catchErrors(async (_, res) => {
+        const serviceResponse = await faqService.find();
+        const response = serviceResponse.map((faq) => {
+            const parsed = faqListResponseDto.parse(faq);
+
+            return parsed;
+        });
+        return res.status(OK).json(response);
     }),
     findOne: catchErrors(async ({ params }, res) => {
         const { id } = params;
 
-        const faq = await FaqModel.findOne({ _id: id });
+        const { id: validId } = paramsIdDto.parse({ id });
 
-        if (!faq) {
-            return res.status(404).json({ message: "FAQ not found" });
-        }
+        const { faq, items } = await faqService.findOne(validId);
 
-        const faqItems = await FaqItemModel.find({ faqId: id }).select("question answer").lean();
+        const parsedFaq = faqResponseDto.parse(faq);
+        const parsedItems = items.map((item) => faqItemResponseDto.parse(item));
 
-        return res.status(OK).json({
-            ...faq.toObject(),
-            items: faqItems,
-        });
+        const response = {
+            ...parsedFaq,
+            items: parsedItems,
+        };
+        return res.status(OK).json(response);
     }),
 });
