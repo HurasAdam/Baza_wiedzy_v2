@@ -7,6 +7,7 @@ export const faqListResponseDto = z.object({
     title: z.string(),
     description: z.string(),
     slug: z.string(),
+    items: z.number(),
     labelColor: z.string(),
     isDefault: z.boolean(),
     iconKey: z.string(),
