@@ -30,7 +30,7 @@ export const FaqItemService = {
     },
 
     async findOne(faqItemId: string): Promise<FaqItemResponseDto> {
-        const faqItem = await FaqItemModel.findById({ _id: faqItemId });
+        const faqItem = await FaqItemModel.findById({ _id: faqItemId }).lean();
         appAssert(faqItem, NOT_FOUND, "Faq item not found");
 
         return faqItemResponseDto.parse(faqItem);
