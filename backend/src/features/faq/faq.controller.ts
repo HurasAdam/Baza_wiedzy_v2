@@ -3,6 +3,7 @@ import catchErrors from "@/utils/catchErrors";
 import { paramsIdDto } from "../../common/dto/params-id.dto";
 import { faqItemResponseDto } from "../faq-item/dto/response-dto/faqItemResponseDto";
 import { createFaqDto } from "./dto/request-dto/create-faq.dto";
+import { searchFaqDto } from "./dto/request-dto/search-faq.dto";
 import { faqListResponseDto } from "./dto/response-dto/faq-list-response.dto";
 import { faqResponseDto } from "./dto/response-dto/faq-response.dto";
 import { FaqService } from "./faq.service";
@@ -14,8 +15,10 @@ export const FaqController = (faqService = FaqService) => ({
         return res.status(CREATED).json({ message: "Dodano nowy faq", data: "FAQ" });
     }),
 
-    find: catchErrors(async (_, res) => {
-        const serviceResponse = await faqService.find();
+    find: catchErrors(async ({ query }, res) => {
+        const payload = searchFaqDto.parse(query);
+        const serviceResponse = await faqService.find(payload);
+
         const response = serviceResponse.map((faq) => {
             const parsed = faqListResponseDto.parse(faq);
 
@@ -38,5 +41,10 @@ export const FaqController = (faqService = FaqService) => ({
             items: parsedItems,
         };
         return res.status(OK).json(response);
+    }),
+    setDefault: catchErrors(async ({ params }, res) => {
+        const { id } = params;
+        await faqService.setDefault(id);
+        return res.status(204).send();
     }),
 });

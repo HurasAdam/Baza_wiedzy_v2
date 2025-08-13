@@ -2,6 +2,12 @@
 import { Types } from "mongoose";
 import { z } from "zod";
 
+const userDto = z.object({
+    _id: z.union([z.string(), z.instanceof(Types.ObjectId)]).transform((v) => v.toString()),
+    name: z.string(),
+    surname: z.string(),
+});
+
 export const faqResponseDto = z.object({
     _id: z.union([z.string(), z.instanceof(Types.ObjectId)]).transform((v) => v.toString()),
     title: z.string(),
@@ -11,7 +17,7 @@ export const faqResponseDto = z.object({
     isDefault: z.boolean(),
     iconKey: z.string(),
     status: z.string(),
-    createdBy: z.union([z.string(), z.instanceof(Types.ObjectId)]).transform((v) => v.toString()),
+    createdBy: z.union([z.string(), userDto]),
     createdAt: z.union([z.string(), z.date()]).transform((v) => (typeof v === "string" ? v : v.toISOString())),
     updatedAt: z.union([z.string(), z.date()]).transform((v) => (typeof v === "string" ? v : v.toISOString())),
 });
