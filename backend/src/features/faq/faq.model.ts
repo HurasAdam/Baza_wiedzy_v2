@@ -1,6 +1,20 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { Document, Schema, Types, model } from "mongoose";
 
-const faqSchema = new Schema(
+export interface FaqDocument extends Document {
+    _id: Types.ObjectId;
+    title: string;
+    description: string;
+    slug: string;
+    labelColor: string;
+    isDefault: boolean;
+    iconKey: string;
+    status: string;
+    createdBy: Types.ObjectId | null;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const faqSchema = new Schema<FaqDocument>(
     {
         title: { type: String, required: true },
         description: { type: String, required: true },
@@ -26,5 +40,5 @@ const faqSchema = new Schema(
     }
 );
 
-const FaqModel = model("Faq", faqSchema);
+const FaqModel = model<FaqDocument>("Faq", faqSchema);
 export default FaqModel;

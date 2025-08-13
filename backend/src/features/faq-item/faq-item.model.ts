@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
 
-export interface IFaqItem extends Document {
+export interface IFaqItemDocument extends Document {
     faqId: Types.ObjectId;
     question: string;
     answer: string;
@@ -10,7 +10,7 @@ export interface IFaqItem extends Document {
     updatedAt: Date;
 }
 
-const faqItemSchema = new Schema<IFaqItem>(
+const faqItemSchema = new Schema<IFaqItemDocument>(
     {
         faqId: { type: Schema.Types.ObjectId, ref: "Faq", required: true },
         question: { type: String, required: true },
@@ -21,4 +21,4 @@ const faqItemSchema = new Schema<IFaqItem>(
     { timestamps: true }
 );
 
-export const FaqItemModel = mongoose.model<IFaqItem>("FaqItem", faqItemSchema);
+export const FaqItemModel = mongoose.model<IFaqItemDocument>("FaqItem", faqItemSchema);
