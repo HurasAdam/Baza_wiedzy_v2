@@ -6,5 +6,7 @@ export const faqItemRoutes = Router();
 const faqItemController = FaqItemController();
 
 faqItemRoutes.post("/:faqId", faqItemController.create);
+faqItemRoutes.get("/:faqItemId", faqItemController.findOne);
+faqItemRoutes.put("/:faqItemId", faqItemController.updateOne);
 faqItemRoutes.delete("/:faqItemId", faqItemController.deleteOne);
 // faqItemRoutes.get("/", faqItemController.find);

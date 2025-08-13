@@ -1,4 +1,4 @@
-import { CREATED, NO_CONTENT } from "../../constants/http";
+import { CREATED, NO_CONTENT, OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { createFaqItemDto } from "./dto/create-faq-item.dto";
 import { FaqItemService } from "./faq-item.service";
@@ -8,7 +8,20 @@ export const FaqItemController = (faqItemService = FaqItemService) => ({
         const payload = createFaqItemDto.parse(body);
         const { faqId } = params;
         const newFaqItem = await faqItemService.create(faqId, userId, payload);
-        return res.status(CREATED).json({ message: "FAQ Item has been created", data: newFaqItem });
+        return res.status(CREATED).json(newFaqItem);
+    }),
+
+    findOne: catchErrors(async ({ params }, res) => {
+        const { faqItemId } = params;
+        const faqItem = await faqItemService.findOne(faqItemId);
+        return res.status(OK).json(faqItem);
+    }),
+
+    updateOne: catchErrors(async ({ params, body }, res) => {
+        const { faqItemId } = params;
+
+        const updatedFaqItem = await faqItemService.updateOne(faqItemId, body);
+        return res.status(NO_CONTENT).json(updatedFaqItem);
     }),
 
     deleteOne: catchErrors(async ({ params }, res) => {
