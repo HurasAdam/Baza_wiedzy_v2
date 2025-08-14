@@ -3,6 +3,7 @@ import appAssert from "../../utils/appAssert";
 import { FaqItemModel, IFaqItemDocument } from "../faq-item/faq-item.model";
 import FaqModel, { FaqDocument } from "../faq/faq.model";
 import { SearchFaqDto } from "./dto/request-dto/search-faq.dto";
+import { UpdateFaqDto } from "./dto/request-dto/update-faq.dto";
 
 export const FaqService = {
     async create(userId: string, body: any) {
@@ -69,6 +70,26 @@ export const FaqService = {
 
         await FaqModel.updateMany({ isDefault: true }, { $set: { isDefault: false } });
         faq.isDefault = true;
+        await faq.save();
+    },
+
+    async updateOne(faqId: string, payload: UpdateFaqDto): Promise<void> {
+        const faq = await FaqModel.findById(faqId);
+        appAssert(faq, NOT_FOUND, "Faq not found");
+
+        if (payload.title && payload.title !== faq.title) {
+            const existingFaq = await FaqModel.findOne({
+                title: payload.title,
+            });
+            appAssert(!existingFaq, CONFLICT, `FAQ with this title already exists. Please use a different FAQ title.`);
+        }
+        faq.title = payload.title ?? faq.title;
+        faq.iconKey = payload.iconKey ?? faq.iconKey;
+        faq.description = payload.description ?? faq.description;
+        faq.labelColor = payload.labelColor ?? faq.labelColor;
+        // #TODO IN FUTURE
+        // faq.slug = payload.slug ?? faq.slug;
+
         await faq.save();
     },
 };

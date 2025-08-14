@@ -4,6 +4,7 @@ import { paramsIdDto } from "../../common/dto/params-id.dto";
 import { faqItemResponseDto } from "../faq-item/dto/response-dto/faqItemResponseDto";
 import { createFaqDto } from "./dto/request-dto/create-faq.dto";
 import { searchFaqDto } from "./dto/request-dto/search-faq.dto";
+import { updateFaqDto } from "./dto/request-dto/update-faq.dto";
 import { faqListResponseDto } from "./dto/response-dto/faq-list-response.dto";
 import { faqResponseDto } from "./dto/response-dto/faq-response.dto";
 import { FaqService } from "./faq.service";
@@ -45,6 +46,13 @@ export const FaqController = (faqService = FaqService) => ({
     setDefault: catchErrors(async ({ params }, res) => {
         const { id } = params;
         await faqService.setDefault(id);
+        return res.status(204).send();
+    }),
+
+    updateOne: catchErrors(async ({ params, body }, res) => {
+        const { id } = params;
+        const payload = updateFaqDto.parse(body);
+        await faqService.updateOne(id, payload);
         return res.status(204).send();
     }),
 });
