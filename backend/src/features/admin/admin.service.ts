@@ -84,14 +84,19 @@ export const AdminService = {
     },
 
     async findRoles(query: SearchRolesDto) {
-        const { withPermissions, name } = query;
+        const { withPermissions, name, includeAdmins } = query;
 
         const baseFields = ["-createdAt", "-updatedAt"];
         const selectFields = withPermissions ? baseFields : ["-permissions", ...baseFields];
 
         const filter: any = {};
+
         if (name) {
             filter.name = { $regex: name, $options: "i" };
+        }
+
+        if (!includeAdmins) {
+            filter.name = { ...filter.name, $ne: "ADMIN" };
         }
 
         const roles = await RoleModel.find(filter).select(selectFields).sort({ createdAt: 1 }).lean();
