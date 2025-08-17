@@ -34,11 +34,22 @@ export const UserService = {
     async findOne(id: string) {
         const user = await UserModel.findById(id).populate({
             path: "role",
-            select: "name permissions", // wybieramy tylko te pola z roli
+            select: "name permissions iconKey labelColor",
         });
         appAssert(user, NOT_FOUND, "User not found");
 
         return user.omitPassword();
+    },
+
+    async updateOne(id: string, payload: { name?: string; surname?: string; bio?: string }) {
+        const user = await UserModel.findById(id);
+        appAssert(user, NOT_FOUND, "User not found");
+
+        console.log(payload, "DANE");
+
+        user.name = payload.name || user.name;
+        user.surname = payload.surname || user.surname;
+        await user.save();
     },
 
     async findAll(query) {
