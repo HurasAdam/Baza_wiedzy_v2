@@ -1,9 +1,11 @@
-import { OK } from "@/constants/http";
+import { CREATED, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
-import { UserService } from "./user.service";
-import { findUsersWithDto } from "./dto/find-users-with.dto";
+import { paramsIdDto } from "../../common/dto/params-id.dto";
 import { changeUserPasswordDto } from "./dto/change-user-password.dto";
+import { findUsersWithDto } from "./dto/find-users-with.dto";
 import { findUsersDto } from "./dto/find-users.dto";
+import { updateUserDto } from "./dto/request-dto/update-user.dto";
+import { UserService } from "./user.service";
 
 export const UserController = (userService = UserService) => ({
     findMe: catchErrors(async ({ userId }, res) => {
@@ -14,6 +16,13 @@ export const UserController = (userService = UserService) => ({
     findOne: catchErrors(async ({ params }, res) => {
         const user = await userService.findOne(params.id);
         return res.status(OK).json(user);
+    }),
+
+    updateOne: catchErrors(async ({ params, body }, res) => {
+        const { id } = paramsIdDto.parse(params);
+        const payload = updateUserDto.parse(body);
+        await userService.updateOne(id, payload);
+        return res.send(CREATED);
     }),
 
     findAll: catchErrors(async ({ query }, res) => {

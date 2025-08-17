@@ -16,3 +16,4 @@ userRoutes.get("/statistics/articles", userController.findWithArticleCount);
 userRoutes.get("/statistics/changed-articles", userController.findWithChangeCount);
 userRoutes.get("/:id", userController.findOne);
 userRoutes.post("/change-password", userController.changePassword);
+userRoutes.put("/:id", userController.updateOne);
