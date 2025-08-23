@@ -11,6 +11,7 @@ adminRoutes.post("/create-account", adminController.createUserAccount);
 adminRoutes.post("/users/:id/disable", adminController.disableUserAccount);
 adminRoutes.post("/users/:id/enable", adminController.enableUserAccount);
 adminRoutes.post("/users/:id/reset-password", adminController.resetUserPassword);
+adminRoutes.put("/users/:id/change-role", adminController.changeUserRole);
 adminRoutes.get("/products", adminController.findProducts);
 adminRoutes.post("/roles/create", adminController.createRole);
 adminRoutes.get("/roles", adminController.findRoles);
