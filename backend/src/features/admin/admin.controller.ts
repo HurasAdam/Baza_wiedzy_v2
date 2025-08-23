@@ -5,6 +5,7 @@ import { searchProductsDto } from "../product/dto/search-products.dto";
 import { searchRolesDto } from "../role-permission/dto/search-roles.dto";
 import { updateRoleDto } from "../role-permission/dto/update-role-permissions.dto";
 import { AdminService } from "./admin.service";
+import { changeUserRoleBodyDto } from "./dto/change-user-role-body.dto";
 import { createUserAccountDto } from "./dto/create-user-account.dto";
 import { findAdminsDto } from "./dto/find-admins.dto";
 import { userIdParamsDto } from "./dto/user-id-params-.dto";
@@ -30,6 +31,14 @@ export const AdminController = (adminService = AdminService) => ({
         const { message } = await adminService.resetUserPassword(payload.id);
         return res.status(OK).json(message);
     }),
+
+    changeUserRole: catchErrors(async ({ params, body }, res) => {
+        const { id } = userIdParamsDto.parse(params);
+        const payload = changeUserRoleBodyDto.parse(body);
+        const { message } = await adminService.changeUserRole(id, payload);
+        return res.status(OK).json(message);
+    }),
+
     findProducts: catchErrors(async ({ query }, res) => {
         const payload = searchProductsDto.parse(query);
         const products = await adminService.findProducts(payload);

@@ -4,11 +4,13 @@ import appAssert from "@/utils/appAssert";
 import UserModel from "../user/user.model";
 
 import { DEFAULT_TEMP_PASSWORD } from "@/constants/env";
+import { Types } from "mongoose";
 import { SearchProductsDto } from "../product/dto/search-products.dto";
 import ProductModel from "../product/product.model";
 import { SearchRolesDto } from "../role-permission/dto/search-roles.dto";
 import RoleModel from "../role-permission/roles-permission.model";
 import SessionModel from "../session/session.model";
+import { ChangeUserRoleBodyDto } from "./dto/change-user-role-body.dto";
 
 export const AdminService = {
     async createUserAccount(payload) {
@@ -64,6 +66,16 @@ export const AdminService = {
         user.mustChangePassword = true;
         await user.save();
         return { message: "User password has been reset to default" };
+    },
+    async changeUserRole(params: string, payload: ChangeUserRoleBodyDto) {
+        const user = await UserModel.findById(params);
+        appAssert(user, NOT_FOUND, "User not found");
+        const role = await RoleModel.findById(payload.roleId);
+        appAssert(role, NOT_FOUND, "Role not found");
+        user.role = new Types.ObjectId(payload.roleId);
+
+        await user.save();
+        return { message: "User role has been updated" };
     },
 
     async createRole(payload) {
