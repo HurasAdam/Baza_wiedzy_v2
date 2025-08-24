@@ -1,5 +1,5 @@
 import { Router } from "express";
-import defaultTagMiddleware from "./middleware/default-tag.middleware";
+
 import { TagController } from "./tag.controller";
 
 export const tagRoutes = Router();
