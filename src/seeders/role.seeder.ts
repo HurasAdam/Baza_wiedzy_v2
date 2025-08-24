@@ -1,9 +1,9 @@
 import "dotenv/config";
-import mongoose from "mongoose";
 
-import { RolePermissions, RoleVisualConfig } from "../utils/role-permission";
+import mongoose from "mongoose";
 import connectDB from "../config/db";
 import RoleModel from "../features/role-permission/roles-permission.model";
+import { RolePermissions, RoleVisualConfig } from "../utils/role-permission";
 
 const seedRoles = async () => {
     console.log("Running script...");
@@ -13,11 +13,8 @@ const seedRoles = async () => {
             console.log("Start Seeding Roles");
         });
 
-        const session = await mongoose.startSession();
-        session.startTransaction();
-
         console.log("Clearing existing roles...");
-        await RoleModel.deleteMany({}, { session });
+        await RoleModel.deleteMany({});
 
         for (const roleName in RolePermissions) {
             const role = roleName as keyof typeof RolePermissions;
@@ -25,7 +22,7 @@ const seedRoles = async () => {
             const { iconKey, labelColor } = RoleVisualConfig[role];
 
             // Check if the role already exists
-            const existingRole = await RoleModel.findOne({ name: role }).session(session);
+            const existingRole = await RoleModel.findOne({ name: role });
             if (!existingRole) {
                 const newRole = new RoleModel({
                     name: role,
@@ -33,20 +30,17 @@ const seedRoles = async () => {
                     iconKey,
                     labelColor,
                 });
-                await newRole.save({ session });
+                await newRole.save();
                 console.log(`Role ${role} added with permissions.`);
             } else {
                 console.log(`Role ${role} already exists.`);
             }
         }
 
-        await session.commitTransaction();
         console.log("Transaction committed.");
 
-        session.endSession();
-        console.log("Session ended.");
-
         console.log("Seeding completed successfully.");
+        await mongoose.disconnect();
     } catch (error) {
         console.error("Error during seeding:", error);
     }
