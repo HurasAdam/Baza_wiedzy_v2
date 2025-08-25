@@ -78,6 +78,17 @@ export const AdminService = {
         return { message: "User role has been updated" };
     },
 
+    async updateUser(id: string, payload: { name?: string; surname?: string; bio?: string }) {
+        const user = await UserModel.findById(id);
+        appAssert(user, NOT_FOUND, "User not found");
+
+        console.log(payload, "DANE");
+
+        user.name = payload.name || user.name;
+        user.surname = payload.surname || user.surname;
+        await user.save();
+    },
+
     async createRole(payload) {
         const { name } = payload;
         const transformedRoleName = name.toUpperCase();
