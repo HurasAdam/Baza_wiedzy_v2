@@ -1,6 +1,5 @@
 import { CREATED, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
-import { paramsIdDto } from "../../common/dto/params-id.dto";
 import { changeUserPasswordDto } from "./dto/change-user-password.dto";
 import { findUsersWithDto } from "./dto/find-users-with.dto";
 import { findUsersDto } from "./dto/find-users.dto";
@@ -18,10 +17,9 @@ export const UserController = (userService = UserService) => ({
         return res.status(OK).json(user);
     }),
 
-    updateOne: catchErrors(async ({ params, body }, res) => {
-        const { id } = paramsIdDto.parse(params);
+    updateMe: catchErrors(async ({ userId, body }, res) => {
         const payload = updateUserDto.parse(body);
-        await userService.updateOne(id, payload);
+        await userService.updateMe(userId, payload);
         return res.send(CREATED);
     }),
 

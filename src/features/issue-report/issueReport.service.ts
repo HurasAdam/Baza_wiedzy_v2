@@ -1,7 +1,7 @@
-import { CONFLICT, NOT_FOUND } from "@/constants/http";
+import { NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
-import IssueReportModel from "./issue-report.model";
 import { CreateIssueDto } from "./dto/create-issue.dto";
+import IssueReportModel from "./issue-report.model";
 
 export const IssueReportService = {
     async create(userId: string, payload: CreateIssueDto) {
@@ -56,25 +56,17 @@ export const IssueReportService = {
         return issueReport;
     },
     async markAsRead(issueReportId: string) {
-        const session = await IssueReportModel.startSession();
-        session.startTransaction();
-
         try {
-            const issueReport = await IssueReportModel.findById(issueReportId).session(session);
+            const issueReport = await IssueReportModel.findById(issueReportId);
             appAssert(issueReport, NOT_FOUND, "Issue report not found");
 
             if (issueReport.isUnread) {
                 issueReport.isUnread = false;
-                await issueReport.save({ session });
+                await issueReport.save();
             }
-
-            await session.commitTransaction();
-            session.endSession();
 
             return { data: issueReport, message: "Zgłoszenie zostało oznaczone jako przeczytane" };
         } catch (error) {
-            await session.abortTransaction();
-            session.endSession();
             throw error;
         }
     },

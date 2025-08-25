@@ -1,9 +1,11 @@
 import { CREATED, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
+import { paramsIdDto } from "../../common/dto/params-id.dto";
 import { PERMISSIONS_LIST } from "../../constants/permissions";
 import { searchProductsDto } from "../product/dto/search-products.dto";
 import { searchRolesDto } from "../role-permission/dto/search-roles.dto";
 import { updateRoleDto } from "../role-permission/dto/update-role-permissions.dto";
+import { updateUserDto } from "../user/dto/request-dto/update-user.dto";
 import { AdminService } from "./admin.service";
 import { changeUserRoleBodyDto } from "./dto/change-user-role-body.dto";
 import { createUserAccountDto } from "./dto/create-user-account.dto";
@@ -37,6 +39,13 @@ export const AdminController = (adminService = AdminService) => ({
         const payload = changeUserRoleBodyDto.parse(body);
         const { message } = await adminService.changeUserRole(id, payload);
         return res.status(OK).json(message);
+    }),
+
+    updateUser: catchErrors(async ({ params, body }, res) => {
+        const { id } = paramsIdDto.parse(params);
+        const payload = updateUserDto.parse(body);
+        await adminService.updateUser(id, payload);
+        return res.send(CREATED);
     }),
 
     findProducts: catchErrors(async ({ query }, res) => {
