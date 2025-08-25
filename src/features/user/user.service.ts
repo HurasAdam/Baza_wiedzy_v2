@@ -41,8 +41,8 @@ export const UserService = {
         return user.omitPassword();
     },
 
-    async updateOne(id: string, payload: { name?: string; surname?: string; bio?: string }) {
-        const user = await UserModel.findById(id);
+    async updateMe(userId: string, payload: { name?: string; surname?: string; bio?: string }) {
+        const user = await UserModel.findById(userId);
         appAssert(user, NOT_FOUND, "User not found");
 
         console.log(payload, "DANE");
