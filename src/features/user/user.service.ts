@@ -1,9 +1,11 @@
 import { BAD_REQUEST, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import { compareValue, hashValue } from "@/utils/bcrypt";
+import fs from "fs";
 import { constructSearchQuery } from "../../utils/constructSearchQuery";
 import ArticleHistoryModel from "../article-history/article-history.model";
 import ArticleModel from "../article/article.model";
+import AttachmentModel from "../attachment/attachment.model";
 import RoleModel from "../role-permission/roles-permission.model";
 import type { FindUsersWithDto } from "./dto/find-users-with.dto";
 import UserModel from "./user.model";
@@ -32,10 +34,15 @@ export const UserService = {
     },
 
     async findOne(id: string) {
-        const user = await UserModel.findById(id).populate({
-            path: "role",
-            select: "name permissions iconKey labelColor",
-        });
+        const user = await UserModel.findById(id)
+            .populate({
+                path: "role",
+                select: "name permissions iconKey labelColor",
+            })
+            .populate({
+                path: "profilePicture",
+                select: "filename path mimeType size createdAt updatedAt",
+            });
         appAssert(user, NOT_FOUND, "User not found");
 
         return user.omitPassword();
@@ -50,6 +57,36 @@ export const UserService = {
         user.name = payload.name || user.name;
         user.surname = payload.surname || user.surname;
         await user.save();
+    },
+
+    async updateAvatar(userId: string, file: Express.Multer.File) {
+        const user = await UserModel.findById(userId);
+        appAssert(user, NOT_FOUND, "User not found");
+
+        // Usuń stary avatar
+        if (user.profilePicture) {
+            const oldAvatar = await AttachmentModel.findById(user.profilePicture);
+            if (oldAvatar) {
+                if (fs.existsSync(oldAvatar.path)) fs.unlinkSync(oldAvatar.path);
+                await AttachmentModel.deleteOne({ _id: oldAvatar._id });
+            }
+        }
+
+        // Utwórz nowy attachment
+        const attachment = await AttachmentModel.create({
+            filename: file.originalname,
+            path: file.path,
+            mimeType: file.mimetype,
+            size: file.size,
+            uploadedBy: userId,
+            ownerType: "User",
+            ownerId: userId,
+        });
+
+        user.profilePicture = attachment._id;
+        await user.save();
+
+        return attachment;
     },
 
     async findAll(query) {
@@ -85,7 +122,11 @@ export const UserService = {
             .select(["-password", "-email", "-verified", "-createdAt", "-updatedAt", "-favourites"])
             .populate({
                 path: "role",
-                select: "name ", // wybieramy tylko te pola z roli
+                select: "name ",
+            })
+            .populate({
+                path: "profilePicture",
+                select: "filename path mimeType size createdAt updatedAt",
             });
         return users;
     },

@@ -54,9 +54,20 @@ export const FaqService = {
     },
     async findOne(faqId: string): Promise<{ faq: FaqDocument; items: IFaqItemDocument[] }> {
         const faq = await FaqModel.findById(faqId)
-            .populate({ path: "createdBy", select: ["name", "surname"] })
+            .populate({
+                path: "createdBy",
+                select: ["name", "surname", "profilePicture"],
+                populate: {
+                    path: "profilePicture",
+                    select: ["path", "-_id"],
+                },
+            })
             .lean();
+
         appAssert(faq, NOT_FOUND, "FAQ not found");
+
+        console.log("FAQ", faq);
+
         const faqItems = await FaqItemModel.find({ faqId }).lean();
 
         return {

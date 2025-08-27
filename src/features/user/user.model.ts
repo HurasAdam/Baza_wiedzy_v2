@@ -10,7 +10,7 @@ export interface UserDocument extends mongoose.Document {
     surname: string;
     email: string;
     isActive: boolean;
-    profilePicture?: string | null;
+    profilePicture?: mongoose.Types.ObjectId | null;
     password: string;
     mustChangePassword: boolean;
     verified: boolean;
@@ -32,7 +32,7 @@ const userSchema = new Schema<UserDocument>(
         password: { type: String, required: true },
         mustChangePassword: { type: Boolean, default: true },
         verified: { type: Boolean, required: true, default: false },
-        profilePicture: { type: String, default: null },
+        profilePicture: { type: Schema.Types.ObjectId, ref: "Attachment", default: null },
         isActive: { type: Boolean, default: true },
         lastLogin: { type: Date, default: null },
         favourites: [{ type: Schema.Types.ObjectId, ref: "Article" }],

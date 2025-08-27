@@ -23,6 +23,18 @@ export const UserController = (userService = UserService) => ({
         return res.send(CREATED);
     }),
 
+    updateAvatar: catchErrors(async (req, res) => {
+        // const payload = updateUserDto.parse(body);
+        const userId = req.userId;
+        const file = req.file;
+        console.log(file);
+        if (!file) {
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+        await userService.updateAvatar(userId, file);
+        return res.send(CREATED);
+    }),
+
     findAll: catchErrors(async ({ query }, res) => {
         const payload = findUsersDto.parse(query);
         const users = await userService.findAll(payload);
