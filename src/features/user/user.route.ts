@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { avatarUploader } from "../../middleware/upload";
 import { UserController } from "./user.controller";
 // import { getUserConversationReports } from "../features/conversation-report/conversation-report.controller";
 
@@ -17,3 +18,4 @@ userRoutes.get("/statistics/changed-articles", userController.findWithChangeCoun
 userRoutes.get("/:id", userController.findOne);
 userRoutes.post("/change-password", userController.changePassword);
 userRoutes.put("/update-my-profile", userController.updateMe);
+userRoutes.post("/me/avatar", avatarUploader.single("avatar"), userController.updateAvatar);

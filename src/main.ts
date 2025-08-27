@@ -4,8 +4,9 @@ import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import path from "node:path";
 import connectDB from "./config/db";
-import { NODE_ENV, PORT } from "./constants/env";
+import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 import { adminRoutes } from "./features/admin/admin.route";
 import { articleViewRoute } from "./features/article-view/articleView.route";
 import { articleRoutes } from "./features/article/article.route";
@@ -34,9 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
     cors({
-        origin: (origin, callback) => {
-            callback(null, true); //  wszystkie origins
-        },
+        origin: APP_ORIGIN,
         credentials: true,
     })
 );
@@ -61,6 +60,22 @@ app.use("/issue-report", authenticate, IssueReportRoutes);
 app.use("/funny-messages", authenticate, funnyMessageRoutes);
 app.use("/faq", authenticate, faqRoutes);
 app.use("/faq-item", authenticate, faqItemRoutes);
+
+const uploadsPath = path.resolve("/app/uploads");
+app.use(
+    "/uploads",
+    express.static(uploadsPath, {
+        setHeaders: (res, filePath) => {
+            if (filePath.endsWith(".jpg") || filePath.endsWith(".jpeg")) {
+                res.setHeader("Content-Type", "image/jpeg");
+            } else if (filePath.endsWith(".png")) {
+                res.setHeader("Content-Type", "image/png");
+            } else if (filePath.endsWith(".svg")) {
+                res.setHeader("Content-Type", "image/svg+xml");
+            }
+        },
+    })
+);
 
 app.use(errorHandler);
 
