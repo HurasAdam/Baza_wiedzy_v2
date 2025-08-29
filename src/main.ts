@@ -10,6 +10,7 @@ import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 import { adminRoutes } from "./features/admin/admin.route";
 import { articleViewRoute } from "./features/article-view/articleView.route";
 import { articleRoutes } from "./features/article/article.route";
+import { attachmentRoutes } from "./features/attachment/attachment.route";
 import { authRoutes } from "./features/auth/auth.route";
 import { categoryRoutes } from "./features/category/category.route";
 import { conversationReportRoutes } from "./features/conversation-report/conversation-report.route";
@@ -60,6 +61,7 @@ app.use("/issue-report", authenticate, IssueReportRoutes);
 app.use("/funny-messages", authenticate, funnyMessageRoutes);
 app.use("/faq", authenticate, faqRoutes);
 app.use("/faq-item", authenticate, faqItemRoutes);
+app.use("/attachments", authenticate, attachmentRoutes);
 
 const uploadsPath = path.resolve("/app/uploads");
 app.use(

@@ -2,7 +2,9 @@ import mongoose from "mongoose";
 
 const attachmentSchema = new mongoose.Schema(
     {
-        filename: { type: String, required: true },
+        filename: { type: String, required: true }, // faktyczna nazwa pliku (oryginalna lub zmodyfikowana)
+        title: { type: String, required: false, trim: true }, // nazwa "logiczna", widoczna w UI
+        description: { type: String, required: false, trim: true }, // dodatkowy opis
         path: { type: String, required: true }, // ścieżka na wolumenie / URL
         mimeType: { type: String, required: true },
         size: { type: Number, required: true },
