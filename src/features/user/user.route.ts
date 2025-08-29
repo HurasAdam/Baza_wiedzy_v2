@@ -1,12 +1,18 @@
 import { Router } from "express";
-import { avatarUploader } from "../../middleware/upload";
+import { createUploader } from "../../middleware/upload";
 import { UserController } from "./user.controller";
-// import { getUserConversationReports } from "../features/conversation-report/conversation-report.controller";
 
 export const userRoutes = Router();
 const userController = UserController();
 
 //prefix: /users
+
+const avatarUploader = createUploader({
+    folderPrefix: "users",
+    subFolderFn: (req) => req.userId,
+    allowedTypes: ["image/*"],
+    maxSizeMB: 5,
+});
 
 userRoutes.get("/", userController.findAll);
 userRoutes.get("/me", userController.findMe);
