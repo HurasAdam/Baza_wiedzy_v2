@@ -22,3 +22,5 @@ const articleUploader = createUploader({
 
 attachmentRoutes.post("/articles/:articleId", articleUploader.single("file"), attachmentController.create);
 attachmentRoutes.get("/articles/:articleId", attachmentController.find);
+attachmentRoutes.get("/articles/:articleId/attachment/:attachmentId", attachmentController.findOne);
+attachmentRoutes.delete("/articles/:attachmentId", attachmentController.deleteOne);
