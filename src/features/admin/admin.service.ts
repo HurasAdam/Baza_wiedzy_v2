@@ -224,6 +224,10 @@ export const AdminService = {
             .populate({
                 path: "role",
                 select: "name ", // wybieramy tylko te pola z roli
+            })
+            .populate({
+                path: "profilePicture",
+                select: "filename path mimeType size createdAt updatedAt",
             });
         return users;
     },
