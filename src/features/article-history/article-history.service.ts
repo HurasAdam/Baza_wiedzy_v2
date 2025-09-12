@@ -1,205 +1,115 @@
-import EventType from "@/constants/articleEventTypes";
-import { NOT_FOUND } from "@/constants/http";
-import ArticleModel from "@/features/article/article.model";
-import appAssert from "@/utils/appAssert";
-import mongoose, { Types } from "mongoose";
+import CategoryModel from "@/features/category/category.model";
+import ProductModel from "@/features/product/product.model";
+import TagModel from "@/features/tag/tag.model";
+import { Types } from "mongoose";
 import ArticleHistoryModel from "./article-history.model";
 
-interface Article {
-    _id: Types.ObjectId;
-    title: string;
-    employeeDescription: string;
-    clientDescription: string;
-    tags: Types.ObjectId[];
-    createdBy: Types.ObjectId;
-    verifiedBy: Types.ObjectId;
-    viewsCounter: number;
-    isTrashed: boolean;
-    isVerified: boolean;
+export enum ArticleEventType {
+    Created = "created",
+    Updated = "updated",
+    Trashed = "trashed",
+    Restored = "restored",
+    Verified = "verified",
+    Unverified = "unverified",
 }
-interface Change {
+
+export interface Change {
     field: string;
-    oldValue: string;
-    newValue: string;
+    oldValue: any;
+    newValue: any;
 }
 
-interface ISaveArticleChangesProps {
+interface SaveChangesParams {
     articleId: string;
-    articleBeforeChanges: Article | null;
-    updatedArticle: Article;
-    updatedBy: string;
-    eventType: EventType;
+    before?: any;
+    after: any;
+    userId: string;
+    eventType: ArticleEventType;
 }
 
-export const getArticleHistory = async ({ articleId }: { articleId: string }) => {
-    // Sprawdzenie, czy artykuł o danym ID istnieje
-    const article = await ArticleModel.findById({ _id: articleId });
-    appAssert(article, NOT_FOUND, "Article not found");
+export const ArticleHistoryService = {
+    async saveChanges({ articleId, before, after, userId, eventType }: SaveChangesParams) {
+        const changes: Change[] = [];
 
-    // Pobranie historii zmian artykułu z kolekcji ArticleHistory
-    const articleHistory = await ArticleHistoryModel.aggregate([
-        {
-            $match: { articleId: new mongoose.Types.ObjectId(articleId) }, // Filtruj po articleId
-        },
-        {
-            $lookup: {
-                from: "users", // Kolekcja Users, zakładając, że "updatedBy" jest referencją do Usera
-                localField: "updatedBy",
-                foreignField: "_id",
-                as: "updatedBy",
-            },
-        },
-        {
-            $unwind: "$updatedBy", // Rozwijanie tablicy "updatedBy"
-        },
-        {
-            $lookup: {
-                from: "articles", // Kolekcja Articles
-                localField: "articleId",
-                foreignField: "_id",
-                as: "articleDetails",
-            },
-        },
-        {
-            $addFields: {
-                articleDetails: {
-                    $cond: {
-                        if: { $eq: ["$eventType", "created"] }, // Warunek, jeśli eventType to "created"
-                        then: { $arrayElemAt: ["$articleDetails", 0] }, // Pobierz pierwszy element z tablicy
-                        else: null, // Dla innych eventType, nie dodawaj danych artykułu
+        if (eventType === ArticleEventType.Created) {
+            await ArticleHistoryModel.create({
+                articleId: new Types.ObjectId(articleId),
+                createdBy: new Types.ObjectId(userId),
+                eventType,
+                changes: [
+                    {
+                        field: "all",
+                        oldValue: null,
+                        newValue: after, // snapshot całego artykułu
                     },
-                },
-            },
-        },
-        {
-            $project: {
-                _id: 1,
-                articleId: 1,
-                eventType: 1,
-                changes: 1,
-                updatedBy: { name: 1, surname: 1 },
-                updatedAt: 1,
-                createdAt: 1,
-                articleDetails: 1, // Zwróć artykuł tylko dla "created"
-            },
-        },
-    ]);
+                ],
+                updatedAt: new Date(),
+            });
+            return;
+        }
 
-    return articleHistory;
-};
+        if (eventType === ArticleEventType.Updated && before) {
+            for (const key of ["title", "employeeDescription", "status"]) {
+                if (JSON.stringify(before[key]) !== JSON.stringify(after[key])) {
+                    changes.push({
+                        field: key,
+                        oldValue: before[key],
+                        newValue: after[key],
+                    });
+                }
+            }
 
-export const saveArticleChanges = async ({
-    articleId,
-    articleBeforeChanges,
-    updatedArticle,
-    updatedBy,
-    eventType,
-}: ISaveArticleChangesProps): Promise<void> => {
-    let changes: Change[] = [];
+            // tags
+            if (JSON.stringify(before.tags) !== JSON.stringify(after.tags)) {
+                const oldTags = await TagModel.find({ _id: { $in: before.tags || [] } }).select("name");
+                const newTags = await TagModel.find({ _id: { $in: after.tags || [] } }).select("name");
 
-    // Porównaj artykuły, jeżeli zmiany zachodzą (np. zaktualizowany artykuł)
-    if (eventType === EventType.Updated && articleBeforeChanges) {
-        changes = compareObjects(articleBeforeChanges, updatedArticle);
-
-        // Jeśli zmiany obejmują tagi, sprawdź, czy wszystkie tagi istnieją
-
-        // Jeżeli nie wykryto zmian, nic nie zapisujemy
-        if (changes.length === 0) return;
-    }
-
-    // Zapisujemy historię zmian
-    const historyEntry = new ArticleHistoryModel({
-        articleId: articleId,
-        changes,
-        updatedBy: updatedBy,
-        eventType,
-    });
-    await historyEntry.save();
-};
-
-function compareObjects(oldObj: any, newObj: any): Change[] {
-    const changes: Change[] = [];
-
-    // Lista kluczowych pól, które chcemy porównywać
-    const fieldsToCompare = [
-        "title",
-        "clientDescription",
-        "employeeDescription",
-        "tags",
-        "isVerified",
-        "isTrashed",
-        "product",
-    ];
-
-    // Przechodzimy po wszystkich kluczach w obiekcie
-    for (const key of fieldsToCompare) {
-        if (oldObj.hasOwnProperty(key)) {
-            const oldValue = oldObj[key];
-            const newValue = newObj[key];
-
-            // Jeśli wartość się zmieniła, generujemy zmianę
-            if (JSON.stringify(oldValue) !== JSON.stringify(newValue)) {
                 changes.push({
-                    field: key, // Pole zmienione
-                    oldValue: JSON.stringify(oldValue), // Stara wartość
-                    newValue: JSON.stringify(newValue), // Nowa wartość
+                    field: "tags",
+                    oldValue: oldTags.map((t) => ({ id: t._id, name: t.name })),
+                    newValue: newTags.map((t) => ({ id: t._id, name: t.name })),
+                });
+            }
+
+            // product
+            if (String(before.product) !== String(after.product)) {
+                const oldProduct = before.product ? await ProductModel.findById(before.product).select("name") : null;
+                const newProduct = after.product ? await ProductModel.findById(after.product).select("name") : null;
+
+                changes.push({
+                    field: "product",
+                    oldValue: oldProduct ? { id: oldProduct._id, name: oldProduct.name } : null,
+                    newValue: newProduct ? { id: newProduct._id, name: newProduct.name } : null,
+                });
+            }
+
+            // category
+            if (String(before.category) !== String(after.category)) {
+                const oldCategory = before.category
+                    ? await CategoryModel.findById(before.category).select("name")
+                    : null;
+                const newCategory = after.category ? await CategoryModel.findById(after.category).select("name") : null;
+
+                changes.push({
+                    field: "category",
+                    oldValue: oldCategory ? { id: oldCategory._id, name: oldCategory.name } : null,
+                    newValue: newCategory ? { id: newCategory._id, name: newCategory.name } : null,
                 });
             }
         }
-    }
 
-    return changes;
-}
+        if (changes.length === 0 && eventType === ArticleEventType.Updated) return;
 
-// const compareArticles = (
-//   articleBeforeChanges: Article,
-//   updatedArticle: Article
-// ) => {
-//   const changes: Change[] = [];
+        await ArticleHistoryModel.create({
+            articleId: new Types.ObjectId(articleId),
+            createdBy: new Types.ObjectId(userId),
+            eventType,
+            changes,
+            updatedAt: new Date(),
+        });
+    },
 
-//   // Porównanie tytułu
-//   if (updatedArticle.title !== articleBeforeChanges.title) {
-//     changes.push({
-//       field: "title",
-//       oldValue: articleBeforeChanges.title,
-//       newValue: updatedArticle.title,
-//     });
-//   }
-
-//   // Porównanie opisu klienta
-//   if (
-//     updatedArticle.clientDescription !== articleBeforeChanges.clientDescription
-//   ) {
-//     changes.push({
-//       field: "clientDescription",
-//       oldValue: articleBeforeChanges.clientDescription,
-//       newValue: updatedArticle.clientDescription,
-//     });
-//   }
-
-//   // Porównanie opisu pracownika
-//   if (
-//     updatedArticle.employeeDescription !==
-//     articleBeforeChanges.employeeDescription
-//   ) {
-//     changes.push({
-//       field: "employeeDescription",
-//       oldValue: articleBeforeChanges.employeeDescription,
-//       newValue: updatedArticle.employeeDescription,
-//     });
-//   }
-
-//   // Porównanie tagów
-//   if (
-//     JSON.stringify(updatedArticle.tags) !==
-//     JSON.stringify(articleBeforeChanges.tags)
-//   ) {
-//     changes.push({
-//       field: "tags",
-//       oldValue: JSON.stringify(articleBeforeChanges.tags),
-//       newValue: JSON.stringify(updatedArticle.tags),
-//     });
-//   }
-
-//   return changes;
-// };
+    async findHistoryByArticle(articleId: string) {
+        return ArticleHistoryModel.find({ articleId }).populate("createdBy", "name surname").sort({ createdAt: -1 });
+    },
+};
