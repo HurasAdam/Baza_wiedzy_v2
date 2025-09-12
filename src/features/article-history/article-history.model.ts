@@ -1,6 +1,5 @@
 import { model, Schema } from "mongoose";
 
-// Definicja schematu historii zmian
 const articleHistorySchema = new Schema(
     {
         articleId: { type: Schema.Types.ObjectId, ref: "Article", required: true },
@@ -11,13 +10,13 @@ const articleHistorySchema = new Schema(
         },
         changes: [
             {
-                field: { type: String, required: true }, // Zmienione pole
-                oldValue: { type: String, required: true }, // Poprzednia wartość
-                newValue: { type: String, required: true }, // Nowa wartość
+                field: { type: String, required: true },
+                oldValue: { type: Schema.Types.Mixed },
+                newValue: { type: Schema.Types.Mixed, required: true },
             },
         ],
-        updatedBy: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Użytkownik, który wprowadził zmianę
-        updatedAt: { type: Date, default: Date.now }, // Czas zmiany
+        createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        updatedAt: { type: Date, default: Date.now },
     },
     { timestamps: true }
 );
