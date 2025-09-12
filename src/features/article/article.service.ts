@@ -3,7 +3,7 @@ import appAssert from "@/utils/appAssert";
 import { constructSearchQuery } from "@/utils/constructSearchQuery";
 import mongoose from "mongoose";
 import ArticleHistoryModel from "../article-history/article-history.model";
-import { getArticleHistory } from "../article-history/article-history.service";
+import { ArticleEventType, ArticleHistoryService } from "../article-history/article-history.service";
 import TagModel from "../tag/tag.model";
 import UserModel from "../user/user.model";
 import { UserService } from "../user/user.service";
@@ -33,6 +33,15 @@ export const ArticleService = {
                 })
             )
         );
+
+        // --- historia: event created ---
+        await ArticleHistoryService.saveChanges({
+            articleId: newArticle._id.toString(),
+            before: null,
+            after: newArticle.toObject(),
+            userId,
+            eventType: ArticleEventType.Created,
+        });
 
         return newArticle;
     },
@@ -135,7 +144,7 @@ export const ArticleService = {
     },
 
     async findOneHistory(articleId: string) {
-        const articleWithHistory = await getArticleHistory({ articleId });
+        const articleWithHistory = await ArticleHistoryService.findHistoryByArticle(articleId);
         return articleWithHistory;
     },
 
@@ -266,6 +275,9 @@ export const ArticleService = {
         const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
+        const oldArticle = article.toObject(); // snapshot przed zmianą
+
+        // --- aktualizacja artykułu ---
         article.title = title ?? article.title;
         article.employeeDescription = employeeDescription ?? article.employeeDescription;
         article.tags = tags ?? article.tags;
@@ -279,19 +291,24 @@ export const ArticleService = {
 
         await article.save();
 
+        // --- zapis historii w serwisie ---
+        await ArticleHistoryService.saveChanges({
+            articleId,
+            before: oldArticle,
+            after: article.toObject(),
+            userId,
+            eventType: ArticleEventType.Updated,
+        });
+
+        // --- obsługa responseVariants ---
         if (Array.isArray(responseVariants)) {
-            // getting response varriants linked to current Article
             const existingVariants = await ResponseVariantModel.find({ articleId });
-
-            // converting array into map
             const existingMap = new Map(existingVariants.map((v) => [v._id.toString(), v]));
-
             const incomingIds = responseVariants.filter((v: any) => v._id).map((v: any) => v._id);
 
-            // 1. Update
+            // Update / Create
             for (const variant of responseVariants) {
                 if (variant._id && existingMap.has(variant._id)) {
-                    // Update istniejącego
                     await ResponseVariantModel.findByIdAndUpdate(variant._id, {
                         version: variant.version,
                         variantName: variant.variantName,
@@ -300,7 +317,6 @@ export const ArticleService = {
                         modifiedAt: new Date(),
                     });
                 } else {
-                    // Adding new varaints
                     const newVariant = new ResponseVariantModel({
                         articleId,
                         version: variant.version,
@@ -312,7 +328,7 @@ export const ArticleService = {
                 }
             }
 
-            // 2. Removing variants
+            // Remove
             for (const existing of existingVariants) {
                 if (!incomingIds.includes(existing._id.toString())) {
                     await ResponseVariantModel.findByIdAndDelete(existing._id);
