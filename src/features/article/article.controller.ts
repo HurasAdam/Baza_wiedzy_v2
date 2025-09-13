@@ -94,7 +94,12 @@ export const ArticleController = (articleService = ArticleService) => ({
     }),
 
     updateOne: catchErrors(async ({ userId, params, body }, res) => {
-        await articleService.updateOne(userId, params.id, body);
+        await articleService.updateOne(userId, params.id, body, { simpleEdit: false });
+        res.status(OK).json({ message: "Artykuł został zaktualizowany" });
+    }),
+
+    simpleUpdateOne: catchErrors(async ({ userId, params, body }, res) => {
+        await articleService.updateOne(userId, params.id, body, { simpleEdit: true });
         res.status(OK).json({ message: "Artykuł został zaktualizowany" });
     }),
 

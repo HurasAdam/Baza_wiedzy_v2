@@ -4,9 +4,10 @@ const articleHistorySchema = new Schema(
     {
         articleId: { type: Schema.Types.ObjectId, ref: "Article", required: true },
         eventType: {
+            // <- pojedynczy event
             type: String,
             required: true,
-            enum: ["created", "updated", "trashed", "restored", "verified", "unverified"],
+            enum: ["created", "updated", "trashed", "restored", "verified", "unverified", "statusChanged"],
         },
         changes: [
             {
@@ -15,6 +16,10 @@ const articleHistorySchema = new Schema(
                 newValue: { type: Schema.Types.Mixed, required: true },
             },
         ],
+        statusChange: {
+            from: { type: String, enum: ["pending", "approved", "rejected", "draft"], required: false },
+            to: { type: String, enum: ["pending", "approved", "rejected", "draft"], required: false },
+        },
         createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
         updatedAt: { type: Date, default: Date.now },
     },

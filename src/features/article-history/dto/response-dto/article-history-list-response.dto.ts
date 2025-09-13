@@ -10,7 +10,12 @@ export const articleHistoryListResponseDto = z.object({
         name: z.string(),
         surname: z.string(),
     }),
-
+    statusChange: z
+        .object({
+            from: z.enum(["pending", "approved", "rejected", "draft"]),
+            to: z.enum(["pending", "approved", "rejected", "draft"]),
+        })
+        .optional(),
     createdAt: z.union([z.string(), z.date()]).transform((v) => (typeof v === "string" ? v : v.toISOString())),
 });
 
