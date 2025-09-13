@@ -19,6 +19,7 @@ articleRoutes.post("/:id/verify", articleController.toggleVerify);
 articleRoutes.post("/:id/aprove", articleController.aproveOne);
 articleRoutes.post("/:id/reject", articleController.rejectOne);
 articleRoutes.post("/:id/markAsFavourite", articleController.toggleFavourite);
+articleRoutes.put("/:id/simple-update", articleController.simpleUpdateOne);
 articleRoutes.put("/:id", articleController.updateOne);
 articleRoutes.put("/:id/trash", articleController.updateOneAsTrash);
 articleRoutes.put("/:id/restore", articleController.updateOneAsRestore);

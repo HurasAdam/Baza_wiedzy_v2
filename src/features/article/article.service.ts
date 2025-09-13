@@ -40,7 +40,7 @@ export const ArticleService = {
             before: null,
             after: newArticle.toObject(),
             userId,
-            eventType: ArticleEventType.Created,
+            eventType: ArticleEventType.Created, // pojedynczy event
         });
 
         return newArticle;
@@ -195,15 +195,30 @@ export const ArticleService = {
         const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
+        // snapshot BEFORE changes
+        const articleBeforeChangesObj = article.toObject();
+
+        // apply changes
         article.status = "approved";
         article.isVerified = true;
         article.rejectionReason = null;
         article.rejectedBy = null;
         article.verifiedBy = new mongoose.Types.ObjectId(userId);
 
+        // save
         const updatedArticle = await article.save();
         const updatedArticleObj = updatedArticle.toObject();
-        const articleBeforeChangesObj = article.toObject();
+
+        // save history event
+        await ArticleHistoryService.saveChanges({
+            articleId,
+            before: articleBeforeChangesObj,
+            after: updatedArticleObj,
+            userId,
+            eventType: ArticleEventType.Verified,
+        });
+
+        return updatedArticle;
     },
 
     async rejectOne(userId: string, articleId: string, rejectionReason: string) {
@@ -269,74 +284,48 @@ export const ArticleService = {
         await ArticleHistoryModel.deleteMany({ articleId: articleId });
     },
 
-    async updateOne(userId: string, articleId: string, body: any) {
-        const { title, employeeDescription, tags, product, category, responseVariants } = body;
-
+    async updateOne(userId: string, articleId: string, body: any, options?: { simpleEdit?: boolean }) {
         const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
-        const oldArticle = article.toObject(); // snapshot przed zmianą
+        const oldArticle = article.toObject();
+        const oldStatus = article.status as "draft" | "pending" | "approved" | "rejected";
 
-        // --- aktualizacja artykułu ---
-        article.title = title ?? article.title;
-        article.employeeDescription = employeeDescription ?? article.employeeDescription;
-        article.tags = tags ?? article.tags;
-        article.product = product ?? article.product;
-        article.category = category ?? article.category;
-        if (article.status === "rejected") {
-            article.status = "draft";
-        } else {
-            article.status = "pending";
+        article.title = body.title ?? article.title;
+        article.employeeDescription = body.employeeDescription ?? article.employeeDescription;
+        article.tags = body.tags ?? article.tags;
+        article.product = body.product ?? article.product;
+        article.category = body.category ?? article.category;
+
+        if (!options?.simpleEdit) {
+            if (article.status === "rejected") {
+                article.status = "draft";
+            } else if (article.status === "approved") {
+                article.status = "pending";
+            }
         }
 
         await article.save();
+        const newArticle = article.toObject();
+        const newStatus = newArticle.status as "draft" | "pending" | "approved" | "rejected";
 
-        // --- zapis historii w serwisie ---
+        // --- zapis historii ---
+        let statusChange: { from: typeof oldStatus; to: typeof newStatus } | undefined;
+
+        if (oldStatus !== newStatus) {
+            statusChange = { from: oldStatus, to: newStatus };
+        }
+
         await ArticleHistoryService.saveChanges({
             articleId,
             before: oldArticle,
-            after: article.toObject(),
+            after: newArticle,
             userId,
             eventType: ArticleEventType.Updated,
+            statusChange,
         });
 
-        // --- obsługa responseVariants ---
-        if (Array.isArray(responseVariants)) {
-            const existingVariants = await ResponseVariantModel.find({ articleId });
-            const existingMap = new Map(existingVariants.map((v) => [v._id.toString(), v]));
-            const incomingIds = responseVariants.filter((v: any) => v._id).map((v: any) => v._id);
-
-            // Update / Create
-            for (const variant of responseVariants) {
-                if (variant._id && existingMap.has(variant._id)) {
-                    await ResponseVariantModel.findByIdAndUpdate(variant._id, {
-                        version: variant.version,
-                        variantName: variant.variantName,
-                        variantContent: variant.variantContent,
-                        modifiedBy: userId,
-                        modifiedAt: new Date(),
-                    });
-                } else {
-                    const newVariant = new ResponseVariantModel({
-                        articleId,
-                        version: variant.version,
-                        variantName: variant.variantName,
-                        variantContent: variant.variantContent,
-                        createdBy: userId,
-                    });
-                    await newVariant.save();
-                }
-            }
-
-            // Remove
-            for (const existing of existingVariants) {
-                if (!incomingIds.includes(existing._id.toString())) {
-                    await ResponseVariantModel.findByIdAndDelete(existing._id);
-                }
-            }
-        }
-
-        return article.toObject();
+        return newArticle;
     },
 
     async findCreatedByUser(userId: string, query: any) {
