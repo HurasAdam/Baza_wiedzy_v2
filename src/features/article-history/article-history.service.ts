@@ -11,6 +11,7 @@ export enum ArticleEventType {
     Restored = "restored",
     Verified = "verified",
     Unverified = "unverified",
+    StatusChanged = "statusChanged",
 }
 
 export interface Change {
@@ -24,13 +25,35 @@ interface SaveChangesParams {
     before?: any;
     after: any;
     userId: string;
-    eventType: ArticleEventType;
+    eventType: ArticleEventType | string;
+    statusChange?: {
+        from: "pending" | "approved" | "rejected" | "draft";
+        to: "pending" | "approved" | "rejected" | "draft";
+    };
 }
 
 export const ArticleHistoryService = {
-    async saveChanges({ articleId, before, after, userId, eventType }: SaveChangesParams) {
+    async saveChanges({ articleId, before, after, userId, eventType, statusChange }: SaveChangesParams) {
         const changes: Change[] = [];
 
+        const finalStatusChange = statusChange ?? { from: before?.status ?? after.status, to: after.status };
+
+        if (eventType === ArticleEventType.Verified) {
+            changes.push({
+                field: "isVerified",
+                oldValue: before?.isVerified ?? false,
+                newValue: true,
+            });
+        }
+        if (eventType === ArticleEventType.Unverified) {
+            changes.push({
+                field: "isVerified",
+                oldValue: before?.isVerified ?? true,
+                newValue: false,
+            });
+        }
+
+        // Tworzenie artykułu
         if (eventType === ArticleEventType.Created) {
             await ArticleHistoryModel.create({
                 articleId: new Types.ObjectId(articleId),
@@ -40,16 +63,18 @@ export const ArticleHistoryService = {
                     {
                         field: "all",
                         oldValue: null,
-                        newValue: after, // snapshot całego artykułu
+                        newValue: after,
                     },
                 ],
+                statusChange: finalStatusChange,
                 updatedAt: new Date(),
             });
             return;
         }
 
+        // Aktualizacja artykułu
         if (eventType === ArticleEventType.Updated && before) {
-            for (const key of ["title", "employeeDescription", "status"]) {
+            for (const key of ["title", "employeeDescription"]) {
                 if (JSON.stringify(before[key]) !== JSON.stringify(after[key])) {
                     changes.push({
                         field: key,
@@ -59,7 +84,16 @@ export const ArticleHistoryService = {
                 }
             }
 
-            // tags
+            // Status
+            if (before.status !== after.status) {
+                changes.push({
+                    field: "status",
+                    oldValue: before.status,
+                    newValue: after.status,
+                });
+            }
+
+            // Tags
             if (JSON.stringify(before.tags) !== JSON.stringify(after.tags)) {
                 const oldTags = await TagModel.find({ _id: { $in: before.tags || [] } }).select("name");
                 const newTags = await TagModel.find({ _id: { $in: after.tags || [] } }).select("name");
@@ -71,7 +105,7 @@ export const ArticleHistoryService = {
                 });
             }
 
-            // product
+            // Product
             if (String(before.product) !== String(after.product)) {
                 const oldProduct = before.product ? await ProductModel.findById(before.product).select("name") : null;
                 const newProduct = after.product ? await ProductModel.findById(after.product).select("name") : null;
@@ -83,7 +117,7 @@ export const ArticleHistoryService = {
                 });
             }
 
-            // category
+            // Category
             if (String(before.category) !== String(after.category)) {
                 const oldCategory = before.category
                     ? await CategoryModel.findById(before.category).select("name")
@@ -98,6 +132,7 @@ export const ArticleHistoryService = {
             }
         }
 
+        // Jeśli brak zmian  – nie zapisuj historii
         if (changes.length === 0 && eventType === ArticleEventType.Updated) return;
 
         await ArticleHistoryModel.create({
@@ -105,6 +140,7 @@ export const ArticleHistoryService = {
             createdBy: new Types.ObjectId(userId),
             eventType,
             changes,
+            statusChange: finalStatusChange,
             updatedAt: new Date(),
         });
     },

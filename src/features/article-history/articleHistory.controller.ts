@@ -8,7 +8,7 @@ export const ArticleHistoryController = (articleHistoryService = ArticleHistoryS
     findHistoryByArticle: catchErrors(async ({ userId, params, query }, res) => {
         const { articleId } = params;
         const serviceResponse = await articleHistoryService.findHistoryByArticle(articleId);
-
+        console.log(serviceResponse);
         const response = z.array(articleHistoryListResponseDto).parse(serviceResponse);
         return res.status(OK).json(response);
     }),
