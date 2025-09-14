@@ -8,7 +8,6 @@ const articleController = ArticleController();
 
 articleRoutes.get("/", articleController.find);
 articleRoutes.get("/my", articleController.findAllByUser);
-
 articleRoutes.get("/trashed", articleController.findTrashed);
 articleRoutes.get("/trashed/:id", articleController.findOneTrashed);
 articleRoutes.get("/history/:id", articleController.findHistoryOne);
@@ -18,6 +17,7 @@ articleRoutes.post("/", articleController.create);
 articleRoutes.post("/:id/verify", articleController.toggleVerify);
 articleRoutes.post("/:id/aprove", articleController.aproveOne);
 articleRoutes.post("/:id/reject", articleController.rejectOne);
+articleRoutes.post("/:id/request-review", articleController.requestReviewOne);
 articleRoutes.post("/:id/markAsFavourite", articleController.toggleFavourite);
 articleRoutes.put("/:id/simple-update", articleController.simpleUpdateOne);
 articleRoutes.put("/:id", articleController.updateOne);

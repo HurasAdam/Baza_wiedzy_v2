@@ -234,6 +234,23 @@ export const ArticleService = {
         await article.save();
     },
 
+    async requestReviewOne(userId: string, articleId: string) {
+        const article = await ArticleModel.findById(articleId);
+        appAssert(article, NOT_FOUND, "Article not found");
+
+        // sprawdź czy jest w statusie rejected
+        appAssert(article.status === "rejected", CONFLICT, "Only rejected articles can be resubmitted");
+
+        // zmiana statusu
+        article.status = "draft";
+        article.rejectionReason = null; // możesz też czyścić powód, bo już nie jest aktualny
+        article.rejectedBy = null;
+
+        const updatedArticle = await article.save();
+
+        return updatedArticle.toObject();
+    },
+
     async toggleFavourite(userId: string, articleId: string) {
         const user = await UserModel.findById({ _id: userId });
         appAssert(user, NOT_FOUND, "User not found");
@@ -284,48 +301,103 @@ export const ArticleService = {
         await ArticleHistoryModel.deleteMany({ articleId: articleId });
     },
 
-    async updateOne(userId: string, articleId: string, body: any, options?: { simpleEdit?: boolean }) {
+    async updateOne(userId: string, articleId: string, body: any, options: { simpleEdit: boolean }) {
+        const { title, employeeDescription, tags, product, category, responseVariants } = body;
+
         const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
-        const oldArticle = article.toObject();
-        const oldStatus = article.status as "draft" | "pending" | "approved" | "rejected";
+        // 2. Pobierz warianty przed zmianą
+        const beforeVariants = await ResponseVariantModel.find({ articleId })
+            .select("_id version variantName variantContent")
+            .lean();
 
-        article.title = body.title ?? article.title;
-        article.employeeDescription = body.employeeDescription ?? article.employeeDescription;
-        article.tags = body.tags ?? article.tags;
-        article.product = body.product ?? article.product;
-        article.category = body.category ?? article.category;
+        // 3. Złóż snapshot "before"
+        const beforeArticle = {
+            ...(article.toObject() as any),
+            responseVariants: beforeVariants,
+        };
 
-        if (!options?.simpleEdit) {
+        article.title = title ?? article.title;
+        article.employeeDescription = employeeDescription ?? article.employeeDescription;
+        article.tags = tags ?? article.tags;
+        article.product = product ?? article.product;
+        article.category = category ?? article.category;
+
+        if (!options.simpleEdit) {
             if (article.status === "rejected") {
                 article.status = "draft";
             } else if (article.status === "approved") {
+                article.status = "pending";
+            } else {
                 article.status = "pending";
             }
         }
 
         await article.save();
-        const newArticle = article.toObject();
-        const newStatus = newArticle.status as "draft" | "pending" | "approved" | "rejected";
 
-        // --- zapis historii ---
-        let statusChange: { from: typeof oldStatus; to: typeof newStatus } | undefined;
+        if (Array.isArray(responseVariants)) {
+            // getting response varriants linked to current Article
+            const existingVariants = await ResponseVariantModel.find({ articleId });
 
-        if (oldStatus !== newStatus) {
-            statusChange = { from: oldStatus, to: newStatus };
+            // converting array into map
+            const existingMap = new Map(existingVariants.map((v) => [v._id.toString(), v]));
+
+            const incomingIds = responseVariants.filter((v: any) => v._id).map((v: any) => v._id);
+
+            // 1. Update
+            for (const variant of responseVariants) {
+                if (variant._id && existingMap.has(variant._id)) {
+                    // Update istniejącego
+                    await ResponseVariantModel.findByIdAndUpdate(variant._id, {
+                        version: variant.version,
+                        variantName: variant.variantName,
+                        variantContent: variant.variantContent,
+                        modifiedBy: userId,
+                        modifiedAt: new Date(),
+                    });
+                } else {
+                    // Adding new varaints
+                    const newVariant = new ResponseVariantModel({
+                        articleId,
+                        version: variant.version,
+                        variantName: variant.variantName,
+                        variantContent: variant.variantContent,
+                        createdBy: userId,
+                    });
+                    await newVariant.save();
+                }
+            }
+
+            // 2. Removing variants
+            for (const existing of existingVariants) {
+                if (!incomingIds.includes(existing._id.toString())) {
+                    await ResponseVariantModel.findByIdAndDelete(existing._id);
+                }
+            }
         }
+
+        // 6. Pobierz warianty po zmianie
+        const afterVariants = await ResponseVariantModel.find({ articleId })
+            .select("_id version variantName variantContent")
+            .lean();
+
+        // 7. Złóż snapshot "after"
+        const afterArticle = {
+            ...(article.toObject() as any),
+            responseVariants: afterVariants,
+        };
 
         await ArticleHistoryService.saveChanges({
             articleId,
-            before: oldArticle,
-            after: newArticle,
+            before: beforeArticle,
+            after: afterArticle,
             userId,
             eventType: ArticleEventType.Updated,
-            statusChange,
+            statusChange: { from: beforeArticle.status, to: afterArticle.status },
         });
 
-        return newArticle;
+        return article.toObject();
     },
 
     async findCreatedByUser(userId: string, query: any) {
