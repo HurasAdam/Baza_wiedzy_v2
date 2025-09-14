@@ -1,7 +1,7 @@
-import CategoryModel from "@/features/category/category.model";
-import ProductModel from "@/features/product/product.model";
-import TagModel from "@/features/tag/tag.model";
 import { Types } from "mongoose";
+import CategoryModel from "../category/category.model";
+import ProductModel from "../product/product.model";
+import TagModel from "../tag/tag.model";
 import ArticleHistoryModel from "./article-history.model";
 
 export enum ArticleEventType {
@@ -36,24 +36,9 @@ export const ArticleHistoryService = {
     async saveChanges({ articleId, before, after, userId, eventType, statusChange }: SaveChangesParams) {
         const changes: Change[] = [];
 
+        // fallback dla statusChange
         const finalStatusChange = statusChange ?? { from: before?.status ?? after.status, to: after.status };
 
-        if (eventType === ArticleEventType.Verified) {
-            changes.push({
-                field: "isVerified",
-                oldValue: before?.isVerified ?? false,
-                newValue: true,
-            });
-        }
-        if (eventType === ArticleEventType.Unverified) {
-            changes.push({
-                field: "isVerified",
-                oldValue: before?.isVerified ?? true,
-                newValue: false,
-            });
-        }
-
-        // Tworzenie artykułu
         if (eventType === ArticleEventType.Created) {
             await ArticleHistoryModel.create({
                 articleId: new Types.ObjectId(articleId),
@@ -72,28 +57,73 @@ export const ArticleHistoryService = {
             return;
         }
 
-        // Aktualizacja artykułu
+        if (eventType === ArticleEventType.Verified) {
+            await ArticleHistoryModel.create({
+                articleId: new Types.ObjectId(articleId),
+                createdBy: new Types.ObjectId(userId),
+                eventType,
+                changes: [
+                    {
+                        field: "isVerified",
+                        oldValue: before?.isVerified ?? false,
+                        newValue: true,
+                    },
+                    {
+                        field: "status",
+                        oldValue: before?.status,
+                        newValue: after.status,
+                    },
+                ],
+                statusChange: finalStatusChange,
+                updatedAt: new Date(),
+            });
+            return;
+        }
+
+        if (eventType === ArticleEventType.Unverified) {
+            await ArticleHistoryModel.create({
+                articleId: new Types.ObjectId(articleId),
+                createdBy: new Types.ObjectId(userId),
+                eventType,
+                changes: [
+                    {
+                        field: "isVerified",
+                        oldValue: before?.isVerified ?? true,
+                        newValue: false,
+                    },
+                ],
+                statusChange: finalStatusChange,
+                updatedAt: new Date(),
+            });
+            return;
+        }
+
         if (eventType === ArticleEventType.Updated && before) {
-            for (const key of ["title", "employeeDescription"]) {
-                if (JSON.stringify(before[key]) !== JSON.stringify(after[key])) {
-                    changes.push({
-                        field: key,
-                        oldValue: before[key],
-                        newValue: after[key],
-                    });
-                }
+            // TITLE
+            if (before.title !== after.title) {
+                changes.push({ field: "title", oldValue: before.title, newValue: after.title });
             }
 
-            // Status
-            if (before.status !== after.status) {
+            // DESCRIPTION
+            if (before.employeeDescription !== after.employeeDescription) {
                 changes.push({
-                    field: "status",
-                    oldValue: before.status,
-                    newValue: after.status,
+                    field: "employeeDescription",
+                    oldValue: before.employeeDescription,
+                    newValue: after.employeeDescription,
                 });
             }
 
-            // Tags
+            // STATUS
+            if (before.status !== after.status) {
+                changes.push({ field: "status", oldValue: before.status, newValue: after.status });
+            }
+
+            // IS VERIFIED
+            if (before.isVerified !== after.isVerified) {
+                changes.push({ field: "isVerified", oldValue: before.isVerified, newValue: after.isVerified });
+            }
+
+            // TAGS
             if (JSON.stringify(before.tags) !== JSON.stringify(after.tags)) {
                 const oldTags = await TagModel.find({ _id: { $in: before.tags || [] } }).select("name");
                 const newTags = await TagModel.find({ _id: { $in: after.tags || [] } }).select("name");
@@ -105,7 +135,7 @@ export const ArticleHistoryService = {
                 });
             }
 
-            // Product
+            // PRODUCT
             if (String(before.product) !== String(after.product)) {
                 const oldProduct = before.product ? await ProductModel.findById(before.product).select("name") : null;
                 const newProduct = after.product ? await ProductModel.findById(after.product).select("name") : null;
@@ -117,7 +147,7 @@ export const ArticleHistoryService = {
                 });
             }
 
-            // Category
+            // CATEGORY
             if (String(before.category) !== String(after.category)) {
                 const oldCategory = before.category
                     ? await CategoryModel.findById(before.category).select("name")
@@ -130,10 +160,19 @@ export const ArticleHistoryService = {
                     newValue: newCategory ? { id: newCategory._id, name: newCategory.name } : null,
                 });
             }
+
+            // RESPONSE VARIANTS – snapshot całości
+            if (JSON.stringify(before.responseVariants) !== JSON.stringify(after.responseVariants)) {
+                changes.push({
+                    field: "responseVariants",
+                    oldValue: before.responseVariants,
+                    newValue: after.responseVariants,
+                });
+            }
         }
 
-        // Jeśli brak zmian  – nie zapisuj historii
-        if (changes.length === 0 && eventType === ArticleEventType.Updated) return;
+        // jeśli nic się realnie nie zmieniło, nie zapisujemy historii
+        if (changes.length === 0) return;
 
         await ArticleHistoryModel.create({
             articleId: new Types.ObjectId(articleId),
@@ -144,7 +183,6 @@ export const ArticleHistoryService = {
             updatedAt: new Date(),
         });
     },
-
     async findHistoryByArticle(articleId: string) {
         return ArticleHistoryModel.find({ articleId }).populate("createdBy", "name surname").sort({ createdAt: -1 });
     },
