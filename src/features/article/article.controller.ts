@@ -70,6 +70,12 @@ export const ArticleController = (articleService = ArticleService) => ({
             message: body.isVerified ? "Artykuł został zweryfikowany" : "Artykuł został oznaczony jako do weryfikacji",
         });
     }),
+    requestReviewOne: catchErrors(async ({ userId, body, params }, res) => {
+        await articleService.requestReviewOne(userId, params.id);
+        return res.status(OK).json({
+            message: "Artykuł został zgłoszony do ponownej do weryfikacji",
+        });
+    }),
 
     toggleFavourite: catchErrors(async ({ userId, params }, res) => {
         const isFavourite = await articleService.toggleFavourite(userId, params.id);

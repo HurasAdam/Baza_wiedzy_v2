@@ -10,6 +10,8 @@ export const ArticleHistoryController = (articleHistoryService = ArticleHistoryS
         const serviceResponse = await articleHistoryService.findHistoryByArticle(articleId);
         console.log(serviceResponse);
         const response = z.array(articleHistoryListResponseDto).parse(serviceResponse);
+        console.log("FULL HISTORY:", JSON.stringify(serviceResponse, null, 2));
+
         return res.status(OK).json(response);
     }),
     findOneHistoryItem: catchErrors(async ({ userId, query }, res) => {
