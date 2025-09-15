@@ -30,7 +30,7 @@ export const constructSearchQuery = (query: any) => {
     if (query.status) {
         constructedQuery.status = query.status;
     } else {
-        constructedQuery.status = "approved";
+        constructedQuery.status = { $in: ["approved", "pending"] };
     }
 
     return constructedQuery;
