@@ -17,14 +17,15 @@ export const ArticleService = {
         const articleExists = await ArticleModel.exists({ title: payload.title });
         appAssert(!articleExists, CONFLICT, "Article already exists");
 
+        // 1. utworzenie artykułu
         const newArticle = await ArticleModel.create({
             ...payload,
             createdBy: userId,
             verifiedBy: userId,
         });
 
-        // Create response varaint/variants based on form data and link them to created Article
-        await Promise.all(
+        // 2. utworzenie responseVariants
+        const createdVariants = await Promise.all(
             payload.responseVariants.map((variant) =>
                 ResponseVariantModel.create({
                     ...variant,
@@ -34,18 +35,36 @@ export const ArticleService = {
             )
         );
 
-        // --- historia: event created ---
+        // 3. od razu pobieramy artykuł z populacją
+        const populatedArticle = await ArticleModel.findById(newArticle._id)
+            .populate("tags", "name")
+            .populate("product", "name")
+            .populate("category", "name")
+            .populate("createdBy", "name surname")
+            .select("-_id")
+            .lean();
+
+        // 4. snapshot = artykuł + warianty
+        const afterSnapshot = {
+            ...populatedArticle,
+            responseVariants: createdVariants.map((v) => ({
+                id: v._id,
+                variantName: v.variantName,
+                variantContent: v.variantContent,
+            })),
+        };
+
+        // 5. zapis historii
         await ArticleHistoryService.saveChanges({
             articleId: newArticle._id.toString(),
             before: null,
-            after: newArticle.toObject(),
+            after: afterSnapshot,
             userId,
-            eventType: ArticleEventType.Created, // pojedynczy event
+            eventType: ArticleEventType.Created,
         });
 
         return newArticle;
     },
-
     async find(userId: string, query: SearchArticlesDto, findTrashed = false) {
         const querydb = {
             ...constructSearchQuery(query),
