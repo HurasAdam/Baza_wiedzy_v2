@@ -42,6 +42,7 @@ export const Permissions = {
     ADD_TOPIC: "ADD_TOPIC",
     EDIT_TOPIC: "EDIT_TOPIC",
     DELETE_TOPIC: "DELETE_TOPIC",
+    ACCESS_ADMIN_PANEL: "ACCESS_ADMIN_PANEL",
     READ_ONLY: "READ_ONLY",
 } as const;
 

@@ -30,6 +30,7 @@ export const RolePermissions: Record<RoleType, Array<PermissionType>> = {
         Permissions.EDIT_TOPIC,
         Permissions.DELETE_TOPIC,
         Permissions.READ_ONLY,
+        Permissions.ACCESS_ADMIN_PANEL,
     ],
 
     MODERATOR: [
