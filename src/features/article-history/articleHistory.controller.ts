@@ -14,8 +14,10 @@ export const ArticleHistoryController = (articleHistoryService = ArticleHistoryS
 
         return res.status(OK).json(response);
     }),
-    findOneHistoryItem: catchErrors(async ({ userId, query }, res) => {
-        return res.status(OK).json("articles");
+    findOneHistoryItem: catchErrors(async ({ userId, params, query }, res) => {
+        const { historyItemId } = params;
+        const serviceResponse = await articleHistoryService.findHistoryItemDetails(historyItemId);
+        return res.status(OK).json(serviceResponse);
     }),
     findHistoryByUser: catchErrors(async ({ userId, query }, res) => {
         return res.status(OK).json("articles");

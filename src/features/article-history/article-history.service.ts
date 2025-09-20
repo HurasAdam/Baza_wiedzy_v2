@@ -186,4 +186,9 @@ export const ArticleHistoryService = {
     async findHistoryByArticle(articleId: string) {
         return ArticleHistoryModel.find({ articleId }).populate("createdBy", "name surname").sort({ createdAt: -1 });
     },
+    async findHistoryItemDetails(historyItemId: string) {
+        return ArticleHistoryModel.findOne({ _id: historyItemId })
+            .populate("createdBy", "name surname")
+            .sort({ createdAt: -1 });
+    },
 };
