@@ -37,4 +37,5 @@ export const PERMISSIONS_LIST = [
     { key: Permissions.EDIT_TOPIC, label: "Edytuj temat", category: "Tematy rozmowy" },
     { key: Permissions.DELETE_TOPIC, label: "Usuń temat", category: "Tematy rozmowy" },
     { key: Permissions.READ_ONLY, label: "Tylko do odczytu", category: "Tematy rozmowy" },
+    { key: Permissions.ACCESS_ADMIN_PANEL, label: "Dostęp do panelu admina", category: "Admin panel" },
 ];
