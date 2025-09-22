@@ -24,6 +24,7 @@ import { funnyMessageRoutes } from "./features/funny-message/funny-message.route
 import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
 import { productRoutes } from "./features/product/product.route";
 import { projectRoutes } from "./features/project/project.route";
+import { statisticsRoutes } from "./features/statistics/statistics.route";
 import { tagRoutes } from "./features/tag/tag.route";
 import { userRoutes } from "./features/user/user.route";
 import authenticate from "./middleware/authenticate";
@@ -47,6 +48,7 @@ app.use("/auth", authRoutes);
 
 //#protected routes
 app.use("/users", authenticate, userRoutes);
+app.use("/statistics", authenticate, statisticsRoutes);
 app.use("/admin", authenticate, adminRoutes);
 app.use("/articles", authenticate, articleRoutes);
 app.use("/articles-history", authenticate, articleHistoryRoutes);
