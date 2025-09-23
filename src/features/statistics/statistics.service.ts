@@ -76,5 +76,22 @@ export const StatisticsService = {
             },
         }));
     },
+    async findUserAddedArticles(userId: string, from?: Date, to?: Date) {
+        const now = new Date();
+
+        const startDate = from ? from : new Date(now.setHours(0, 0, 0, 0));
+        const endDate = to ? to : new Date(now.setHours(23, 59, 59, 999));
+
+        const filter = {
+            createdBy: userId,
+            // createdAt: { $gte: startDate, $lte: endDate },
+        };
+
+        const userAddedArticles = await ArticleModel.find(filter)
+            .sort({ createdAt: -1 })
+            .populate({ path: "product", select: "name" });
+
+        return userAddedArticles;
+    },
     async findMyStatistics() {},
 };

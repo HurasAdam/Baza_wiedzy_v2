@@ -7,4 +7,7 @@ const statisticsController = StatisticsController();
 //prefix: /statistics
 
 statisticsRoutes.get("/users", statisticsController.findAllUsersStatistics);
+statisticsRoutes.get("/users/:id/articles/added", statisticsController.findUserAddedArticles);
+
+statisticsRoutes.get("/users/:id/articles/edited", statisticsController.findUserEditedArticles);
 statisticsRoutes.get("/me", statisticsController.findMyStatistics);

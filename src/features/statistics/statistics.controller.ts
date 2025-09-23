@@ -9,5 +9,19 @@ export const StatisticsController = (statisticsService = StatisticsService) => (
         const serviceResponse = await statisticsService.findAllUsersStatistics(payload);
         res.status(200).json(serviceResponse);
     }),
+    findUserAddedArticles: catchErrors(async ({ params, query }, res) => {
+        const { id: userId } = params;
+        const payload = findUsersWithDto.parse(query);
+        const serviceResponse = await statisticsService.findUserAddedArticles(userId);
+        res.status(200).json(serviceResponse);
+    }),
+
+    findUserEditedArticles: catchErrors(async ({ params, query }, res) => {
+        const { id: userId } = params;
+        const payload = findUsersWithDto.parse(query);
+        const serviceResponse = await statisticsService.findUserAddedArticles(userId);
+        res.status(200).json(serviceResponse);
+    }),
+
     findMyStatistics: catchErrors(async ({ query }, res) => {}),
 });
