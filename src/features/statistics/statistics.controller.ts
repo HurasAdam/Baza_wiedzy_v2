@@ -1,5 +1,6 @@
 import catchErrors from "../../utils/catchErrors";
 import { findUsersWithDto } from "../user/dto/find-users-with.dto";
+import { dateRangeFilterDto } from "./dto/request-dto/date-range-filter.dto";
 import { StatisticsService } from "./statistics.service";
 
 export const StatisticsController = (statisticsService = StatisticsService) => ({
@@ -11,15 +12,15 @@ export const StatisticsController = (statisticsService = StatisticsService) => (
     }),
     findUserAddedArticles: catchErrors(async ({ params, query }, res) => {
         const { id: userId } = params;
-        const payload = findUsersWithDto.parse(query);
-        const serviceResponse = await statisticsService.findUserAddedArticles(userId);
+        const payload = dateRangeFilterDto.parse(query);
+        const serviceResponse = await statisticsService.findUserAddedArticles(userId, payload);
         res.status(200).json(serviceResponse);
     }),
 
     findUserEditedArticles: catchErrors(async ({ params, query }, res) => {
         const { id: userId } = params;
         const payload = findUsersWithDto.parse(query);
-        const serviceResponse = await statisticsService.findUserAddedArticles(userId);
+        const serviceResponse = await statisticsService.findUserAddedArticles(userId, payload);
         res.status(200).json(serviceResponse);
     }),
 
