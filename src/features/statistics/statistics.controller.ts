@@ -20,9 +20,14 @@ export const StatisticsController = (statisticsService = StatisticsService) => (
     findUserEditedArticles: catchErrors(async ({ params, query }, res) => {
         const { id: userId } = params;
         const payload = findUsersWithDto.parse(query);
-        const serviceResponse = await statisticsService.findUserAddedArticles(userId, payload);
+        const serviceResponse = await statisticsService.findUserEditedArticles(userId, payload);
         res.status(200).json(serviceResponse);
     }),
-
+    findUserConversationReports: catchErrors(async ({ params, query }, res) => {
+        const { id: userId } = params;
+        const payload = findUsersWithDto.parse(query);
+        const serviceResponse = await statisticsService.findUserConversationReports(userId, payload);
+        res.status(200).json(serviceResponse);
+    }),
     findMyStatistics: catchErrors(async ({ query }, res) => {}),
 });

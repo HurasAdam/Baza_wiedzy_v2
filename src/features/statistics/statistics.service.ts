@@ -1,9 +1,16 @@
+import mongoose, { PipelineStage } from "mongoose";
 import ArticleHistoryModel from "../article-history/article-history.model";
 import ArticleModel from "../article/article.model";
 import ConversationReportModel from "../conversation-report/conversation-report.model";
 import { FindUsersWithDto } from "../user/dto/find-users-with.dto";
 import UserModel from "../user/user.model";
 import { DateRangeFilterDto } from "./dto/request-dto/date-range-filter.dto";
+
+interface UserConversationReportDTO {
+    name: string;
+    count: number;
+    labelColor: string;
+}
 
 export const StatisticsService = {
     async findAllUsersStatistics(query: FindUsersWithDto) {
@@ -28,7 +35,8 @@ export const StatisticsService = {
         // 2 articles edited
         const articlesEditedAgg = await ArticleHistoryModel.aggregate([
             { $match: { eventType: "updated", createdAt: dateFilter.createdAt } },
-            { $group: { _id: "$createdBy", count: { $sum: 1 } } },
+            { $group: { _id: "$createdBy", articles: { $addToSet: "$articleId" } } },
+            { $project: { count: { $size: "$articles" } } },
         ]);
         const articlesEditedMap = new Map<string, number>();
         articlesEditedAgg.forEach((a) => articlesEditedMap.set(a._id.toString(), a.count));
@@ -93,6 +101,86 @@ export const StatisticsService = {
             .populate({ path: "product", select: "name" });
 
         return userAddedArticles;
+    },
+
+    async findUserEditedArticles(userId: string, payload: DateRangeFilterDto) {
+        const now = new Date();
+
+        const startDate = payload.startDate ? new Date(payload.startDate) : new Date(now.setHours(0, 0, 0, 0));
+        const endDate = payload.endDate ? new Date(payload.endDate) : new Date(now.setHours(23, 59, 59, 999));
+
+        const historyEntries = await ArticleHistoryModel.find({
+            createdBy: userId,
+            eventType: "updated",
+            createdAt: { $gte: startDate, $lte: endDate },
+        })
+            .sort({ createdAt: -1 })
+            .populate({
+                path: "articleId",
+                select: "title product",
+                populate: { path: "product", select: "name" },
+            });
+
+        const seenIds = new Set<string>();
+        const editedArticles = historyEntries
+            .map((entry) => entry.articleId)
+            .filter((article) => {
+                if (!article) return false;
+                const id = article._id.toString();
+                if (seenIds.has(id)) return false;
+                seenIds.add(id);
+                return true;
+            });
+
+        return editedArticles;
+    },
+
+    async findUserConversationReports(userId: string, payload: DateRangeFilterDto) {
+        const now = new Date();
+
+        const startDate = payload.startDate ? new Date(payload.startDate) : new Date(now.setHours(0, 0, 0, 0));
+        const endDate = payload.endDate ? new Date(payload.endDate) : new Date(now.setHours(23, 59, 59, 999));
+
+        // Aggregation pipeline
+        const pipeline = [
+            {
+                $match: {
+                    createdBy: new mongoose.Types.ObjectId(userId),
+                    createdAt: { $gte: startDate, $lte: endDate },
+                },
+            },
+            {
+                $lookup: {
+                    from: "conversationtopics",
+                    localField: "topic",
+                    foreignField: "_id",
+                    as: "topic",
+                },
+            },
+            { $unwind: "$topic" },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "topic.product",
+                    foreignField: "_id",
+                    as: "product",
+                },
+            },
+            { $unwind: "$product" },
+            {
+                $group: {
+                    _id: "$product._id",
+                    name: { $first: "$product.name" },
+                    labelColor: { $first: "$product.labelColor" },
+                    count: { $sum: 1 },
+                },
+            },
+            { $sort: { count: -1 } },
+        ];
+
+        const result = await ConversationReportModel.aggregate<UserConversationReportDTO>(pipeline as PipelineStage[]);
+
+        return result;
     },
     async findMyStatistics() {},
 };

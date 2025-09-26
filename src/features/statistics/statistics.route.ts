@@ -10,4 +10,6 @@ statisticsRoutes.get("/users", statisticsController.findAllUsersStatistics);
 statisticsRoutes.get("/users/:id/articles/added", statisticsController.findUserAddedArticles);
 
 statisticsRoutes.get("/users/:id/articles/edited", statisticsController.findUserEditedArticles);
+
+statisticsRoutes.get("/users/:id/conversationReports", statisticsController.findUserConversationReports);
 statisticsRoutes.get("/me", statisticsController.findMyStatistics);
