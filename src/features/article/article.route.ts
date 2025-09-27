@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { Permissions } from "../../enums/role.enum";
+import permissionGuard from "../../middleware/permissionGuard";
 import { ArticleController } from "./article.controller";
 
 export const articleRoutes = Router();
@@ -15,7 +17,7 @@ articleRoutes.get("/:id/history", articleController.findOneHistory);
 articleRoutes.get("/:id", articleController.findOne);
 articleRoutes.post("/", articleController.create);
 articleRoutes.post("/:id/verify", articleController.toggleVerify);
-articleRoutes.post("/:id/aprove", articleController.aproveOne);
+articleRoutes.post("/:id/aprove", permissionGuard(Permissions.VERIFY_ARTICLE), articleController.aproveOne);
 articleRoutes.post("/:id/reject", articleController.rejectOne);
 articleRoutes.post("/:id/request-review", articleController.requestReviewOne);
 articleRoutes.post("/:id/markAsFavourite", articleController.toggleFavourite);
