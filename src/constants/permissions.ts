@@ -8,10 +8,16 @@ export const PERMISSIONS_LIST = [
     { key: Permissions.EDIT_ARTICLE, label: "Edycja artykułów", category: "Artykuły" },
     { key: Permissions.VERIFY_ARTICLE, label: "Weryfikacja artykułów", category: "Artykuły" },
     { key: Permissions.APPROVE_ARTICLE, label: "Zatwierdzanie nowo dodanych artykułów", category: "Artykuły" },
+    { key: Permissions.REJECT_ARTICLE, label: "Zgłaszanie uwag do no dodanych artykułów", category: "Artykuły" },
     { key: Permissions.ARCHIVE_ARTICLE, label: "Archiwizacja artykułów", category: "Artykuły" },
     { key: Permissions.RESTORE_ARTICLE, label: "Przywracanie z archiwum", category: "Artykuły" },
     { key: Permissions.DELETE_ARTICLE, label: "Usuwanie artykułów", category: "Artykuły" },
     { key: Permissions.VIEW_ARTICLE_HISTORY, label: "Wgląd w historie zmian artykułów", category: "Artykuły" },
+    {
+        key: Permissions.ACCESS_PENDING_ARTICLES_PANEL,
+        label: "Dostęp do panelu oczekujących artykułów",
+        category: "Artykuły",
+    },
 
     // FAQ
     { key: Permissions.ADD_FAQ, label: "Dodawanie FAQ", category: "FAQ" },
@@ -21,8 +27,7 @@ export const PERMISSIONS_LIST = [
     { key: Permissions.EDIT_FAQ_QUESTION, label: "Edycja pytań do FAQ", category: "FAQ" },
 
     // Zgłoszenia
-    { key: Permissions.REPORT_BUG, label: "Zgłaszanie błędów", category: "Zgłoszenia" },
-    { key: Permissions.REPORT_PROPOSAL, label: "Zgłaszanie propozycji", category: "Zgłoszenia" },
+    { key: Permissions.SEND_REPORT, label: "Zgłaszanie błędów i propozycji", category: "Zgłoszenia" },
 
     // Tagi
     { key: Permissions.ADD_TAG, label: "Dodawanie tagów", category: "Tagi" },
