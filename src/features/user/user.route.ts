@@ -15,6 +15,7 @@ const avatarUploader = createUploader({
 });
 
 userRoutes.get("/", userController.findAll);
+userRoutes.get("/select", userController.findForSelect);
 userRoutes.get("/me", userController.findMe);
 userRoutes.get("/favourites-articles", userController.findWithFavouriteArticles);
 userRoutes.get("/statistics/reports", userController.findWithReportCount);

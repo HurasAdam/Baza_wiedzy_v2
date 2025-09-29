@@ -15,6 +15,9 @@ export const searchArticlesDto = searchDto.extend({
     verified: z.string().optional(),
 
     status: z.enum(["draft", "pending", "approved", "rejected"]).optional(),
+
+    page: z.preprocess((val) => (val ? Number(val) : undefined), z.number().int().min(1).default(1)),
+    limit: z.preprocess((val) => (val ? Number(val) : undefined), z.number().int().min(1).max(50).default(20)),
 });
 
 export type SearchArticlesDto = z.infer<typeof searchArticlesDto>;

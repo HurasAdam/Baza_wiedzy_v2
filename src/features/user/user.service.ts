@@ -127,7 +127,8 @@ export const UserService = {
             .populate({
                 path: "profilePicture",
                 select: "filename path mimeType size createdAt updatedAt",
-            });
+            })
+            .lean();
         return users;
     },
 
