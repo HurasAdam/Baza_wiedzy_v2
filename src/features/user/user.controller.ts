@@ -40,6 +40,18 @@ export const UserController = (userService = UserService) => ({
         const users = await userService.findAll(payload);
         return res.status(OK).json(users);
     }),
+    findForSelect: catchErrors(async ({ query }, res) => {
+        const payload = findUsersDto.parse(query); // walidacja query
+        const users = await userService.findAll(payload);
+
+        const dto = users.map((u) => ({
+            _id: u._id,
+            name: u.name,
+            surname: u.surname,
+        }));
+
+        return res.status(OK).json(dto);
+    }),
 
     findWithReportCount: catchErrors(async ({ query }, res) => {
         const payload = findUsersWithDto.parse(query);
