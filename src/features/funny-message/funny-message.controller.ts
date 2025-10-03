@@ -2,6 +2,7 @@ import { OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
 
 import { createFunnyMessageDto } from "./dto/create-funny-message.dto";
+import { searchFunnyMessagesDto } from "./dto/search-funny-messages.dto";
 import { FunnyMessageService } from "./funny-message.service";
 
 export const FunnyMessageController = (funnyMessageService = FunnyMessageService) => ({
@@ -12,8 +13,8 @@ export const FunnyMessageController = (funnyMessageService = FunnyMessageService
     }),
 
     find: catchErrors(async ({ userId, query }, res) => {
-        // const payload = searchArticlesDto.parse(query);
-        const articles = await funnyMessageService.find(userId, query);
+        const payload = searchFunnyMessagesDto.parse(query);
+        const articles = await funnyMessageService.find(userId, payload);
         return res.status(OK).json(articles);
     }),
 
