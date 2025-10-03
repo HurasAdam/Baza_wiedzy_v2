@@ -18,18 +18,26 @@ export const FunnyMessageService = {
     },
 
     async find(userId: string, query) {
-        // const { limit, page, sortBy, sortAt } = query;
+        const { page, limit, sortBy, sortAt, title, author } = query;
 
-        const { limit, page, sortBy = "createdAt", sortAt = -1, ...filter } = query;
+        const filter: Record<string, any> = {};
 
+        if (title && title.trim() !== "") {
+            filter.title = { $regex: title, $options: "i" };
+        }
+
+        if (author && author.trim() !== "") {
+            filter.createdBy = author;
+        }
         const skip = (page - 1) * limit;
-        const funnyMessages = await FunnyMessageModel.find(query)
 
+        const funnyMessages = await FunnyMessageModel.find(filter)
             .populate([{ path: "createdBy", select: ["name", "surname"] }])
             .skip(skip)
             .limit(limit)
             .sort([[sortBy, sortAt]]);
-        const total = await FunnyMessageModel.countDocuments(query);
+
+        const total = await FunnyMessageModel.countDocuments(filter);
 
         return {
             data: funnyMessages,
