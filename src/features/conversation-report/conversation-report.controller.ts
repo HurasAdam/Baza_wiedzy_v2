@@ -8,9 +8,9 @@ export const ConversationReportController = (conversationReportService = Convers
     create: catchErrors(async ({ userId, body }, res) => {
         const request = newConversationReportSchema.parse(body);
 
-        const newTag = await conversationReportService.addConversationReport(userId, request);
+        const serviceResponse = await conversationReportService.addConversationReport(userId, request);
 
-        return res.status(OK).json(newTag);
+        return res.status(OK).json(serviceResponse);
     }),
 
     find: catchErrors(async ({ query }, res) => {

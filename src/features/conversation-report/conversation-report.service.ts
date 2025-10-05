@@ -3,27 +3,25 @@ import { CONFLICT } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
 import ConversationTopicModel from "../conversation-topic/conversation-topic.model";
 import ConversationReportModel from "./conversation-report.model";
-
-interface CreateConversationTopicRequest {
-    description?: string;
-    topic: string;
-    type: string;
-}
+import { CreateConversationReportRequest } from "./conversation-report.schema";
 
 export const ConversationReportService = {
-    async addConversationReport(userId: string, payload: CreateConversationTopicRequest) {
-        const { topic, description, type } = payload;
+    async addConversationReport(userId: string, payload: CreateConversationReportRequest) {
+        const { topic, description, type, count } = payload;
 
         const conversationTopic = await ConversationTopicModel.exists({ topic });
         appAssert(!conversationTopic, CONFLICT, "Conversation topic does not exist");
 
-        const createdConversationTopic = await ConversationReportModel.create({
-            description,
-            type,
-            createdBy: userId,
-            topic,
-        });
-        return createdConversationTopic;
+        for (let i = 0; i < count; i++) {
+            await ConversationReportModel.create({
+                description,
+                type,
+                createdBy: userId,
+                topic,
+            });
+        }
+
+        return { message: `${count} reports created successfully` };
     },
     async find(query) {
         const { startDate, endDate, userId, limit } = query;
