@@ -16,7 +16,7 @@ export const StatisticsService = {
     async findAllUsersStatistics(query: FindUsersWithDto) {
         const now = new Date();
 
-        // if no query set today as default
+        // jeśli nie podano zakresu, domyślnie dzisiejszy dzień
         const startDate = query.startDate ? new Date(query.startDate) : new Date(now.setHours(0, 0, 0, 0));
         const endDate = query.endDate ? new Date(query.endDate) : new Date(now.setHours(23, 59, 59, 999));
 
@@ -24,7 +24,7 @@ export const StatisticsService = {
             createdAt: { $gte: startDate, $lte: endDate },
         };
 
-        // 1 articles added
+        // Added articles
         const articlesAddedAgg = await ArticleModel.aggregate([
             { $match: dateFilter },
             { $group: { _id: "$createdBy", count: { $sum: 1 } } },
@@ -32,7 +32,7 @@ export const StatisticsService = {
         const articlesAddedMap = new Map<string, number>();
         articlesAddedAgg.forEach((a) => articlesAddedMap.set(a._id.toString(), a.count));
 
-        // 2 articles edited
+        // Edited articles
         const articlesEditedAgg = await ArticleHistoryModel.aggregate([
             { $match: { eventType: "updated", createdAt: dateFilter.createdAt } },
             { $group: { _id: "$createdBy", articles: { $addToSet: "$articleId" } } },
@@ -41,7 +41,7 @@ export const StatisticsService = {
         const articlesEditedMap = new Map<string, number>();
         articlesEditedAgg.forEach((a) => articlesEditedMap.set(a._id.toString(), a.count));
 
-        // 3 conversation reports
+        // Added conversation reports
         const conversationsAgg = await ConversationReportModel.aggregate([
             { $match: dateFilter },
             { $group: { _id: "$createdBy", count: { $sum: 1 } } },
@@ -49,7 +49,6 @@ export const StatisticsService = {
         const conversationsMap = new Map<string, number>();
         conversationsAgg.forEach((c) => conversationsMap.set(c._id.toString(), c.count));
 
-        // except users with admin role
         const users = await UserModel.aggregate([
             {
                 $lookup: {
@@ -60,6 +59,15 @@ export const StatisticsService = {
                 },
             },
             { $unwind: "$roleInfo" },
+            {
+                $lookup: {
+                    from: "attachments",
+                    localField: "profilePicture",
+                    foreignField: "_id",
+                    as: "avatar",
+                },
+            },
+            { $unwind: { path: "$avatar", preserveNullAndEmptyArrays: true } },
             { $match: { "roleInfo.name": { $ne: "ADMIN" } } },
             {
                 $project: {
@@ -68,6 +76,10 @@ export const StatisticsService = {
                     surname: 1,
                     email: 1,
                     role: "$roleInfo.name",
+                    avatar: {
+                        path: "$avatar.path",
+                        filename: "$avatar.filename",
+                    },
                 },
             },
         ]);
@@ -78,6 +90,7 @@ export const StatisticsService = {
             surname: user.surname,
             email: user.email,
             role: user.role,
+            avatar: user.avatar ? user.avatar.path : null,
             stats: {
                 articlesAdded: articlesAddedMap.get(user._id.toString()) || 0,
                 articlesEdited: articlesEditedMap.get(user._id.toString()) || 0,
