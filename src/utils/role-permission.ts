@@ -5,14 +5,12 @@ export const RolePermissions: Record<RoleType, Array<PermissionType>> = {
         Permissions.ADD_ARTICLE,
         Permissions.EDIT_ARTICLE,
         Permissions.VERIFY_ARTICLE,
-        Permissions.UNVERIFY_ARTICLE,
-        Permissions.TRASH_ARTICLE,
+
         Permissions.RESTORE_ARTICLE,
         Permissions.DELETE_ARTICLE,
         Permissions.VIEW_ARTICLE_HISTORY,
 
-        Permissions.REPORT_BUG,
-        Permissions.REPORT_PROPOSAL,
+        Permissions.SEND_REPORT,
 
         Permissions.ADD_TAG,
         Permissions.EDIT_TAG,
@@ -36,12 +34,11 @@ export const RolePermissions: Record<RoleType, Array<PermissionType>> = {
     MODERATOR: [
         Permissions.ADD_ARTICLE,
         Permissions.EDIT_ARTICLE,
-        Permissions.TRASH_ARTICLE,
+
         Permissions.RESTORE_ARTICLE,
         Permissions.VIEW_ARTICLE_HISTORY,
 
-        Permissions.REPORT_BUG,
-        Permissions.REPORT_PROPOSAL,
+        Permissions.SEND_REPORT,
 
         Permissions.ADD_TAG,
         Permissions.EDIT_TAG,
@@ -57,20 +54,8 @@ export const RolePermissions: Record<RoleType, Array<PermissionType>> = {
         Permissions.READ_ONLY,
     ],
 
-    EDYTOR: [
-        Permissions.ADD_ARTICLE,
-        Permissions.EDIT_ARTICLE,
-        Permissions.REPORT_BUG,
-        Permissions.REPORT_PROPOSAL,
-        Permissions.READ_ONLY,
-    ],
-    AUTOR: [
-        Permissions.ADD_ARTICLE,
-        Permissions.EDIT_ARTICLE,
-        Permissions.REPORT_BUG,
-        Permissions.REPORT_PROPOSAL,
-        Permissions.READ_ONLY,
-    ],
+    EDYTOR: [Permissions.ADD_ARTICLE, Permissions.EDIT_ARTICLE, Permissions.SEND_REPORT, Permissions.READ_ONLY],
+    AUTOR: [Permissions.ADD_ARTICLE, Permissions.EDIT_ARTICLE, Permissions.SEND_REPORT, Permissions.READ_ONLY],
 
     CZYTELNIK: [Permissions.READ_ONLY],
 };
