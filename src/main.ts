@@ -3,8 +3,10 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import helmet from "helmet";
+import http from "http";
 import morgan from "morgan";
 import path from "node:path";
+import { Server as IOServer } from "socket.io";
 import connectDB from "./config/db";
 import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 import { adminRoutes } from "./features/admin/admin.route";
@@ -22,6 +24,7 @@ import { faqItemRoutes } from "./features/faq-item/faq-item.route";
 import { faqRoutes } from "./features/faq/faq.route";
 import { funnyMessageRoutes } from "./features/funny-message/funny-message.route";
 import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
+import { notificationRoutes } from "./features/notification/notification.route";
 import { productRoutes } from "./features/product/product.route";
 import { projectRoutes } from "./features/project/project.route";
 import { statisticsRoutes } from "./features/statistics/statistics.route";
@@ -31,6 +34,44 @@ import authenticate from "./middleware/authenticate";
 import errorHandler from "./middleware/errorHandlers";
 
 const app = express();
+
+const server = http.createServer(app);
+
+export const io = new IOServer(server, {
+    cors: {
+        origin: APP_ORIGIN,
+        credentials: true,
+    },
+});
+
+const onlineUsers: Map<string, any> = new Map();
+
+// io.on("connection", (socket) => {
+//     console.log("Nowy użytkownik połączony:", socket.id);
+
+//     socket.on("user-login", ({ userId }) => {
+//         console.log(`User zalogowany: ${userId}`);
+//         onlineUsers.set(userId, {
+//             socketId: socket.id,
+//             userId,
+//             connectedAt: new Date(),
+//         });
+
+//         io.emit("online-users", Array.from(onlineUsers.values()));
+//     });
+
+//     socket.on("disconnect", () => {
+//         console.log("Użytkownik się rozłączył:", socket.id);
+//         for (const [userId, user] of onlineUsers.entries()) {
+//             if (user.socketId === socket.id) {
+//                 onlineUsers.delete(userId);
+//                 break;
+//             }
+//         }
+//         io.emit("online-users", Array.from(onlineUsers.values()));
+//     });
+// });
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(helmet());
@@ -49,6 +90,7 @@ app.use("/auth", authRoutes);
 //#protected routes
 app.use("/users", authenticate, userRoutes);
 app.use("/statistics", authenticate, statisticsRoutes);
+app.use("/notifications", authenticate, notificationRoutes);
 app.use("/admin", authenticate, adminRoutes);
 app.use("/articles", authenticate, articleRoutes);
 app.use("/articles-history", authenticate, articleHistoryRoutes);
@@ -86,7 +128,7 @@ app.use(
 app.use(errorHandler);
 
 connectDB(() => {
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log(`Server is running on port ${PORT} in ${NODE_ENV} environment`);
     });
 });

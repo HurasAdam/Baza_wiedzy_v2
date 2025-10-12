@@ -1,8 +1,11 @@
 export const constructSearchQuery = (query: any) => {
     const constructedQuery: any = {};
 
+    const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
     if (query.title) {
-        constructedQuery.$or = [{ title: new RegExp(query.title, "i") }];
+        const safeTitle = escapeRegex(query.title.trim());
+        constructedQuery.$or = [{ title: new RegExp(safeTitle, "i") }];
     }
 
     if (query.tags) {

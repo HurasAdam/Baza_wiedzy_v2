@@ -18,6 +18,7 @@ export const searchArticlesDto = searchDto.extend({
 
     page: z.preprocess((val) => (val ? Number(val) : undefined), z.number().int().min(1).default(1)),
     limit: z.preprocess((val) => (val ? Number(val) : undefined), z.number().int().min(1).max(50).default(20)),
+    searchInContent: z.preprocess((v) => (v === "true" || v === true ? true : false), z.boolean().default(false)),
 });
 
 export type SearchArticlesDto = z.infer<typeof searchArticlesDto>;

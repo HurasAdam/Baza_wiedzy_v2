@@ -1,9 +1,11 @@
 import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import { constructSearchQuery } from "@/utils/constructSearchQuery";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
+import { io } from "../../main";
 import ArticleHistoryModel from "../article-history/article-history.model";
 import { ArticleEventType, ArticleHistoryService } from "../article-history/article-history.service";
+import { NotificationService } from "../notification/notofication.service";
 import TagModel from "../tag/tag.model";
 import UserModel from "../user/user.model";
 import { UserService } from "../user/user.service";
@@ -17,14 +19,13 @@ export const ArticleService = {
         const articleExists = await ArticleModel.exists({ title: payload.title });
         appAssert(!articleExists, CONFLICT, "Article already exists");
 
-        // 1. utworzenie artykułu
         const newArticle = await ArticleModel.create({
             ...payload,
             createdBy: userId,
             verifiedBy: userId,
         });
 
-        // 2. utworzenie responseVariants
+        // responseVariants
         const createdVariants = await Promise.all(
             payload.responseVariants.map((variant) =>
                 ResponseVariantModel.create({
@@ -35,7 +36,6 @@ export const ArticleService = {
             )
         );
 
-        // 3. od razu pobieramy artykuł z populacją
         const populatedArticle = await ArticleModel.findById(newArticle._id)
             .populate("tags", "name")
             .populate("product", "name")
@@ -44,7 +44,7 @@ export const ArticleService = {
             .select("-_id")
             .lean();
 
-        // 4. snapshot = artykuł + warianty
+        // SNAPSHOT
         const afterSnapshot = {
             ...populatedArticle,
             responseVariants: createdVariants.map((v) => ({
@@ -54,7 +54,6 @@ export const ArticleService = {
             })),
         };
 
-        // 5. zapis historii
         await ArticleHistoryService.saveChanges({
             articleId: newArticle._id.toString(),
             before: null,
@@ -63,19 +62,99 @@ export const ArticleService = {
             eventType: ArticleEventType.Created,
         });
 
+        await NotificationService.broadcastNotification({
+            permissions: ["APPROVE_ARTICLE"],
+            title: "Dodano nowy artykuł",
+            message: `Dodano nowy artykuł: ${payload.title}`,
+            link: `/articles/${newArticle._id}`,
+            type: "info",
+        });
+
+        io.emit("new-notification", { type: "article_created", articleId: newArticle._id });
         return newArticle;
     },
-    async find(userId: string, query: SearchArticlesDto, findTrashed = false) {
-        const querydb = {
-            ...constructSearchQuery(query),
-            isTrashed: findTrashed,
-        };
 
-        const { limit, page, sortBy, sortAt } = query;
+    async find(userId: string, query: SearchArticlesDto, findTrashed = false) {
+        const { limit, page, sortBy, sortAt, title } = query;
         const skip = (page - 1) * limit;
+        const baseProjection = ["-clientDescription", "-employeeDescription", "-verifiedBy", "-updatedAt", "-__v"];
+
+        const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        let keyword = title?.trim() || "";
+        let searchInContent = query.searchInContent || false;
+
+        const starPattern = /\*([^*]+)\*/g;
+        const matches = [...keyword.matchAll(starPattern)].map((m) => m[1].trim());
+        if (matches.length > 0) {
+            searchInContent = true;
+        }
+
+        const titleForQuery = searchInContent ? undefined : keyword;
+        const constructed = constructSearchQuery({ ...query, title: titleForQuery });
+        const querydb = { ...constructed, isTrashed: findTrashed };
+
+        if (searchInContent && (matches.length > 0 || keyword.length > 0)) {
+            let matchedArticleIds: any[] = [];
+
+            if (matches.length > 0) {
+                const regexArray = matches.map((m) => new RegExp(escapeRegex(m), "i"));
+                const conditions = regexArray.map((regex) => ({ variantContent: regex }));
+
+                matchedArticleIds = await ResponseVariantModel.distinct("articleId", { $and: conditions });
+            } else {
+                const cleanKeyword = keyword.replace(/\*/g, "").trim();
+                const regex = new RegExp(escapeRegex(cleanKeyword), "i");
+                matchedArticleIds = await ResponseVariantModel.distinct("articleId", { variantContent: regex });
+            }
+
+            const MAX_IDS = 5000;
+            if (matchedArticleIds.length > MAX_IDS) matchedArticleIds = matchedArticleIds.slice(0, MAX_IDS);
+
+            if (matchedArticleIds.length === 0) {
+                return { data: [], pagination: { total: 0, page, pages: 0 } };
+            }
+
+            const articleObjectIds = matchedArticleIds.map((id) => new Types.ObjectId(String(id)));
+            const articleQuery = { ...querydb, _id: { $in: articleObjectIds } };
+
+            const articles = await ArticleModel.find(articleQuery)
+                .select(baseProjection)
+                .populate([
+                    { path: "tags", select: ["name", "shortname"] },
+                    { path: "createdBy", select: ["name", "surname"] },
+                    { path: "product", select: ["name", "labelColor", "banner"] },
+                    { path: "category", select: ["name"] },
+                ])
+                .skip(skip)
+                .limit(limit)
+                .sort([[sortBy, sortAt]])
+                .exec();
+
+            const total = await ArticleModel.countDocuments(articleQuery);
+            const { favourites } = await UserService.findOne(userId);
+
+            const articlesWithExtras = await Promise.all(
+                articles.map(async (article) => {
+                    const articleObj = article.toObject();
+                    const isFavourite = favourites.some((favId) => favId.equals(article._id));
+                    const responseVariantsCount = await ResponseVariantModel.countDocuments({ articleId: article._id });
+                    return { ...articleObj, isFavourite, responseVariantsCount };
+                })
+            );
+
+            return {
+                data: articlesWithExtras,
+                pagination: { total, page, pages: Math.ceil(total / limit) },
+            };
+        }
+
+        if (keyword.length > 0) {
+            querydb.title = new RegExp(escapeRegex(keyword), "i");
+        }
 
         const articles = await ArticleModel.find(querydb)
-            .select(["-clientDescription", "-employeeDescription", "-verifiedBy", "-updatedAt", "-__v"])
+            .select(baseProjection)
             .populate([
                 { path: "tags", select: ["name", "shortname"] },
                 { path: "createdBy", select: ["name", "surname"] },
@@ -92,28 +171,15 @@ export const ArticleService = {
         const articlesWithExtras = await Promise.all(
             articles.map(async (article) => {
                 const articleObj = article.toObject();
-
                 const isFavourite = favourites.some((favId) => favId.equals(article._id));
-
-                const responseVariantsCount = await ResponseVariantModel.countDocuments({
-                    articleId: article._id,
-                });
-
-                return {
-                    ...articleObj,
-                    isFavourite,
-                    responseVariantsCount,
-                };
+                const responseVariantsCount = await ResponseVariantModel.countDocuments({ articleId: article._id });
+                return { ...articleObj, isFavourite, responseVariantsCount };
             })
         );
 
         return {
             data: articlesWithExtras,
-            pagination: {
-                total,
-                page,
-                pages: Math.ceil(total / limit),
-            },
+            pagination: { total, page, pages: Math.ceil(total / limit) },
         };
     },
 
@@ -237,6 +303,14 @@ export const ArticleService = {
             eventType: ArticleEventType.Verified,
         });
 
+        await NotificationService.broadcastNotification({
+            permissions: ["READ_ONLY"],
+            title: "Dodano nowy artykuł",
+            message: `Dodano nowy artykuł: ${article.title}`,
+            link: `/articles/${article._id}`,
+            type: "info",
+        });
+        io.emit("new-notification", { type: "article_created", articleId: article._id });
         return updatedArticle;
     },
 
@@ -251,6 +325,15 @@ export const ArticleService = {
         article.rejectionReason = rejectionReason;
         article.rejectedBy = new mongoose.Types.ObjectId(userId);
         await article.save();
+
+        await NotificationService.notifyArticleAuthor({
+            articleId: article._id.toString(),
+            title: "Twój artykuł został odrzucony",
+            message: `Artykuł "${article.title}" wymaga naniesienia zmian.`,
+            link: `/articles/${article._id}`,
+            type: "info",
+        });
+        io.emit("new-notification", { type: "article_created", articleId: article._id });
     },
 
     async requestReviewOne(userId: string, articleId: string) {
@@ -267,6 +350,14 @@ export const ArticleService = {
 
         const updatedArticle = await article.save();
 
+        await NotificationService.broadcastNotification({
+            permissions: ["APPROVE_ARTICLE"],
+            title: "Artykuł przesłany do ponownej weryfikacji",
+            message: `Artykuł "${updatedArticle.title}" został poprawiony i oczekuje na weryfikację.`,
+            link: `/articles/${updatedArticle._id}`,
+            type: "info",
+        });
+        io.emit("new-notification", { type: "article_created", articleId: updatedArticle._id });
         return updatedArticle.toObject();
     },
 
