@@ -21,6 +21,7 @@ const articleSchema = new Schema(
         isTrashed: { type: Boolean, default: false },
         product: { type: Schema.Types.ObjectId, ref: "Product", required: true },
         category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
+        followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
     },
     {
         timestamps: true,

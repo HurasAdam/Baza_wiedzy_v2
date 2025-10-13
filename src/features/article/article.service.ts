@@ -23,6 +23,7 @@ export const ArticleService = {
             ...payload,
             createdBy: userId,
             verifiedBy: userId,
+            followers: [userId],
         });
 
         // responseVariants
