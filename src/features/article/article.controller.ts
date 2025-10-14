@@ -1,4 +1,4 @@
-import { NO_CONTENT, OK } from "@/constants/http";
+import { CREATED, NO_CONTENT, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
 import { ArticleService } from "./article.service";
 
@@ -10,6 +10,15 @@ export const ArticleController = (articleService = ArticleService) => ({
         const payload = createArticleDto.parse(body);
         const article = await articleService.create(userId, payload);
         return res.status(OK).json({ message: "Dodano nowy artykuł", data: article });
+    }),
+    follow: catchErrors(async ({ userId, params }, res) => {
+        await articleService.follow(userId, params.id);
+        return res.sendStatus(CREATED);
+    }),
+
+    unfollow: catchErrors(async ({ userId, params }, res) => {
+        await articleService.unfollow(userId, params.id);
+        return res.sendStatus(NO_CONTENT);
     }),
 
     find: catchErrors(async ({ userId, query }, res) => {
