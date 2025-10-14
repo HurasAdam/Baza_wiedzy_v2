@@ -1,4 +1,4 @@
-import { CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND } from "@/constants/http";
+import { BAD_REQUEST, CONFLICT, INTERNAL_SERVER_ERROR, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import { constructSearchQuery } from "@/utils/constructSearchQuery";
 import mongoose, { Types } from "mongoose";
@@ -73,6 +73,24 @@ export const ArticleService = {
 
         io.emit("new-notification", { type: "article_created", articleId: newArticle._id });
         return newArticle;
+    },
+
+    async follow(userId: string, articleId: string) {
+        const article = await ArticleModel.findById({ _id: articleId });
+        appAssert(article, NOT_FOUND, "Article not found");
+        const alreadyFollowing = article.followers.some((followerId) => followerId.toString() === userId);
+        appAssert(!alreadyFollowing, BAD_REQUEST, "User already follows this article");
+
+        await ArticleModel.findByIdAndUpdate(articleId, { $addToSet: { followers: userId } }, { new: true });
+    },
+    async unfollow(userId: string, articleId: string) {
+        const article = await ArticleModel.findById(articleId);
+        appAssert(article, NOT_FOUND, "Article not found");
+
+        const isFollowing = article.followers.some((followerId) => followerId.toString() === userId);
+        appAssert(isFollowing, BAD_REQUEST, "User does not follow this article");
+
+        await ArticleModel.findByIdAndUpdate(articleId, { $pull: { followers: userId } }, { new: true });
     },
 
     async find(userId: string, query: SearchArticlesDto, findTrashed = false) {

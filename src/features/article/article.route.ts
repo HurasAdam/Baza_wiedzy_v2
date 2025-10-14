@@ -16,6 +16,8 @@ articleRoutes.get("/history/:id", articleController.findHistoryOne);
 articleRoutes.get("/:id/history", articleController.findOneHistory);
 articleRoutes.get("/:id", articleController.findOne);
 articleRoutes.post("/", permissionGuard(Permissions.ADD_ARTICLE), articleController.create);
+articleRoutes.post("/:id/follow", articleController.follow);
+articleRoutes.delete("/:id/follow", articleController.unfollow);
 articleRoutes.post("/:id/verify", articleController.toggleVerify);
 articleRoutes.post("/:id/aprove", permissionGuard(Permissions.VERIFY_ARTICLE), articleController.aproveOne);
 articleRoutes.post("/:id/reject", permissionGuard(Permissions.REJECT_ARTICLE), articleController.rejectOne);
