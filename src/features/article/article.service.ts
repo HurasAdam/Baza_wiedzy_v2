@@ -218,10 +218,13 @@ export const ArticleService = {
         const responseVariants = await ResponseVariantModel.find({ articleId: article._id }).lean();
         const isFavourite = user.favourites.some((f) => f._id.equals(article._id));
 
+        const isFollowed = await ArticleModel.exists({ _id: article._id, followers: user._id });
+
         return {
             ...article.toObject(),
             responseVariants,
             isFavourite,
+            isFollowed: Boolean(isFollowed),
         };
     },
     async findByUser(userId: string, { startDate, endDate }: { startDate?: string; endDate?: string }) {
