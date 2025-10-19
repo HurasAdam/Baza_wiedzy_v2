@@ -46,31 +46,20 @@ export const io = new IOServer(server, {
 
 const onlineUsers: Map<string, any> = new Map();
 
-// io.on("connection", (socket) => {
-//     console.log("Nowy użytkownik połączony:", socket.id);
+io.on("connection", (socket) => {
+    console.log("Nowy użytkownik połączony:", socket.id);
 
-//     socket.on("user-login", ({ userId }) => {
-//         console.log(`User zalogowany: ${userId}`);
-//         onlineUsers.set(userId, {
-//             socketId: socket.id,
-//             userId,
-//             connectedAt: new Date(),
-//         });
+    socket.on("register-user", (userId: string) => {
+        if (!userId) return;
 
-//         io.emit("online-users", Array.from(onlineUsers.values()));
-//     });
+        socket.join(`user:${userId}`);
+        console.log(`++ Użytkownik ${userId} dołączył do pokoju user:${userId}`);
+    });
 
-//     socket.on("disconnect", () => {
-//         console.log("Użytkownik się rozłączył:", socket.id);
-//         for (const [userId, user] of onlineUsers.entries()) {
-//             if (user.socketId === socket.id) {
-//                 onlineUsers.delete(userId);
-//                 break;
-//             }
-//         }
-//         io.emit("online-users", Array.from(onlineUsers.values()));
-//     });
-// });
+    socket.on("disconnect", () => {
+        console.log("-- Użytkownik się rozłączył:", socket.id);
+    });
+});
 
 app.use(express.json());
 app.use(morgan("dev"));
