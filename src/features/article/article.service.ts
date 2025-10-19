@@ -65,8 +65,8 @@ export const ArticleService = {
 
         await NotificationService.broadcastNotification({
             permissions: ["APPROVE_ARTICLE"],
-            title: "Dodano nowy artykuł",
-            message: `Dodano nowy artykuł: ${payload.title}`,
+            title: "Dodano nowy szkic artykułu",
+            message: `Dodano nowy szkic artykułu: ${payload.title}`,
             link: `/articles/${newArticle._id}`,
             type: "info",
         });
@@ -546,6 +546,31 @@ export const ArticleService = {
             eventType: ArticleEventType.Updated,
             statusChange: { from: beforeArticle.status, to: afterArticle.status },
         });
+
+        const statusChanged = beforeArticle.status !== afterArticle.status;
+        await NotificationService.notifyArticleFollowers({
+            articleId,
+            title: `Artykuł "${article.title}" został zaktualizowany`,
+            message: statusChanged
+                ? `Status zmienił się z ${beforeArticle.status} na ${afterArticle.status}`
+                : "Artykuł został zaktualizowany",
+            link: `/articles/${articleId}`,
+            type: "info",
+        });
+
+        if (article.followers?.length > 0) {
+            for (const followerId of article.followers) {
+                io.to(`user:${followerId}`).emit("new-notification", {
+                    type: "article_update",
+                    articleId,
+                    title: `Artykuł "${article.title}" został zaktualizowany`,
+                    message: statusChanged
+                        ? `Status zmienił się z ${beforeArticle.status} na ${afterArticle.status}`
+                        : "Artykuł został zaktualizowany",
+                    link: `/articles/${articleId}`,
+                });
+            }
+        }
 
         return article.toObject();
     },
