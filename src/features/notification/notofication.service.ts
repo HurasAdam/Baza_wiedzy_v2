@@ -135,6 +135,9 @@ export const NotificationService = {
             { new: true }
         );
     },
+    markAllAsRead: async (userId: string) => {
+        return NotificationModel.updateMany({ userId, read: false }, { $set: { read: true } });
+    },
     deleteNotification: async (userId: string, notificationId: string) => {
         return NotificationModel.findOneAndDelete({ _id: notificationId, userId });
     },
