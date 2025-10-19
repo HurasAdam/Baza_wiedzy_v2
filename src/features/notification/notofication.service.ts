@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import ArticleModel from "../article/article.model";
 import RoleModel from "../role-permission/roles-permission.model";
 import UserModel from "../user/user.model";
@@ -69,6 +70,42 @@ export const NotificationService = {
         });
 
         return notification;
+    },
+
+    async notifyArticleFollowers(payload: {
+        articleId: string;
+        message: string;
+        title: string;
+        link?: string;
+        type: string;
+    }) {
+        const { articleId, message, title, link, type } = payload;
+
+        // pobierz artykuł z listą obserwujących
+        const article = await ArticleModel.findById(articleId).select("followers title");
+        if (!article) {
+            console.warn("[NotificationService] Artykuł nie znaleziony:", articleId);
+            return null;
+        }
+        console.log("FOLLOWERS", article);
+        // jeśli brak obserwujących — nic nie rób
+        if (!article.followers || article.followers.length === 0) {
+            console.warn("[NotificationService] Brak obserwujących dla artykułu:", articleId);
+            return [];
+        }
+
+        // przygotuj powiadomienia dla każdego obserwującego
+        const notifications = article.followers.map((userId) => ({
+            userId: new mongoose.Types.ObjectId(userId),
+            link: link || `/articles/${articleId}`,
+            title,
+            message,
+            type,
+        }));
+
+        const createdNotifications = await NotificationModel.insertMany(notifications);
+
+        return createdNotifications;
     },
 
     async findByUser(userId: string, page = 1, limit = 20) {

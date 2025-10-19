@@ -288,35 +288,60 @@ export const ArticleService = {
         };
     },
 
-    async toggleVerify(userId: string, articleId: string, isVerified: any) {
-        const article = await ArticleModel.findById({ _id: articleId });
-        appAssert(article, NOT_FOUND, "Article not found");
-
-        const isVerifiedChanged = article.isVerified !== isVerified;
-        article.isVerified = isVerified;
-        const updatedAritlce = await article.save();
-        const updatedAritlceObj = updatedAritlce.toObject();
-    },
-
-    async aproveOne(userId: string, articleId: string) {
+    async verify(userId: string, articleId: string) {
         const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
         // snapshot BEFORE changes
         const articleBeforeChangesObj = article.toObject();
 
-        // apply changes
+        appAssert(article.status === "pending", BAD_REQUEST, `Cannot verify article with status "${article.status}".`);
+
+        article.status = "approved";
+        article.rejectionReason = null;
+        article.rejectedBy = null;
+        article.verifiedBy = new mongoose.Types.ObjectId(userId);
+        // article.verifiedAt = new Date();
+
+        const updatedArticle = await article.save();
+        const updatedArticleObj = updatedArticle.toObject();
+
+        await ArticleHistoryService.saveChanges({
+            articleId,
+            before: articleBeforeChangesObj,
+            after: updatedArticleObj,
+            userId,
+            eventType: ArticleEventType.Verified,
+        });
+
+        await NotificationService.notifyArticleFollowers({
+            articleId: article._id.toString(),
+            title: "Artykuł ponownie zweryfikowany",
+            message: `Artykuł "${article.title}" został ponownie zweryfikowany.`,
+            link: `/articles/${article._id}`,
+            type: "info",
+        });
+
+        io.emit("article-verified", { articleId: article._id });
+
+        return updatedArticle;
+    },
+
+    async aproveOne(userId: string, articleId: string) {
+        const article = await ArticleModel.findById(articleId);
+        appAssert(article, NOT_FOUND, "Article not found");
+
+        const articleBeforeChangesObj = article.toObject();
+
         article.status = "approved";
         article.isVerified = true;
         article.rejectionReason = null;
         article.rejectedBy = null;
         article.verifiedBy = new mongoose.Types.ObjectId(userId);
 
-        // save
         const updatedArticle = await article.save();
         const updatedArticleObj = updatedArticle.toObject();
 
-        // save history event
         await ArticleHistoryService.saveChanges({
             articleId,
             before: articleBeforeChangesObj,
@@ -362,12 +387,10 @@ export const ArticleService = {
         const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
-        // sprawdź czy jest w statusie rejected
         appAssert(article.status === "rejected", CONFLICT, "Only rejected articles can be resubmitted");
 
-        // zmiana statusu
         article.status = "draft";
-        article.rejectionReason = null; // możesz też czyścić powód, bo już nie jest aktualny
+        article.rejectionReason = null;
         article.rejectedBy = null;
 
         const updatedArticle = await article.save();
@@ -439,12 +462,10 @@ export const ArticleService = {
         const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
-        // 2. Pobierz warianty przed zmianą
         const beforeVariants = await ResponseVariantModel.find({ articleId })
             .select("_id version variantName variantContent")
             .lean();
 
-        // 3. Złóż snapshot "before"
         const beforeArticle = {
             ...(article.toObject() as any),
             responseVariants: beforeVariants,
@@ -477,10 +498,9 @@ export const ArticleService = {
 
             const incomingIds = responseVariants.filter((v: any) => v._id).map((v: any) => v._id);
 
-            // 1. Update
+            //  Update
             for (const variant of responseVariants) {
                 if (variant._id && existingMap.has(variant._id)) {
-                    // Update istniejącego
                     await ResponseVariantModel.findByIdAndUpdate(variant._id, {
                         version: variant.version,
                         variantName: variant.variantName,
@@ -501,7 +521,7 @@ export const ArticleService = {
                 }
             }
 
-            // 2. Removing variants
+            //  Removing variants
             for (const existing of existingVariants) {
                 if (!incomingIds.includes(existing._id.toString())) {
                     await ResponseVariantModel.findByIdAndDelete(existing._id);
@@ -509,12 +529,10 @@ export const ArticleService = {
             }
         }
 
-        // 6. Pobierz warianty po zmianie
         const afterVariants = await ResponseVariantModel.find({ articleId })
             .select("_id version variantName variantContent")
             .lean();
 
-        // 7. Złóż snapshot "after"
         const afterArticle = {
             ...(article.toObject() as any),
             responseVariants: afterVariants,

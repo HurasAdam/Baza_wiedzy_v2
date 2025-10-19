@@ -58,8 +58,8 @@ export const ArticleController = (articleService = ArticleService) => ({
         return res.status(OK).json(history);
     }),
 
-    toggleVerify: catchErrors(async ({ userId, body, params }, res) => {
-        await articleService.toggleVerify(userId, params.id, body.isVerified);
+    verify: catchErrors(async ({ userId, body, params }, res) => {
+        await articleService.verify(userId, params.id);
         return res.status(OK).json({
             message: body.isVerified ? "Artykuł został zweryfikowany" : "Artykuł został oznaczony jako do weryfikacji",
         });
