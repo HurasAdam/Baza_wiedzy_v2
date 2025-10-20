@@ -76,7 +76,6 @@ export const UserController = (userService = UserService) => ({
         return res.status(OK).json(result);
     }),
     changePassword: catchErrors(async ({ userId, body }, res) => {
-        console.log(body, "BODY");
         const payload = changeUserPasswordDto.parse(body);
         const { message } = await userService.changePassword(userId, payload);
         res.status(OK).json(message);
