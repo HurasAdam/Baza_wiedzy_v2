@@ -66,8 +66,6 @@ export const FaqService = {
 
         appAssert(faq, NOT_FOUND, "FAQ not found");
 
-        console.log("FAQ", faq);
-
         const faqItems = await FaqItemModel.find({ faqId }).lean();
 
         return {

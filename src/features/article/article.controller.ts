@@ -73,7 +73,6 @@ export const ArticleController = (articleService = ArticleService) => ({
     }),
 
     rejectOne: catchErrors(async ({ userId, body, params }, res) => {
-        console.log(body);
         await articleService.rejectOne(userId, params.id, body.rejectionReason);
         return res.status(OK).json({
             message: body.isVerified ? "Artykuł został zweryfikowany" : "Artykuł został oznaczony jako do weryfikacji",

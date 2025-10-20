@@ -72,6 +72,7 @@ export const ArticleService = {
         });
 
         io.emit("new-notification", { type: "article_created", articleId: newArticle._id });
+
         return newArticle;
     },
 
@@ -322,7 +323,17 @@ export const ArticleService = {
             type: "info",
         });
 
-        io.emit("article-verified", { articleId: article._id });
+        if (article.followers?.length > 0) {
+            for (const followerId of article.followers) {
+                io.to(`user:${followerId}`).emit("new-notification", {
+                    type: "article_update",
+                    articleId,
+                    title: `Artykuł "${article.title}" został zaktualizowany`,
+                    message: "Status artykułu został zaktualizowany",
+                    link: `/articles/${articleId}`,
+                });
+            }
+        }
 
         return updatedArticle;
     },
@@ -357,6 +368,13 @@ export const ArticleService = {
             link: `/articles/${article._id}`,
             type: "info",
         });
+
+        io.emit("article_created", {
+            articleId: article._id,
+            title: article.title,
+            link: `/articles/${article._id}`,
+        });
+
         io.emit("new-notification", { type: "article_created", articleId: article._id });
         return updatedArticle;
     },
