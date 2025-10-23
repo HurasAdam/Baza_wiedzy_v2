@@ -1,0 +1,15 @@
+import { CREATED } from "../../constants/http";
+import catchErrors from "../../utils/catchErrors";
+import { FlagService } from "./flag.service";
+
+export const FlagController = (flagService = FlagService) => ({
+    create: catchErrors(async ({ userId, body }, res) => {
+        const serviceResponse = await flagService.create(userId, body);
+        return res.status(CREATED).json({ message: "Dodano nową flagę", data: serviceResponse });
+    }),
+
+    findMyFlags: catchErrors(async ({ userId }, res) => {
+        const serviceResponse = await flagService.findMyFlags(userId);
+        return res.status(200).json(serviceResponse);
+    }),
+});
