@@ -4,7 +4,7 @@ import { ArticleUserFlagService } from "./article-user-flag.service";
 
 export const ArticleUserFlagController = (articleUserFlagService = ArticleUserFlagService) => ({
     create: catchErrors(async ({ userId, body }, res) => {
-        const serviceResponse = await articleUserFlagService.create(body, userId);
+        const serviceResponse = await articleUserFlagService.create(userId, body);
         return res.status(CREATED).json({ message: "OK" });
     }),
 
