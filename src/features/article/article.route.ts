@@ -10,6 +10,7 @@ const articleController = ArticleController();
 
 articleRoutes.get("/", articleController.find);
 articleRoutes.get("/my", articleController.findAllByUser);
+articleRoutes.get("/flagged", articleController.findFlaggedByUser);
 articleRoutes.get("/trashed", articleController.findTrashed);
 articleRoutes.get("/trashed/:id", articleController.findOneTrashed);
 articleRoutes.get("/history/:id", articleController.findHistoryOne);

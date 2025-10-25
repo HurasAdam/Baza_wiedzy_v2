@@ -4,6 +4,7 @@ import { ArticleService } from "./article.service";
 
 import { createArticleDto } from "./dto/create-article.dto";
 import { searchArticlesDto } from "./dto/search-articles.dto";
+import { searchFlaggedArticlesDto } from "./dto/search-flagged-articles.dto";
 
 export const ArticleController = (articleService = ArticleService) => ({
     create: catchErrors(async ({ userId, body }, res) => {
@@ -130,6 +131,13 @@ export const ArticleController = (articleService = ArticleService) => ({
     findAllByUser: catchErrors(async ({ userId, query }, res) => {
         const payload = searchArticlesDto.parse(query);
         const articles = await articleService.findAllByUser(userId, payload);
+        return res.status(200).json(articles);
+    }),
+
+    findFlaggedByUser: catchErrors(async ({ userId, query }, res) => {
+        const payload = searchFlaggedArticlesDto.parse(query);
+        console.log("PRZEŁADOWANIE", payload);
+        const articles = await articleService.findFlagged(userId, payload);
         return res.status(200).json(articles);
     }),
 });
