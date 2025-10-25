@@ -5,6 +5,7 @@ import mongoose, { Types } from "mongoose";
 import { io } from "../../main";
 import ArticleHistoryModel from "../article-history/article-history.model";
 import { ArticleEventType, ArticleHistoryService } from "../article-history/article-history.service";
+import ArticleUserFlagModel from "../article-user-flag/article-user-flag.model";
 import { NotificationService } from "../notification/notofication.service";
 import TagModel from "../tag/tag.model";
 import UserModel from "../user/user.model";
@@ -12,6 +13,7 @@ import { UserService } from "../user/user.service";
 import ArticleModel from "./article.model";
 import type { CreateArticleDto } from "./dto/create-article.dto";
 import type { SearchArticlesDto } from "./dto/search-articles.dto";
+import { SearchFlaggedArticlesDto } from "./dto/search-flagged-articles.dto";
 import ResponseVariantModel from "./responseVariant/responseVariant.model";
 
 export const ArticleService = {
@@ -97,7 +99,14 @@ export const ArticleService = {
     async find(userId: string, query: SearchArticlesDto, findTrashed = false) {
         const { limit, page, sortBy, sortAt, title } = query;
         const skip = (page - 1) * limit;
-        const baseProjection = ["-clientDescription", "-employeeDescription", "-verifiedBy", "-updatedAt", "-__v"];
+        const baseProjection = [
+            "-clientDescription",
+            "-employeeDescription",
+            "-verifiedBy",
+            "-updatedAt",
+            "-__v",
+            "-followers",
+        ];
 
         const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -106,13 +115,14 @@ export const ArticleService = {
 
         const starPattern = /\*([^*]+)\*/g;
         const matches = [...keyword.matchAll(starPattern)].map((m) => m[1].trim());
-        if (matches.length > 0) {
-            searchInContent = true;
-        }
+        if (matches.length > 0) searchInContent = true;
 
         const titleForQuery = searchInContent ? undefined : keyword;
         const constructed = constructSearchQuery({ ...query, title: titleForQuery });
         const querydb = { ...constructed, isTrashed: findTrashed };
+
+        let articles: any[] = [];
+        let total = 0;
 
         if (searchInContent && (matches.length > 0 || keyword.length > 0)) {
             let matchedArticleIds: any[] = [];
@@ -120,7 +130,6 @@ export const ArticleService = {
             if (matches.length > 0) {
                 const regexArray = matches.map((m) => new RegExp(escapeRegex(m), "i"));
                 const conditions = regexArray.map((regex) => ({ variantContent: regex }));
-
                 matchedArticleIds = await ResponseVariantModel.distinct("articleId", { $and: conditions });
             } else {
                 const cleanKeyword = keyword.replace(/\*/g, "").trim();
@@ -130,7 +139,6 @@ export const ArticleService = {
 
             const MAX_IDS = 5000;
             if (matchedArticleIds.length > MAX_IDS) matchedArticleIds = matchedArticleIds.slice(0, MAX_IDS);
-
             if (matchedArticleIds.length === 0) {
                 return { data: [], pagination: { total: 0, page, pages: 0 } };
             }
@@ -138,7 +146,7 @@ export const ArticleService = {
             const articleObjectIds = matchedArticleIds.map((id) => new Types.ObjectId(String(id)));
             const articleQuery = { ...querydb, _id: { $in: articleObjectIds } };
 
-            const articles = await ArticleModel.find(articleQuery)
+            articles = await ArticleModel.find(articleQuery)
                 .select(baseProjection)
                 .populate([
                     { path: "tags", select: ["name", "shortname"] },
@@ -151,51 +159,43 @@ export const ArticleService = {
                 .sort([[sortBy, sortAt]])
                 .exec();
 
-            const total = await ArticleModel.countDocuments(articleQuery);
-            const { favourites } = await UserService.findOne(userId);
+            total = await ArticleModel.countDocuments(articleQuery);
+        } else {
+            if (keyword.length > 0) querydb.title = new RegExp(escapeRegex(keyword), "i");
 
-            const articlesWithExtras = await Promise.all(
-                articles.map(async (article) => {
-                    const articleObj = article.toObject();
-                    const isFavourite = favourites.some((favId) => favId.equals(article._id));
-                    const responseVariantsCount = await ResponseVariantModel.countDocuments({ articleId: article._id });
-                    return { ...articleObj, isFavourite, responseVariantsCount };
-                })
-            );
+            articles = await ArticleModel.find(querydb)
+                .select(baseProjection)
+                .populate([
+                    { path: "tags", select: ["name", "shortname"] },
+                    { path: "createdBy", select: ["name", "surname"] },
+                    { path: "product", select: ["name", "labelColor", "banner"] },
+                    { path: "category", select: ["name"] },
+                ])
+                .skip(skip)
+                .limit(limit)
+                .sort([[sortBy, sortAt]]);
 
-            return {
-                data: articlesWithExtras,
-                pagination: { total, page, pages: Math.ceil(total / limit) },
-            };
+            total = await ArticleModel.countDocuments(querydb);
         }
 
-        if (keyword.length > 0) {
-            querydb.title = new RegExp(escapeRegex(keyword), "i");
-        }
-
-        const articles = await ArticleModel.find(querydb)
-            .select(baseProjection)
-            .populate([
-                { path: "tags", select: ["name", "shortname"] },
-                { path: "createdBy", select: ["name", "surname"] },
-                { path: "product", select: ["name", "labelColor", "banner"] },
-                { path: "category", select: ["name"] },
-            ])
-            .skip(skip)
-            .limit(limit)
-            .sort([[sortBy, sortAt]]);
-
-        const total = await ArticleModel.countDocuments(querydb);
         const { favourites } = await UserService.findOne(userId);
 
-        const articlesWithExtras = await Promise.all(
-            articles.map(async (article) => {
-                const articleObj = article.toObject();
-                const isFavourite = favourites.some((favId) => favId.equals(article._id));
-                const responseVariantsCount = await ResponseVariantModel.countDocuments({ articleId: article._id });
-                return { ...articleObj, isFavourite, responseVariantsCount };
-            })
-        );
+        const articlesIds = articles.map((a) => a._id);
+        const responseCounts = await ResponseVariantModel.aggregate([
+            { $match: { articleId: { $in: articlesIds } } },
+            { $group: { _id: "$articleId", count: { $sum: 1 } } },
+        ]);
+        const responseCountMap = responseCounts.reduce((acc, item) => {
+            acc[item._id.toString()] = item.count;
+            return acc;
+        }, {} as Record<string, number>);
+
+        const articlesWithExtras = articles.map((article) => {
+            const articleObj = article.toObject();
+            const isFavourite = favourites.some((favId) => favId.equals(article._id));
+            const responseVariantsCount = responseCountMap[article._id.toString()] || 0;
+            return { ...articleObj, isFavourite, responseVariantsCount };
+        });
 
         return {
             data: articlesWithExtras,
@@ -205,6 +205,8 @@ export const ArticleService = {
 
     async findOne(userId: string, articleId: string, findTrashed = false) {
         const user = await UserService.findOne(userId);
+
+        // Pobierz artykuł z powiązanymi referencjami
         const article = await ArticleModel.findById(articleId)
             .populate([
                 { path: "tags", select: ["name"] },
@@ -216,18 +218,37 @@ export const ArticleService = {
             .where({ isTrashed: findTrashed });
 
         appAssert(article, NOT_FOUND, "Article not found");
-        const responseVariants = await ResponseVariantModel.find({ articleId: article._id }).lean();
-        const isFavourite = user.favourites.some((f) => f._id.equals(article._id));
 
+        // Pobierz warianty odpowiedzi
+        const responseVariants = await ResponseVariantModel.find({ articleId: article._id }).lean();
+
+        // Sprawdź ulubione i obserwowane
+        const isFavourite = user.favourites.some((f) => f._id.equals(article._id));
         const isFollowed = await ArticleModel.exists({ _id: article._id, followers: user._id });
+
+        const userFlag = await ArticleUserFlagModel.findOne({
+            articleId: article._id,
+            userId: user._id,
+        }).populate<{ flagId: { _id: string; name: string; color: string } }>("flagId", "name color");
+
+        const selectedFlag =
+            userFlag && userFlag.flagId
+                ? {
+                      _id: userFlag.flagId._id,
+                      name: userFlag.flagId.name,
+                      color: userFlag.flagId.color,
+                  }
+                : null;
 
         return {
             ...article.toObject(),
             responseVariants,
             isFavourite,
             isFollowed: Boolean(isFollowed),
+            selectedFlag, // obiekt lub null
         };
     },
+
     async findByUser(userId: string, { startDate, endDate }: { startDate?: string; endDate?: string }) {
         const query: any = { createdBy: userId };
 
@@ -702,6 +723,88 @@ export const ArticleService = {
                 total,
                 page,
                 pages: Math.ceil(total / limit),
+            },
+        };
+    },
+
+    async findFlagged(userId: string, query: SearchFlaggedArticlesDto) {
+        const { limit, page, sortBy, sortAt, title, product, category, searchInContent, flag } = query;
+        const skip = (page - 1) * limit;
+
+        const flaggedFilter: any = { userId };
+        if (flag) flaggedFilter.flagId = flag;
+
+        const flaggedRecords = await ArticleUserFlagModel.find(flaggedFilter)
+            .populate<{ flagId: { _id: Types.ObjectId; name: string; color: string } }>("flagId")
+            .exec();
+
+        if (flaggedRecords.length === 0) {
+            return { data: [], pagination: { total: 0, page, pages: 0 } };
+        }
+
+        const flaggedArticleIds = flaggedRecords.map((r) => r.articleId);
+
+        const querydb: any = {
+            _id: { $in: flaggedArticleIds },
+            isTrashed: false,
+        };
+
+        const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        if (title) {
+            querydb.title = { $regex: escapeRegex(title.replace(/\*/g, ".*")), $options: "i" };
+        }
+        if (product) querydb.product = product;
+        if (category) querydb.category = category;
+
+        const baseProjection = ["-followers", "-employeeDescription", "-verifiedBy", "-updatedAt", "-__v", "-tags"];
+
+        const articles = await ArticleModel.find(querydb)
+            .select(baseProjection)
+            .populate([
+                { path: "createdBy", select: ["name", "surname"] },
+                { path: "product", select: ["name", "labelColor", "banner"] },
+                { path: "category", select: ["name"] },
+            ])
+            .skip(skip)
+            .limit(limit)
+            .sort([[sortBy || "createdAt", sortAt || -1]])
+            .exec();
+
+        const articleIds = articles.map((a) => a._id);
+        const responseCounts = await ResponseVariantModel.aggregate([
+            { $match: { articleId: { $in: articleIds } } },
+            { $group: { _id: "$articleId", count: { $sum: 1 } } },
+        ]);
+        const responseCountMap = responseCounts.reduce((acc, item) => {
+            acc[item._id.toString()] = item.count;
+            return acc;
+        }, {} as Record<string, number>);
+
+        const articlesWithExtras = articles.map((article) => {
+            const articleObj = article.toObject();
+            const flaggedRecord = flaggedRecords.find((r) => r.articleId.equals(article._id));
+            const flagData = flaggedRecord?.flagId;
+            return {
+                ...articleObj,
+                isFlagged: !!flaggedRecord,
+                flag: flagData
+                    ? {
+                          id: flagData._id,
+                          name: flagData.name,
+                          color: flagData.color,
+                      }
+                    : null,
+                responseVariantsCount: responseCountMap[article._id.toString()] || 0,
+            };
+        });
+
+        return {
+            data: articlesWithExtras,
+            pagination: {
+                total: flaggedArticleIds.length,
+                page,
+                pages: Math.ceil(flaggedArticleIds.length / limit),
             },
         };
     },
