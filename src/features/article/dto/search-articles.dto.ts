@@ -17,7 +17,7 @@ export const searchArticlesDto = searchDto.extend({
     status: z.enum(["draft", "pending", "approved", "rejected"]).optional(),
 
     page: z.preprocess((val) => (val ? Number(val) : undefined), z.number().int().min(1).default(1)),
-    limit: z.preprocess((val) => (val ? Number(val) : undefined), z.number().int().min(1).max(50).default(20)),
+    limit: z.preprocess((val) => (val ? Number(val) : undefined), z.number().int().min(1).max(50).default(50)),
     searchInContent: z.preprocess((v) => (v === "true" || v === true ? true : false), z.boolean().default(false)),
 });
 
