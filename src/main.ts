@@ -32,6 +32,7 @@ import { projectRoutes } from "./features/project/project.route";
 import { statisticsRoutes } from "./features/statistics/statistics.route";
 import { tagRoutes } from "./features/tag/tag.route";
 import { userRoutes } from "./features/user/user.route";
+import { workspaceRoutes } from "./features/workspace/workspace.route";
 import authenticate from "./middleware/authenticate";
 import errorHandler from "./middleware/errorHandlers";
 
@@ -101,6 +102,7 @@ app.use("/funny-messages", authenticate, funnyMessageRoutes);
 app.use("/faq", authenticate, faqRoutes);
 app.use("/faq-item", authenticate, faqItemRoutes);
 app.use("/attachments", authenticate, attachmentRoutes);
+app.use("/workspaces", authenticate, workspaceRoutes);
 
 const uploadsPath = path.resolve("/app/uploads");
 app.use(
