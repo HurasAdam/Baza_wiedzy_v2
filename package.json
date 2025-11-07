@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "seed:roles": "ts-node src/seeders/role.seeder.ts",
+        "seed:workspace-roles": "ts-node src/seeders/workspace-role.seeder.ts",
         "seed:admin": "ts-node src/seeders/admin-account.seeder.ts",
         "seed-prod:roles": "node dist/seeders/role.seeder.js",
         "seed-prod:admin": "node dist/seeders/admin-account.seeder.js",
@@ -30,6 +31,7 @@
         "nodemailer": "^6.10.0",
         "resend": "^4.0.0",
         "socket.io": "^4.8.1",
+        "uuid": "^11.0.3",
         "zod": "^3.23.8"
     },
     "devDependencies": {
