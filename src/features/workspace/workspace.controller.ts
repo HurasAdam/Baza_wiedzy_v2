@@ -9,4 +9,8 @@ export const WorkspaceController = (workspaceService = WorkspaceService) => ({
         const workspace = await workspaceService.create(userId, payload);
         return res.status(OK).json({ message: "Dodano nową kolekcję", data: workspace });
     }),
+    find: catchErrors(async ({ userId }, res) => {
+        const userWorkspaces = await workspaceService.find(userId);
+        return res.status(OK).json(userWorkspaces);
+    }),
 });

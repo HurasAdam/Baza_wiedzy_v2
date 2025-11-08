@@ -5,6 +5,7 @@ export interface WorkspaceDocument extends Document {
     name: string;
     description: string;
     labelColor: string;
+    icon: string;
     owner: mongoose.Types.ObjectId;
     inviteCode: string;
     createdAt: string;
@@ -16,6 +17,7 @@ const workspaceSchema = new Schema<WorkspaceDocument>(
         name: { type: String, required: true, trim: true },
         description: { type: String, required: false },
         labelColor: { type: String, required: true, default: "#475569" },
+        icon: { type: String, required: true, default: "📊" },
         owner: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
