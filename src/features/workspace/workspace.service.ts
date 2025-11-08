@@ -22,8 +22,17 @@ export const WorkspaceService = {
             role: onwerRole._id,
             joinedAt: new Date(),
         });
+
+        await workspaceMember.save();
         // TODO -- extend User model with currentWorkspace field --
         // user.currentWorkspace = workspace._id as mongoose.Types.ObjectId;
         return workspace;
+    },
+    async find(userId: string) {
+        const memberships = await WorkspaceMemberModel.find({ userId }).populate("workspaceId");
+
+        const workspaces = memberships.map((member) => member.workspaceId).filter((ws) => ws !== null);
+
+        return workspaces;
     },
 };
