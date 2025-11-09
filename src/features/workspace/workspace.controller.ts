@@ -13,4 +13,10 @@ export const WorkspaceController = (workspaceService = WorkspaceService) => ({
         const userWorkspaces = await workspaceService.find(userId);
         return res.status(OK).json(userWorkspaces);
     }),
+
+    findOne: catchErrors(async ({ userId, params }, res) => {
+        const { workspaceId } = params;
+        const userWorkspaces = await workspaceService.findOne(userId, workspaceId);
+        return res.status(OK).json(userWorkspaces);
+    }),
 });

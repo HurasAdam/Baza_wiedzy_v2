@@ -17,7 +17,7 @@ const workspaceSchema = new Schema<WorkspaceDocument>(
         name: { type: String, required: true, trim: true },
         description: { type: String, required: false },
         labelColor: { type: String, required: true, default: "#475569" },
-        icon: { type: String, required: true, default: "📊" },
+        icon: { type: String, required: true, default: "blocks" },
         owner: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

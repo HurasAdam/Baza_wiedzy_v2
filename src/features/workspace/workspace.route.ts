@@ -7,4 +7,5 @@ const workspaceController = WorkspaceController();
 //prefix: /workspaces
 
 workspaceRoutes.get("/", workspaceController.find);
+workspaceRoutes.get("/:workspaceId", workspaceController.findOne);
 workspaceRoutes.post("/", workspaceController.create);

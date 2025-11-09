@@ -12,29 +12,27 @@ async function seedAdmin() {
     });
 
     try {
-        // 1) Pobierz lub utwórz rolę ADMIN
         let adminRole = await RoleModel.findOne({ name: "ADMIN" });
         if (!adminRole) {
             adminRole = new RoleModel({
                 name: "ADMIN",
-                permissions: Object.values(Permissions), // cała lista permisji
+                permissions: Object.values(Permissions),
             });
             await adminRole.save();
             console.log("Rola ADMIN utworzona");
         }
 
-        // 2) Pobierz lub utwórz konto admina
         const existing = await UserModel.findOne({ email: ADMIN_DEFAULT_EMAIL });
         if (!existing) {
             const admin = new UserModel({
                 name: "Admin",
                 surname: "Admin",
                 email: ADMIN_DEFAULT_EMAIL,
-                password: ADMIN_DEFAULT_PASSWORD, // zahashuje pre-save hook
+                password: ADMIN_DEFAULT_PASSWORD,
                 role: adminRole._id,
                 isActive: true,
                 verified: true,
-                mustChangePassword: true, // wymuś zmianę hasła przy pierwszym logowaniu
+                mustChangePassword: true,
             });
             await admin.save();
             console.log("Konto admina utworzone");
