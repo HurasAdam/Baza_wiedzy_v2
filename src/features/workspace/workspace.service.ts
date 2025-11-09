@@ -1,7 +1,6 @@
 import { FORBIDDEN, NOT_FOUND } from "../../constants/http";
 import { WorkspaceRoles } from "../../enums/workspaceRole.enum";
 import appAssert from "../../utils/appAssert";
-import { WorkspaceFolderModel } from "../workspace-folder/workspace-folder.model";
 import WorkspaceMemberModel from "../workspace-member/workspaceMember.model";
 import WorkspaceRoleModel from "../workspace-role/workspace-role.model";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
@@ -48,11 +47,6 @@ export const WorkspaceService = {
         const workspace = await WorkspaceModel.findById(workspaceId).lean();
         appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
 
-        const folders = await WorkspaceFolderModel.find({ workspaceId }).lean();
-
-        return {
-            ...workspace,
-            folders,
-        };
+        return workspace;
     },
 };
