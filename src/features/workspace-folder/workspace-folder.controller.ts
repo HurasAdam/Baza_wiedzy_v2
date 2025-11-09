@@ -15,4 +15,9 @@ export const WorkspaceFolderController = (workspaceFolderService = WorkspaceFold
         const folders = await WorkspaceFolderService.findFolders(userId, workspaceId);
         return res.status(OK).json(folders);
     }),
+    findOneFolder: catchErrors(async ({ userId, body, params }, res) => {
+        const { workspaceId, folderId } = params;
+        const folder = await WorkspaceFolderService.findOneFolder(userId, workspaceId, folderId);
+        return res.status(OK).json(folder);
+    }),
 });

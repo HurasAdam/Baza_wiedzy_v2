@@ -38,8 +38,8 @@ export const WorkspaceArticleService = {
     async findByFolder(folderId: string, query: { page?: number; limit?: number; title?: string }) {
         appAssert(Types.ObjectId.isValid(folderId), BAD_REQUEST, "Nieprawidłowy identyfikator folderu");
 
-        const folder = await WorkspaceFolderModel.findById(folderId).lean();
-        appAssert(folder, NOT_FOUND, "Folder nie istnieje");
+        const folderExists = await WorkspaceFolderModel.exists({ _id: folderId });
+        appAssert(folderExists, NOT_FOUND, "Folder nie istnieje");
 
         const page = Math.max(Number(query.page) || 1, 1);
         const limit = Math.min(Math.max(Number(query.limit) || 10, 1), 100);
@@ -61,10 +61,7 @@ export const WorkspaceArticleService = {
             WorkspaceArticleModel.countDocuments(filter),
         ]);
 
-        const folderWithCount = { ...folder, articlesCount: total };
-
         return {
-            folder: folderWithCount,
             data: articles,
             pagination: {
                 total,
