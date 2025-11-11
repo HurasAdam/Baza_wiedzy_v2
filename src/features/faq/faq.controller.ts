@@ -1,6 +1,6 @@
 import { CREATED, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
-import { paramsIdDto } from "../../common/dto/params-id.dto";
+import { objectIdParam } from "../../common/dto/params-id.dto";
 import { faqItemResponseDto } from "../faq-item/dto/response-dto/faqItemResponseDto";
 import { createFaqDto } from "./dto/request-dto/create-faq.dto";
 import { searchFaqDto } from "./dto/request-dto/search-faq.dto";
@@ -30,7 +30,7 @@ export const FaqController = (faqService = FaqService) => ({
     findOne: catchErrors(async ({ params }, res) => {
         const { id } = params;
 
-        const { id: validId } = paramsIdDto.parse({ id });
+        const { id: validId } = objectIdParam("id").parse(params);
 
         const { faq, items } = await faqService.findOne(validId);
 

@@ -1,6 +1,6 @@
 import { CREATED, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
-import { paramsIdDto } from "../../common/dto/params-id.dto";
+import { objectIdParam } from "../../common/dto/params-id.dto";
 import { PERMISSIONS_LIST } from "../../constants/permissions";
 import { searchProductsDto } from "../product/dto/search-products.dto";
 import { searchRolesDto } from "../role-permission/dto/search-roles.dto";
@@ -42,7 +42,7 @@ export const AdminController = (adminService = AdminService) => ({
     }),
 
     updateUser: catchErrors(async ({ params, body }, res) => {
-        const { id } = paramsIdDto.parse(params);
+        const { id } = objectIdParam("id").parse(params);
         const payload = updateUserDto.parse(body);
         await adminService.updateUser(id, payload);
         return res.send(CREATED);

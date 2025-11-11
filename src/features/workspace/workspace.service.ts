@@ -38,14 +38,13 @@ export const WorkspaceService = {
         return workspaces;
     },
     async findOne(userId: string, workspaceId: string) {
-        const isMember =
-            (await WorkspaceMemberModel.exists({ userId, workspaceId })) ||
-            (await WorkspaceModel.exists({ _id: workspaceId, owner: userId }));
-
-        appAssert(isMember, FORBIDDEN, "Nie masz dostępu do tego workspace");
-
         const workspace = await WorkspaceModel.findById(workspaceId).lean();
         appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
+
+        const isMember = await WorkspaceMemberModel.exists({ userId, workspaceId });
+        const isOwner = workspace.owner?.toString() === userId.toString();
+
+        appAssert(isMember || isOwner, FORBIDDEN, "Nie masz dostępu do tego workspace");
 
         return workspace;
     },
@@ -62,5 +61,21 @@ export const WorkspaceService = {
             .lean();
 
         return members;
+    },
+    async updateOne(userId: string, workspaceId: string, payload: CreateWorkspaceDto) {
+        const workspace = await WorkspaceModel.findById(workspaceId);
+        appAssert(workspace, NOT_FOUND, "Workspace not found");
+
+        const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
+
+        const isOwner = workspace.owner.toString() === userId;
+        const isAdmin = member?.role?.name === WorkspaceRoles.OWNER;
+
+        appAssert(isOwner || isAdmin, FORBIDDEN, "You do not have sufficient permissions to perform this action");
+
+        Object.assign(workspace, payload);
+        await workspace.save();
+
+        return workspace;
     },
 };
