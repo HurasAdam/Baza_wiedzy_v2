@@ -22,7 +22,7 @@ const memberSchema = new Schema<WorkspaceMemberDocument>(
         },
         role: {
             type: Schema.Types.ObjectId,
-            ref: "Role",
+            ref: "WorkspaceRole",
             required: true,
         },
         joinedAt: {

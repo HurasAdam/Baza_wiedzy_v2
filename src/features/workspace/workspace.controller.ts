@@ -1,6 +1,7 @@
 import { OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { createWorkspaceDto } from "./dto/create-workspace.dto";
+import { workspaceMembersDto } from "./dto/workspaceMembers.dto";
 import { WorkspaceService } from "./workspace.service";
 
 export const WorkspaceController = (workspaceService = WorkspaceService) => ({
@@ -18,5 +19,11 @@ export const WorkspaceController = (workspaceService = WorkspaceService) => ({
         const { workspaceId } = params;
         const userWorkspaces = await workspaceService.findOne(userId, workspaceId);
         return res.status(OK).json(userWorkspaces);
+    }),
+    findMembers: catchErrors(async ({ params }, res) => {
+        const { workspaceId } = params;
+        const members = await workspaceService.findMembers(workspaceId);
+        const formattedMembers = workspaceMembersDto(members);
+        return res.status(OK).json(formattedMembers);
     }),
 });

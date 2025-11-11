@@ -49,4 +49,18 @@ export const WorkspaceService = {
 
         return workspace;
     },
+    async findMembers(workspaceId: string) {
+        const members = await WorkspaceMemberModel.find({ workspaceId })
+            .populate({
+                path: "userId",
+                select: "name surname email",
+            })
+            .populate({
+                path: "role",
+                select: "name",
+            })
+            .lean();
+
+        return members;
+    },
 };
