@@ -8,4 +8,5 @@ const workspaceController = WorkspaceController();
 
 workspaceRoutes.get("/", workspaceController.find);
 workspaceRoutes.get("/:workspaceId", workspaceController.findOne);
+workspaceRoutes.get("/:workspaceId/members", workspaceController.findMembers);
 workspaceRoutes.post("/", workspaceController.create);
