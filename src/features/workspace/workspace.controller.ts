@@ -1,3 +1,4 @@
+import { objectIdParam } from "../../common/dto/params-id.dto";
 import { OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { createWorkspaceDto } from "./dto/create-workspace.dto";
@@ -16,7 +17,7 @@ export const WorkspaceController = (workspaceService = WorkspaceService) => ({
     }),
 
     findOne: catchErrors(async ({ userId, params }, res) => {
-        const { workspaceId } = params;
+        const { workspaceId } = objectIdParam("workspaceId").parse(params);
         const userWorkspaces = await workspaceService.findOne(userId, workspaceId);
         return res.status(OK).json(userWorkspaces);
     }),
@@ -25,5 +26,11 @@ export const WorkspaceController = (workspaceService = WorkspaceService) => ({
         const members = await workspaceService.findMembers(workspaceId);
         const formattedMembers = workspaceMembersDto(members);
         return res.status(OK).json(formattedMembers);
+    }),
+    updateOne: catchErrors(async ({ userId, params, body }, res) => {
+        const { workspaceId } = objectIdParam("workspaceId").parse(params);
+        const payload = createWorkspaceDto.parse(body);
+        const updated = await workspaceService.updateOne(userId, workspaceId, payload);
+        return res.status(OK).json({ message: "Zaktualizowano workspace", data: updated });
     }),
 });
