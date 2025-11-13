@@ -1,3 +1,4 @@
+import { objectIdParam } from "../../common/dto/params-id.dto";
 import { CREATED, OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { createWorkspaceFolderDto } from "./dto/create-workspaceFolder.dto";
@@ -18,6 +19,13 @@ export const WorkspaceFolderController = (workspaceFolderService = WorkspaceFold
     findOneFolder: catchErrors(async ({ userId, body, params }, res) => {
         const { workspaceId, folderId } = params;
         const folder = await WorkspaceFolderService.findOneFolder(userId, workspaceId, folderId);
+        return res.status(OK).json(folder);
+    }),
+    updateOneFolder: catchErrors(async ({ userId, body, params }, res) => {
+        const payload = createWorkspaceFolderDto.parse(body);
+        const { workspaceId } = objectIdParam("workspaceId").parse(params);
+        const { folderId } = objectIdParam("folderId").parse(params);
+        const folder = await WorkspaceFolderService.updateOneFolder(userId, workspaceId, folderId, payload);
         return res.status(OK).json(folder);
     }),
 });
