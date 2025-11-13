@@ -69,4 +69,31 @@ export const WorkspaceFolderService = {
 
         return folder;
     },
+
+    async updateOneFolder(userId: string, workspaceId: string, folderId: string, payload: CreateWorkspaceFolderDto) {
+        const workspace = await WorkspaceModel.findById(workspaceId);
+        appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
+
+        const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
+        const isOwner = workspace.owner.toString() === userId;
+        const isAdmin = member?.role?.name === "OWNER";
+        appAssert(isOwner || isAdmin, FORBIDDEN, "Brak uprawnień do edycji folderu");
+
+        const folder = await WorkspaceFolderModel.findOne({ _id: folderId, workspaceId });
+
+        console.log("FOLDER", folder);
+        appAssert(folder, NOT_FOUND, "Folder nie istnieje");
+
+        const existingFolder = await WorkspaceFolderModel.findOne({
+            workspaceId,
+            name: payload.name,
+            _id: { $ne: folderId },
+        });
+        appAssert(!existingFolder, CONFLICT, "Folder o tej nazwie już istnieje");
+
+        folder.name = payload.name;
+        await folder.save();
+
+        return folder;
+    },
 };
