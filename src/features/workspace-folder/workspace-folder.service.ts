@@ -49,6 +49,7 @@ export const WorkspaceFolderService = {
             {
                 $project: { articles: 0, __v: 0 },
             },
+            { $sort: { createdAt: -1 } },
         ]);
 
         return folders;
