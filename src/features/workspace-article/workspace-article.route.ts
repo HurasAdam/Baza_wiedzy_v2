@@ -9,3 +9,4 @@ const workspaceArticleController = WorkspaceArticleController();
 
 workspaceArticleRoutes.post("/", workspaceArticleController.create);
 workspaceArticleRoutes.get("/folder/:folderId", workspaceArticleController.findByFolder);
+workspaceArticleRoutes.get("/:articleId", workspaceArticleController.findOne);
