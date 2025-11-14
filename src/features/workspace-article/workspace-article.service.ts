@@ -2,6 +2,8 @@ import { Types } from "mongoose";
 import { BAD_REQUEST, NOT_FOUND } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
 import { WorkspaceFolderModel } from "../workspace-folder/workspace-folder.model";
+import WorkspaceMemberModel from "../workspace-member/workspaceMember.model";
+import WorkspaceModel from "../workspace/workspace.model";
 import { CreateWorkspaceArticleDto } from "./dto/create-workspace-article.dto";
 import { WorkspaceResponseVariantModel } from "./response-variant/workspace-response-variant.model";
 import { WorkspaceArticleModel } from "./workspace-article.model";
@@ -69,6 +71,43 @@ export const WorkspaceArticleService = {
                 pages: Math.ceil(total / limit),
                 limit,
             },
+        };
+    },
+    async findOne(userId: string, articleId: string) {
+        const article = await WorkspaceArticleModel.findById(articleId)
+            .populate({ path: "createdBy", select: ["name", "surname"] })
+            .lean();
+
+        appAssert(article, NOT_FOUND, "Artykuł nie istnieje");
+
+        const folder = await WorkspaceFolderModel.findById(article.folderId).select("_id name").lean();
+        appAssert(folder, NOT_FOUND, "Folder powiązany z artykułem nie istnieje");
+
+        const workspace = await WorkspaceModel.findById(article.workspaceId).lean();
+        appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
+
+        const isOwner = workspace.owner?.toString() === userId;
+
+        const isMember = await WorkspaceMemberModel.exists({
+            workspaceId: workspace._id,
+            userId,
+        });
+
+        appAssert(isOwner || isMember, NOT_FOUND, "Nie masz dostępu do tego artykułu");
+
+        const variants = await WorkspaceResponseVariantModel.find({
+            articleId: article._id,
+        })
+            .sort({ createdAt: 1 })
+            .select("variantName variantContent")
+            .lean();
+
+        const { folderId, ...rest } = article;
+
+        return {
+            ...rest,
+            folder,
+            responseVariants: variants,
         };
     },
 };
