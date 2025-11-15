@@ -11,3 +11,4 @@ workspaceFolderRoutes.post("/:workspaceId", workspaceFolderController.create);
 workspaceFolderRoutes.get("/:workspaceId/folders", workspaceFolderController.findFolders);
 workspaceFolderRoutes.get("/:workspaceId/folders/:folderId", workspaceFolderController.findOneFolder);
 workspaceFolderRoutes.patch("/:workspaceId/folders/:folderId", workspaceFolderController.updateOneFolder);
+workspaceFolderRoutes.delete("/:workspaceId/folders/:folderId", workspaceFolderController.deleteOneFolder);
