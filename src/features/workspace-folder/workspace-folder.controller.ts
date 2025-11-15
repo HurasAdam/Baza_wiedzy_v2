@@ -2,6 +2,7 @@ import { objectIdParam } from "../../common/dto/params-id.dto";
 import { CREATED, OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { createWorkspaceFolderDto } from "./dto/create-workspaceFolder.dto";
+import { searchFoldersDto } from "./dto/search-folders.dto";
 import { WorkspaceFolderService } from "./workspace-folder.service";
 
 export const WorkspaceFolderController = (workspaceFolderService = WorkspaceFolderService) => ({
@@ -11,9 +12,10 @@ export const WorkspaceFolderController = (workspaceFolderService = WorkspaceFold
         const folder = await workspaceFolderService.create(userId, workspaceId, payload);
         return res.status(CREATED).json({ message: "Dodano nowy folder", data: folder });
     }),
-    findFolders: catchErrors(async ({ userId, body, params }, res) => {
+    findFolders: catchErrors(async ({ userId, body, query, params }, res) => {
         const { workspaceId } = params;
-        const folders = await WorkspaceFolderService.findFolders(userId, workspaceId);
+        const payload = searchFoldersDto.parse(query);
+        const folders = await WorkspaceFolderService.findFolders(userId, workspaceId, payload);
         return res.status(OK).json(folders);
     }),
     findOneFolder: catchErrors(async ({ userId, body, params }, res) => {
@@ -26,6 +28,12 @@ export const WorkspaceFolderController = (workspaceFolderService = WorkspaceFold
         const { workspaceId } = objectIdParam("workspaceId").parse(params);
         const { folderId } = objectIdParam("folderId").parse(params);
         const folder = await WorkspaceFolderService.updateOneFolder(userId, workspaceId, folderId, payload);
+        return res.status(OK).json(folder);
+    }),
+    deleteOneFolder: catchErrors(async ({ userId, params }, res) => {
+        const { workspaceId } = objectIdParam("workspaceId").parse(params);
+        const { folderId } = objectIdParam("folderId").parse(params);
+        const folder = await WorkspaceFolderService.deleteOneFolder(userId, workspaceId, folderId);
         return res.status(OK).json(folder);
     }),
 });
