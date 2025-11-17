@@ -2,6 +2,7 @@ import { objectIdParam } from "../../common/dto/params-id.dto";
 import { OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { createWorkspaceDto } from "./dto/create-workspace.dto";
+import { joinWorkspaceDto } from "./dto/join-workspace.dto";
 import { workspaceMembersDto } from "./dto/workspaceMembers.dto";
 import { WorkspaceService } from "./workspace.service";
 
@@ -32,5 +33,12 @@ export const WorkspaceController = (workspaceService = WorkspaceService) => ({
         const payload = createWorkspaceDto.parse(body);
         const updated = await workspaceService.updateOne(userId, workspaceId, payload);
         return res.status(OK).json({ message: "Zaktualizowano workspace", data: updated });
+    }),
+    joinByInviteCode: catchErrors(async ({ userId, body }, res) => {
+        const { inviteCode } = joinWorkspaceDto.parse(body);
+
+        const serviceResponse = await workspaceService.joinByInviteCode(userId, inviteCode);
+
+        return res.status(OK).json({ message: "Dołączono do kolekcji", data: serviceResponse });
     }),
 });
