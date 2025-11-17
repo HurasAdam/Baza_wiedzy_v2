@@ -1,4 +1,4 @@
-import { FORBIDDEN, NOT_FOUND } from "../../constants/http";
+import { CONFLICT, FORBIDDEN, NOT_FOUND } from "../../constants/http";
 import { WorkspaceRoles } from "../../enums/workspaceRole.enum";
 import appAssert from "../../utils/appAssert";
 import WorkspaceMemberModel from "../workspace-member/workspaceMember.model";
@@ -77,5 +77,29 @@ export const WorkspaceService = {
         await workspace.save();
 
         return workspace;
+    },
+
+    async joinByInviteCode(userId: string, inviteCode: string) {
+        const workspace = await WorkspaceModel.findOne({ inviteCode });
+        appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
+
+        const isMember = await WorkspaceMemberModel.exists({ userId, workspaceId: workspace._id });
+        if (isMember) {
+            throw appAssert(false, CONFLICT, "Już należysz do tej kolekcji");
+        }
+
+        const memberRole = await WorkspaceRoleModel.findOne({ name: "VIEWER" });
+
+        appAssert(memberRole, NOT_FOUND, "Role MEMBER nie istnieje");
+
+        const newMember = new WorkspaceMemberModel({
+            userId,
+            workspaceId: workspace._id,
+            role: memberRole._id,
+            joinedAt: new Date(),
+        });
+
+        await newMember.save();
+        return { workspaceId: workspace._id, workspaceName: workspace.name };
     },
 };

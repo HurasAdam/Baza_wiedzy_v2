@@ -11,3 +11,5 @@ workspaceRoutes.get("/:workspaceId", workspaceController.findOne);
 workspaceRoutes.get("/:workspaceId/members", workspaceController.findMembers);
 workspaceRoutes.post("/", workspaceController.create);
 workspaceRoutes.patch("/:workspaceId", workspaceController.updateOne);
+
+workspaceRoutes.post("/join", workspaceController.joinByInviteCode);
