@@ -41,4 +41,9 @@ export const WorkspaceController = (workspaceService = WorkspaceService) => ({
 
         return res.status(OK).json({ message: "Dołączono do kolekcji", data: serviceResponse });
     }),
+    removeMember: catchErrors(async ({ userId, params }, res) => {
+        const { workspaceId, memberId } = params;
+        const result = await workspaceService.removeMember(userId, workspaceId, memberId);
+        return res.status(OK).json(result);
+    }),
 });
