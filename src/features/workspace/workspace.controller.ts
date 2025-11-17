@@ -1,5 +1,5 @@
 import { objectIdParam } from "../../common/dto/params-id.dto";
-import { OK } from "../../constants/http";
+import { NO_CONTENT, OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { createWorkspaceDto } from "./dto/create-workspace.dto";
 import { joinWorkspaceDto } from "./dto/join-workspace.dto";
@@ -42,8 +42,9 @@ export const WorkspaceController = (workspaceService = WorkspaceService) => ({
         return res.status(OK).json({ message: "Dołączono do kolekcji", data: serviceResponse });
     }),
     removeMember: catchErrors(async ({ userId, params }, res) => {
-        const { workspaceId, memberId } = params;
-        const result = await workspaceService.removeMember(userId, workspaceId, memberId);
-        return res.status(OK).json(result);
+        const { workspaceId } = objectIdParam("workspaceId").parse(params);
+        const { memberId } = objectIdParam("memberId").parse(params);
+        await workspaceService.removeMember(userId, workspaceId, memberId);
+        return res.status(NO_CONTENT).send();
     }),
 });

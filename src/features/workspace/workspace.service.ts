@@ -119,8 +119,11 @@ export const WorkspaceService = {
             "Użytkownik nie należy do wybranej kolekcji"
         );
 
+        appAssert(memberToRemove.role.name !== "OWNER", FORBIDDEN, "Brak uprawnień do wykonania tej operacji");
+        appAssert(memberToRemove.userId.toString() !== userId, FORBIDDEN, "Brak uprawnień do wykonania tej operacji");
+
         await WorkspaceMemberModel.deleteOne({ _id: memberId });
 
-        return { message: "Użytkownik został usunięty z kolekcji" };
+        return;
     },
 };
