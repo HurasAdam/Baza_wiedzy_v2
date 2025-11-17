@@ -102,4 +102,25 @@ export const WorkspaceService = {
         await newMember.save();
         return { workspaceId: workspace._id, workspaceName: workspace.name };
     },
+
+    async removeMember(userId: string, workspaceId: string, memberId: string) {
+        const workspace = await WorkspaceModel.findById(workspaceId);
+        appAssert(workspace, NOT_FOUND, "Kolekcja nie istnieje");
+
+        const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
+        const isOwner = workspace.owner.toString() === userId;
+        const isAdmin = member?.role?.name === "OWNER";
+        appAssert(isOwner || isAdmin, FORBIDDEN, "Nie masz uprawnień do usunięcia użytkownika z tej kolekcji");
+
+        const memberToRemove = await WorkspaceMemberModel.findById(memberId);
+        appAssert(
+            memberToRemove && memberToRemove.workspaceId.toString() === workspaceId,
+            NOT_FOUND,
+            "Użytkownik nie należy do wybranej kolekcji"
+        );
+
+        await WorkspaceMemberModel.deleteOne({ _id: memberId });
+
+        return { message: "Użytkownik został usunięty z kolekcji" };
+    },
 };
