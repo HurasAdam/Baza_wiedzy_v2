@@ -10,3 +10,8 @@ const workspaceArticleController = WorkspaceArticleController();
 workspaceArticleRoutes.post("/", workspaceArticleController.create);
 workspaceArticleRoutes.get("/folder/:folderId", workspaceArticleController.findByFolder);
 workspaceArticleRoutes.get("/:articleId", workspaceArticleController.findOne);
+
+workspaceArticleRoutes.put(
+    "/:articleId/response-variants/:variantId",
+    workspaceArticleController.updateResponseVariant
+);
