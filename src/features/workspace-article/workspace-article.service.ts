@@ -5,6 +5,7 @@ import { WorkspaceFolderModel } from "../workspace-folder/workspace-folder.model
 import WorkspaceMemberModel from "../workspace-member/workspaceMember.model";
 import WorkspaceModel from "../workspace/workspace.model";
 import { CreateWorkspaceArticleDto } from "./dto/create-workspace-article.dto";
+import { WorkspaceArticleResponseVariantDto } from "./dto/workspace-article-response-variant.dto";
 import { WorkspaceResponseVariantModel } from "./response-variant/workspace-response-variant.model";
 import { WorkspaceArticleModel } from "./workspace-article.model";
 
@@ -109,5 +110,36 @@ export const WorkspaceArticleService = {
             folder,
             responseVariants: variants,
         };
+    },
+    async updateResponseVariant(
+        userId: string,
+        articleId: string,
+        variantId: string,
+        payload: WorkspaceArticleResponseVariantDto
+    ) {
+        const article = await WorkspaceArticleModel.findById(articleId).lean();
+        appAssert(article, NOT_FOUND, "Artykuł nie istnieje");
+
+        const workspace = await WorkspaceModel.findById(article.workspaceId).lean();
+        appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
+
+        const isOwner = workspace.owner?.toString() === userId;
+        const isMember = await WorkspaceMemberModel.exists({
+            workspaceId: workspace._id,
+            userId,
+        });
+        appAssert(isOwner || isMember, NOT_FOUND, "Nie masz dostępu do tego artykułu");
+
+        const variant = await WorkspaceResponseVariantModel.findOne({
+            _id: variantId,
+            articleId,
+        });
+        appAssert(variant, NOT_FOUND, "Wariant odpowiedzi nie istnieje");
+
+        variant.variantName = payload.variantName;
+        variant.variantContent = payload.variantContent;
+        await variant.save();
+
+        return variant.toObject();
     },
 };
