@@ -111,6 +111,31 @@ export const WorkspaceArticleService = {
             responseVariants: variants,
         };
     },
+
+    async createResponseVariant(userId: string, articleId: string, payload: WorkspaceArticleResponseVariantDto) {
+        const article = await WorkspaceArticleModel.findById(articleId).lean();
+        appAssert(article, NOT_FOUND, "Artykuł nie istnieje");
+
+        const workspace = await WorkspaceModel.findById(article.workspaceId).lean();
+        appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
+
+        const isOwner = workspace.owner?.toString() === userId;
+        const isMember = await WorkspaceMemberModel.exists({
+            workspaceId: workspace._id,
+            userId,
+        });
+        appAssert(isOwner || isMember, NOT_FOUND, "Nie masz dostępu do tego artykułu");
+
+        const newVariant = await WorkspaceResponseVariantModel.create({
+            articleId,
+            variantName: payload.variantName,
+            variantContent: payload.variantContent,
+            createdBy: userId,
+        });
+
+        return newVariant.toObject();
+    },
+
     async updateResponseVariant(
         userId: string,
         articleId: string,

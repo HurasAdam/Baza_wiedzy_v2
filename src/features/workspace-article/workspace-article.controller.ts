@@ -23,6 +23,20 @@ export const WorkspaceArticleController = (workspaceArticleService = WorkspaceAr
 
         return res.status(OK).json(article);
     }),
+    createResponseVariant: catchErrors(async ({ params, body, userId }, res) => {
+        const { articleId } = params;
+
+        const payload = workspaceArticleResponseVariantDto.parse(body);
+
+        const updatedVariant = await workspaceArticleService.createResponseVariant(
+            userId,
+            articleId,
+
+            payload
+        );
+
+        return res.status(OK).json({ message: "Wariant odpowiedzi został zaktualizowany", data: updatedVariant });
+    }),
 
     updateResponseVariant: catchErrors(async ({ params, body, userId }, res) => {
         const { articleId, variantId } = params;
