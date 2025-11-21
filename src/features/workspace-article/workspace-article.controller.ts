@@ -2,6 +2,7 @@ import { OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
 import { objectIdParam } from "../../common/dto/params-id.dto";
 import { createWorkspaceArticleDto } from "./dto/create-workspace-article.dto";
+import { updateWorkspaceArticleDto } from "./dto/update-workspace-article.dto";
 import { workspaceArticleResponseVariantDto } from "./dto/workspace-article-response-variant.dto";
 import { WorkspaceArticleService } from "./workspace-article.service";
 
@@ -51,5 +52,18 @@ export const WorkspaceArticleController = (workspaceArticleService = WorkspaceAr
         );
 
         return res.status(OK).json({ message: "Wariant odpowiedzi został zaktualizowany", data: updatedVariant });
+    }),
+
+    updateOne: catchErrors(async ({ params, body, userId }, res) => {
+        const { articleId } = objectIdParam("articleId").parse(params);
+        const payload = updateWorkspaceArticleDto.parse(body);
+        const updatedVariant = await workspaceArticleService.updateOne(
+            userId,
+            articleId,
+
+            payload
+        );
+
+        return res.status(OK).json(updatedVariant);
     }),
 });

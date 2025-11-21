@@ -167,4 +167,29 @@ export const WorkspaceArticleService = {
 
         return variant.toObject();
     },
+
+    async updateOne(userId: string, articleId: string, payload: { title: string; folderId: string }) {
+        const article = await WorkspaceArticleModel.findById(articleId);
+        appAssert(article, NOT_FOUND, "Artykuł nie istnieje");
+
+        const workspace = await WorkspaceModel.findById(article.workspaceId).lean();
+        appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
+
+        const isOwner = workspace.owner?.toString() === userId;
+        const isMember = await WorkspaceMemberModel.exists({
+            workspaceId: workspace._id,
+            userId,
+        });
+        appAssert(isOwner || isMember, NOT_FOUND, "Nie masz dostępu do tego artykułu");
+
+        const folder = await WorkspaceFolderModel.findById(payload.folderId);
+        appAssert(folder, NOT_FOUND, "Folder nie istnieje");
+
+        article.title = payload.title;
+        article.folderId = folder._id as Types.ObjectId;
+        article.updatedBy = new Types.ObjectId(userId);
+        await article.save();
+
+        return article;
+    },
 };

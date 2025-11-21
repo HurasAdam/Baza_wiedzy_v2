@@ -12,7 +12,7 @@ workspaceArticleRoutes.get("/folder/:folderId", workspaceArticleController.findB
 workspaceArticleRoutes.get("/:articleId", workspaceArticleController.findOne);
 
 workspaceArticleRoutes.post("/:articleId/response-variants", workspaceArticleController.createResponseVariant);
-
+workspaceArticleRoutes.put("/:articleId", workspaceArticleController.updateOne);
 workspaceArticleRoutes.put(
     "/:articleId/response-variants/:variantId",
     workspaceArticleController.updateResponseVariant
