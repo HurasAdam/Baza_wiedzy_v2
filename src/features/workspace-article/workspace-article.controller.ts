@@ -3,6 +3,7 @@ import catchErrors from "@/utils/catchErrors";
 import { objectIdParam } from "../../common/dto/params-id.dto";
 import { createWorkspaceArticleDto } from "./dto/create-workspace-article.dto";
 import { updateWorkspaceArticleDto } from "./dto/update-workspace-article.dto";
+import { toWorkspaceArticleUpdateResponseDto } from "./dto/update-workspace-article.response.dto";
 import { workspaceArticleResponseVariantDto } from "./dto/workspace-article-response-variant.dto";
 import { WorkspaceArticleService } from "./workspace-article.service";
 
@@ -63,7 +64,7 @@ export const WorkspaceArticleController = (workspaceArticleService = WorkspaceAr
 
             payload
         );
-
-        return res.status(OK).json(updatedVariant);
+        const response = toWorkspaceArticleUpdateResponseDto(updatedVariant);
+        return res.status(OK).json(response);
     }),
 });
