@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { PipelineStage, Types } from "mongoose";
 import { BAD_REQUEST, NOT_FOUND } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
 import { WorkspaceFolderModel } from "../workspace-folder/workspace-folder.model";
@@ -37,7 +37,6 @@ export const WorkspaceArticleService = {
             responseVariants: createdVariants,
         };
     },
-
     async findByFolder(folderId: string, query: { page?: number; limit?: number; title?: string }) {
         appAssert(Types.ObjectId.isValid(folderId), BAD_REQUEST, "Nieprawidłowy identyfikator folderu");
 
@@ -48,21 +47,56 @@ export const WorkspaceArticleService = {
         const limit = Math.min(Math.max(Number(query.limit) || 50, 1), 100);
         const skip = (page - 1) * limit;
 
-        const filter: any = { folderId: new Types.ObjectId(folderId) };
+        const match: any = { folderId: new Types.ObjectId(folderId) };
         if (query.title?.trim()) {
             const escapeRegex = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-            filter.title = new RegExp(escapeRegex(query.title.trim()), "i");
+            match.title = new RegExp(escapeRegex(query.title.trim()), "i");
         }
 
-        const [articles, total] = await Promise.all([
-            WorkspaceArticleModel.find(filter)
-                .populate({ path: "createdBy", select: ["name", "surname"] })
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limit)
-                .lean(),
-            WorkspaceArticleModel.countDocuments(filter),
-        ]);
+        const aggregation: PipelineStage[] = [
+            { $match: match } as PipelineStage,
+
+            {
+                $lookup: {
+                    from: "workspaceresponsevariants",
+                    localField: "_id",
+                    foreignField: "articleId",
+                    as: "variants",
+                },
+            } as PipelineStage,
+
+            {
+                $addFields: {
+                    responseVariantsCount: { $size: "$variants" },
+                },
+            } as PipelineStage,
+
+            {
+                $lookup: {
+                    from: "users",
+                    let: { createdById: "$createdBy" },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ["$_id", "$$createdById"] } } },
+                        { $project: { _id: 1, name: 1, surname: 1 } },
+                    ],
+                    as: "createdBy",
+                },
+            } as PipelineStage,
+
+            { $unwind: "$createdBy" } as PipelineStage,
+            { $sort: { createdAt: -1 } } as PipelineStage,
+            { $skip: skip } as PipelineStage,
+            { $limit: limit } as PipelineStage,
+
+            {
+                $project: {
+                    variants: 0,
+                },
+            } as PipelineStage,
+        ];
+
+        const articles = await WorkspaceArticleModel.aggregate(aggregation);
+        const total = await WorkspaceArticleModel.countDocuments(match);
 
         return {
             data: articles,
