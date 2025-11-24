@@ -6,6 +6,7 @@
         "seed:workspace-roles": "ts-node src/seeders/workspace-role.seeder.ts",
         "seed:admin": "ts-node src/seeders/admin-account.seeder.ts",
         "seed-prod:roles": "node dist/seeders/role.seeder.js",
+        "seed-prod:workspace-roles": "node dist/seeders/workspace-role.seeder.js",
         "seed-prod:admin": "node dist/seeders/admin-account.seeder.js",
         "start:dev": "ts-node-dev -r tsconfig-paths/register src/main.ts",
         "start:prod": "node dist/main.js",

@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import connectDB from "../config/db";
 import WorkspaceRoleModel from "../features/workspace-role/workspace-role.model";
 
-import { WorkspaceRolePermissions, WorkspaceRoleVisualConfig } from "../utils/workspaceRole-permission";
+import { WorkspaceRolePermissions } from "../utils/workspaceRole-permission";
 
 const seedWorkspaceRoles = async () => {
     console.log("Running script...");
@@ -20,16 +20,12 @@ const seedWorkspaceRoles = async () => {
         for (const workspaceRoleName in WorkspaceRolePermissions) {
             const role = workspaceRoleName as keyof typeof WorkspaceRolePermissions;
             const permissions = WorkspaceRolePermissions[role];
-            const { iconKey, labelColor } = WorkspaceRoleVisualConfig[role];
 
-            // Check if the role already exists
             const existingRole = await WorkspaceRoleModel.findOne({ name: role });
             if (!existingRole) {
                 const newRole = new WorkspaceRoleModel({
                     name: role,
                     permissions: permissions,
-                    iconKey,
-                    labelColor,
                 });
                 await newRole.save();
                 console.log(`Role ${role} added with permissions.`);
