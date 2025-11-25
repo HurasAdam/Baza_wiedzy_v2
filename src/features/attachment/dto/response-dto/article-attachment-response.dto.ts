@@ -29,6 +29,7 @@ export const articleAttachmentResponseDto = z.object({
                     path: z.string().optional(),
                 }),
             ])
+            .nullable()
             .optional(),
     }),
     ownerType: z.enum(["User", "Article", "Workspace", "Loose"]),

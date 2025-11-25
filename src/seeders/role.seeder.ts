@@ -13,36 +13,34 @@ const seedRoles = async () => {
             console.log("Start Seeding Roles");
         });
 
-        console.log("Clearing existing roles...");
-        await RoleModel.deleteMany({});
+        console.log("Checking existing roles...");
 
         for (const roleName in RolePermissions) {
             const role = roleName as keyof typeof RolePermissions;
             const permissions = RolePermissions[role];
             const { iconKey, labelColor } = RoleVisualConfig[role];
 
-            // Check if the role already exists
             const existingRole = await RoleModel.findOne({ name: role });
+
             if (!existingRole) {
-                const newRole = new RoleModel({
+                await RoleModel.create({
                     name: role,
-                    permissions: permissions,
+                    permissions,
                     iconKey,
                     labelColor,
                 });
-                await newRole.save();
-                console.log(`Role ${role} added with permissions.`);
+
+                console.log(`Role ${role} created.`);
             } else {
-                console.log(`Role ${role} already exists.`);
+                console.log(`Role ${role} already exists. Skipping.`);
             }
         }
-
-        console.log("Transaction committed.");
 
         console.log("Seeding completed successfully.");
         await mongoose.disconnect();
     } catch (error) {
         console.error("Error during seeding:", error);
+        process.exit(1);
     }
 };
 
