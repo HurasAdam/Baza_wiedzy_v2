@@ -25,7 +25,6 @@ export const ArticleService = {
             ...payload,
             createdBy: userId,
             verifiedBy: userId,
-            followers: [userId],
         });
 
         // responseVariants
@@ -521,9 +520,9 @@ export const ArticleService = {
             if (article.status === "rejected") {
                 article.status = "draft";
             } else if (article.status === "approved") {
-                article.status = "pending";
+                article.status = "draft";
             } else {
-                article.status = "pending";
+                article.status = "draft";
             }
         }
 
