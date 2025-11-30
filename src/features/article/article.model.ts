@@ -6,6 +6,7 @@ const articleSchema = new Schema(
         employeeDescription: { type: String, required: true },
         tags: [{ type: Schema.Types.ObjectId, ref: "Tag", required: true }],
         isVerified: { type: Boolean, required: true, default: false },
+        lastVerifiedAt: { type: Date, default: null },
         status: {
             type: String,
             enum: ["pending", "approved", "rejected", "draft"],

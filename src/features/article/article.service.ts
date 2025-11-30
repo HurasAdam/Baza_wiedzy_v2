@@ -367,6 +367,7 @@ export const ArticleService = {
 
         article.status = "approved";
         article.isVerified = true;
+        article.lastVerifiedAt = new Date();
         article.rejectionReason = null;
         article.rejectedBy = null;
         article.verifiedBy = new mongoose.Types.ObjectId(userId);

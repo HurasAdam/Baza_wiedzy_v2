@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const createArticleDto = z.object({
     title: z.string().trim().min(4).max(255),
-    employeeDescription: z.string().trim().min(6).max(9000),
+    employeeDescription: z.string().trim().min(1).max(9000),
     tags: z.array(z.string().refine(Types.ObjectId.isValid)).nonempty(),
     product: z.string().refine(Types.ObjectId.isValid),
     category: z.string().refine(Types.ObjectId.isValid),
