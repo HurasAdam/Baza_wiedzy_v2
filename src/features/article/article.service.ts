@@ -204,24 +204,31 @@ export const ArticleService = {
 
     async findOne(userId: string, articleId: string, findTrashed = false) {
         const user = await UserService.findOne(userId);
+        console.log(user, "USERID");
 
-        // Pobierz artykuł z powiązanymi referencjami
         const article = await ArticleModel.findById(articleId)
             .populate([
                 { path: "tags", select: ["name"] },
-                { path: "createdBy", select: ["name", "surname"] },
-                { path: "verifiedBy", select: ["name", "surname", "isActive"] },
+                { path: "createdBy", select: ["name", "surname", "email"] },
+                { path: "verifiedBy", select: ["name", "surname", "isActive", "email"] },
                 { path: "product", select: ["name", "labelColor", "banner"] },
                 { path: "category", select: ["name"] },
+                {
+                    path: "rejectionNote.createdBy",
+                    select: ["name", "surname", "email"],
+                },
+                {
+                    path: "rejectionNote.targetUser",
+                    select: ["name", "surname", "email"],
+                },
             ])
             .where({ isTrashed: findTrashed });
 
+        console.log("ZNALEZIONY", article);
         appAssert(article, NOT_FOUND, "Article not found");
 
-        // Pobierz warianty odpowiedzi
         const responseVariants = await ResponseVariantModel.find({ articleId: article._id }).lean();
 
-        // Sprawdź ulubione i obserwowane
         const isFavourite = user.favourites.some((f) => f._id.equals(article._id));
         const isFollowed = await ArticleModel.exists({ _id: article._id, followers: user._id });
 
@@ -230,21 +237,22 @@ export const ArticleService = {
             userId: user._id,
         }).populate<{ flagId: { _id: string; name: string; color: string } }>("flagId", "name color");
 
-        const selectedFlag =
-            userFlag && userFlag.flagId
-                ? {
-                      _id: userFlag.flagId._id,
-                      name: userFlag.flagId.name,
-                      color: userFlag.flagId.color,
-                  }
-                : null;
+        const selectedFlag = userFlag?.flagId
+            ? {
+                  _id: userFlag.flagId._id,
+                  name: userFlag.flagId.name,
+                  color: userFlag.flagId.color,
+              }
+            : null;
+
+        const articleObj = article.toObject();
 
         return {
-            ...article.toObject(),
+            ...articleObj,
             responseVariants,
             isFavourite,
             isFollowed: Boolean(isFollowed),
-            selectedFlag, // obiekt lub null
+            selectedFlag,
         };
     },
 
@@ -320,7 +328,7 @@ export const ArticleService = {
 
         article.status = "approved";
         article.rejectionReason = null;
-        article.rejectedBy = null;
+
         article.verifiedBy = new mongoose.Types.ObjectId(userId);
         // article.verifiedAt = new Date();
 
@@ -365,12 +373,12 @@ export const ArticleService = {
         const articleBeforeChangesObj = article.toObject();
 
         article.status = "approved";
-        article.isVerified = true;
+        article.isVisible = true;
         article.lastVerifiedAt = new Date();
         article.rejectionReason = null;
-        article.rejectedBy = null;
-        article.verifiedBy = new mongoose.Types.ObjectId(userId);
 
+        article.verifiedBy = new mongoose.Types.ObjectId(userId);
+        article.rejectionNote = undefined;
         const updatedArticle = await article.save();
         const updatedArticleObj = updatedArticle.toObject();
 
@@ -404,12 +412,47 @@ export const ArticleService = {
         const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
-        const isPending = article.status === "draft";
-        appAssert(isPending, NOT_FOUND, "Article status must be 'draft' to reject");
+        const isDraft = article.status === "draft";
+        appAssert(isDraft, NOT_FOUND, "Article status must be 'draft' to reject");
 
         article.status = "rejected";
         article.rejectionReason = rejectionReason;
-        article.rejectedBy = new mongoose.Types.ObjectId(userId);
+
+        article.rejectionNote = {
+            text: rejectionReason,
+            createdBy: new mongoose.Types.ObjectId(userId),
+            targetUser: article.createdBy,
+            createdAt: new Date(),
+        };
+
+        await article.save();
+
+        await NotificationService.notifyArticleAuthor({
+            articleId: article._id.toString(),
+            title: "Twój artykuł został odrzucony",
+            message: `Artykuł "${article.title}" wymaga naniesienia zmian.`,
+            link: `/articles/${article._id}`,
+            type: "info",
+        });
+        io.emit("new-notification", { type: "article_created", articleId: article._id });
+    },
+    async rejectChanges(userId: string, articleId: string, rejectionReason: string) {
+        const article = await ArticleModel.findById(articleId);
+        appAssert(article, NOT_FOUND, "Article not found");
+
+        const isDraft = article.status === "draft";
+        appAssert(isDraft, NOT_FOUND, "Article status must be 'draft' to reject");
+
+        article.status = "rejected";
+        article.rejectionReason = rejectionReason;
+        const targetUserId = article.lastUpdatedBy;
+        article.rejectionNote = {
+            text: rejectionReason,
+            createdBy: new mongoose.Types.ObjectId(userId),
+            targetUser: targetUserId || article.createdBy,
+            createdAt: new Date(),
+        };
+
         await article.save();
 
         await NotificationService.notifyArticleAuthor({
@@ -430,7 +473,6 @@ export const ArticleService = {
 
         article.status = "draft";
         article.rejectionReason = null;
-        article.rejectedBy = null;
 
         const updatedArticle = await article.save();
 
@@ -517,6 +559,8 @@ export const ArticleService = {
         article.category = category ?? article.category;
 
         if (!options.simpleEdit) {
+            article.lastUpdatedBy = new mongoose.Types.ObjectId(userId);
+
             if (article.status === "rejected") {
                 article.status = "draft";
             } else if (article.status === "approved") {
@@ -532,7 +576,6 @@ export const ArticleService = {
             // getting response varriants linked to current Article
             const existingVariants = await ResponseVariantModel.find({ articleId });
 
-            // converting array into map
             const existingMap = new Map(existingVariants.map((v) => [v._id.toString(), v]));
 
             const incomingIds = responseVariants.filter((v: any) => v._id).map((v: any) => v._id);
@@ -548,7 +591,6 @@ export const ArticleService = {
                         modifiedAt: new Date(),
                     });
                 } else {
-                    // Adding new varaints
                     const newVariant = new ResponseVariantModel({
                         articleId,
                         version: variant.version,
@@ -560,7 +602,6 @@ export const ArticleService = {
                 }
             }
 
-            //  Removing variants
             for (const existing of existingVariants) {
                 if (!incomingIds.includes(existing._id.toString())) {
                     await ResponseVariantModel.findByIdAndDelete(existing._id);
@@ -703,7 +744,7 @@ export const ArticleService = {
                 { path: "createdBy", select: ["name", "surname"] },
                 { path: "product", select: ["name", "labelColor", "banner"] },
                 { path: "category", select: ["name"] },
-                { path: "rejectedBy", select: ["name", "surname"] },
+                // { path: "rejectedBy", select: ["name", "surname"] },
             ])
             .skip(skip)
             .limit(limit)
