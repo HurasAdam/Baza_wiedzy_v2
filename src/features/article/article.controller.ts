@@ -79,6 +79,14 @@ export const ArticleController = (articleService = ArticleService) => ({
             message: body.isVerified ? "Artykuł został zweryfikowany" : "Artykuł został oznaczony jako do weryfikacji",
         });
     }),
+
+    rejectChanges: catchErrors(async ({ userId, body, params }, res) => {
+        await articleService.rejectChanges(userId, params.id, body.rejectionReason);
+        return res.status(OK).json({
+            message: body.isVerified ? "Artykuł został zweryfikowany" : "Artykuł został oznaczony jako do weryfikacji",
+        });
+    }),
+
     requestReviewOne: catchErrors(async ({ userId, body, params }, res) => {
         await articleService.requestReviewOne(userId, params.id);
         return res.status(OK).json({

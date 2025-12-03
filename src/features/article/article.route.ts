@@ -22,6 +22,7 @@ articleRoutes.delete("/:id/follow", articleController.unfollow);
 articleRoutes.post("/:id/verify", permissionGuard(Permissions.VERIFY_ARTICLE), articleController.verify);
 articleRoutes.post("/:id/aprove", permissionGuard(Permissions.APPROVE_ARTICLE), articleController.aproveOne);
 articleRoutes.post("/:id/reject", permissionGuard(Permissions.REJECT_ARTICLE), articleController.rejectOne);
+articleRoutes.post("/:id/reject-changes", permissionGuard(Permissions.REJECT_ARTICLE), articleController.rejectChanges);
 articleRoutes.post("/:id/request-review", articleController.requestReviewOne);
 articleRoutes.post("/:id/markAsFavourite", articleController.toggleFavourite);
 articleRoutes.put("/:id/simple-update", permissionGuard(Permissions.EDIT_ARTICLE), articleController.simpleUpdateOne);

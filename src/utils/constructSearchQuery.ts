@@ -33,7 +33,17 @@ export const constructSearchQuery = (query: any) => {
     if (query.status) {
         constructedQuery.status = query.status;
     } else {
-        constructedQuery.status = { $in: ["approved", "pending"] };
+    }
+
+    // --- VISIBILITY LOGIC ---
+    const SHOW_ALL_VISIBILITY = ["draft", "rejected"];
+
+    if (query.status) {
+        if (!SHOW_ALL_VISIBILITY.includes(query.status)) {
+            constructedQuery.isVisible = true;
+        }
+    } else {
+        constructedQuery.isVisible = true;
     }
 
     return constructedQuery;
