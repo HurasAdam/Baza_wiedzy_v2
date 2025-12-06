@@ -42,4 +42,29 @@ export const ArticleUserFlagService = {
     async unflagOne(articleId, userId) {
         return await ArticleUserFlagModel.findOneAndDelete({ articleId, userId });
     },
+
+    async updateFlag(articleId: string, userId: string, flagId: string) {
+        appAssert(flagId, BAD_REQUEST, "flagId is required");
+
+        const flagExists = await FlagModel.exists({ _id: flagId });
+        appAssert(flagExists, NOT_FOUND, "Flag not found");
+
+        const updated = await ArticleUserFlagModel.findOneAndUpdate(
+            { articleId, userId },
+            { flagId },
+            { new: true, upsert: true }
+        )
+            .populate<{ flagId: { _id: string; name: string; color: string } }>("flagId", "name color")
+            .lean();
+
+        return {
+            selectedFlag: updated.flagId
+                ? {
+                      _id: updated.flagId._id,
+                      name: updated.flagId.name,
+                      color: updated.flagId.color,
+                  }
+                : null,
+        };
+    },
 };
