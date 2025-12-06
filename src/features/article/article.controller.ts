@@ -144,7 +144,6 @@ export const ArticleController = (articleService = ArticleService) => ({
 
     findFlaggedByUser: catchErrors(async ({ userId, query }, res) => {
         const payload = searchFlaggedArticlesDto.parse(query);
-        console.log("PRZEŁADOWANIE", payload);
         const articles = await articleService.findFlagged(userId, payload);
         return res.status(200).json(articles);
     }),

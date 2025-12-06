@@ -831,7 +831,7 @@ export const ArticleService = {
                 isFlagged: !!flaggedRecord,
                 flag: flagData
                     ? {
-                          id: flagData._id,
+                          _id: flagData._id,
                           name: flagData.name,
                           color: flagData.color,
                       }
