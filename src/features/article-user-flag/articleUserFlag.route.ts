@@ -12,3 +12,4 @@ articleUserFlagRoutes.post("/", articleUserFlagController.create);
 
 articleUserFlagRoutes.get("/:articleId", articleUserFlagController.findOne);
 articleUserFlagRoutes.delete("/:articleId", articleUserFlagController.unflagOne);
+articleUserFlagRoutes.put("/:articleId", articleUserFlagController.updateFlag);
