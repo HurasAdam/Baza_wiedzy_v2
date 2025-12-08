@@ -849,4 +849,41 @@ export const ArticleService = {
             },
         };
     },
+
+    async setImportance(articleId: string, isImportant: boolean, userId: string) {
+        const article = await ArticleModel.findById(articleId);
+        appAssert(article, NOT_FOUND, "Article not found");
+
+        const beforeArticle = article.toObject();
+
+        article.isImportant = isImportant;
+        article.lastUpdatedBy = new mongoose.Types.ObjectId(userId);
+
+        const updatedArticle = await article.save();
+        const afterArticle = updatedArticle.toObject();
+
+        // Zapis historii zmian
+        await ArticleHistoryService.saveChanges({
+            articleId,
+            before: beforeArticle,
+            after: afterArticle,
+            userId,
+            eventType: ArticleEventType.Updated,
+            statusChange: { from: beforeArticle.status, to: afterArticle.status },
+        });
+
+        if (article.followers?.length > 0) {
+            for (const followerId of article.followers) {
+                io.to(`user:${followerId}`).emit("new-notification", {
+                    type: "article_update",
+                    articleId,
+                    title: `Artykuł "${article.title}" został zaktualizowany`,
+                    message: isImportant ? "Oznaczono artykuł jako ważny" : "Artykuł przestał być oznaczony jako ważny",
+                    link: `/articles/${articleId}`,
+                });
+            }
+        }
+
+        return updatedArticle.toObject();
+    },
 };

@@ -5,6 +5,7 @@ const articleSchema = new Schema(
         title: { type: String, required: true },
         employeeDescription: { type: String, required: true },
         tags: [{ type: Schema.Types.ObjectId, ref: "Tag", required: true }],
+        isImportant: { type: Boolean, default: false },
         isVisible: { type: Boolean, required: true, default: false },
         lastVerifiedAt: { type: Date, default: null },
         status: {
