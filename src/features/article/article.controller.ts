@@ -147,4 +147,20 @@ export const ArticleController = (articleService = ArticleService) => ({
         const articles = await articleService.findFlagged(userId, payload);
         return res.status(200).json(articles);
     }),
+
+    markAsImportant: catchErrors(async ({ params, userId }, res) => {
+        const article = await articleService.setImportance(params.id, true, userId);
+        return res.status(OK).json({
+            message: "Artykuł został oznaczony jako ważny",
+            data: article,
+        });
+    }),
+
+    unmarkAsImportant: catchErrors(async ({ params, userId }, res) => {
+        const article = await articleService.setImportance(params.id, false, userId);
+        return res.status(OK).json({
+            message: "Artykuł został odznaczony jako ważny",
+            data: article,
+        });
+    }),
 });

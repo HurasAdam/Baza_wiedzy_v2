@@ -19,6 +19,12 @@ articleRoutes.get("/:id", articleController.findOne);
 articleRoutes.post("/", permissionGuard(Permissions.ADD_ARTICLE), articleController.create);
 articleRoutes.post("/:id/follow", articleController.follow);
 articleRoutes.delete("/:id/follow", articleController.unfollow);
+articleRoutes.post("/:id/mark-important", permissionGuard(Permissions.EDIT_ARTICLE), articleController.markAsImportant);
+articleRoutes.post(
+    "/:id/unmark-important",
+    permissionGuard(Permissions.EDIT_ARTICLE),
+    articleController.unmarkAsImportant
+);
 articleRoutes.post("/:id/verify", permissionGuard(Permissions.VERIFY_ARTICLE), articleController.verify);
 articleRoutes.post("/:id/aprove", permissionGuard(Permissions.APPROVE_ARTICLE), articleController.aproveOne);
 articleRoutes.post("/:id/reject", permissionGuard(Permissions.REJECT_ARTICLE), articleController.rejectOne);
