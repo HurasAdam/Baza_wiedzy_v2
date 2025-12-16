@@ -8,3 +8,4 @@ const flagController = FlagController();
 
 flagRoutes.post("/", flagController.create);
 flagRoutes.get("/", flagController.findMyFlags);
+flagRoutes.get("/with-stats", flagController.findMyFlagsWithStats);
