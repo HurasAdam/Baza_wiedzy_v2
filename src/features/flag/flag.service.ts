@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import FlagModel from "./flag.model";
 
 export const FlagService = {
@@ -8,5 +9,44 @@ export const FlagService = {
     },
     async findMyFlags(userId: string) {
         return await FlagModel.find({ createdBy: userId }).lean();
+    },
+
+    async findMyFlagsWithStats(userId: string) {
+        const userObjectId = new Types.ObjectId(userId);
+
+        return FlagModel.aggregate([
+            {
+                $match: {
+                    createdBy: userObjectId,
+                },
+            },
+            {
+                $lookup: {
+                    from: "articleuserflags",
+                    let: { flagId: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [{ $eq: ["$flagId", "$$flagId"] }, { $eq: ["$userId", userObjectId] }],
+                                },
+                            },
+                        },
+                    ],
+                    as: "articles",
+                },
+            },
+            {
+                $addFields: {
+                    articlesCount: { $size: "$articles" },
+                },
+            },
+            {
+                $project: {
+                    articles: 0,
+                    __v: 0,
+                },
+            },
+        ]);
     },
 };

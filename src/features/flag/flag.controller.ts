@@ -12,4 +12,9 @@ export const FlagController = (flagService = FlagService) => ({
         const serviceResponse = await flagService.findMyFlags(userId);
         return res.status(200).json(serviceResponse);
     }),
+
+    findMyFlagsWithStats: catchErrors(async ({ userId }, res) => {
+        const flags = await flagService.findMyFlagsWithStats(userId);
+        return res.status(200).json(flags);
+    }),
 });
