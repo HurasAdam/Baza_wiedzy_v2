@@ -9,3 +9,5 @@ const flagController = FlagController();
 flagRoutes.post("/", flagController.create);
 flagRoutes.get("/", flagController.findMyFlags);
 flagRoutes.get("/with-stats", flagController.findMyFlagsWithStats);
+flagRoutes.get("/:flagId", flagController.findOne);
+flagRoutes.put("/:flagId", flagController.updateOne);
