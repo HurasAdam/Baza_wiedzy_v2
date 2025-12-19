@@ -5,7 +5,7 @@ export const statisticsRoutes = Router();
 const statisticsController = StatisticsController();
 
 //prefix: /statistics
-
+statisticsRoutes.get("/export/users", statisticsController.exportUsersStatistics);
 statisticsRoutes.get("/users", statisticsController.findAllUsersStatistics);
 statisticsRoutes.get("/users/:id/articles/added", statisticsController.findUserAddedArticles);
 
