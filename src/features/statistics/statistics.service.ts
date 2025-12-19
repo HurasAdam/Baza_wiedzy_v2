@@ -1,3 +1,4 @@
+import ExcelJS from "exceljs";
 import mongoose, { PipelineStage } from "mongoose";
 import ArticleHistoryModel from "../article-history/article-history.model";
 import ArticleModel from "../article/article.model";
@@ -5,6 +6,7 @@ import ConversationReportModel from "../conversation-report/conversation-report.
 import { FindUsersWithDto } from "../user/dto/find-users-with.dto";
 import UserModel from "../user/user.model";
 import { DateRangeFilterDto } from "./dto/request-dto/date-range-filter.dto";
+import { UserExportRow } from "./types/statistics.types";
 
 interface UserConversationReportDTO {
     name: string;
@@ -196,4 +198,31 @@ export const StatisticsService = {
         return result;
     },
     async findMyStatistics() {},
+
+    async generateUsersExcel(users: UserExportRow[]) {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Statystyki użytkowników");
+
+        worksheet.columns = [
+            { header: "Imię", key: "name", width: 20 },
+            { header: "Nazwisko", key: "surname", width: 20 },
+            { header: "Email", key: "email", width: 30 },
+            { header: "Dodane artykuły", key: "articlesAdded", width: 15 },
+            { header: "Edytowane artykuły", key: "articlesEdited", width: 15 },
+            { header: "Odnotowane tematy", key: "conversationTopics", width: 15 },
+        ];
+
+        users.forEach((user) => {
+            worksheet.addRow({
+                name: user.name ?? "",
+                surname: user.surname ?? "",
+                email: user.email ?? "",
+                articlesAdded: user.articlesAdded ?? 0,
+                articlesEdited: user.articlesEdited ?? 0,
+                conversationTopics: user.conversationTopics ?? 0,
+            });
+        });
+
+        return workbook.xlsx.writeBuffer();
+    },
 };
