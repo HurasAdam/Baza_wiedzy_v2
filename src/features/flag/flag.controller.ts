@@ -1,3 +1,4 @@
+import { objectIdParam } from "../../common/dto/params-id.dto";
 import { CREATED } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { FlagService } from "./flag.service";
@@ -28,6 +29,16 @@ export const FlagController = (flagService = FlagService) => ({
         const { flagId } = params;
 
         const serviceResponse = await flagService.updateOne(userId, flagId, body);
+
+        return res.status(200).json({
+            message: "Zaktualizowano flagę",
+            data: serviceResponse,
+        });
+    }),
+
+    deleteOne: catchErrors(async ({ userId, params }, res) => {
+        const { flagId } = objectIdParam("flagId").parse(params);
+        const serviceResponse = await flagService.deleteOne(userId, flagId);
 
         return res.status(200).json({
             message: "Zaktualizowano flagę",
