@@ -80,4 +80,15 @@ export const FlagService = {
 
         return flag;
     },
+    async deleteOne(userId: string, flagId: string) {
+        const flag = await FlagModel.findOne({
+            _id: flagId,
+            createdBy: userId,
+        });
+
+        appAssert(flag, NOT_FOUND, "Flag not found");
+
+        await FlagModel.findByIdAndDelete(flagId);
+        return;
+    },
 };
