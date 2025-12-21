@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { CONFLICT, NOT_FOUND } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
+import ArticleUserFlagModel from "../article-user-flag/article-user-flag.model";
 import FlagModel from "./flag.model";
 
 export const FlagService = {
@@ -87,6 +88,13 @@ export const FlagService = {
         });
 
         appAssert(flag, NOT_FOUND, "Flag not found");
+
+        const isUsed = await ArticleUserFlagModel.exists({
+            flagId,
+            userId,
+        });
+
+        appAssert(!isUsed, CONFLICT, "Cannot delete flag that is used to mark articles");
 
         await FlagModel.findByIdAndDelete(flagId);
         return;
