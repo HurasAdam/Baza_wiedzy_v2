@@ -4,9 +4,32 @@ import { WorkspaceRoleDocument } from "../workspace-role/workspace-role.model";
 export interface WorkspaceMemberDocument extends Document {
     userId: mongoose.Types.ObjectId;
     workspaceId: mongoose.Types.ObjectId;
+    permissions: {};
     role: WorkspaceRoleDocument;
     joinedAt: Date;
 }
+
+export interface WorkspacePermissions {
+    addFolder: boolean;
+    editFolder: boolean;
+    deleteFolder: boolean;
+    addArticle: boolean;
+    editArticle: boolean;
+    deleteArticle: boolean;
+    addMember: boolean;
+    removeMember: boolean;
+}
+
+const defaultPermissions: WorkspacePermissions = {
+    addFolder: false,
+    editFolder: false,
+    deleteFolder: false,
+    addArticle: false,
+    editArticle: false,
+    deleteArticle: false,
+    addMember: false,
+    removeMember: false,
+};
 
 const memberSchema = new Schema<WorkspaceMemberDocument>(
     {
@@ -19,6 +42,10 @@ const memberSchema = new Schema<WorkspaceMemberDocument>(
             type: Schema.Types.ObjectId,
             ref: "Workspace",
             required: true,
+        },
+        permissions: {
+            type: Object,
+            default: defaultPermissions,
         },
         role: {
             type: Schema.Types.ObjectId,
