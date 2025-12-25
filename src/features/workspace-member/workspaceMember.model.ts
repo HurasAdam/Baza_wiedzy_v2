@@ -16,6 +16,7 @@ export interface WorkspacePermissions {
     deleteArticle: boolean;
     addMember: boolean;
     removeMember: boolean;
+    editWorkspace: boolean;
 }
 
 const defaultPermissions: WorkspacePermissions = {
@@ -27,6 +28,7 @@ const defaultPermissions: WorkspacePermissions = {
     deleteArticle: false,
     addMember: false,
     removeMember: false,
+    editWorkspace: false,
 };
 
 const memberSchema = new Schema<WorkspaceMemberDocument>(

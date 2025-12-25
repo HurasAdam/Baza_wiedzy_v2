@@ -44,4 +44,15 @@ export const WorkspaceMemberService = {
         await member.deleteOne();
         return;
     },
+    async findCurrentWorkspaceMember(userId: string, workspaceId: string) {
+        const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).lean();
+        appAssert(member, NOT_FOUND, "User is not a member of this workspace");
+
+        const workspace = await WorkspaceModel.findById(workspaceId).lean();
+        appAssert(workspace, NOT_FOUND, "Workspace not found");
+
+        const isOwner = workspace.owner.toString() === userId.toString();
+
+        return { ...member, isOwner };
+    },
 };
