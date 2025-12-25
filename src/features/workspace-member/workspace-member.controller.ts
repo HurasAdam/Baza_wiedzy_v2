@@ -17,4 +17,11 @@ export const WorkspaceMemberController = (
 
         return res.status(OK).json({ message: "Permissions updated" });
     }),
+
+    findCurrentWorkspaceMember: catchErrors(async ({ params, userId }, res) => {
+        const { workspaceId } = objectIdParam("workspaceId").parse(params);
+
+        const serviceResponse = await workspaceMemberService.findCurrentWorkspaceMember(userId, workspaceId);
+        return res.status(OK).json(serviceResponse);
+    }),
 });

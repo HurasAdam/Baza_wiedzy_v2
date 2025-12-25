@@ -21,6 +21,7 @@ export const WorkspaceService = {
             deleteArticle: true,
             addMember: true,
             removeMember: true,
+            editWorkspace: true,
         };
 
         const workspaceMember = new WorkspaceMemberModel({
@@ -72,8 +73,6 @@ export const WorkspaceService = {
     async updateOne(userId: string, workspaceId: string, payload: CreateWorkspaceDto) {
         const workspace = await WorkspaceModel.findById(workspaceId);
         appAssert(workspace, NOT_FOUND, "Workspace not found");
-
-        const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
 
         const isOwner = workspace.owner.toString() === userId;
 
