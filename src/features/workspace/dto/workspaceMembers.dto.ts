@@ -4,7 +4,7 @@ export const workspaceMembersDto = (members) => {
         name: m.userId?.name ?? null,
         surname: m.userId?.surname ?? null,
         email: m.userId?.email ?? null,
-        role: m.role?.name ?? null,
+        isOwner: m.isOwner ?? false,
         permissions: m.permissions ?? {
             addFolder: false,
             editFolder: false,

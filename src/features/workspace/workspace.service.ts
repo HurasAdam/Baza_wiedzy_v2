@@ -1,33 +1,37 @@
 import { CONFLICT, FORBIDDEN, NOT_FOUND } from "../../constants/http";
-import { WorkspaceRoles } from "../../enums/workspaceRole.enum";
 import appAssert from "../../utils/appAssert";
-import WorkspaceMemberModel from "../workspace-member/workspaceMember.model";
+import WorkspaceMemberModel, { WorkspacePermissions } from "../workspace-member/workspaceMember.model";
 import WorkspaceRoleModel from "../workspace-role/workspace-role.model";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import WorkspaceModel from "./workspace.model";
 
 export const WorkspaceService = {
     async create(userId: string, payload: CreateWorkspaceDto) {
-        const onwerRole = await WorkspaceRoleModel.findOne({ name: WorkspaceRoles.OWNER });
-
-        if (!onwerRole) {
-            throw new Error("Owner role not found");
-        }
         const workspace = await WorkspaceModel.create({
             ...payload,
             owner: userId,
         });
 
+        const allPermissions: WorkspacePermissions = {
+            addFolder: true,
+            editFolder: true,
+            deleteFolder: true,
+            addArticle: true,
+            editArticle: true,
+            deleteArticle: true,
+            addMember: true,
+            removeMember: true,
+        };
+
         const workspaceMember = new WorkspaceMemberModel({
             userId,
             workspaceId: workspace._id,
-            role: onwerRole._id,
             joinedAt: new Date(),
+            permissions: allPermissions,
         });
 
         await workspaceMember.save();
-        // TODO -- extend User model with currentWorkspace field --
-        // user.currentWorkspace = workspace._id as mongoose.Types.ObjectId;
+
         return workspace;
     },
     async find(userId: string) {
@@ -49,18 +53,21 @@ export const WorkspaceService = {
         return workspace;
     },
     async findMembers(workspaceId: string) {
+        const workspace = await WorkspaceModel.findById(workspaceId).lean();
+        appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
+
         const members = await WorkspaceMemberModel.find({ workspaceId })
             .populate({
                 path: "userId",
                 select: "name surname email",
             })
-            .populate({
-                path: "role",
-                select: "name",
-            })
+
             .lean();
 
-        return members;
+        return members.map((member) => ({
+            ...member,
+            isOwner: member.userId._id.toString() === workspace.owner.toString(),
+        }));
     },
     async updateOne(userId: string, workspaceId: string, payload: CreateWorkspaceDto) {
         const workspace = await WorkspaceModel.findById(workspaceId);
@@ -69,9 +76,8 @@ export const WorkspaceService = {
         const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
 
         const isOwner = workspace.owner.toString() === userId;
-        const isAdmin = member?.role?.name === WorkspaceRoles.OWNER;
 
-        appAssert(isOwner || isAdmin, FORBIDDEN, "You do not have sufficient permissions to perform this action");
+        appAssert(isOwner, FORBIDDEN, "You do not have sufficient permissions to perform this action");
 
         Object.assign(workspace, payload);
         await workspace.save();
@@ -109,8 +115,8 @@ export const WorkspaceService = {
 
         const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
         const isOwner = workspace.owner.toString() === userId;
-        const isAdmin = member?.role?.name === "OWNER";
-        appAssert(isOwner || isAdmin, FORBIDDEN, "Nie masz uprawnień do usunięcia użytkownika z tej kolekcji");
+
+        appAssert(isOwner, FORBIDDEN, "Nie masz uprawnień do usunięcia użytkownika z tej kolekcji");
 
         const memberToRemove = await WorkspaceMemberModel.findById(memberId);
         appAssert(
@@ -119,7 +125,6 @@ export const WorkspaceService = {
             "Użytkownik nie należy do wybranej kolekcji"
         );
 
-        appAssert(memberToRemove.role.name !== "OWNER", FORBIDDEN, "Brak uprawnień do wykonania tej operacji");
         appAssert(memberToRemove.userId.toString() !== userId, FORBIDDEN, "Brak uprawnień do wykonania tej operacji");
 
         await WorkspaceMemberModel.deleteOne({ _id: memberId });

@@ -1,11 +1,9 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { WorkspaceRoleDocument } from "../workspace-role/workspace-role.model";
 
 export interface WorkspaceMemberDocument extends Document {
     userId: mongoose.Types.ObjectId;
     workspaceId: mongoose.Types.ObjectId;
     permissions: {};
-    role: WorkspaceRoleDocument;
     joinedAt: Date;
 }
 
@@ -47,11 +45,7 @@ const memberSchema = new Schema<WorkspaceMemberDocument>(
             type: Object,
             default: defaultPermissions,
         },
-        role: {
-            type: Schema.Types.ObjectId,
-            ref: "WorkspaceRole",
-            required: true,
-        },
+
         joinedAt: {
             type: Date,
             default: Date.now,
