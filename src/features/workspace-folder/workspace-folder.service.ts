@@ -90,8 +90,8 @@ export const WorkspaceFolderService = {
 
         const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
         const isOwner = workspace.owner.toString() === userId;
-        const isAdmin = member?.role?.name === "OWNER";
-        appAssert(isOwner || isAdmin, FORBIDDEN, "Brak uprawnień do edycji folderu");
+
+        appAssert(isOwner, FORBIDDEN, "Brak uprawnień do edycji folderu");
 
         const folder = await WorkspaceFolderModel.findOne({ _id: folderId, workspaceId });
 
@@ -117,8 +117,8 @@ export const WorkspaceFolderService = {
 
         const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
         const isOwner = workspace.owner.toString() === userId;
-        const isAdmin = member?.role?.name === "OWNER";
-        appAssert(isOwner || isAdmin, FORBIDDEN, "Brak uprawnień do usunięcia folderu");
+
+        appAssert(isOwner, FORBIDDEN, "Brak uprawnień do usunięcia folderu");
 
         const folder = await WorkspaceFolderModel.findOne({ _id: folderId, workspaceId });
         appAssert(folder, NOT_FOUND, "Folder nie istnieje");

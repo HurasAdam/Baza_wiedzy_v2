@@ -34,6 +34,7 @@ import { tagRoutes } from "./features/tag/tag.route";
 import { userRoutes } from "./features/user/user.route";
 import { workspaceArticleRoutes } from "./features/workspace-article/workspace-article.route";
 import { workspaceFolderRoutes } from "./features/workspace-folder/workspace-folder.routes";
+import { workspaceMemberRoutes } from "./features/workspace-member/workspace-member.routes";
 import { workspaceRoutes } from "./features/workspace/workspace.route";
 import authenticate from "./middleware/authenticate";
 import errorHandler from "./middleware/errorHandlers";
@@ -107,6 +108,7 @@ app.use("/attachments", authenticate, attachmentRoutes);
 app.use("/workspaces", authenticate, workspaceRoutes);
 app.use("/workspace-folders", authenticate, workspaceFolderRoutes);
 app.use("/workspace-articles", authenticate, workspaceArticleRoutes);
+app.use("/workspace-members", authenticate, workspaceMemberRoutes);
 
 const uploadsPath = path.resolve("/app/uploads");
 app.use(
