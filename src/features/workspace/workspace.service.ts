@@ -116,7 +116,6 @@ export const WorkspaceService = {
         const workspace = await WorkspaceModel.findById(workspaceId);
         appAssert(workspace, NOT_FOUND, "Kolekcja nie istnieje");
 
-        const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
         const isOwner = workspace.owner.toString() === userId;
 
         appAssert(isOwner, FORBIDDEN, "Nie masz uprawnień do usunięcia użytkownika z tej kolekcji");
