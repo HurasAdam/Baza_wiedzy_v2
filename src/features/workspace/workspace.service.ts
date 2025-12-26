@@ -51,6 +51,10 @@ export const WorkspaceService = {
 
         appAssert(isMember || isOwner, FORBIDDEN, "Nie masz dostępu do tego workspace");
 
+        if (!isOwner) {
+            workspace.inviteCode = "";
+        }
+
         return workspace;
     },
     async findMembers(workspaceId: string) {
