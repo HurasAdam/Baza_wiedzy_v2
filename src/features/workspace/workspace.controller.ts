@@ -47,4 +47,10 @@ export const WorkspaceController = (workspaceService = WorkspaceService) => ({
         await workspaceService.removeMember(userId, workspaceId, memberId);
         return res.status(NO_CONTENT).send();
     }),
+
+    deleteWorkspace: catchErrors(async ({ userId, params }, res) => {
+        const { workspaceId } = objectIdParam("workspaceId").parse(params);
+        await workspaceService.deleteWorkspace(userId, workspaceId);
+        return res.sendStatus(NO_CONTENT);
+    }),
 });

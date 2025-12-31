@@ -8,7 +8,10 @@ const workspaceController = WorkspaceController();
 
 workspaceRoutes.get("/", workspaceController.find);
 workspaceRoutes.get("/:workspaceId", workspaceController.findOne);
+
+workspaceRoutes.delete("/:workspaceId", workspaceController.deleteWorkspace);
 workspaceRoutes.get("/:workspaceId/members", workspaceController.findMembers);
+
 workspaceRoutes.delete("/:workspaceId/members/:memberId", workspaceController.removeMember);
 workspaceRoutes.post("/", workspaceController.create);
 workspaceRoutes.patch("/:workspaceId", workspaceController.updateOne);
