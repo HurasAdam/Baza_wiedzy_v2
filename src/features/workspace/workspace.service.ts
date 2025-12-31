@@ -1,5 +1,8 @@
 import { CONFLICT, FORBIDDEN, NOT_FOUND } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
+import { WorkspaceResponseVariantModel } from "../workspace-article/response-variant/workspace-response-variant.model";
+import { WorkspaceArticleModel } from "../workspace-article/workspace-article.model";
+import { WorkspaceFolderModel } from "../workspace-folder/workspace-folder.model";
 import WorkspaceMemberModel, { WorkspacePermissions } from "../workspace-member/workspaceMember.model";
 import WorkspaceRoleModel from "../workspace-role/workspace-role.model";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
@@ -132,5 +135,32 @@ export const WorkspaceService = {
         await WorkspaceMemberModel.deleteOne({ _id: memberId });
 
         return;
+    },
+
+    async deleteWorkspace(userId: string, workspaceId: string) {
+        const workspace = await WorkspaceModel.findById(workspaceId);
+        appAssert(workspace, NOT_FOUND, "Kolekcja nie istnieje");
+
+        const isOwner = workspace.owner.toString() === userId;
+        appAssert(isOwner, FORBIDDEN, "Nie masz uprawnień do usunięcia tej kolekcji");
+
+        await WorkspaceMemberModel.deleteMany({ workspaceId });
+
+        const folders = await WorkspaceFolderModel.find({ workspaceId }).select("_id");
+
+        const folderIds = folders.map((f) => f._id);
+
+        const articles = await WorkspaceArticleModel.find({ folderId: { $in: folderIds } }).select("_id");
+        const articleIds = articles.map((a) => a._id);
+
+        await WorkspaceResponseVariantModel.deleteMany({ articleId: { $in: articleIds } });
+
+        await WorkspaceArticleModel.deleteMany({ _id: { $in: articleIds } });
+
+        await WorkspaceFolderModel.deleteMany({ _id: { $in: folderIds } });
+
+        await WorkspaceModel.deleteOne({ _id: workspaceId });
+
+        return true;
     },
 };
