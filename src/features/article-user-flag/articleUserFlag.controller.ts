@@ -10,7 +10,8 @@ export const ArticleUserFlagController = (articleUserFlagService = ArticleUserFl
     }),
 
     findOne: catchErrors(async ({ userId, params }, res) => {
-        const { articleId } = params;
+        const { articleId } = objectIdParam("articleId").parse(params);
+
         const serviceResponse = await articleUserFlagService.findOne(articleId, userId);
         return res.status(OK).json(serviceResponse);
     }),

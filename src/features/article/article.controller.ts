@@ -2,6 +2,7 @@ import { CREATED, NO_CONTENT, OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
 import { ArticleService } from "./article.service";
 
+import { objectIdParam } from "../../common/dto/params-id.dto";
 import { createArticleDto } from "./dto/create-article.dto";
 import { searchArticlesDto } from "./dto/search-articles.dto";
 import { searchFlaggedArticlesDto } from "./dto/search-flagged-articles.dto";
@@ -35,7 +36,9 @@ export const ArticleController = (articleService = ArticleService) => ({
     }),
 
     findOne: catchErrors(async ({ userId, params }, res) => {
-        const article = await articleService.findOne(userId, params.id);
+        const { id } = objectIdParam("id").parse(params);
+
+        const article = await articleService.findOne(userId, id);
         return res.status(OK).json(article);
     }),
     findByUser: catchErrors(async ({ params, query }, res) => {
