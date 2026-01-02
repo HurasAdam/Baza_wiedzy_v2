@@ -1,10 +1,10 @@
 import { CONFLICT, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
-import TagModel from "./tag.model";
 import ArticleModel from "../article/article.model";
 import { CreateTagDto } from "./dto/create-tag.dto";
 import { SearchTagDto } from "./dto/search-tag.dto";
 import { UpdateTagDto } from "./dto/update-tag.dto";
+import TagModel from "./tag.model";
 
 export const TagService = {
     async create(userId: string, payload: CreateTagDto) {
@@ -12,7 +12,6 @@ export const TagService = {
 
         const tag = await TagModel.exists({ name: payload.name });
 
-        console.log(tag, "ISTNIEJACY TAG");
         appAssert(!tag, CONFLICT, "Tag already exists");
 
         const createdTag = await TagModel.create({

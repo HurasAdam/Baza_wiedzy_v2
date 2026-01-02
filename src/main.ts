@@ -36,6 +36,7 @@ import { workspaceArticleRoutes } from "./features/workspace-article/workspace-a
 import { workspaceFolderRoutes } from "./features/workspace-folder/workspace-folder.routes";
 import { workspaceMemberRoutes } from "./features/workspace-member/workspace-member.routes";
 import { workspaceRoutes } from "./features/workspace/workspace.route";
+import { startArticleReviewJob } from "./jobs/article-review.job";
 import authenticate from "./middleware/authenticate";
 import errorHandler from "./middleware/errorHandlers";
 
@@ -130,6 +131,7 @@ app.use(errorHandler);
 
 connectDB(() => {
     server.listen(PORT, () => {
+        startArticleReviewJob();
         console.log(`Server is running on port ${PORT} in ${NODE_ENV} environment`);
     });
 });

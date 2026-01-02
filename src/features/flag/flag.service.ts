@@ -61,7 +61,7 @@ export const FlagService = {
             _id: flagId,
             createdBy: userId,
         });
-        console.log("FLAG", flag);
+
         appAssert(flag, NOT_FOUND, "Flag not found");
 
         if (payload.name) {

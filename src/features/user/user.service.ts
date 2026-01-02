@@ -52,8 +52,6 @@ export const UserService = {
         const user = await UserModel.findById(userId);
         appAssert(user, NOT_FOUND, "User not found");
 
-        console.log(payload, "DANE");
-
         user.name = payload.name || user.name;
         user.surname = payload.surname || user.surname;
         await user.save();
