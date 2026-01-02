@@ -14,7 +14,6 @@ export const ConversationReportController = (conversationReportService = Convers
     }),
 
     find: catchErrors(async ({ query }, res) => {
-        console.log(query, "QUERY TOPIC");
         const payload = topicReportsFilterDto.parse(query);
         const result = await conversationReportService.find(payload);
 

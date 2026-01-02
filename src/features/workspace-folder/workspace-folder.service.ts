@@ -95,7 +95,6 @@ export const WorkspaceFolderService = {
 
         const folder = await WorkspaceFolderModel.findOne({ _id: folderId, workspaceId });
 
-        console.log("FOLDER", folder);
         appAssert(folder, NOT_FOUND, "Folder nie istnieje");
 
         const existingFolder = await WorkspaceFolderModel.findOne({

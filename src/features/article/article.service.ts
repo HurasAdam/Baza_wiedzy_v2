@@ -224,7 +224,6 @@ export const ArticleService = {
             ])
             .where({ isTrashed: findTrashed });
 
-        console.log("ZNALEZIONY", article);
         appAssert(article, NOT_FOUND, "Article not found");
 
         const responseVariants = await ResponseVariantModel.find({ articleId: article._id }).lean();
@@ -885,5 +884,43 @@ export const ArticleService = {
         }
 
         return updatedArticle.toObject();
+    },
+    // CRON JOB
+    async expireApprovedArticles() {
+        const ONE_YEAR_AGO = new Date();
+        ONE_YEAR_AGO.setFullYear(ONE_YEAR_AGO.getFullYear() - 1);
+
+        const expiredArticles = await ArticleModel.find({
+            status: "approved",
+            lastVerifiedAt: { $lte: ONE_YEAR_AGO },
+            isTrashed: false,
+        });
+
+        for (const article of expiredArticles) {
+            const before = article.toObject();
+
+            article.status = "pending";
+
+            await article.save();
+
+            await ArticleHistoryService.saveChanges({
+                articleId: article._id.toString(),
+                before,
+                after: article.toObject(),
+                isSystem: true,
+                eventType: ArticleEventType.Expired,
+                statusChange: { from: "approved", to: "pending" },
+            });
+
+            await NotificationService.notifyArticleFollowers({
+                articleId: article._id.toString(),
+                title: "Artykuł wymaga ponownej weryfikacji",
+                message: `Artykuł "${article.title}" utracił ważność i oczekuje na weryfikację.`,
+                link: `/articles/${article._id}`,
+                type: "warning",
+            });
+        }
+
+        return expiredArticles.length;
     },
 };

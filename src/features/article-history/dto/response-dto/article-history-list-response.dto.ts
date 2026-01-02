@@ -5,11 +5,16 @@ import { z } from "zod";
 export const articleHistoryListResponseDto = z.object({
     _id: z.union([z.string(), z.instanceof(Types.ObjectId)]).transform((v) => v.toString()),
     eventType: z.string(),
-    createdBy: z.object({
-        _id: z.union([z.string(), z.instanceof(Types.ObjectId)]).transform((v) => v.toString()),
-        name: z.string(),
-        surname: z.string(),
-    }),
+    createdBy: z
+        .union([
+            z.object({
+                _id: z.union([z.string(), z.instanceof(Types.ObjectId)]).transform((v) => v.toString()),
+                name: z.string(),
+                surname: z.string(),
+            }),
+            z.null(),
+        ])
+        .transform((val) => val ?? { _id: "system", name: "Automatyczna zmiana statusu", surname: "" }),
     statusChange: z
         .object({
             from: z.enum(["pending", "approved", "rejected", "draft"]),

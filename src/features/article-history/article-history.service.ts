@@ -11,6 +11,7 @@ export enum ArticleEventType {
     Restored = "restored",
     Verified = "verified",
     Unverified = "unverified",
+    Expired = "expired",
     StatusChanged = "statusChanged",
 }
 
@@ -24,7 +25,8 @@ interface SaveChangesParams {
     articleId: string;
     before?: any;
     after: any;
-    userId: string;
+    userId?: string;
+    isSystem?: boolean;
     eventType: ArticleEventType | string;
     statusChange?: {
         from: "pending" | "approved" | "rejected" | "draft";
@@ -33,16 +35,19 @@ interface SaveChangesParams {
 }
 
 export const ArticleHistoryService = {
-    async saveChanges({ articleId, before, after, userId, eventType, statusChange }: SaveChangesParams) {
+    async saveChanges({ articleId, before, after, isSystem, userId, eventType, statusChange }: SaveChangesParams) {
         const changes: Change[] = [];
 
         // fallback dla statusChange
         const finalStatusChange = statusChange ?? { from: before?.status ?? after.status, to: after.status };
 
+        const createdById = userId && !isSystem ? new Types.ObjectId(userId) : undefined;
+
         if (eventType === ArticleEventType.Created) {
             await ArticleHistoryModel.create({
                 articleId: new Types.ObjectId(articleId),
-                createdBy: new Types.ObjectId(userId),
+                createdBy: createdById,
+                isSystem: !!isSystem,
                 eventType,
                 changes: [
                     {
@@ -80,19 +85,20 @@ export const ArticleHistoryService = {
             return;
         }
 
-        if (eventType === ArticleEventType.Unverified) {
+        if (eventType === ArticleEventType.Expired) {
             await ArticleHistoryModel.create({
                 articleId: new Types.ObjectId(articleId),
                 createdBy: new Types.ObjectId(userId),
                 eventType,
                 changes: [
                     {
-                        field: "isVerified",
-                        oldValue: before?.isVerified ?? true,
-                        newValue: false,
+                        field: "status",
+                        oldValue: before?.status,
+                        newValue: after.status,
                     },
                 ],
                 statusChange: finalStatusChange,
+                isSystem: !!isSystem,
                 updatedAt: new Date(),
             });
             return;
@@ -171,7 +177,6 @@ export const ArticleHistoryService = {
             }
         }
 
-        // jeśli nic się realnie nie zmieniło, nie zapisujemy historii
         if (changes.length === 0) return;
 
         await ArticleHistoryModel.create({

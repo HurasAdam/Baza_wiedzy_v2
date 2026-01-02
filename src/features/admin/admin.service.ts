@@ -82,8 +82,6 @@ export const AdminService = {
         const user = await UserModel.findById(id);
         appAssert(user, NOT_FOUND, "User not found");
 
-        console.log(payload, "DANE");
-
         user.name = payload.name || user.name;
         user.surname = payload.surname || user.surname;
         await user.save();
@@ -218,7 +216,6 @@ export const AdminService = {
             return [];
         }
 
-        console.log(query, "USER QUERY");
         const users = await UserModel.find(querydb)
             .select(["-password", "-email", "-verified", "-createdAt", "-updatedAt", "-favourites"])
             .populate({

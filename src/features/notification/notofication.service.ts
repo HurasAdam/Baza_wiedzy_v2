@@ -128,7 +128,6 @@ export const NotificationService = {
         };
     },
     markAsRead: async (userId: string, notificationId: string) => {
-        console.log(notificationId, "ID");
         return NotificationModel.findOneAndUpdate(
             { _id: notificationId, userId },
             { $set: { read: true } },
