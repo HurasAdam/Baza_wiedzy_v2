@@ -26,6 +26,7 @@ import { faqRoutes } from "./features/faq/faq.route";
 import { flagRoutes } from "./features/flag/flag.route";
 import { funnyMessageRoutes } from "./features/funny-message/funny-message.route";
 import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
+import { ReportCommentRoutes } from "./features/IssueReportComment/ReportComment.route";
 import { notificationRoutes } from "./features/notification/notification.route";
 import { productRoutes } from "./features/product/product.route";
 import { projectRoutes } from "./features/project/project.route";
@@ -110,6 +111,7 @@ app.use("/workspaces", authenticate, workspaceRoutes);
 app.use("/workspace-folders", authenticate, workspaceFolderRoutes);
 app.use("/workspace-articles", authenticate, workspaceArticleRoutes);
 app.use("/workspace-members", authenticate, workspaceMemberRoutes);
+app.use("/report-comments", authenticate, ReportCommentRoutes);
 
 const uploadsPath = path.resolve("/app/uploads");
 app.use(
