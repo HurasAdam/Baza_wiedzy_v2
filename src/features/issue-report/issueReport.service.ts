@@ -2,15 +2,19 @@ import { NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import { CreateIssueDto } from "./dto/create-issue.dto";
 import IssueReportModel from "./issue-report.model";
+import { getNextIssueNumber } from "./utils/getNextIssueNumber";
 
 export const IssueReportService = {
     async create(userId: string, payload: CreateIssueDto) {
         // const issueReport = await IssueReportModel.exists({ title: payload.title });
         // appAssert(!issueReport, CONFLICT, "Issue already exists");
 
+        const ticketNumber = await getNextIssueNumber();
+
         const Issue = await IssueReportModel.create({
             ...payload,
             createdBy: userId,
+            ticketNumber,
         });
 
         return { data: Issue, message: "Zgłoszenie zostało wysłane" };

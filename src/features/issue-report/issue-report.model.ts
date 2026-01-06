@@ -2,6 +2,7 @@ import mongoose, { Schema, model } from "mongoose";
 
 const issueReportSchema = new Schema(
     {
+        ticketNumber: { type: String, unique: true, index: true },
         title: { type: String, required: true, trim: true, kMaxLength: 120 },
         type: {
             type: String,
