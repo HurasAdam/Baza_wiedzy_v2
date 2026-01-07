@@ -1,6 +1,7 @@
 import { NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import { CreateIssueDto } from "./dto/create-issue.dto";
+import { UpdateIssueStatusDto } from "./dto/update-issue-status.dto";
 import IssueReportModel from "./issue-report.model";
 import { getNextIssueNumber } from "./utils/getNextIssueNumber";
 
@@ -91,5 +92,15 @@ export const IssueReportService = {
             })
             .sort({ createdAt: -1 });
         return issueReports;
+    },
+
+    async updateStatus(issueReportId: string, payload: UpdateIssueStatusDto) {
+        const issueReport = await IssueReportModel.findById(issueReportId);
+        appAssert(issueReport, NOT_FOUND, "Issue report not found");
+
+        issueReport.status = payload.status;
+        await issueReport.save();
+
+        return { data: issueReport, message: "Status zgłoszenia został zaktualizowany" };
     },
 };
