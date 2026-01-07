@@ -1,9 +1,11 @@
 import { OK } from "@/constants/http";
 import catchErrors from "@/utils/catchErrors";
 
-import { IssueReportService } from "./issueReport.service";
+import { objectIdParam } from "../../common/dto/params-id.dto";
 import { createIssueDto } from "./dto/create-issue.dto";
 import { searchIssuesDto } from "./dto/search-issue.dto";
+import { updateIssueStatusDto } from "./dto/update-issue-status.dto";
+import { IssueReportService } from "./issueReport.service";
 
 export const IssueReportController = (issueReportService = IssueReportService) => ({
     create: catchErrors(async ({ userId, body }, res) => {
@@ -26,5 +28,12 @@ export const IssueReportController = (issueReportService = IssueReportService) =
         const payload = searchIssuesDto.parse(query);
         const myIssueReports = await issueReportService.findMyReports(userId, payload);
         return res.status(OK).json(myIssueReports);
+    }),
+
+    updateStatus: catchErrors(async ({ params, body }, res) => {
+        const { id } = objectIdParam("id").parse(params);
+        const payload = updateIssueStatusDto.parse(body);
+        const updatedReport = await issueReportService.updateStatus(id, payload);
+        return res.status(OK).json(updatedReport);
     }),
 });
