@@ -114,7 +114,6 @@ export const WorkspaceFolderService = {
         const workspace = await WorkspaceModel.findById(workspaceId);
         appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
 
-        const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
         const isOwner = workspace.owner.toString() === userId;
 
         appAssert(isOwner, FORBIDDEN, "Brak uprawnień do usunięcia folderu");
@@ -122,7 +121,6 @@ export const WorkspaceFolderService = {
         const folder = await WorkspaceFolderModel.findOne({ _id: folderId, workspaceId });
         appAssert(folder, NOT_FOUND, "Folder nie istnieje");
 
-        // Sprawdź czy są artykuły w folderze
         const articlesCount = await WorkspaceArticleModel.countDocuments({ folderId });
         appAssert(
             articlesCount === 0,
