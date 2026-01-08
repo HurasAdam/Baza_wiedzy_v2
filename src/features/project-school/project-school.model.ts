@@ -7,6 +7,7 @@ const projectSchoolSchema = new Schema(
         email: { type: String, unique: false, required: true, trim: true, lowercase: true },
         project: { type: Schema.Types.ObjectId, ref: "Project", required: true },
         szId: { type: String, required: true, unique: true },
+        libId: { type: String, required: true, unique: true },
         phone: { type: String, required: true },
     },
 

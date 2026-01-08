@@ -7,6 +7,7 @@ export const createSchoolDto = z.object({
     phone: z.string().min(2),
     // project: z.string(),
     szId: z.string().min(1),
+    libId: z.string().min(1),
 });
 
 export type CreateSchoolDto = z.infer<typeof createSchoolDto>;
