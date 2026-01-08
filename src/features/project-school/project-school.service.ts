@@ -22,6 +22,7 @@ export const ProjectSchoolService = {
             phone: payload.phone.trim(),
             project: projectId,
             szId: payload.szId.trim(),
+            libId: payload.libId.trim(),
         });
     },
 
@@ -70,6 +71,7 @@ export const ProjectSchoolService = {
         existingProjectSchool.email = payload?.email || existingProjectSchool?.email;
         existingProjectSchool.phone = payload?.phone || existingProjectSchool?.phone;
         existingProjectSchool.szId = payload.szId || existingProjectSchool.szId;
+        existingProjectSchool.libId = payload.libId || existingProjectSchool.libId;
 
         await existingProjectSchool.save();
     },
