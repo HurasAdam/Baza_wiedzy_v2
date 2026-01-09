@@ -11,6 +11,11 @@ export const NofitifactionController = (notificationService = NotificationServic
         const serviceResponse = await notificationService.findByUser(userId);
         return res.status(OK).json(serviceResponse);
     }),
+
+    findSummaryByUser: catchErrors(async ({ userId }, res) => {
+        const serviceResponse = await notificationService.findSummaryByUser(userId);
+        return res.status(OK).json(serviceResponse);
+    }),
     markAsRead: catchErrors(async ({ userId, params }, res) => {
         await notificationService.markAsRead(userId, params.id);
         return res.status(CREATED).json({ message: "Notification has been set as readed" });
