@@ -127,6 +127,12 @@ export const NotificationService = {
             unreadCount,
         };
     },
+
+    async findSummaryByUser(userId: string) {
+        const unreadCount = await NotificationModel.countDocuments({ userId, read: false });
+        return { unreadCount };
+    },
+
     markAsRead: async (userId: string, notificationId: string) => {
         return NotificationModel.findOneAndUpdate(
             { _id: notificationId, userId },

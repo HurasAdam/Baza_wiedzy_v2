@@ -9,6 +9,8 @@ const notificationController = NofitifactionController();
 
 // notificationRoutes.post("/", permissionGuard(Permissions.ADD_FAQ), notificationController.create);
 notificationRoutes.get("/", notificationController.findByUser);
+notificationRoutes.get("/summary", notificationController.findSummaryByUser);
+
 notificationRoutes.patch("/:id/read", notificationController.markAsRead);
 notificationRoutes.patch("/read-all", notificationController.markAllAsRead);
 notificationRoutes.delete("/:id", notificationController.deleteNotification);
