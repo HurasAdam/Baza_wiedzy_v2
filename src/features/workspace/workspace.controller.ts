@@ -53,4 +53,10 @@ export const WorkspaceController = (workspaceService = WorkspaceService) => ({
         await workspaceService.deleteWorkspace(userId, workspaceId);
         return res.sendStatus(NO_CONTENT);
     }),
+    changeOwner: catchErrors(async ({ userId, params, body }, res) => {
+        const { workspaceId } = objectIdParam("workspaceId").parse(params);
+        const { memberId } = body;
+        await workspaceService.changeOwner(userId, workspaceId, memberId);
+        return res.sendStatus(NO_CONTENT);
+    }),
 });
