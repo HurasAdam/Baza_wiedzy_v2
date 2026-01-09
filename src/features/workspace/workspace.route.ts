@@ -17,3 +17,4 @@ workspaceRoutes.post("/", workspaceController.create);
 workspaceRoutes.patch("/:workspaceId", workspaceController.updateOne);
 
 workspaceRoutes.post("/join", workspaceController.joinByInviteCode);
+workspaceRoutes.patch("/:workspaceId/owner", workspaceController.changeOwner);

@@ -163,4 +163,20 @@ export const WorkspaceService = {
 
         return true;
     },
+
+    async changeOwner(userId: string, workspaceId: string, memberDocId: string) {
+        const workspace = await WorkspaceModel.findById(workspaceId);
+        appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
+
+        const isOwner = workspace.owner.toString() === userId;
+        appAssert(isOwner, FORBIDDEN, "Nie masz uprawnień do zmiany właściciela");
+
+        const memberDoc = await WorkspaceMemberModel.findById(memberDocId);
+        appAssert(memberDoc, NOT_FOUND, "Wybrany członek nie istnieje");
+
+        appAssert(memberDoc.workspaceId.toString() === workspaceId, FORBIDDEN, "Członek nie należy do tego workspace");
+
+        workspace.owner = memberDoc.userId;
+        await workspace.save();
+    },
 };
