@@ -1,65 +1,347 @@
 // constants/permissions.ts
-
 import { Permissions } from "../enums/role.enum";
 
 export const PERMISSIONS_LIST = [
-    // Artykuły
-    { key: Permissions.ADD_ARTICLE, label: "Dodanie artykułów", category: "Artykuły" },
-    { key: Permissions.EDIT_ARTICLE, label: "Edycja artykułów", category: "Artykuły" },
-    { key: Permissions.VERIFY_ARTICLE, label: "Weryfikacja artykułów", category: "Artykuły" },
-    { key: Permissions.APPROVE_ARTICLE, label: "Zatwierdzanie nowo dodanych artykułów", category: "Artykuły" },
-    { key: Permissions.REJECT_ARTICLE, label: "Zgłaszanie uwag do no dodanych artykułów", category: "Artykuły" },
-    { key: Permissions.ARCHIVE_ARTICLE, label: "Archiwizacja artykułów", category: "Artykuły" },
-    { key: Permissions.RESTORE_ARTICLE, label: "Przywracanie z archiwum", category: "Artykuły" },
-    { key: Permissions.DELETE_ARTICLE, label: "Usuwanie artykułów", category: "Artykuły" },
-    { key: Permissions.VIEW_ARTICLE_HISTORY, label: "Wgląd w historie zmian artykułów", category: "Artykuły" },
+    // ======================
+    // Panel administracyjny
+    // ======================
     {
-        key: Permissions.ACCESS_PENDING_ARTICLES_PANEL,
-        label: "Dostęp do panelu oczekujących artykułów",
-        category: "Artykuły",
+        key: Permissions.ACCESS_ADMIN_PANEL,
+        label: "Dostęp do panelu administracyjnego",
+        category: "Panel administracyjny",
+        description:
+            "Umożliwia wgląd do panelu administracyjnego. Część operacji zarządzania aplikacją jest dostępna wyłącznie z poziomu panelu",
     },
 
+    // ==========
+    // Artykuły
+    // ==========
+    {
+        key: Permissions.ADD_ARTICLE,
+        label: "Dodawanie artykułów",
+        category: "Artykuły",
+        description: "Pozwala tworzyć nowe artykuły w systemie.",
+    },
+    {
+        key: Permissions.EDIT_ARTICLE,
+        label: "Edycja artykułów",
+        category: "Artykuły",
+        description: "Pozwala edytować istniejące artykuły.",
+    },
+    {
+        key: Permissions.ADD_ARTICLE_ATTACHMENT,
+        label: "Dodawanie załączników do artykułów",
+        category: "Artykuły",
+        description: "Umożliwia dodawanie plików i załączników do artykułów.",
+    },
+    {
+        key: Permissions.SET_ARTICLE_PRIORITY,
+        label: "Nadawanie priorytetu artykułom",
+        category: "Artykuły",
+        description: "Pozwala oznaczyć istniejący artykuł jako ważny",
+    },
+    {
+        key: Permissions.VIEW_ARTICLE_HISTORY,
+        label: "Wgląd w historię zmian artykułów",
+        category: "Artykuły",
+        description: "Umożliwia podgląd wszystkich zmian wprowadzonych w artykułach.",
+    },
+    {
+        key: Permissions.ARCHIVE_ARTICLE,
+        label: "Archiwizacja artykułów",
+        category: "Artykuły",
+        description: "Pozwala przenosić artykuły do archiwum.",
+    },
+    {
+        key: Permissions.RESTORE_ARTICLE,
+        label: "Przywracanie artykułów z archiwum",
+        category: "Artykuły",
+        description: "Umożliwia przywracanie artykułów z archiwum do publikacji.",
+    },
+    {
+        key: Permissions.DELETE_ARTICLE,
+        label: "Usuwanie artykułów",
+        category: "Artykuły",
+        description: "Pozwala trwale usuwać artykuły z systemu.",
+    },
+
+    // ======================
+    // Weryfikacja artykułów
+    // ======================
+    {
+        key: Permissions.VERIFY_ARTICLE,
+        label: "Weryfikacja artykułów",
+        category: "Weryfikacja artykułów",
+        description: "Umożliwia sprawdzanie poprawności merytorycznej artykułów.",
+    },
+    {
+        key: Permissions.APPROVE_ARTICLE,
+        label: "Zatwierdzanie artykułów",
+        category: "Weryfikacja artykułów",
+        description: "Pozwala zatwierdzać artykuły do publikacji.",
+    },
+    {
+        key: Permissions.REJECT_ARTICLE,
+        label: "Zgłaszanie uwag do artykułów",
+        category: "Weryfikacja artykułów",
+        description: "Pozwala zgłaszać uwagi i sugestie poprawek dla artykułów.",
+    },
+    {
+        key: Permissions.ACCESS_PENDING_ARTICLES_PANEL,
+        label: "Dostęp do panelu artykułów oczekujących",
+        category: "Weryfikacja artykułów",
+        description: "Umożliwia podgląd artykułów oczekujących na weryfikację lub poprawki.",
+    },
+
+    // ====
     // FAQ
-    { key: Permissions.ADD_FAQ, label: "Dodawanie FAQ", category: "FAQ" },
-    { key: Permissions.EDIT_FAQ, label: "Edycja FAQ", category: "FAQ" },
-    { key: Permissions.SET_DEFAULT_FAQ, label: "Możliwość oznaczenia wybranego FAQ jako domyślnego", category: "FAQ" },
-    { key: Permissions.ADD_FAQ_QUESTION, label: "Dodawanie pytań do FAQ", category: "FAQ" },
-    { key: Permissions.EDIT_FAQ_QUESTION, label: "Edycja pytań do FAQ", category: "FAQ" },
+    // ====
+    {
+        key: Permissions.ADD_FAQ,
+        label: "Tworzenie nowych FAQ",
+        category: "FAQ",
+        description: "Pozwala tworzyć nowe zasoby FAQ.",
+    },
+    {
+        key: Permissions.EDIT_FAQ,
+        label: "Edycja istniejących FAQ",
+        category: "FAQ",
+        description: "Umożliwia edycję zawartości FAQ.",
+    },
+    {
+        key: Permissions.DELETE_FAQ,
+        label: "Usuwanie FAQ",
+        category: "FAQ",
+        description: "Pozwala usuwać całe FAQ z systemu.",
+    },
+    {
+        key: Permissions.SET_DEFAULT_FAQ,
+        label: "Ustawianie domyślnego FAQ",
+        category: "FAQ",
+        description: "Pozwala oznaczać wybrane FAQ jako domyślne.",
+    },
+    {
+        key: Permissions.ADD_FAQ_QUESTION,
+        label: "Dodawanie pytań i odpowiedzi w FAQ",
+        category: "FAQ",
+        description: "Umożliwia dodawanie nowych pytań i odpowiedzi do FAQ.",
+    },
+    {
+        key: Permissions.EDIT_FAQ_QUESTION,
+        label: "Edycja pytań i odpowiedzi w FAQ",
+        category: "FAQ",
+        description: "Pozwala edytować istniejące pytania i odpowiedzi w FAQ.",
+    },
+    {
+        key: Permissions.DELETE_FAQ_QUESTION,
+        label: "Usuwanie pytań i odpowiedzi w FAQ",
+        category: "FAQ",
+        description: "Pozwala usuwać wybrane pytania i odpowiedzi w FAQ.",
+    },
 
+    // =======================
+    // Statystyki użytkowników
+    // =======================
+    {
+        key: Permissions.VIEW_USER_STATS,
+        label: "Wgląd w ogólne statystyki użytkowników",
+        category: "Statystyki użytkowników",
+        description: "Pozwala podglądać ogólne statystyki aktywności użytkowników.",
+    },
+    {
+        key: Permissions.VIEW_USER_STATS_DETAILS,
+        label: "Wgląd w szczegółowe statystyki użytkowników",
+        category: "Statystyki użytkowników",
+        description: "Umożliwia podgląd szczegółowych danych i raportów dla użytkowników.",
+    },
+
+    // ===========
     // Zgłoszenia
-    { key: Permissions.SEND_REPORT, label: "Zgłaszanie błędów i propozycji", category: "Zgłoszenia" },
+    // ===========
+    {
+        key: Permissions.SEND_REPORT,
+        label: "Tworzenie zgłoszeń",
+        category: "Zgłoszenia",
+        description: "Pozwala tworzyć nowe zgłoszenia wewnętrzne.",
+    },
+    {
+        key: Permissions.ADD_REPORT_COMMENT,
+        label: "Dodawanie komentarzy do zgłoszeń",
+        category: "Zgłoszenia",
+        description: "Umożliwia dodawanie komentarzy i notatek do istniejących zgłoszeń.",
+    },
+    {
+        key: Permissions.MANAGE_REPORT_STATUS,
+        label: "Zarządzanie statusem zgłoszeń",
+        category: "Zgłoszenia",
+        description: "Pozwala zmieniać status zgłoszeń (otwarte, w trakcie, zamknięte).",
+    },
 
+    // =====
     // Tagi
-    { key: Permissions.ADD_TAG, label: "Dodawanie tagów", category: "Tagi" },
-    { key: Permissions.EDIT_TAG, label: "Edycja tagów", category: "Tagi" },
-    { key: Permissions.DELETE_TAG, label: "Usuwanie tagów", category: "Tagi" },
+    // =====
+    {
+        key: Permissions.ADD_TAG,
+        label: "Dodawanie tagów",
+        category: "Tagi",
+        description: "Pozwala dodawać nowe tagi do artykułów i zasobów.",
+    },
+    {
+        key: Permissions.EDIT_TAG,
+        label: "Edycja tagów",
+        category: "Tagi",
+        description: "Umożliwia edycję istniejących tagów.",
+    },
+    {
+        key: Permissions.DELETE_TAG,
+        label: "Usuwanie tagów",
+        category: "Tagi",
+        description: "Pozwala usuwać tagi z systemu.",
+    },
 
-    // Produkty
-    { key: Permissions.ADD_PRODUCT, label: "Dodanie produktów", category: "Produkty" },
-    { key: Permissions.EDIT_PRODUCT, label: "Edycja produktów", category: "Produkty" },
-    { key: Permissions.DELETE_PRODUCT, label: "Usuwanie produktów", category: "Produkty" },
+    // =====================
+    // Produkty i kategorie
+    // =====================
+    {
+        key: Permissions.ADD_PRODUCT,
+        label: "Dodawanie produktów",
+        category: "Produkty",
+        description: "Pozwala dodawać nowe produkty do katalogu.",
+    },
+    {
+        key: Permissions.EDIT_PRODUCT,
+        label: "Edycja produktów",
+        category: "Produkty",
+        description: "Umożliwia edycję istniejących produktów.",
+    },
+    {
+        key: Permissions.DELETE_PRODUCT,
+        label: "Usuwanie produktów",
+        category: "Produkty",
+        description: "Pozwala usuwać produkty z katalogu.",
+    },
+    {
+        key: Permissions.ADD_CATEGORY,
+        label: "Dodawanie kategorii",
+        category: "Kategorie",
+        description: "Pozwala tworzyć nowe kategorie produktów.",
+    },
+    {
+        key: Permissions.EDIT_CATEGORY,
+        label: "Edycja kategorii",
+        category: "Kategorie",
+        description: "Umożliwia edycję istniejących kategorii.",
+    },
+    {
+        key: Permissions.DELETE_CATEGORY,
+        label: "Usuwanie kategorii",
+        category: "Kategorie",
+        description: "Pozwala usuwać kategorie z katalogu.",
+    },
 
-    // Kategorie
-    { key: Permissions.ADD_CATEGORY, label: "Dodawanie kategorii", category: "Kategorie" },
-    { key: Permissions.EDIT_CATEGORY, label: "Edycja kategorii", category: "Kategorie" },
-    { key: Permissions.DELETE_CATEGORY, label: "Usuwanie kategorii", category: "Kategorie" },
-
+    // ============
     // Projekty JST
-    { key: Permissions.ADD_JST_PROJECT, label: "Dodawanie projektów JST", category: "Projekty JST" },
-    { key: Permissions.EDIT_JST_PROJECT, label: "Edycja projektów JST", category: "Projekty JST" },
-    { key: Permissions.ADD_JST_SCHOOL, label: "Dodawanie jednostek JST", category: "Projekty JST" },
-    { key: Permissions.EDIT_JST_SCHOOL, label: "Edycja jednostek JST", category: "Projekty JST" },
+    // ============
+    {
+        key: Permissions.ADD_JST_PROJECT,
+        label: "Dodawanie projektów JST",
+        category: "Projekty JST",
+        description: "Pozwala tworzyć nowe projekty JST.",
+    },
+    {
+        key: Permissions.EDIT_JST_PROJECT,
+        label: "Edycja projektów JST",
+        category: "Projekty JST",
+        description: "Umożliwia edycję istniejących projektów JST.",
+    },
+    {
+        key: Permissions.DELETE_JST_PROJECT,
+        label: "Usuwanie projektów JST",
+        category: "Projekty JST",
+        description: "Pozwala usuwać projekty JST.",
+    },
+    {
+        key: Permissions.ADD_JST_SCHOOL,
+        label: "Dodawanie szkół w projektach JST",
+        category: "Projekty JST",
+        description: "Pozwala dodawać nowe jednostki szkół w projektach JST.",
+    },
+    {
+        key: Permissions.EDIT_JST_SCHOOL,
+        label: "Edycja szkół w projektach JST",
+        category: "Projekty JST",
+        description: "Umożliwia edycję istniejących jednostek szkół.",
+    },
+    {
+        key: Permissions.DELETE_JST_SCHOOL,
+        label: "Usuwanie szkół w projektach JST",
+        category: "Projekty JST",
+        description: "Pozwala usuwać jednostki szkół w projektach JST.",
+    },
 
+    // ===============
     // Tematy rozmowy
-    { key: Permissions.ADD_TOPIC, label: "Dodawanie tematów rozów", category: "Tematy rozmowy" },
-    { key: Permissions.EDIT_TOPIC, label: "Edycja tematów rozmów", category: "Tematy rozmowy" },
-    { key: Permissions.DELETE_TOPIC, label: "Usuwanie tematów rozmów", category: "Tematy rozmowy" },
-    { key: Permissions.READ_ONLY, label: "Tylko do odczytu", category: "Tematy rozmowy" },
+    // ===============
+    {
+        key: Permissions.ADD_TOPIC,
+        label: "Dodawanie tematów rozmów",
+        category: "Tematy rozmowy",
+        description: "Pozwala tworzyć nowe tematy rozmów.",
+    },
+    {
+        key: Permissions.EDIT_TOPIC,
+        label: "Edycja tematów rozmów",
+        category: "Tematy rozmowy",
+        description: "Umożliwia edycję istniejących tematów rozmów.",
+    },
+    {
+        key: Permissions.DELETE_TOPIC,
+        label: "Usuwanie tematów rozmów",
+        category: "Tematy rozmowy",
+        description: "Pozwala usuwać tematy rozmów.",
+    },
+    {
+        key: Permissions.READ_ONLY,
+        label: "Dostęp tylko do odczytu",
+        category: "Tematy rozmowy",
+        description: "Pozwala wyłącznie przeglądać tematy rozmów bez możliwości edycji.",
+    },
 
-    { key: Permissions.ADD_FUN_MESSAGE, label: "Dodawanie zabawnych wiadomości", category: "Zabawne wiadomości" },
-    { key: Permissions.EDIT_FUN_MESSAGE, label: "Edycja zabawnych wiadomości", category: "Zabawne wiadomości" },
-    { key: Permissions.DELETE_FUN_MESSAGE, label: "Usuwanie zabaawnych wiadomości", category: "Zabawne wiadomości" },
+    // ==========
+    // Kolekcje
+    // ==========
+    {
+        key: Permissions.ADD_COLLECTION,
+        label: "Tworzenie własnych kolekcji",
+        category: "Kolekcje",
+        description: "Pozwala tworzyć nowe kolekcje użytkowników.",
+    },
+    {
+        key: Permissions.JOIN_COLLECTION,
+        label: "Dołączanie do kolekcji",
+        category: "Kolekcje",
+        description: "Umożliwia dołączanie do istniejących kolekcji.",
+    },
 
-    // Admin Panel
-    { key: Permissions.ACCESS_ADMIN_PANEL, label: "Dostęp do panelu admina", category: "Admin panel" },
+    // ====================
+    // Zabawne wiadomości
+    // ====================
+    {
+        key: Permissions.ADD_FUN_MESSAGE,
+        label: "Dodawanie zabawnych wiadomości",
+        category: "Zabawne wiadomości",
+        description: "Pozwala dodawać nowe wiadomości w sekcji zabawnej.",
+    },
+    {
+        key: Permissions.EDIT_FUN_MESSAGE,
+        label: "Edycja zabawnych wiadomości",
+        category: "Zabawne wiadomości",
+        description: "Umożliwia edycję istniejących wiadomości w sekcji zabawnej.",
+    },
+    {
+        key: Permissions.DELETE_FUN_MESSAGE,
+        label: "Usuwanie zabawnych wiadomości",
+        category: "Zabawne wiadomości",
+        description: "Pozwala usuwać wiadomości w sekcji zabawnej.",
+    },
 ];
