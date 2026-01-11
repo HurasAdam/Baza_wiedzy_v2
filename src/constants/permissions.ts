@@ -248,13 +248,14 @@ export const PERMISSIONS_LIST = [
         key: Permissions.EDIT_JST_PROJECT,
         label: "Edycja projektów JST",
         category: "Projekty JST",
-        description: "Umożliwia edycję istniejących projektów JST.",
+        description:
+            "Umożliwia edycję istniejących projektów JST (dostępne wyłącznie z poziomu panelu administratora).",
     },
     {
         key: Permissions.DELETE_JST_PROJECT,
         label: "Usuwanie projektów JST",
         category: "Projekty JST",
-        description: "Pozwala usuwać projekty JST.",
+        description: "Pozwala usuwać projekty JST (dostępne wyłącznie z poziomu panelu administratora).",
     },
     {
         key: Permissions.ADD_JST_SCHOOL,
@@ -266,13 +267,15 @@ export const PERMISSIONS_LIST = [
         key: Permissions.EDIT_JST_SCHOOL,
         label: "Edycja szkół w projektach JST",
         category: "Projekty JST",
-        description: "Umożliwia edycję istniejących jednostek szkół.",
+        description:
+            "Umożliwia edycję istniejących jednostek szkół (dostępne wyłącznie z poziomu panelu administratora).",
     },
     {
         key: Permissions.DELETE_JST_SCHOOL,
         label: "Usuwanie szkół w projektach JST",
         category: "Projekty JST",
-        description: "Pozwala usuwać jednostki szkół w projektach JST.",
+        description:
+            "Pozwala usuwać jednostki szkół w projektach JST (dostępne wyłącznie z poziomu panelu administratora).",
     },
 
     // ===============
@@ -288,13 +291,14 @@ export const PERMISSIONS_LIST = [
         key: Permissions.EDIT_TOPIC,
         label: "Edycja tematów rozmów",
         category: "Tematy rozmowy",
-        description: "Umożliwia edycję istniejących tematów rozmów.",
+        description:
+            "Umożliwia edycję istniejących tematów rozmów (dostępne wyłącznie z poziomu panelu administratora).",
     },
     {
         key: Permissions.DELETE_TOPIC,
         label: "Usuwanie tematów rozmów",
         category: "Tematy rozmowy",
-        description: "Pozwala usuwać tematy rozmów.",
+        description: "Pozwala usuwać tematy rozmów (dostępne wyłącznie z poziomu panelu administratora).",
     },
     {
         key: Permissions.READ_ONLY,
@@ -326,18 +330,20 @@ export const PERMISSIONS_LIST = [
         key: Permissions.ADD_FUN_MESSAGE,
         label: "Dodawanie zabawnych wiadomości",
         category: "Zabawne wiadomości",
-        description: "Pozwala dodawać nowe wiadomości w sekcji zabawnej.",
+        description: "Pozwala dodawać nowe wiadomości w sekcji zabawnych wiadomości od użytkowników",
     },
     {
         key: Permissions.EDIT_FUN_MESSAGE,
         label: "Edycja zabawnych wiadomości",
         category: "Zabawne wiadomości",
-        description: "Umożliwia edycję istniejących wiadomości w sekcji zabawnej.",
+        description:
+            "Umożliwia edycję wszystkich wiadomości w sekcji zabawnych wiadomości (Domyślnie możliwa jest edycja jedynie własnych wiadomości, uprawnienie to rozszerza możliwość edycji na wszystkie wiadomości w sekcji, niezależnie od jej autora).",
     },
     {
         key: Permissions.DELETE_FUN_MESSAGE,
         label: "Usuwanie zabawnych wiadomości",
         category: "Zabawne wiadomości",
-        description: "Pozwala usuwać wiadomości w sekcji zabawnej.",
+        description:
+            "Umożliwia usuwanie wszystkich wiadomości w sekcji zabawnych wiadomości (Domyślnie możliwe jest usuwanie jedynie własnych wiadomości, uprawnienie to nadaje możliwość usuwania wszystkich dodanych wiadomości, niezależnie od autora",
     },
 ];
