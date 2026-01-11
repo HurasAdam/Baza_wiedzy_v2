@@ -10,7 +10,7 @@ export const PERMISSIONS_LIST = [
         label: "Dostęp do panelu administracyjnego",
         category: "Panel administracyjny",
         description:
-            "Umożliwia wgląd do panelu administracyjnego. Część operacji zarządzania aplikacją jest dostępna wyłącznie z poziomu panelu",
+            "Umożliwia wgląd do panelu administracyjnego - część operacji i opcji konfiguracyjnych jest dostępna wyłącznie z poziomu panelu admina",
     },
 
     // ==========
@@ -20,13 +20,13 @@ export const PERMISSIONS_LIST = [
         key: Permissions.ADD_ARTICLE,
         label: "Dodawanie artykułów",
         category: "Artykuły",
-        description: "Pozwala tworzyć nowe artykuły w systemie.",
+        description: "Umożliwia dodawanie nowych artykułów ",
     },
     {
         key: Permissions.EDIT_ARTICLE,
         label: "Edycja artykułów",
         category: "Artykuły",
-        description: "Pozwala edytować istniejące artykuły.",
+        description: "Umożliwia edycję istniejących artykułów.",
     },
     {
         key: Permissions.ADD_ARTICLE_ATTACHMENT,
@@ -44,41 +44,37 @@ export const PERMISSIONS_LIST = [
         key: Permissions.VIEW_ARTICLE_HISTORY,
         label: "Wgląd w historię zmian artykułów",
         category: "Artykuły",
-        description: "Umożliwia podgląd wszystkich zmian wprowadzonych w artykułach.",
+        description: "Umożliwia wgląd w historię zmian wprowadzonych w artykułach.",
     },
     {
         key: Permissions.ARCHIVE_ARTICLE,
         label: "Archiwizacja artykułów",
         category: "Artykuły",
-        description: "Pozwala przenosić artykuły do archiwum.",
+        description: "Umożliwia przenoszenie artykułów do archiwum.",
     },
     {
         key: Permissions.RESTORE_ARTICLE,
         label: "Przywracanie artykułów z archiwum",
         category: "Artykuły",
-        description: "Umożliwia przywracanie artykułów z archiwum do publikacji.",
+        description: "Umożliwia przywracanie artykułów z archiwum(dostępne jedynie z poziomu panelu admina)",
     },
     {
         key: Permissions.DELETE_ARTICLE,
         label: "Usuwanie artykułów",
         category: "Artykuły",
-        description: "Pozwala trwale usuwać artykuły z systemu.",
+        description: "Umożliwia definitywne usunięcie artykułów (dostępne jedynie z poziomu panelu admina).",
     },
 
     // ======================
     // Weryfikacja artykułów
     // ======================
-    {
-        key: Permissions.VERIFY_ARTICLE,
-        label: "Weryfikacja artykułów",
-        category: "Weryfikacja artykułów",
-        description: "Umożliwia sprawdzanie poprawności merytorycznej artykułów.",
-    },
+
     {
         key: Permissions.APPROVE_ARTICLE,
         label: "Zatwierdzanie artykułów",
         category: "Weryfikacja artykułów",
-        description: "Pozwala zatwierdzać artykuły do publikacji.",
+        description:
+            "Umożliwia zatwierdzanie artykułów: nowo dodanych, po pełnej edycji oraz wymagających ponownej weryfikacji (np. po 12 miesiącach). Zapewnia dostęp do przycisków zatwierdzenia oraz wysyłania uwag do autora.",
     },
     {
         key: Permissions.REJECT_ARTICLE,
