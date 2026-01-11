@@ -10,7 +10,7 @@ export const createProjectDto = z.object({
     description: z
         .string()
         .trim()
-        .min(6, { message: "Opis projektu musi mieć co najmniej 6 znaków" })
+        .min(3, { message: "Opis projektu musi zawierać co najmniej 3 znaki" })
         .max(9000, { message: "Opis projektu nie może przekroczyć 9000 znaków" }),
 });
 
