@@ -17,7 +17,6 @@ export const NotificationService = {
         const query: any = { notificationsEnabled: { $ne: false } };
 
         if (permissions && permissions.length > 0) {
-            // pobieramy role, które zawierają ten permission
             const rolesWithPermission = await RoleModel.find({ permissions: { $in: permissions } }, "_id");
 
             const roleIds = rolesWithPermission.map((r) => r._id);
@@ -87,14 +86,13 @@ export const NotificationService = {
             console.warn("[NotificationService] Artykuł nie znaleziony:", articleId);
             return null;
         }
-        console.log("FOLLOWERS", article);
-        // jeśli brak obserwujących — nic nie rób
+
         if (!article.followers || article.followers.length === 0) {
             console.warn("[NotificationService] Brak obserwujących dla artykułu:", articleId);
             return [];
         }
 
-        // przygotuj powiadomienia dla każdego obserwującego
+        //  powiadomienia dla każdego obserwującego
         const notifications = article.followers.map((userId) => ({
             userId: new mongoose.Types.ObjectId(userId),
             link: link || `/articles/${articleId}`,
@@ -108,7 +106,7 @@ export const NotificationService = {
         return createdNotifications;
     },
 
-    async findByUser(userId: string, page = 1, limit = 20) {
+    async findByUser(userId: string, page = 1, limit = 15) {
         const skip = (page - 1) * limit;
 
         const notifications = await NotificationModel.find({ userId })

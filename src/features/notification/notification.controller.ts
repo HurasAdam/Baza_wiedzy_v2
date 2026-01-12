@@ -1,5 +1,6 @@
 import { CREATED, OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
+import { notificationsFilterDto, NotificationsFilterDto } from "./dto/notifications-filter.dto";
 import { NotificationService } from "./notofication.service";
 
 export const NofitifactionController = (notificationService = NotificationService) => ({
@@ -7,8 +8,10 @@ export const NofitifactionController = (notificationService = NotificationServic
         return res.status(OK).json({ message: "Notification has been created" });
     }),
 
-    findByUser: catchErrors(async ({ userId, body }, res) => {
-        const serviceResponse = await notificationService.findByUser(userId);
+    findByUser: catchErrors(async ({ userId, query }, res) => {
+        const { page, limit }: NotificationsFilterDto = notificationsFilterDto.parse(query);
+
+        const serviceResponse = await notificationService.findByUser(userId, page, limit);
         return res.status(OK).json(serviceResponse);
     }),
 
