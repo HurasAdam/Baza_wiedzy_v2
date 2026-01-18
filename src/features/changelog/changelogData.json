@@ -1,0 +1,12 @@
+[
+    {
+        "version": "1.2.0",
+        "date": "2025-09-04",
+        "changes": ["Dodano eksport do Excela", "Poprawiono błąd z logowaniem", "UI: nowy widok szczegółów użytkownika"]
+    },
+    {
+        "version": "1.1.0",
+        "date": "2025-08-20",
+        "changes": ["Dodano ciemny motyw", "Ulepszono wyszukiwanie"]
+    }
+]

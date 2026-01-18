@@ -17,6 +17,7 @@ import { articleRoutes } from "./features/article/article.route";
 import { attachmentRoutes } from "./features/attachment/attachment.route";
 import { authRoutes } from "./features/auth/auth.route";
 import { categoryRoutes } from "./features/category/category.route";
+import { changelogRoutes } from "./features/changelog/changelog.route";
 import { conversationReportRoutes } from "./features/conversation-report/conversation-report.route";
 import { conversationTopicRoutes } from "./features/conversation-topic/conversation-topic.route";
 import { dashboardRoutes } from "./features/dashboard/dashboard.route";
@@ -112,6 +113,7 @@ app.use("/workspace-folders", authenticate, workspaceFolderRoutes);
 app.use("/workspace-articles", authenticate, workspaceArticleRoutes);
 app.use("/workspace-members", authenticate, workspaceMemberRoutes);
 app.use("/report-comments", authenticate, ReportCommentRoutes);
+app.use("/changelog", authenticate, changelogRoutes);
 
 const uploadsPath = path.resolve("/app/uploads");
 app.use(
