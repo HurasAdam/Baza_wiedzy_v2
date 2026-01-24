@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - 'dev'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and push Docker image
+        run: |
+          echo "Building image"
+          docker build -t ${{ vars.APPLICATION_NAME }}:latest .
+
+          echo "Tagging image"
+          docker tag ${{ vars.APPLICATION_NAME }}:latest ${{ vars.REGISTRY }}/${{ vars.APPLICATION_NAME }}:latest
+
+          echo "Pushing image"
+          docker push ${{ vars.REGISTRY }}/${{ vars.APPLICATION_NAME }}:latest
