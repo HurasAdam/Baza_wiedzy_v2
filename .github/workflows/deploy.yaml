@@ -23,3 +23,6 @@ jobs:
 
           echo "Pushing image"
           docker push ${{ vars.REGISTRY }}/${{ vars.APPLICATION_NAME }}:latest
+
+
+
