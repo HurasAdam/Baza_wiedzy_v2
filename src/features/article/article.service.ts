@@ -184,10 +184,13 @@ export const ArticleService = {
             { $match: { articleId: { $in: articlesIds } } },
             { $group: { _id: "$articleId", count: { $sum: 1 } } },
         ]);
-        const responseCountMap = responseCounts.reduce((acc, item) => {
-            acc[item._id.toString()] = item.count;
-            return acc;
-        }, {} as Record<string, number>);
+        const responseCountMap = responseCounts.reduce(
+            (acc, item) => {
+                acc[item._id.toString()] = item.count;
+                return acc;
+            },
+            {} as Record<string, number>
+        );
 
         const articlesWithExtras = articles.map((article) => {
             const articleObj = article.toObject();
@@ -411,21 +414,25 @@ export const ArticleService = {
         const article = await ArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Article not found");
 
-        const isDraft = article.status === "draft";
-        appAssert(isDraft, NOT_FOUND, "Article status must be 'draft' to reject");
+        // status musi być draft, niezależnie od tego, czy jest visible
+        appAssert(article.status === "draft", BAD_REQUEST, "Article must be draft to reject");
 
         article.status = "rejected";
         article.rejectionReason = rejectionReason;
 
+        // target zależy od tego czy artykuł jest widoczny
+        const targetUserId = article.isVisible ? article.lastUpdatedBy : article.createdBy;
+
         article.rejectionNote = {
             text: rejectionReason,
             createdBy: new mongoose.Types.ObjectId(userId),
-            targetUser: article.createdBy,
+            targetUser: targetUserId,
             createdAt: new Date(),
         };
 
         await article.save();
 
+        // powiadomienie
         await NotificationService.notifyArticleAuthor({
             articleId: article._id.toString(),
             title: "Twój artykuł został odrzucony",
@@ -433,7 +440,8 @@ export const ArticleService = {
             link: `/articles/${article._id}`,
             type: "info",
         });
-        io.emit("new-notification", { type: "article_created", articleId: article._id });
+
+        io.emit("new-notification", { type: "article_updated", articleId: article._id });
     },
     async rejectChanges(userId: string, articleId: string, rejectionReason: string) {
         const article = await ArticleModel.findById(articleId);
@@ -448,7 +456,7 @@ export const ArticleService = {
         article.rejectionNote = {
             text: rejectionReason,
             createdBy: new mongoose.Types.ObjectId(userId),
-            targetUser: targetUserId || article.createdBy,
+            targetUser: targetUserId,
             createdAt: new Date(),
         };
 
@@ -472,6 +480,7 @@ export const ArticleService = {
 
         article.status = "draft";
         article.rejectionReason = null;
+        article.rejectionNote = undefined;
 
         const updatedArticle = await article.save();
 
@@ -482,6 +491,7 @@ export const ArticleService = {
             link: `/articles/${updatedArticle._id}`,
             type: "info",
         });
+
         io.emit("new-notification", { type: "article_created", articleId: updatedArticle._id });
         return updatedArticle.toObject();
     },
@@ -816,10 +826,13 @@ export const ArticleService = {
             { $match: { articleId: { $in: articleIds } } },
             { $group: { _id: "$articleId", count: { $sum: 1 } } },
         ]);
-        const responseCountMap = responseCounts.reduce((acc, item) => {
-            acc[item._id.toString()] = item.count;
-            return acc;
-        }, {} as Record<string, number>);
+        const responseCountMap = responseCounts.reduce(
+            (acc, item) => {
+                acc[item._id.toString()] = item.count;
+                return acc;
+            },
+            {} as Record<string, number>
+        );
 
         const articlesWithExtras = articles.map((article) => {
             const articleObj = article.toObject();
