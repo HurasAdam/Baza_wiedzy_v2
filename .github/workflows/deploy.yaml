@@ -1,25 +1,28 @@
 name: Deploy
 
 on:
-  push:
-    branches:
-      - 'dev'
+    push:
+        branches:
+            - "dev"
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+    deploy:
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Build and push Docker image
-        run: |
-          echo "Building image"
-          docker build -t ${{ vars.APPLICATION_NAME }}:latest .
+            - name: Build and push Docker image
+              run: |
+                  echo '{ "insecure-registries": ["79.187.49.90","79.187.49.90:32711"] }' | sudo tee /etc/docker/daemon.json
+                  sudo systemctl restart docker
 
-          echo "Tagging image"
-          docker tag ${{ vars.APPLICATION_NAME }}:latest ${{ vars.REGISTRY }}/${{ vars.APPLICATION_NAME }}:latest
+                  echo "Building image"
+                  docker build -t ${{ vars.APPLICATION_NAME }}:latest .
 
-          echo "Pushing image"
-          docker push ${{ vars.REGISTRY }}/${{ vars.APPLICATION_NAME }}:latest
+                  echo "Tagging image"
+                  docker tag ${{ vars.APPLICATION_NAME }}:latest ${{ vars.REGISTRY }}/${{ vars.APPLICATION_NAME }}:latest
+
+                  echo "Pushing image"
+                  docker push ${{ vars.REGISTRY }}/${{ vars.APPLICATION_NAME }}:latest
