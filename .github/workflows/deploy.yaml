@@ -26,7 +26,7 @@ jobs:
                   SOCKET_PORT=4005
                   JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}
                   EMAIL_SENDER=asd@dupa.pl
-                  EMAIL_SENDER_PASSWORD
+                  EMAIL_SENDER_PASSWORD="asdasdasd"
                   EMAIL_SERVICE=gmail
                   EMAIL_SERVICE_HOST=smtp.gmail.com
                   RESEND_API_KEY=dupa
