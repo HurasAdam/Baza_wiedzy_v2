@@ -19,7 +19,6 @@ export const faqResponseDto = z.object({
     _id: z.union([z.string(), z.instanceof(Types.ObjectId)]).transform((v) => v.toString()),
     title: z.string(),
     description: z.string(),
-    slug: z.string(),
     labelColor: z.string(),
     isDefault: z.boolean(),
     iconKey: z.string(),
