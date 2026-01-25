@@ -46,6 +46,22 @@ const app = express();
 
 const server = http.createServer(app);
 
+app.use(
+    cors({
+        origin: [`${APP_ORIGIN}`, `${APP_ORIGIN}/`],
+        credentials: true,
+    })
+);
+
+app.use((_req: express.Request, res, next: express.NextFunction) => {
+    res.header("Content-Type", "application/json;charset=UTF-8");
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
+app.set("trust proxy", 1);
+
 export const io = new IOServer(server, {
     cors: {
         origin: APP_ORIGIN,
@@ -75,12 +91,6 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-    cors({
-        origin: APP_ORIGIN,
-        credentials: true,
-    })
-);
 app.use(cookieParser());
 
 app.use("/auth", authRoutes);
