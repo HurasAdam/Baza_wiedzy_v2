@@ -1,11 +1,11 @@
 import { CREATED, OK, UNAUTHORIZED } from "@/constants/http";
-import catchErrors from "@/utils/catchErrors";
 import appAssert from "@/utils/appAssert";
+import catchErrors from "@/utils/catchErrors";
 import { getAccessTokenCookieOptions, getRefreshTokenCookieOptions, optionsRefreshToken } from "@/utils/cookies";
 import { AuthService } from "./auth.service";
 import { createUserDto } from "./dto/create-user.dto";
-import { loginUserDto } from "./dto/login-user.dto";
 import { emailDto } from "./dto/email.dto";
+import { loginUserDto } from "./dto/login-user.dto";
 import { resetPasswordDto, verificationCodeSchema } from "./dto/reset-password.dto";
 
 export const AuthController = (authService = AuthService) => ({
@@ -22,6 +22,7 @@ export const AuthController = (authService = AuthService) => ({
     login: catchErrors(async ({ body }, res) => {
         const payload = loginUserDto.parse(body);
         const { user, accessToken, refreshToken } = await authService.login(payload);
+        console.log("User", user);
 
         res.cookie("accessToken", accessToken, getAccessTokenCookieOptions());
         res.cookie("refreshToken", refreshToken, getRefreshTokenCookieOptions());
