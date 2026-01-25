@@ -18,6 +18,26 @@ jobs:
                   echo '{ "insecure-registries": ["79.187.49.90","79.187.49.90:32711"] }' | sudo tee /etc/docker/daemon.json
                   sudo systemctl restart docker
 
+                  cat <<EOF > .env
+                  NODE_ENV=development
+                  PORT=5000
+                  APP_ORIGIN=http://localhost:5173
+                  JWT_SECRET=${{ secrets.JWT_SECRET }}
+                  SOCKET_PORT=4005
+                  JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}
+                  EMAIL_SENDER=asd@dupa.pl
+                  EMAIL_SENDER_PASSWORD
+                  EMAIL_SERVICE=gmail
+                  EMAIL_SERVICE_HOST=smtp.gmail.com
+                  RESEND_API_KEY=dupa
+                  DEFAULT_TEMP_PASSWORD=${{ secrets.DEFAULT_TEMP_PASSWORD }}
+                  ADMIN_DEFAULT_PASSWORD=${{ secrets.ADMIN_DEFAULT_PASSWORD }}
+                  ADMIN_DEFAULT_EMAIL=${{ secrets.ADMIN_DEFAULT_EMAIL }}
+                  UPLOADS_ROOT=./uploads
+                  LOG_LVL ="debug"
+                  MONGO_URI=${{ secrets.MONGO_URI }}
+                  EOF
+
                   echo "Building image"
                   docker build -t ${{ vars.APPLICATION_NAME }}:latest .
 
