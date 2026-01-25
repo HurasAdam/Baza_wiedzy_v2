@@ -88,7 +88,6 @@ export const WorkspaceFolderService = {
         const workspace = await WorkspaceModel.findById(workspaceId);
         appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
 
-        const member = await WorkspaceMemberModel.findOne({ userId, workspaceId }).populate("role");
         const isOwner = workspace.owner.toString() === userId;
 
         appAssert(isOwner, FORBIDDEN, "Brak uprawnień do edycji folderu");
