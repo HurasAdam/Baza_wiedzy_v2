@@ -9,7 +9,7 @@ const connectDB = async (callback: CallbackFunction) => {
         console.log("Database has been connected...");
         await callback();
     } catch (error) {
-        console.log(`Error has occured during db connection:${error}`);
+        console.log(`Error has occurred during db connection:${error}`);
         process.exit(1);
     }
 };

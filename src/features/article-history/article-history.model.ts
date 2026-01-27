@@ -7,7 +7,18 @@ const articleHistorySchema = new Schema(
             // <- pojedynczy event
             type: String,
             required: true,
-            enum: ["created", "updated", "trashed", "restored", "verified", "unverified", "statusChanged", "expired"],
+            enum: [
+                "created",
+                "updated",
+                "trashed",
+                "restored",
+                "verified",
+                "unverified",
+                "statusChanged",
+                "expired",
+                "attachmentAdded",
+                "attachmentRemoved",
+            ],
         },
         changes: [
             {
