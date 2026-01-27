@@ -3,6 +3,8 @@ import { Types } from "mongoose";
 import path from "path";
 import { FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
+import { ArticleEventType, ArticleHistoryService } from "../article-history/article-history.service";
+import ArticleModel from "../article/article.model";
 import AttachmentModel from "./attachment.model";
 export const AttachmentService = {
     create: async (
@@ -10,11 +12,15 @@ export const AttachmentService = {
         meta: { title?: string; description?: string },
         userId: string,
         ownerType: "Article" | "Workspace" | "User" | "Loose",
-        ownerId?: string
+        ownerId: string
     ) => {
         if (!file) {
             throw new Error("Missing attachment");
         }
+
+        const article = await ArticleModel.findById(ownerId).select("status").lean();
+        appAssert(article, NOT_FOUND, "Article not found");
+
         const attachment = await AttachmentModel.create({
             filename: file.originalname,
             path: file.path,
@@ -25,6 +31,27 @@ export const AttachmentService = {
             ownerId,
             title: meta.title,
             description: meta.description,
+        });
+
+        await ArticleHistoryService.saveChanges({
+            articleId: ownerId,
+            userId,
+            eventType: ArticleEventType.AttachmentAdded,
+            before: null,
+            after: {
+                id: attachment._id,
+                filename: attachment.filename,
+                originalName: file.originalname,
+                title: attachment.title,
+                description: attachment.description,
+                mimeType: attachment.mimeType,
+                size: attachment.size,
+            },
+
+            statusChange: {
+                from: article?.status,
+                to: article?.status,
+            },
         });
         return attachment;
     },
@@ -74,15 +101,37 @@ export const AttachmentService = {
         if (!Types.ObjectId.isValid(attachmentId)) throw new Error("Nieprawidłowe ID załącznika");
 
         const attachment = await AttachmentModel.findById(attachmentId);
+
         if (!attachment) throw new Error("Załącznik nie istnieje");
 
-        // usuń plik z dysku
+        const article = await ArticleModel.findById(attachment.ownerId);
+        appAssert(article, NOT_FOUND, "Article not found");
+
         const filePath = path.resolve(attachment.path);
         fs.unlink(filePath, (err) => {
             if (err) console.error("Błąd usuwania pliku:", err);
         });
 
-        // usuń dokument z bazy
+        await ArticleHistoryService.saveChanges({
+            articleId: article._id.toString(),
+            userId: attachment.uploadedBy?.toString(),
+            eventType: ArticleEventType.AttachmentRemoved,
+            before: {
+                id: attachment._id,
+                filename: attachment.filename,
+                originalName: attachment.filename,
+                title: attachment.title,
+                description: attachment.description,
+                mimeType: attachment.mimeType,
+                size: attachment.size,
+            },
+            after: { removed: true },
+            statusChange: {
+                from: article.status,
+                to: article.status,
+            },
+        });
+
         await AttachmentModel.findByIdAndDelete(attachmentId);
     },
 };

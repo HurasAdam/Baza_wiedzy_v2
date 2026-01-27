@@ -13,6 +13,8 @@ export enum ArticleEventType {
     Unverified = "unverified",
     Expired = "expired",
     StatusChanged = "statusChanged",
+    AttachmentAdded = "attachmentAdded",
+    AttachmentRemoved = "attachmentRemoved",
 }
 
 export interface Change {
@@ -77,6 +79,42 @@ export const ArticleHistoryService = {
                         field: "status",
                         oldValue: before?.status,
                         newValue: after.status,
+                    },
+                ],
+                statusChange: finalStatusChange,
+                updatedAt: new Date(),
+            });
+            return;
+        }
+
+        if (eventType === ArticleEventType.AttachmentAdded) {
+            await ArticleHistoryModel.create({
+                articleId: new Types.ObjectId(articleId),
+                createdBy: new Types.ObjectId(userId),
+                eventType,
+                changes: [
+                    {
+                        field: "attachments",
+                        oldValue: null,
+                        newValue: after,
+                    },
+                ],
+                statusChange: finalStatusChange,
+                updatedAt: new Date(),
+            });
+            return;
+        }
+
+        if (eventType === ArticleEventType.AttachmentRemoved) {
+            await ArticleHistoryModel.create({
+                articleId: new Types.ObjectId(articleId),
+                createdBy: userId ? new Types.ObjectId(userId) : undefined,
+                eventType,
+                changes: [
+                    {
+                        field: "attachments",
+                        oldValue: before,
+                        newValue: { removed: true },
                     },
                 ],
                 statusChange: finalStatusChange,
