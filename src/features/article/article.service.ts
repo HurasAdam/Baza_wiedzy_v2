@@ -207,7 +207,6 @@ export const ArticleService = {
 
     async findOne(userId: string, articleId: string, findTrashed = false) {
         const user = await UserService.findOne(userId);
-        console.log(user, "USERID");
 
         const article = await ArticleModel.findById(articleId)
             .populate([
@@ -519,11 +518,8 @@ export const ArticleService = {
     async updateOneAsTrash(userId: string, articleId: string) {
         const article = await ArticleModel.findById({ _id: articleId });
         appAssert(article, NOT_FOUND, "Article not found");
-
         article.isTrashed = true;
         const trashedArticle = await article.save();
-
-        const updatedAritlceObj = trashedArticle.toObject();
     },
 
     async updateOneAsRestore(userId: string, articleId: string) {
@@ -532,8 +528,6 @@ export const ArticleService = {
 
         article.isTrashed = false;
         const restoredArticle = await article.save();
-
-        const updatedAritlceObj = restoredArticle.toObject();
     },
 
     async deleteOne(articleId: string) {

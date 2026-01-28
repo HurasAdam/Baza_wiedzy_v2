@@ -16,7 +16,7 @@ const articleSchema = new Schema(
         },
         rejectionReason: { type: String, default: null, required: false },
         rejectionNote: {
-            text: { type: String, required: false }, // aktualna uwaga
+            text: { type: String, required: false },
             createdBy: { type: Schema.Types.ObjectId, ref: "User", required: false },
             createdAt: { type: Date, default: null },
             targetUser: { type: Schema.Types.ObjectId, ref: "User", required: false },
