@@ -1,18 +1,28 @@
 import mongoose, { Schema, model } from "mongoose";
+import { validBugCategories, validProposalCategories, validTypes } from "./dto/create-issue.dto";
 
 const issueReportSchema = new Schema(
     {
         ticketNumber: { type: String, unique: true, index: true },
-        title: { type: String, required: true, trim: true, kMaxLength: 120 },
+
+        title: { type: String, required: true, trim: true, maxlength: 120 },
+
         type: {
             type: String,
-            enum: ["proposal", "bug"],
+            enum: validTypes,
             required: true,
         },
+
         category: {
-            type: String,
-            enum: ["Interfejs (UI)", "Backend", "Wydajność", "Inne"],
-            required: true,
+            slug: {
+                type: String,
+                required: true,
+            },
+            label: {
+                type: String,
+                required: true,
+                enum: [...validBugCategories, ...validProposalCategories],
+            },
         },
 
         currentBehavior: {
@@ -20,11 +30,13 @@ const issueReportSchema = new Schema(
             required: true,
             trim: true,
         },
+
         expectedBehavior: {
             type: String,
             required: true,
             trim: true,
         },
+
         reproductionSteps: {
             type: [String],
             default: [],
@@ -34,11 +46,13 @@ const issueReportSchema = new Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
+
         status: {
             type: String,
             enum: ["open", "resolved", "closed"],
             default: "open",
         },
+
         isUnread: {
             type: Boolean,
             default: true,
@@ -46,7 +60,6 @@ const issueReportSchema = new Schema(
 
         createdAt: { type: Date, default: Date.now },
     },
-
     {
         timestamps: true,
     }
