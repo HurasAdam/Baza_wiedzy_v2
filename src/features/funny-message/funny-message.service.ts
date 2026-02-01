@@ -1,6 +1,8 @@
 import { CONFLICT, FORBIDDEN, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 
+import { Permissions } from "../../enums/role.enum";
+import UserModel from "../user/user.model";
 import type { CreateFunnyMessageDto } from "./dto/create-funny-message.dto";
 import { UpdateFunnyMessageDto } from "./dto/update-funny-message.dto";
 import FunnyMessageModel from "./funny-message.model";
@@ -60,9 +62,17 @@ export const FunnyMessageService = {
     async updateOne(userId: string, id: string, payload: UpdateFunnyMessageDto) {
         const { title, entries } = payload;
         const funnyMessage = await FunnyMessageModel.findById(id);
+
+        const user = await UserModel.findById(userId).populate("role");
+        appAssert(user, FORBIDDEN, "User not found");
+
+        const permissions = (user.role as any).permissions;
+        const hasPermission = permissions.includes(Permissions.EDIT_FUN_MESSAGE);
+
+        const isMsgAuthor: boolean = funnyMessage?.createdBy.toString() === userId;
         appAssert(funnyMessage, NOT_FOUND, "Wiadomość nie istnieje");
 
-        appAssert(funnyMessage.createdBy.toString() === userId, FORBIDDEN, "Brak uprawnień do edycji");
+        appAssert(isMsgAuthor || hasPermission, FORBIDDEN, "Brak uprawnień do edycji tej wiadomości");
 
         if (title) funnyMessage.title = title;
 
