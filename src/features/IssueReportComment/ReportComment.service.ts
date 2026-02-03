@@ -22,7 +22,7 @@ export const ReportCommentService = {
         const reportComments = await ReportCommentModel.find({ report: reportId })
             .populate({
                 path: "createdBy",
-                select: "name surname",
+                select: "name surname email",
             })
             .sort({ createdAt: -1 });
         return reportComments;
