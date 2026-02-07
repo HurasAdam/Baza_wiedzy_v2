@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface WorkspaceMemberDocument extends Document {
     userId: mongoose.Types.ObjectId;
     workspaceId: mongoose.Types.ObjectId;
-    permissions: {};
+    permissions: WorkspacePermissions;
     joinedAt: Date;
 }
 
@@ -19,7 +19,7 @@ export interface WorkspacePermissions {
     editWorkspace: boolean;
 }
 
-const defaultPermissions: WorkspacePermissions = {
+export const defaultPermissions: WorkspacePermissions = {
     addFolder: false,
     editFolder: false,
     deleteFolder: false,
