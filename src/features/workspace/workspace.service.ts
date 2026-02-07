@@ -3,7 +3,10 @@ import appAssert from "../../utils/appAssert";
 import { WorkspaceResponseVariantModel } from "../workspace-article/response-variant/workspace-response-variant.model";
 import { WorkspaceArticleModel } from "../workspace-article/workspace-article.model";
 import { WorkspaceFolderModel } from "../workspace-folder/workspace-folder.model";
-import WorkspaceMemberModel, { WorkspacePermissions } from "../workspace-member/workspaceMember.model";
+import WorkspaceMemberModel, {
+    defaultPermissions,
+    WorkspacePermissions,
+} from "../workspace-member/workspaceMember.model";
 import WorkspaceRoleModel from "../workspace-role/workspace-role.model";
 import { CreateWorkspaceDto } from "./dto/create-workspace.dto";
 import WorkspaceModel from "./workspace.model";
@@ -171,12 +174,36 @@ export const WorkspaceService = {
         const isOwner = workspace.owner.toString() === userId;
         appAssert(isOwner, FORBIDDEN, "Nie masz uprawnień do zmiany właściciela");
 
-        const memberDoc = await WorkspaceMemberModel.findById(memberDocId);
-        appAssert(memberDoc, NOT_FOUND, "Wybrany członek nie istnieje");
+        const newOwnerMember = await WorkspaceMemberModel.findById(memberDocId);
+        appAssert(newOwnerMember, NOT_FOUND, "Wybrany członek nie istnieje");
 
-        appAssert(memberDoc.workspaceId.toString() === workspaceId, FORBIDDEN, "Członek nie należy do tego workspace");
+        appAssert(
+            newOwnerMember.workspaceId.toString() === workspaceId,
+            FORBIDDEN,
+            "Członek nie należy do tego workspace"
+        );
 
-        workspace.owner = memberDoc.userId;
+        const oldOwnerId = workspace.owner.toString();
+        workspace.owner = newOwnerMember.userId;
         await workspace.save();
+
+        newOwnerMember.permissions = {
+            addFolder: true,
+            editFolder: true,
+            deleteFolder: true,
+            addArticle: true,
+            editArticle: true,
+            deleteArticle: true,
+            addMember: true,
+            removeMember: true,
+            editWorkspace: true,
+        };
+        await newOwnerMember.save();
+
+        const oldOwnerMember = await WorkspaceMemberModel.findOne({ workspaceId, userId: oldOwnerId });
+        if (oldOwnerMember) {
+            oldOwnerMember.permissions = defaultPermissions;
+            await oldOwnerMember.save();
+        }
     },
 };
