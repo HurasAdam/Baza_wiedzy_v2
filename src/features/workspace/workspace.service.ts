@@ -72,13 +72,16 @@ export const WorkspaceService = {
                 path: "userId",
                 select: "name surname email",
             })
-
             .lean();
 
-        return members.map((member) => ({
+        const membersWithOwnerFlag = members.map((member) => ({
             ...member,
             isOwner: member.userId._id.toString() === workspace.owner.toString(),
         }));
+
+        membersWithOwnerFlag.sort((a, b) => (a.isOwner ? -1 : b.isOwner ? 1 : 0));
+
+        return membersWithOwnerFlag;
     },
     async updateOne(userId: string, workspaceId: string, payload: CreateWorkspaceDto) {
         const workspace = await WorkspaceModel.findById(workspaceId);
