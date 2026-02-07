@@ -9,3 +9,6 @@ const workspaceMemberController = WorkspaceMemberController();
 // PATCH /workspace-members/:memberId/permissions
 workspaceMemberRoutes.patch("/:memberId/permissions", workspaceMemberController.updatePermissions);
 workspaceMemberRoutes.get("/me/:workspaceId", workspaceMemberController.findCurrentWorkspaceMember);
+
+workspaceMemberRoutes.get("/candidates/:workspaceId", workspaceMemberController.findInviteCandidates);
+workspaceMemberRoutes.post("/:workspaceId/addMember", workspaceMemberController.addMember);
