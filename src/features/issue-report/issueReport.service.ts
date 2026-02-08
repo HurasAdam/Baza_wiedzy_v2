@@ -1,5 +1,6 @@
 import { NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
+import ReportCommentModel from "../IssueReportComment/Report-comment.model";
 import { CreateIssueDto } from "./dto/create-issue.dto";
 import { UpdateIssueStatusDto } from "./dto/update-issue-status.dto";
 import IssueReportModel from "./issue-report.model";
@@ -102,5 +103,15 @@ export const IssueReportService = {
         await issueReport.save();
 
         return { data: issueReport, message: "Status zgłoszenia został zaktualizowany" };
+    },
+
+    async deleteReport(issueReportId: string) {
+        const issueReport = await IssueReportModel.findById(issueReportId);
+        appAssert(issueReport, NOT_FOUND, "Zgłoszenie nie istnieje");
+
+        await ReportCommentModel.deleteMany({ report: issueReportId });
+        await IssueReportModel.findByIdAndDelete(issueReportId);
+
+        return { message: "Zgłoszenie i wszystkie komentarze zostały usunięte" };
     },
 };

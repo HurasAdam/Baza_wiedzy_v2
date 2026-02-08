@@ -15,3 +15,4 @@ IssueReportRoutes.patch(
     permissionGuard(Permissions.MANAGE_REPORT_STATUS),
     issueReportController.updateStatus
 );
+IssueReportRoutes.delete("/:id", permissionGuard(Permissions.MANAGE_REPORT_STATUS), issueReportController.deleteReport);

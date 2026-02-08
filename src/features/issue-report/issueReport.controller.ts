@@ -36,4 +36,10 @@ export const IssueReportController = (issueReportService = IssueReportService) =
         const updatedReport = await issueReportService.updateStatus(id, payload);
         return res.status(OK).json(updatedReport);
     }),
+
+    deleteReport: catchErrors(async ({ params }, res) => {
+        const { id } = params;
+        const result = await issueReportService.deleteReport(id);
+        return res.status(OK).json(result);
+    }),
 });
