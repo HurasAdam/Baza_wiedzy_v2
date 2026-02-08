@@ -168,9 +168,9 @@ export const PERMISSIONS_LIST = [
     },
     {
         key: Permissions.MANAGE_REPORT_STATUS,
-        label: "Zarządzanie statusem zgłoszeń",
+        label: "Zarządzanie zgłoszeniami",
         category: "Zgłoszenia",
-        description: "Pozwala zmieniać status zgłoszeń (otwarte, w trakcie, zamknięte).",
+        description: "Pozwala zmieniać status zgłoszeń (otwarte, w trakcie, zamknięte) oraz usuwać zgłoszenia.",
     },
 
     // =====
