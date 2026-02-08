@@ -1,5 +1,6 @@
 import { CONFLICT, FORBIDDEN, NOT_FOUND } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
+import UserModel from "../user/user.model";
 import { WorkspaceResponseVariantModel } from "../workspace-article/response-variant/workspace-response-variant.model";
 import { WorkspaceArticleModel } from "../workspace-article/workspace-article.model";
 import { WorkspaceFolderModel } from "../workspace-folder/workspace-folder.model";
@@ -13,12 +14,14 @@ import WorkspaceModel from "./workspace.model";
 
 export const WorkspaceService = {
     async create(userId: string, payload: CreateWorkspaceDto) {
+        // 1. Tworzymy workspace
         const workspace = await WorkspaceModel.create({
             ...payload,
             owner: userId,
         });
 
-        const allPermissions: WorkspacePermissions = {
+        // 2. Uprawnienia dla właściciela
+        const ownerPermissions: WorkspacePermissions = {
             addFolder: true,
             editFolder: true,
             deleteFolder: true,
@@ -30,14 +33,26 @@ export const WorkspaceService = {
             editWorkspace: true,
         };
 
-        const workspaceMember = new WorkspaceMemberModel({
+        const ownerMember = new WorkspaceMemberModel({
             userId,
             workspaceId: workspace._id,
             joinedAt: new Date(),
-            permissions: allPermissions,
+            permissions: ownerPermissions,
         });
+        await ownerMember.save();
 
-        await workspaceMember.save();
+        const allUsers = await UserModel.find({ _id: { $ne: userId } });
+
+        const membersToAdd = allUsers.map((user) => ({
+            userId: user._id,
+            workspaceId: workspace._id,
+            joinedAt: new Date(),
+            permissions: defaultPermissions,
+        }));
+
+        if (membersToAdd.length > 0) {
+            await WorkspaceMemberModel.insertMany(membersToAdd);
+        }
 
         return workspace;
     },
