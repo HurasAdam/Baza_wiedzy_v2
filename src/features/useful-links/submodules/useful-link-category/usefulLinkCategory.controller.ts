@@ -1,24 +1,23 @@
 import { CREATED, OK } from "../../../../constants/http";
 import catchErrors from "../../../../utils/catchErrors";
-import { UsefulLinkFolderService } from "./usefulLinkFolder.service";
+import { UsefulLinkCategoryService } from "./usefulLinkCategory.service";
 
-export const UsefulLinkFolderController = (usefulLinkFolderService = UsefulLinkFolderService) => ({
-    create: catchErrors(async ({ params, body }, res) => {
-        const { usefulLinkId } = params;
+export const UsefulLinkCategoryController = (usefulLinkCategoryService = UsefulLinkCategoryService) => ({
+    create: catchErrors(async ({ body }, res) => {
         const payload = body;
-        await usefulLinkFolderService.create(payload);
+        await usefulLinkCategoryService.create(payload);
         return res.sendStatus(CREATED);
     }),
 
     find: catchErrors(async ({ params, query }, res) => {
         const payload = query;
-        const usefulLinks = await usefulLinkFolderService.find(payload);
+        const usefulLinks = await usefulLinkCategoryService.find(payload);
         return res.status(OK).json(usefulLinks);
     }),
     findOne: catchErrors(async ({ params, query }, res) => {
         const { usefulLinkId } = params;
 
-        const usefulLink = await usefulLinkFolderService.findOne(usefulLinkId);
+        const usefulLink = await usefulLinkCategoryService.findOne(usefulLinkId);
         return res.status(OK).json(usefulLink);
     }),
 });

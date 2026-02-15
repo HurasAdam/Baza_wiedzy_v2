@@ -33,6 +33,8 @@ import { productRoutes } from "./features/product/product.route";
 import { projectRoutes } from "./features/project/project.route";
 import { statisticsRoutes } from "./features/statistics/statistics.route";
 import { tagRoutes } from "./features/tag/tag.route";
+import { usefulLinkCategoryRoutes } from "./features/useful-links/submodules/useful-link-category/usefulLinkCategory.route";
+import { usefulLinkRoutes } from "./features/useful-links/usefulLink.route";
 import { userRoutes } from "./features/user/user.route";
 import { workspaceArticleRoutes } from "./features/workspace-article/workspace-article.route";
 import { workspaceFolderRoutes } from "./features/workspace-folder/workspace-folder.routes";
@@ -124,6 +126,8 @@ app.use("/workspace-articles", authenticate, workspaceArticleRoutes);
 app.use("/workspace-members", authenticate, workspaceMemberRoutes);
 app.use("/report-comments", authenticate, ReportCommentRoutes);
 app.use("/changelog", authenticate, changelogRoutes);
+app.use("/useful-links", authenticate, usefulLinkRoutes);
+app.use("/useful-link-categories", authenticate, usefulLinkCategoryRoutes);
 
 const uploadsPath = path.resolve("/app/uploads");
 app.use(
