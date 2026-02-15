@@ -1,6 +1,6 @@
 import { Document, Schema, model } from "mongoose";
 
-export interface LinkFolderDocument extends Document {
+export interface usefulLinkCategoryDocument extends Document {
     name: string;
     isActive: boolean;
     order: Number;
@@ -8,7 +8,7 @@ export interface LinkFolderDocument extends Document {
     updatedAt: Date;
 }
 
-const linkFolderSchema = new Schema<LinkFolderDocument>(
+const usefulLinkCategorySchema = new Schema<usefulLinkCategoryDocument>(
     {
         name: {
             type: String,
@@ -32,4 +32,7 @@ const linkFolderSchema = new Schema<LinkFolderDocument>(
     }
 );
 
-export const LinkFolder = model<LinkFolderDocument>("LinkFolder", linkFolderSchema);
+export const usefulLinkCategoryModel = model<usefulLinkCategoryDocument>(
+    "usefulLinkCategory",
+    usefulLinkCategorySchema
+);

@@ -1,4 +1,4 @@
-import { CREATED, OK } from "../../constants/http";
+import { CREATED, NO_CONTENT, OK } from "../../constants/http";
 import catchErrors from "../../utils/catchErrors";
 import { UsefulLinkService } from "./usefulLink.service";
 
@@ -20,5 +20,12 @@ export const UsefulLinkController = (usefulLinkService = UsefulLinkService) => (
 
         const usefulLink = await usefulLinkService.findOne(usefulLinkId);
         return res.status(OK).json(usefulLink);
+    }),
+
+    deleteOne: catchErrors(async ({ params, query }, res) => {
+        const { usefulLinkId } = params;
+
+        await usefulLinkService.deleteOne(usefulLinkId);
+        return res.sendStatus(NO_CONTENT);
     }),
 });
