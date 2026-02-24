@@ -28,6 +28,7 @@ import { flagRoutes } from "./features/flag/flag.route";
 import { funnyMessageRoutes } from "./features/funny-message/funny-message.route";
 import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
 import { ReportCommentRoutes } from "./features/IssueReportComment/ReportComment.route";
+import { networkToolsRoutes } from "./features/network-tools/network-tools.route";
 import { notificationRoutes } from "./features/notification/notification.route";
 import { productRoutes } from "./features/product/product.route";
 import { projectRoutes } from "./features/project/project.route";
@@ -128,6 +129,7 @@ app.use("/report-comments", authenticate, ReportCommentRoutes);
 app.use("/changelog", authenticate, changelogRoutes);
 app.use("/useful-links", authenticate, usefulLinkRoutes);
 app.use("/useful-link-categories", authenticate, usefulLinkCategoryRoutes);
+app.use("/network-tools", authenticate, networkToolsRoutes);
 
 const uploadsPath = path.resolve("/app/uploads");
 app.use(
