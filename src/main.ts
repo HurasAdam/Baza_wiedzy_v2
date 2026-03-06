@@ -5,6 +5,7 @@ import express from "express";
 import helmet from "helmet";
 import http from "http";
 import morgan from "morgan";
+import { exec } from "node:child_process";
 import path from "node:path";
 import { Server as IOServer } from "socket.io";
 import connectDB from "./config/db";
@@ -146,6 +147,30 @@ app.use(
         },
     })
 );
+
+app.get("/system/storage", (req, res) => {
+    exec("df -B1 /", (error, stdout) => {
+        if (error) {
+            return res.status(500).json({ error: "Cannot check disk" });
+        }
+
+        const lines = stdout.trim().split("\n");
+
+        const data = lines[1].split(/\s+/);
+
+        const total = Number(data[1]);
+        const used = Number(data[2]);
+        const free = Number(data[3]);
+        const usedPercent = Number(data[4].replace("%", ""));
+
+        res.json({
+            totalGB: (total / 1024 / 1024 / 1024).toFixed(2),
+            usedGB: (used / 1024 / 1024 / 1024).toFixed(2),
+            freeGB: (free / 1024 / 1024 / 1024).toFixed(2),
+            usedPercent,
+        });
+    });
+});
 
 app.use(errorHandler);
 
