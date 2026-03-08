@@ -57,9 +57,21 @@ export const WorkspaceService = {
         return workspace;
     },
     async find(userId: string) {
-        const memberships = await WorkspaceMemberModel.find({ userId }).populate("workspaceId");
+        const memberships = await WorkspaceMemberModel.find({ userId }).populate({
+            path: "workspaceId",
+            select: "-inviteCode",
+            populate: {
+                path: "owner",
+                select: "name surname profilePicture",
+                populate: {
+                    path: "profilePicture",
+                    model: "Attachment",
+                    select: "filename path mimeType",
+                },
+            },
+        });
 
-        const workspaces = memberships.map((member) => member.workspaceId).filter((ws) => ws !== null);
+        const workspaces = memberships.map((member) => member.workspaceId).filter(Boolean);
 
         return workspaces;
     },
