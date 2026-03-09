@@ -1,12 +1,59 @@
 [
     {
-        "version": "1.2.0",
-        "date": "2025-09-04",
-        "changes": ["Dodano eksport do Excela", "Poprawiono błąd z logowaniem", "UI: nowy widok szczegółów użytkownika"]
+        "version": "1.0.0",
+        "date": "2026-02-06",
+        "type": "minor",
+        "changes": {
+            "added": [],
+            "fixed": [
+                "Naprawiono błąd powodujący nieprawidłowe działanie rejestru tematów: ograniczono liczbę jednocześnie wprowadzanych tematów do 20"
+            ],
+            "improved": [
+                "Poprawiono widoczność tagów w wyszukiwarce artykułów dla ciemnych motywów",
+                "W rejestrze tematów skrócono pole 'Temat', przybliżono pole 'Notatka' oraz dodano nagłówki tabeli",
+                "W formularzu dodawania/edycji artykułu zmniejszono minimalną ilość znaków dla pola 'odpowiedzi dla pracownika' do 1 znaku",
+                "Ulepszono formularz dodawania/edycji artykułu: pola select dla tagów, produktu i kategorii obsługują teraz wyszukiwanie po wpisaniu keyword"
+            ]
+        }
     },
     {
         "version": "1.1.0",
-        "date": "2025-08-20",
-        "changes": ["Dodano ciemny motyw", "Ulepszono wyszukiwanie"]
+        "date": "2026-02-11",
+        "type": "minor",
+        "changes": {
+            "added": [
+                "Dodano przydatne linki",
+                "Dodano obsłguę ręcznego dodania użytkowników do kolekcji",
+                "Dodano możliwość zmiany właściciela kolekcji"
+            ],
+            "fixed": [],
+            "improved": []
+        }
+    },
+    {
+        "version": "1.2.0",
+        "date": "2026-02-17",
+        "type": "minor",
+        "changes": {
+            "added": ["Dodano narzędzia sieciowe"],
+            "fixed": [],
+            "improved": [
+                "Ulepszono filtry wyszukiwarki artykułów: pola 'produkt' i 'kategoria' obsługują teraz wyszukiwanie po nazwie",
+                "Ulepszono formularz dodawania/edycji artykułu: lista tagów obsługuje teraz wyszukiwanie po nazwie"
+            ]
+        }
+    },
+
+    {
+        "version": "1.3.0",
+        "date": "2026-02-28",
+        "type": "minor",
+        "changes": {
+            "added": ["Dodano nawigację okruszkową(breadcrumbs)"],
+            "fixed": [],
+            "improved": [
+                "Dodano podpowiedzi (placeholdery) dla pól 'produkt' oraz 'kategoria' w filtrach wyszukiwarki artykułów"
+            ]
+        }
     }
 ]
