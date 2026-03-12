@@ -4,6 +4,7 @@ import { z } from "zod";
 export const createWorkspaceArticleDto = z.object({
     title: z.string().min(3, "Nazwa artykułu musi mieć co najmniej 3 znaki").max(100, "Nazwa artykułu jest za długa"),
     folderId: z.string().min(3),
+    marker: z.string().optional(),
     responseVariants: z
         .array(
             z.object({
