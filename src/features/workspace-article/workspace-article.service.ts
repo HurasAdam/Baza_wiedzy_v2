@@ -206,7 +206,7 @@ export const WorkspaceArticleService = {
     async updateOne(
         userId: string,
         articleId: string,
-        payload: { title: string; folderId: string; marker?: "red" | "yellow" | "green" | "blue" }
+        payload: { title: string; folderId: string; marker?: "red" | "yellow" | "green" | "blue" | null }
     ) {
         const article = await WorkspaceArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Artykuł nie istnieje");
