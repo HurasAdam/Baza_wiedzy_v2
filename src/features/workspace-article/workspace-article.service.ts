@@ -16,8 +16,9 @@ export const WorkspaceArticleService = {
 
         const newArticle = await WorkspaceArticleModel.create({
             title: payload.title,
+            marker: payload.marker ?? null,
             folderId: folder._id,
-            workspaceId: folder.workspaceId, // pobrane z folderu
+            workspaceId: folder.workspaceId,
             createdBy: userId,
         });
 
@@ -202,7 +203,11 @@ export const WorkspaceArticleService = {
         return variant.toObject();
     },
 
-    async updateOne(userId: string, articleId: string, payload: { title: string; folderId: string }) {
+    async updateOne(
+        userId: string,
+        articleId: string,
+        payload: { title: string; folderId: string; marker?: "red" | "yellow" | "green" | "blue" }
+    ) {
         const article = await WorkspaceArticleModel.findById(articleId);
         appAssert(article, NOT_FOUND, "Artykuł nie istnieje");
 
@@ -220,6 +225,7 @@ export const WorkspaceArticleService = {
         appAssert(folder, NOT_FOUND, "Folder nie istnieje");
 
         article.title = payload.title;
+        article.marker = payload.marker ?? null;
         article.folderId = folder._id as Types.ObjectId;
         article.updatedBy = new Types.ObjectId(userId);
         await article.save();
