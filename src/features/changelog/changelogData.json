@@ -12,7 +12,7 @@
                 "Poprawiono widoczność tagów w wyszukiwarce artykułów dla ciemnych motywów",
                 "W rejestrze tematów skrócono pole 'Temat', przybliżono pole 'Notatka' oraz dodano nagłówki tabeli",
                 "W formularzu dodawania/edycji artykułu zmniejszono minimalną ilość znaków dla pola 'odpowiedzi dla pracownika' do 1 znaku",
-                "Ulepszono formularz dodawania/edycji artykułu: pola select dla tagów, produktu i kategorii obsługują teraz wyszukiwanie po wpisaniu keyword"
+                "Ulepszono formularz dodawania/edycji artykułu: pola listy wyboru dla tagów, produktu i kategorii obsługują teraz wyszukiwanie po wpisaniu słowa kluczowego"
             ]
         }
     },
@@ -53,6 +53,20 @@
             "fixed": [],
             "improved": [
                 "Dodano podpowiedzi (placeholdery) dla pól 'produkt' oraz 'kategoria' w filtrach wyszukiwarki artykułów"
+            ]
+        }
+    },
+    {
+        "version": "1.3.1",
+        "date": "2026-03-14",
+        "type": "patch",
+        "changes": {
+            "added": [],
+            "fixed": [
+                "Naprawiono problem z aktualizacją uprawnień użytkownika podczas przełączania między kolekcjami - uprawnienia są teraz poprawnie odświeżane w ramach wybranej przez użytkownika kolekcji"
+            ],
+            "improved": [
+                "Przebudowano nawigację w kolekcjach: foldery mają teraz osobną sekcję, co ułatwia poruszanie się i zwiększa przejrzystość."
             ]
         }
     }
