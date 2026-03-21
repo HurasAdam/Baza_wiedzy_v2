@@ -69,5 +69,22 @@
                 "Przebudowano nawigację w kolekcjach: foldery mają teraz osobną sekcję, co ułatwia poruszanie się i zwiększa przejrzystość."
             ]
         }
+    },
+    {
+        "version": "1.3.2",
+        "date": "2026-03-21",
+        "type": "patch",
+        "changes": {
+            "added": [],
+            "fixed": [
+                "Naprawiono brak walidacji uprawnień po stronie backendu dla operacji edycji i usuwania folderów w kolekcjach - dostęp jest teraz poprawnie weryfikowany na podstawie przypisanych uprawnień członka kolekcji",
+                "Naprawiono błąd w interfejsie użytkownika: przyciski akcji są teraz widoczne wyłącznie dla użytkowników z odpowiednimi uprawnieniami."
+            ],
+            "improved": [
+                "Ulepszono system uprawnień dla folderów - użytkownicy z odpowiednimi uprawnieniami mogą teraz edytować i usuwać foldery bez konieczności bycia właścicielem kolekcji",
+                "Ulepszono wygląd kart artykułów w wyszukiwarce - poprawiono hierarchię informacji oraz czytelność.",
+                "Zmniejszono minimalną długość nazwy kategorii w formularzu z 3 do 2 znaków."
+            ]
+        }
     }
 ]
