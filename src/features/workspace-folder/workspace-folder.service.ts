@@ -87,10 +87,16 @@ export const WorkspaceFolderService = {
     async updateOneFolder(userId: string, workspaceId: string, folderId: string, payload: CreateWorkspaceFolderDto) {
         const workspace = await WorkspaceModel.findById(workspaceId);
         appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
+        const membership = await WorkspaceMemberModel.findOne({
+            userId,
+            workspaceId,
+        });
 
         const isOwner = workspace.owner.toString() === userId;
 
-        appAssert(isOwner, FORBIDDEN, "Brak uprawnień do edycji folderu");
+        const canEditFolder = isOwner || membership?.permissions?.editFolder;
+
+        appAssert(canEditFolder, FORBIDDEN, "Brak uprawnień do edycji folderu");
 
         const folder = await WorkspaceFolderModel.findOne({ _id: folderId, workspaceId });
 
@@ -113,9 +119,13 @@ export const WorkspaceFolderService = {
         const workspace = await WorkspaceModel.findById(workspaceId);
         appAssert(workspace, NOT_FOUND, "Workspace nie istnieje");
 
+        const membership = await WorkspaceMemberModel.findOne({ userId, workspaceId });
+
         const isOwner = workspace.owner.toString() === userId;
 
-        appAssert(isOwner, FORBIDDEN, "Brak uprawnień do usunięcia folderu");
+        const canDeleteFolder = isOwner || membership?.permissions?.deleteFolder;
+
+        appAssert(canDeleteFolder, FORBIDDEN, "Brak uprawnień do usunięcia folderu");
 
         const folder = await WorkspaceFolderModel.findOne({ _id: folderId, workspaceId });
         appAssert(folder, NOT_FOUND, "Folder nie istnieje");
