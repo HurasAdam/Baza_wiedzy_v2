@@ -1,4 +1,4 @@
-import { BAD_REQUEST, NOT_FOUND } from "@/constants/http";
+import { CONFLICT, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
 import { compareValue, hashValue } from "@/utils/bcrypt";
 import fs from "fs";
@@ -15,7 +15,7 @@ export const UserService = {
         const user = await UserModel.findById(userId);
         appAssert(user, NOT_FOUND, "User not found");
         const isSamePassword = compareValue(payload.password, user.password);
-        appAssert(!isSamePassword, BAD_REQUEST, "New password cannot be the same as the current password");
+        appAssert(!isSamePassword, CONFLICT, "New password cannot be the same as the current password");
 
         const updatedUser = await UserModel.findByIdAndUpdate(
             userId,
