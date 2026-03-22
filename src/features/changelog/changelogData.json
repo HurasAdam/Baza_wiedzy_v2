@@ -77,7 +77,8 @@
         "changes": {
             "added": [],
             "fixed": [
-                "Naprawiono brak walidacji uprawnień po stronie backendu dla operacji edycji i usuwania folderów w kolekcjach - dostęp jest teraz poprawnie weryfikowany na podstawie przypisanych uprawnień członka kolekcji",
+                "Naprawiono brak walidacji uprawnień po stronie backendu dla operacji edycji i usuwania folderów w kolekcjach - dostęp jest teraz poprawnie weryfikowany na podstawie przypisanych uprawnień bądź roli właściciela kolekcji",
+                "Naprawiono brak walidacji uprawnień po stronie backendu dla tworzenia folderów w kolekcjach - dostęp jest teraz poprawnie weryfikowany na podstawie przypisanych uprawnień bądź roli właściciela kolekcji",
                 "Naprawiono błąd w interfejsie użytkownika: przyciski akcji są teraz widoczne wyłącznie dla użytkowników z odpowiednimi uprawnieniami."
             ],
             "improved": [
