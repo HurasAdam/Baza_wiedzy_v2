@@ -15,8 +15,10 @@ export const WorkspaceFolderService = {
         const workspace = await WorkspaceModel.findById(workspaceId);
         appAssert(workspace, NOT_FOUND, "Nie znaleziono workspace");
 
-        const isMember = await WorkspaceMemberModel.exists({ userId, workspaceId });
-        appAssert(isMember, FORBIDDEN, "Brak dostępu do tego workspace");
+        const membership = await WorkspaceMemberModel.findOne({ userId, workspaceId });
+        const isOwner = workspace.owner.toString() === userId;
+        const canCreateFolder = isOwner || membership?.permissions?.addFolder;
+        appAssert(canCreateFolder, FORBIDDEN, "Brak uprawnień do dodawania folderów");
 
         const existingFolder = await WorkspaceFolderModel.findOne({ workspaceId, name });
         appAssert(!existingFolder, CONFLICT, "Folder o tej nazwie już istnieje");
