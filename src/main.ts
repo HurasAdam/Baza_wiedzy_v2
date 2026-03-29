@@ -31,6 +31,7 @@ import { IssueReportRoutes } from "./features/issue-report/issueReport.route";
 import { ReportCommentRoutes } from "./features/IssueReportComment/ReportComment.route";
 import { networkToolsRoutes } from "./features/network-tools/network-tools.route";
 import { notificationRoutes } from "./features/notification/notification.route";
+import { pinnedLinkRoutes } from "./features/pinned-link/pinned-link.routes";
 import { productRoutes } from "./features/product/product.route";
 import { projectRoutes } from "./features/project/project.route";
 import { statisticsRoutes } from "./features/statistics/statistics.route";
@@ -129,6 +130,7 @@ app.use("/workspace-members", authenticate, workspaceMemberRoutes);
 app.use("/report-comments", authenticate, ReportCommentRoutes);
 app.use("/changelog", authenticate, changelogRoutes);
 app.use("/useful-links", authenticate, usefulLinkRoutes);
+app.use("/pinned-links", authenticate, pinnedLinkRoutes);
 app.use("/useful-link-categories", authenticate, usefulLinkCategoryRoutes);
 app.use("/network-tools", authenticate, networkToolsRoutes);
 
