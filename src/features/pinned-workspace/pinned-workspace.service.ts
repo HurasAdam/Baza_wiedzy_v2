@@ -1,4 +1,4 @@
-import { CONFLICT, FORBIDDEN, NOT_FOUND } from "../../constants/http";
+import { CONFLICT, FORBIDDEN, NOT_FOUND, UNPROCESSABLE_CONTENT } from "../../constants/http";
 import appAssert from "../../utils/appAssert";
 import WorkspaceMemberModel from "../workspace-member/workspaceMember.model";
 import WorkspaceModel from "../workspace/workspace.model";
@@ -24,6 +24,9 @@ export const PinnedWorkspaceService = {
         });
 
         appAssert(!alreadyPinned, CONFLICT, "Workspace already pinned");
+
+        const pinnedCount = await PinnedWorkspaceModel.countDocuments({ owner: userId });
+        appAssert(pinnedCount < 14, UNPROCESSABLE_CONTENT, "You can pin maximum 14 collections");
 
         await PinnedWorkspaceModel.create({
             owner: userId,
