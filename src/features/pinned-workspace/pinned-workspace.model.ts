@@ -10,5 +10,6 @@ const PinnedWorkspaceSchema = new Schema<PinnedWorkspaceDocument>({
     workspace: { type: Schema.Types.ObjectId, ref: "Workspace", required: true },
 });
 
+PinnedWorkspaceSchema.index({ owner: 1, workspace: 1 }, { unique: true });
 const PinnedWorkspaceModel = model<PinnedWorkspaceDocument>("PinnedWorkspace", PinnedWorkspaceSchema);
 export default PinnedWorkspaceModel;
