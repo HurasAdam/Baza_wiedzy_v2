@@ -15,3 +15,5 @@ export const changeUserPasswordDto = z
         message: "Hasła muszą być takie same",
         path: ["confirmPassword"],
     });
+
+export type ChangeUserPasswordDto = z.infer<typeof changeUserPasswordDto>;
