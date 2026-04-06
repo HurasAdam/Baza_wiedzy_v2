@@ -87,5 +87,19 @@
                 "Zmniejszono minimalną długość nazwy kategorii w formularzu z 3 do 2 znaków."
             ]
         }
+    },
+    {
+        "version": "1.4.0",
+        "date": "2026-04-05",
+        "type": "minor",
+        "changes": {
+            "added": [
+                "Dodano widok Tablicy użytkownika: centralne miejsce do szybkiego dostępu do najważniejszych zasobów",
+                "Umożliwiono przypinanie / odpinanie ulubionych kolekcji do Tablicy (maksymalnie 14 na użytkownika)",
+                "Dodano możliwość tworzenia własnych skrótów do linków na Tablicy"
+            ],
+            "fixed": [],
+            "improved": []
+        }
     }
 ]

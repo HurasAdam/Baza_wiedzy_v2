@@ -1,30 +1,29 @@
 import { CONFLICT, NOT_FOUND } from "@/constants/http";
 import appAssert from "@/utils/appAssert";
-import { compareValue, hashValue } from "@/utils/bcrypt";
+import { compareValue } from "@/utils/bcrypt";
 import fs from "fs";
 import { constructSearchQuery } from "../../utils/constructSearchQuery";
 import ArticleHistoryModel from "../article-history/article-history.model";
 import ArticleModel from "../article/article.model";
 import AttachmentModel from "../attachment/attachment.model";
 import RoleModel from "../role-permission/roles-permission.model";
+import { ChangeUserPasswordDto } from "./dto/change-user-password.dto";
 import type { FindUsersWithDto } from "./dto/find-users-with.dto";
+import { createUserRepository, DB_TYPE } from "./repository/repository.factory";
 import UserModel from "./user.model";
 
+const userRepository = createUserRepository(DB_TYPE.MONGO);
+
 export const UserService = {
-    async changePassword(userId, payload) {
-        const user = await UserModel.findById(userId);
+    async changePassword(userId: string, payload: ChangeUserPasswordDto) {
+        const user = await userRepository.findById(userId);
         appAssert(user, NOT_FOUND, "User not found");
         const isSamePassword = compareValue(payload.password, user.password);
         appAssert(!isSamePassword, CONFLICT, "New password cannot be the same as the current password");
 
-        const updatedUser = await UserModel.findByIdAndUpdate(
-            userId,
-            {
-                password: hashValue(payload.password),
-                mustChangePassword: false,
-            },
-            { new: true }
-        );
+        const updatedUser = await userRepository.updateUserPassword(userId, payload.password, {
+            mustChangePassword: false,
+        });
 
         if (!updatedUser) {
             throw new Error("Failed to change password");
@@ -49,16 +48,19 @@ export const UserService = {
     },
 
     async updateMe(userId: string, payload: { name?: string; surname?: string; bio?: string }) {
-        const user = await UserModel.findById(userId);
-        appAssert(user, NOT_FOUND, "User not found");
+        const { name, surname, bio } = payload;
 
-        user.name = payload.name || user.name;
-        user.surname = payload.surname || user.surname;
-        await user.save();
+        const user = await userRepository.updateMyUserData({
+            id: userId,
+            name,
+            surname,
+            bio,
+        });
+        appAssert(user, NOT_FOUND, "User not found");
     },
 
     async updateAvatar(userId: string, file: Express.Multer.File) {
-        const user = await UserModel.findById(userId);
+        const user = await userRepository.findById(userId);
         appAssert(user, NOT_FOUND, "User not found");
 
         // Usuń stary avatar
