@@ -151,31 +151,36 @@ app.use(
         },
     })
 );
-
 app.get("/system/storage", (req, res) => {
-    exec("df -B1 /", (error, stdout) => {
+    exec("du -sb /app/uploads", (error, stdout) => {
         if (error) {
-            return res.status(500).json({ error: "Cannot check disk" });
+            console.log("ER", error);
+            return res.status(500).json({ error: "Cannot check attachments size" });
         }
 
-        const lines = stdout.trim().split("\n");
+        const [bytes] = stdout.trim().split(/\s+/);
+        const total = Number(bytes);
 
-        const data = lines[1].split(/\s+/);
-
-        const total = Number(data[1]);
-        const used = Number(data[2]);
-        const free = Number(data[3]);
-        const usedPercent = Number(data[4].replace("%", ""));
+        let size, unit;
+        if (total >= 1024 ** 3) {
+            size = total / 1024 ** 3;
+            unit = "GB";
+        } else if (total >= 1024 ** 2) {
+            size = total / 1024 ** 2;
+            unit = "MB";
+        } else if (total >= 1024) {
+            size = total / 1024;
+            unit = "KB";
+        } else {
+            size = total;
+            unit = "B";
+        }
 
         res.json({
-            totalGB: (total / 1024 / 1024 / 1024).toFixed(2),
-            usedGB: (used / 1024 / 1024 / 1024).toFixed(2),
-            freeGB: (free / 1024 / 1024 / 1024).toFixed(2),
-            usedPercent,
+            uploads: `${size.toFixed(2)} ${unit}`,
         });
     });
 });
-
 app.use(errorHandler);
 
 connectDB(() => {
